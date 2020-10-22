@@ -1,0 +1,161 @@
+﻿<UserControl x:Class="ProjetHotel.Views.HotelView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+             xmlns:conv="clr-namespace:ProjetHotel.Converters"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Grid>
+        <Grid.Resources>
+            <conv:ChambreEtatIconeConverter x:Key="ChambreEtatIconeConverterKey"/>
+            <conv:ChambreEtatColorConverter x:Key="ChambreEtatColorConverterKey"/>
+        </Grid.Resources>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="240"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="240"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+        </Grid.RowDefinitions>
+        <!--Ligne 1-->
+        <!--Rien-->
+        <Border Grid.Row="0" Grid.Column="0" BorderBrush="Transparent" BorderThickness="0,0,0,1" Margin="5">
+        </Border>
+        <!--Liste des hôtels -->
+        <Border Grid.Row="0" Grid.Column="1" BorderBrush="Navy" BorderThickness="0,0,0,1" Margin="5">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"></ColumnDefinition>
+                    <ColumnDefinition Width="Auto"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <StackPanel Orientation="Horizontal">
+                    <materialDesign:PackIcon Height="30" Width="Auto" Kind="Building" Foreground="Navy" VerticalAlignment="Bottom" />
+                    <TextBlock FontSize="20" FontWeight="Normal" Foreground="Navy" Text=" Les hôtels" VerticalAlignment="Bottom"/>
+                </StackPanel>
+                <Menu Grid.Column="1" Cursor="Hand" Margin="0" Background="White">
+                   
+                    <MenuItem Header="..." Foreground="Navy" FontSize="16">
+                        <MenuItem Header="Ajouter" Foreground="Navy" Command="{Binding HotelSelectedAddCommand}"/>
+                        <MenuItem Header="Supprimer" Foreground="Navy" Command="{Binding HotelSelectedDeleteCommand}"/>
+                        <MenuItem Header="Annuler les modifications" Foreground="Navy" Command="{Binding HotelSelectedRestoreCommand}"/>
+                    </MenuItem>
+                    
+                </Menu>
+            </Grid>
+        </Border>
+        <!--Modifier-->
+        <Border Grid.Row="0" Grid.Column="2" BorderBrush="Navy" BorderThickness="0,0,0,1" Margin="5">
+            <Grid Grid.Row="0" Grid.Column="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"></ColumnDefinition>
+                    <ColumnDefinition Width="Auto"></ColumnDefinition>
+                    <ColumnDefinition Width="Auto"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition></RowDefinition>
+                </Grid.RowDefinitions>
+                <TextBlock Text="Modifier" FontSize="22" Foreground="Navy" VerticalAlignment="Bottom"/>
+                <Button Grid.Column="1" Background="Transparent" BorderBrush="Transparent" BorderThickness="1" Command="{Binding HotelSelectedRestoreCommand}"  VerticalAlignment="Bottom">
+                    <Button.Content>
+                        <materialDesign:PackIcon Height="20" Width="Auto" Kind="UndoVariant" Foreground="Navy" Margin="0,0,10,0" ToolTip="Annuler"/>
+                    </Button.Content>
+                </Button>
+                <Button Grid.Column="2" Background="Transparent" BorderBrush="Transparent" BorderThickness="1" Command="{Binding HotelModifiedSaveCommand}" VerticalAlignment="Bottom">
+                    <Button.Content>
+                        <materialDesign:PackIcon Height="25" Width="Auto" Kind="Floppy" Foreground="{Binding SaveColor, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,10,0" ToolTip="Enregistrer"/>
+                    </Button.Content>
+                </Button>
+            </Grid>
+        </Border>
+
+        <!--Ligne 2-->
+        <!--Gauche-->
+        <Border Grid.Column="0" Grid.Row="1" BorderBrush="Transparent" BorderThickness="1" CornerRadius="10" HorizontalAlignment="Right" VerticalAlignment="Top" Width="220">
+        </Border>
+        <!--Milieu-->
+        <Border Grid.Column="1" Grid.Row="1" BorderBrush="Transparent" BorderThickness="1" CornerRadius="10">
+            <DataGrid ItemsSource="{Binding EntityCollectionView}" SelectedItem="{Binding HotelSelected, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                      SelectionMode="Single"  SelectionUnit="FullRow" IsSynchronizedWithCurrentItem="False"
+                      AutoGenerateColumns="False" HeadersVisibility="None" CanUserAddRows="False" VerticalScrollBarVisibility="Visible">
+                 <DataGrid.Columns>
+                    <DataGridTextColumn Binding="{Binding Nom}" FontWeight="Bold" Foreground="Navy"/>
+                    <DataGridTemplateColumn Width="Auto">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal">
+                                    <materialDesign:PackIcon Height="20" Width="Auto" Kind="Face" Foreground="Navy"/>
+                                    <TextBlock Text="{Binding Gouvernante.Nom}" TextWrapping="Wrap" Margin="10,0,0,0"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTemplateColumn Width="Auto">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal">
+                                    <materialDesign:PackIcon Height="20" Width="Auto" Kind="Building" Foreground="Navy"/>
+                                    <TextBlock Text="{Binding Reception.Nom}" TextWrapping="Wrap" Margin="10,0,0,0"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTemplateColumn Width="*">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Commentaire}" TextWrapping="Wrap"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTemplateColumn Width="50">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <materialDesign:PackIcon Height="20" Width="Auto" Kind="{Binding DateModifiedIcone}" Foreground="Navy"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                </DataGrid.Columns>
+              
+            </DataGrid>
+        </Border>
+        <!--Droite-->
+        <Border Grid.Column="2" Grid.Row="1" BorderBrush="Transparent" BorderThickness="1" CornerRadius="10" HorizontalAlignment="Left" >
+            <StackPanel Margin="5" Width="220">
+                <TextBlock Text="Libellé" Margin="0,15,0,0"/>
+                <TextBox FontSize="16" Text="{Binding HotelSelected.Nom, UpdateSourceTrigger=PropertyChanged}"/>
+
+                <TextBlock Text="Commentaire" Margin="0,15,0,0"/>
+                <TextBox FontSize="16"  Text="{Binding HotelSelected.Commentaire, UpdateSourceTrigger=PropertyChanged}" TextWrapping="Wrap" TextAlignment="Left"/>
+
+                <TextBlock Text="Gouvernante" Margin="0,15,0,0"/>
+                <ComboBox ItemsSource="{Binding GouvernanteList}" SelectedItem="{Binding HotelSelected.Gouvernante}" FontSize="16" SelectionChanged="ComboBox_SelectionChanged">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal">
+                                <materialDesign:PackIcon Height="20" Width="Auto" Kind="Face" Foreground="{Binding Couleur}"/>
+                                <TextBlock Text="{Binding Nom}" Margin="5,0,0,0"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
+
+                <TextBlock Text="Reception" Margin="0,15,0,0"/>
+                <ComboBox ItemsSource="{Binding ReceptionList}" SelectedItem="{Binding HotelSelected.Reception}" FontSize="16">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal">
+                                <materialDesign:PackIcon Height="20" Width="Auto" Kind="Building" Foreground="{Binding Couleur}"/>
+                                <TextBlock Text="{Binding Nom}" Margin="5,0,0,0"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
+            </StackPanel>
+        </Border>
+    </Grid>
+</UserControl>
+ 

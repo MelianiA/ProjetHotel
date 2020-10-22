@@ -1,0 +1,41 @@
+﻿<Window x:Class="ProjetHotel.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:ProjetHotel.Views"
+        xmlns:data="clr-namespace:ProjetHotel.Metier"
+        xmlns:conv="clr-namespace:ProjetHotel.Converters"
+        mc:Ignorable="d" WindowState="Maximized"
+        Title="Makfi V0.0" Height="800" Width="1280" ResizeMode="CanResize">
+    
+    <DockPanel LastChildFill="True">
+        
+        <Border DockPanel.Dock="Bottom" Background="WhiteSmoke" BorderBrush="Gray" BorderThickness="0,1,0,0">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="Makfi V1.1 - Copyright Makrisoft 2020" Margin="15,2,0,2"/>
+            </StackPanel>
+        </Border>
+
+        <Grid>
+            <Grid.Resources>
+                <conv:ViewSelectedConverter x:Key="ViewSelectedConverterKey"/>
+            </Grid.Resources>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            
+            
+            <!--En tête-->
+            <local:HeaderView x:Name="HeaderUC" />
+            <!--Body-->
+            <ContentControl  Content="{Binding Path=PageHeaderViewModel}"  />
+            <local:LoginView></local:LoginView>
+            <Border  Grid.Row="1" Visibility="{Binding ViewSelected, Converter={StaticResource ViewSelectedConverterKey}, ConverterParameter={x:Static data:ViewEnum.Login}}">
+            </Border>
+
+            
+        </Grid>
+    </DockPanel>
+</Window>

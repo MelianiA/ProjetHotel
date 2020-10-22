@@ -1,0 +1,211 @@
+﻿<UserControl x:Class="ProjetHotel.Views.UtilisateurView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+             xmlns:conv="clr-namespace:ProjetHotel.Converters"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:models="clr-namespace:ProjetHotel.Models"
+             xmlns:local="clr-namespace:ProjetHotel.Views"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Grid>
+        <Grid.Resources>
+            <conv:RoleConverter x:Key="RoleConverterKey"/>
+            <conv:RoleColorConverter x:Key="RoleColorConverterKey"/>
+            <conv:RoleBoolConverter x:Key="RoleBoolConverterKey"/>
+            <conv:BoolRoleConverter x:Key="BoolRoleConverterKey"/>
+            <conv:JoinConverter x:Key="JoinConverterKey"/>
+            <Style x:Key="BorderRole" TargetType="Border">
+                <Setter Property="BorderBrush" Value="Silver"/>
+                <Setter Property="BorderThickness" Value="1"/>
+                <Setter Property="Padding" Value="5"/>
+                <Setter Property="HorizontalAlignment" Value="Center"/>
+                <Setter Property="CornerRadius" Value="5"/>
+                <Setter Property="Width" Value="30"/>
+                <Setter Property="Height" Value="30"/>
+            </Style>
+        </Grid.Resources>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="240"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="240"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+        </Grid.RowDefinitions>
+        <!--Ligne 1-->
+        <!--Filtrer-->
+        <Border Grid.Row="0" Grid.Column="0" BorderBrush="Navy" BorderThickness="0,0,0,1" Margin="5">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"></ColumnDefinition>
+                    <ColumnDefinition Width="Auto"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <TextBlock Text="Filtrer" FontSize="22" Foreground="Navy" VerticalAlignment="Bottom"/>
+                <Button Grid.Column="1" Background="Transparent" BorderBrush="Transparent" BorderThickness="1" Command="{Binding FilterClearCommand}" VerticalAlignment="Bottom">
+                    <Button.Content>
+                        <materialDesign:PackIcon Height="20" Width="Auto" Kind="Clear" Foreground="Navy" Margin="0,0,10,0"/>
+                    </Button.Content>
+                </Button>
+            </Grid>
+        </Border>
+        <!--Liste des utilisateurs -->
+        <Border Grid.Row="0" Grid.Column="1" BorderBrush="Navy" BorderThickness="0,0,0,1" Margin="5">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"></ColumnDefinition>
+                    <ColumnDefinition Width="Auto"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <TextBlock FontSize="20" FontWeight="Normal" Foreground="Navy" Text="Les utilisateurs" VerticalAlignment="Bottom"/>
+                <Menu Grid.Column="1" Cursor="Hand" Margin="0">
+                    <MenuItem Header="..." Foreground="Navy" FontSize="16">
+                        <MenuItem Header="Ajouter" Foreground="Navy" Command="{Binding UtilisateurSelectedAddCommand}"/>
+                        <MenuItem Header="Supprimer" Foreground="Navy" Command="{Binding UtilisateurSelectedDeleteCommand}"/>
+                        <MenuItem Header="Annuler les modifications" Foreground="Navy" Command="{Binding UtilisateurModifiedCancelCommand}"/>
+                    </MenuItem>
+                </Menu>
+            </Grid>
+        </Border>
+        <!--Modifier-->
+        <Border Grid.Row="0" Grid.Column="2" BorderBrush="Navy" BorderThickness="0,0,0,1" Margin="5">
+            <Grid Grid.Row="0" Grid.Column="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"></ColumnDefinition>
+                    <ColumnDefinition Width="Auto"></ColumnDefinition>
+                    <ColumnDefinition Width="Auto"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition></RowDefinition>
+                </Grid.RowDefinitions>
+                <TextBlock Text="Modifier" FontSize="22" Foreground="Navy" VerticalAlignment="Bottom"/>
+                <Button Grid.Column="1" Background="Transparent" BorderBrush="Transparent" BorderThickness="1" Command="{Binding UtilisateurSelectedRestoreCommand}" VerticalAlignment="Bottom">
+                    <Button.Content>
+                        <materialDesign:PackIcon Height="20" Width="Auto" Kind="UndoVariant" Foreground="Navy" Margin="0,0,10,0"/>
+                    </Button.Content>
+                </Button>
+                <Button Grid.Column="2" Background="Transparent" BorderBrush="Transparent" BorderThickness="1" Command="{Binding UtilisateurModifiedSaveCommand}" VerticalAlignment="Bottom">
+                    <Button.Content>
+                        <materialDesign:PackIcon Height="20" Width="Auto" Kind="Floppy" Foreground="{Binding SaveColor}" Margin="0,0,10,0" />
+                    </Button.Content>
+                </Button>
+            </Grid>
+        </Border>
+
+        <!--Ligne 2-->
+        <!--Gauche-->
+        <Border Grid.Column="0" Grid.Row="1" BorderBrush="Transparent" BorderThickness="1" CornerRadius="10" HorizontalAlignment="Right" VerticalAlignment="Top" Width="220">
+            <StackPanel Margin="5">
+                <!--Roles-->
+                <StackPanel Orientation="Horizontal" Margin="0,30,0,0">
+                    <CheckBox  IsChecked="{Binding RoleAdminFilter}"/>
+                    <TextBlock Text="Administrateur" Margin="10,0,0,0" FontSize="16"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
+                    <CheckBox  IsChecked="{Binding RoleGouvFilter}"/>
+                    <TextBlock Text="Gouvernante" Margin="10,0,0,0" FontSize="16"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
+                    <CheckBox  IsChecked="{Binding RoleReceptionFilter}"/>
+                    <TextBlock Text="Réception" Margin="10,0,0,0" FontSize="16" />
+                </StackPanel>
+            </StackPanel>
+        </Border>
+        <!--Milieu-->
+        <Border Grid.Column="1" Grid.Row="1" BorderBrush="Transparent" BorderThickness="1" CornerRadius="10" Margin="0" >
+                <!-- IsEnabled="{Binding PageNotModified.Value} "-->
+                <DataGrid ItemsSource="{Binding EntityCollectionView}" SelectedItem="{Binding UtilisateurSelected}" AutoGenerateColumns="False" HeadersVisibility="None" 
+                          GridLinesVisibility="Horizontal"
+                          CanUserAddRows="False" VerticalScrollBarVisibility="Visible">
+                    <DataGrid.Columns>
+                        <DataGridTemplateColumn>
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock VerticalAlignment="Center" Text="{Binding Nom}" FontWeight="Bold"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTemplateColumn>
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Border Style="{StaticResource BorderRole}">
+                                        <materialDesign:PackIcon Height="20" Width="Auto" 
+                                                             Kind="{Binding Converter={StaticResource RoleConverterKey}, ConverterParameter={x:Static models:RoleEnum.Admin}}" 
+                                                             Foreground="{Binding Converter={StaticResource RoleColorConverterKey}, ConverterParameter={x:Static models:RoleEnum.Admin}}"/>
+                                    </Border>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTemplateColumn>
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Border Style="{StaticResource BorderRole}">
+                                    <materialDesign:PackIcon Height="20" Width="Auto" 
+                                                             Kind="{Binding Converter={StaticResource RoleConverterKey}, ConverterParameter={x:Static models:RoleEnum.Gouvernante}}" 
+                                                             Foreground="{Binding Converter={StaticResource RoleColorConverterKey}, ConverterParameter={x:Static models:RoleEnum.Gouvernante}}"/>
+                                    </Border>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTemplateColumn>
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Border Style="{StaticResource BorderRole}">
+                                        <materialDesign:PackIcon Height="20" Width="Auto" 
+                                                             Kind="{Binding Converter={StaticResource RoleConverterKey}, ConverterParameter={x:Static models:RoleEnum.Reception}}" 
+                                                             Foreground="{Binding Converter={StaticResource RoleColorConverterKey}, ConverterParameter={x:Static models:RoleEnum.Reception}}"/>
+                                    </Border>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTemplateColumn>
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <ListBox ItemsSource="{Binding HotelList, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Foreground="Navy">
+                                        <ListBox.ItemTemplate>
+                                            <DataTemplate>
+                                                    <TextBlock Text="{Binding Nom}"/>
+                                            </DataTemplate>
+                                        </ListBox.ItemTemplate>
+                                    </ListBox>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTextColumn Width="*"/>
+                        <DataGridTemplateColumn Width="50">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <materialDesign:PackIcon Height="20" Width="Auto" Kind="{Binding DateModifiedIcone}" Foreground="Navy"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
+        </Border>
+        <!--Droite-->
+        <Border Grid.Column="2" Grid.Row="1" BorderBrush="Transparent" BorderThickness="1" CornerRadius="10" HorizontalAlignment="Left" >
+            <StackPanel Margin="5" Width="220">
+                <TextBlock Text="Nom" Margin="0,15,0,0"/>
+                <TextBox FontSize="16" Text="{Binding UtilisateurSelected.Nom, UpdateSourceTrigger=PropertyChanged}"/>
+
+                <StackPanel Orientation="Horizontal" Margin="0,30,0,0">
+                    <materialDesign:PackIcon Height="20" Width="Auto" Kind="Person" Foreground="Silver" Margin="0,0,10,0"/>
+                    <CheckBox  IsChecked="{Binding UtilisateurSelected, Converter={StaticResource RoleBoolConverterKey}, ConverterParameter={x:Static models:RoleEnum.Admin}}"/>
+                    <TextBlock Text="Administrateur" Margin="10,0,0,0" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Margin="0,30,0,0">
+                    <materialDesign:PackIcon Height="20" Width="Auto" Kind="FaceWoman" Foreground="Silver" Margin="0,0,10,0"/>
+                    <CheckBox  IsChecked="{Binding UtilisateurSelected, Converter={StaticResource RoleBoolConverterKey}, ConverterParameter={x:Static models:RoleEnum.Gouvernante}}"/>
+                    <TextBlock Text="Gouvernante" Margin="10,0,0,0" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Margin="0,30,0,0">
+                    <materialDesign:PackIcon Height="20" Width="Auto" Kind="Building" Foreground="Silver" Margin="0,0,10,0"/>
+                    <CheckBox  IsChecked="{Binding UtilisateurSelected, Converter={StaticResource RoleBoolConverterKey}, ConverterParameter={x:Static models:RoleEnum.Reception}}"/>
+                    <TextBlock Text="Réception" Margin="10,0,0,0" />
+                </StackPanel>
+            </StackPanel>
+        </Border>
+    </Grid>
+</UserControl>
