@@ -1,11 +1,9 @@
-﻿<UserControl x:Class="ProjetHotel.Views.HomeView"
+﻿<UserControl x:Class="Makrisoft.Makfi.Views.HomeView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:data="clr-namespace:ProjetHotel.Data;assembly=ProjetHotel.Data"
-             xmlns:conv="clr-namespace:ProjetHotel.Converters"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.Resources>
@@ -21,7 +19,6 @@
             <Setter Property="Width" Value="250"/>
             <Setter Property="Height" Value="80"/>
         </Style>
-        <conv:NullToBoolConverter x:Key="NullToBoolConverterKey"/>
     </UserControl.Resources>
     <Grid>
         <Border BorderBrush="Navy" BorderThickness="1" CornerRadius="10" Margin="10">
@@ -39,22 +36,25 @@
                     <RowDefinition Height="*"></RowDefinition>
                 </Grid.RowDefinitions>
                 <materialDesign:PackIcon Grid.Row="0" Grid.Column="0"  Height="30" Width="Auto" Kind="ViewDay" Foreground="Navy" VerticalAlignment="Center"/>
-                <Button Grid.Row="0" Grid.Column="1" Content ="Intervention du jour" IsEnabled="{Binding Header_ViewModel.HotelSelected, Converter={StaticResource NullToBoolConverterKey}}" Style="{StaticResource Menu}" Command="{Binding ChangeViewCommand}" CommandParameter="{x:Static data:ViewEnum.InterventionNew}"/>
+                <Button Grid.Row="0" Grid.Column="1" Content ="Intervention du jour" 
+                        
+                        Style="{StaticResource Menu}" Command="{Binding ChangeViewCommand}"  />
 
                 <materialDesign:PackIcon Grid.Row="0" Grid.Column="3"  Height="30" Width="Auto" Kind="Bed" Foreground="Navy" VerticalAlignment="Center"/>
-                <Button Grid.Row="0" Grid.Column="4" Content="Les chambres" IsEnabled="{Binding Header_ViewModel.HotelSelected, Converter={StaticResource NullToBoolConverterKey}}" Style="{StaticResource Menu}" Command="{Binding ChangeViewCommand}" CommandParameter="{x:Static data:ViewEnum.Chambre}"/>
+                <Button Grid.Row="0" Grid.Column="4" Content="Les chambres"   Style="{StaticResource Menu}" Command="{Binding ChangeViewCommand}" />
 
                 <materialDesign:PackIcon Grid.Row="1" Grid.Column="0" Height="30" Width="Auto" Kind="ViewHeadline" Foreground="Navy" VerticalAlignment="Center"/>
-                <Button Grid.Row="1" Grid.Column="1" Content="Les interventions" IsEnabled="{Binding Header_ViewModel.HotelSelected, Converter={StaticResource NullToBoolConverterKey}}" Style="{StaticResource Menu}" Command="{Binding ChangeViewCommand}" CommandParameter="{x:Static data:ViewEnum.Intervention}"/>
+                <Button Grid.Row="1" Grid.Column="1" Content="Les interventions"  Style="{StaticResource Menu}" Command="{Binding ChangeViewCommand}"
+                        />
 
                 <materialDesign:PackIcon Grid.Row="1" Grid.Column="3" Height="30" Width="Auto" Kind="FaceWoman" Foreground="Navy" VerticalAlignment="Center"/>
-                <Button Grid.Row="1" Grid.Column="4" Content="Les employées" IsEnabled="{Binding Header_ViewModel.HotelSelected, Converter={StaticResource NullToBoolConverterKey}}" Style="{StaticResource Menu}" Command="{Binding ChangeViewCommand}" CommandParameter="{x:Static data:ViewEnum.Employe}"/>
+                <Button Grid.Row="1" Grid.Column="4" Content="Les employées" Style="{StaticResource Menu}" Command="{Binding ChangeViewCommand}" />
 
                 <materialDesign:PackIcon Grid.Row="2" Grid.Column="0" Height="30" Width="Auto" Kind="Calculator" Foreground="Navy" VerticalAlignment="Center"/>
-                <Button Grid.Row="2" Grid.Column="1" Content="Synthèse mensuelle" Style="{StaticResource Menu}" Command="{Binding ChangeViewCommand}" CommandParameter="{x:Static data:ViewEnum.Synthese}"/>
+                <Button Grid.Row="2" Grid.Column="1" Content="Synthèse mensuelle" Style="{StaticResource Menu}" Command="{Binding ChangeViewCommand}"  />
 
                 <materialDesign:PackIcon Grid.Row="2" Grid.Column="3" Height="30" Width="Auto" Kind="Lock" Foreground="Navy"  VerticalAlignment="Center" />
-                <Button Grid.Row="2" Grid.Column="4" Content="Privé" Style="{StaticResource Menu}"  Command="{Binding ChangeViewCommand}" CommandParameter="{x:Static data:ViewEnum.Administration}" 
+                <Button Grid.Row="2" Grid.Column="4" Content="Privé" Style="{StaticResource Menu}"  Command="{Binding ChangeViewCommand}"   
                         IsEnabled="{Binding Header_ViewModel.UtilisateurSelected.IsAdmin}"/>
             </Grid>
         </Border>

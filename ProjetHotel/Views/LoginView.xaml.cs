@@ -1,6 +1,7 @@
-﻿using System.Windows.Controls;
+﻿using Makrisoft.Makfi.ViewModels;
+using System.Windows.Controls;
 
-namespace ProjetHotel.Views
+namespace Makrisoft.Makfi.Views
 {
    
     public partial class LoginView : UserControl
@@ -8,6 +9,7 @@ namespace ProjetHotel.Views
         public LoginView()
         {
             InitializeComponent();
+            DataContext = new LoginViewModel();
 
         }
     }

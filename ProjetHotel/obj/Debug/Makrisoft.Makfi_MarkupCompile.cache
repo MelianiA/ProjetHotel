@@ -1,20 +1,20 @@
-﻿ProjetHotel
+﻿Makrisoft.Makfi
 
 
 winexe
 C#
 .cs
 C:\Users\abdou\source\repos\ProjetHotel\ProjetHotel\obj\Debug\
-ProjetHotel
+Makrisoft.Makfi
 none
 false
 DEBUG;TRACE
 C:\Users\abdou\source\repos\ProjetHotel\ProjetHotel\App.xaml
-3-1403953600
-
-2539443502
+4406365151
+1784467754
+18-1045320453
 15-1895507324
-Views\HeaderView.xaml;Views\LoginView.xaml;Views\MainView.xaml;
+Views\HeaderView.xaml;Views\HomeView.xaml;Views\LoginView.xaml;Views\MainView.xaml;
 
 False
 

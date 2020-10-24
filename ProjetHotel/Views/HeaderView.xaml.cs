@@ -1,6 +1,7 @@
-﻿using System.Windows.Controls;
+﻿using Makrisoft.Makfi.ViewModels;
+using System.Windows.Controls;
 
-namespace ProjetHotel.Views
+namespace Makrisoft.Makfi.Views
 {
     /// <summary>
     /// Logique d'interaction pour HeaderView.xaml
@@ -9,7 +10,8 @@ namespace ProjetHotel.Views
     {
         public HeaderView()
         {
-           // InitializeComponent();
+            InitializeComponent();
+            DataContext = new HeaderViewModel();
         }
     }
 }

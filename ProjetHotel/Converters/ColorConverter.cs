@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using System.Windows.Data;
 using System.Windows.Media;
 
-namespace ProjetHotel.Converters
+namespace Makrisoft.Makfi.Converters
 {
     public class StarColorConverter : IValueConverter
     {

@@ -1,6 +1,6 @@
 ﻿using System.Windows.Controls;
 
-namespace ProjetHotel.Views
+namespace Makrisoft.Makfi.Views
 {
     /// <summary>
     /// Logique d'interaction pour HomeView.xaml

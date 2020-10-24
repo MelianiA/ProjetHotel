@@ -6,8 +6,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{62456511-DA19-4390-885B-6BC47F3856B0}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <RootNamespace>ProjetHotel</RootNamespace>
-    <AssemblyName>ProjetHotel</AssemblyName>
+    <RootNamespace>Makrisoft.Makfi</RootNamespace>
+    <AssemblyName>Makrisoft.Makfi</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -67,26 +67,21 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Converters\ChambreConverter.cs" />
     <Compile Include="Converters\ColorConverter.cs" />
-    <Compile Include="Converters\EmployeConverter.cs" />
-    <Compile Include="Converters\ImageConverter.cs" />
-    <Compile Include="Converters\InterventionConverter.cs" />
-    <Compile Include="Converters\NavigationConverter.cs" />
-    <Compile Include="Converters\RoleConverter.cs" />
-    <Compile Include="Converters\StringConverter.cs" />
-    <Compile Include="Metier\Repository.cs" />
-    <Compile Include="Models\Chambre.cs" />
-    <Compile Include="Models\Employe.cs" />
+    <Compile Include="Dal\MakfiData.cs" />
     <Compile Include="Models\Hotel.cs" />
-    <Compile Include="Models\Intervention.cs" />
-    <Compile Include="Models\MessageErreur.cs" />
-    <Compile Include="Models\Messagerie.cs" />
-    <Compile Include="Models\Modele.cs" />
     <Compile Include="Models\Utilisateur.cs" />
+    <Compile Include="Tools\Log.cs" />
+    <Compile Include="Tools\Tools.cs" />
+    <Compile Include="ViewModels\HeaderViewModel.cs" />
     <Compile Include="ViewModels\LoginViewModel.cs" />
+    <Compile Include="ViewModels\ViewModelBase.cs" />
+    <Compile Include="ViewModels\VM.cs" />
     <Compile Include="Views\HeaderView.xaml.cs">
       <DependentUpon>HeaderView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\HomeView.xaml.cs">
+      <DependentUpon>HomeView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\LoginView.xaml.cs">
       <DependentUpon>LoginView.xaml</DependentUpon>
@@ -127,6 +122,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\HomeView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Views\LoginView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -138,15 +137,19 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Assets\hotels\hotel.png" />
-    <Resource Include="Assets\hotels\Ibis Budget Part-Dieu.png" />
-    <Resource Include="Assets\hotels\Ibis Style Part-Dieu.png" />
+    <Resource Include="Assets\hotels\IbisBudget.png" />
+    <Resource Include="Assets\hotels\IbisStyle.png" />
     <Resource Include="Assets\photos\ali.makri.png" />
-    <Resource Include="Assets\photos\danielle.lopez.png" />
-    <Resource Include="Assets\photos\fatou.traore.png" />
+    <Resource Include="Assets\photos\lopez.png" />
+    <Resource Include="Assets\photos\traore.png" />
     <Resource Include="Assets\photos\gouvernante.png" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Assets\chambres\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\photos\Ziani.png" />
+    <Content Include="Dal\StoredProcedures.sql" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\MaterialDesignThemes.4.0.0-ci2156\build\MaterialDesignThemes.targets" Condition="Exists('..\packages\MaterialDesignThemes.4.0.0-ci2156\build\MaterialDesignThemes.targets')" />
