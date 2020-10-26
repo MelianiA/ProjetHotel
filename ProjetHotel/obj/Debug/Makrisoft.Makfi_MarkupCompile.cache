@@ -8,12 +8,12 @@ C:\Users\abdou\source\repos\ProjetHotel\ProjetHotel\obj\Debug\
 Makrisoft.Makfi
 none
 false
-DEBUG;TRACE
+TRACE;DEBUG;PASSEDROIT
 C:\Users\abdou\source\repos\ProjetHotel\ProjetHotel\App.xaml
 4406365151
 1784467754
-18-1045320453
-15-1895507324
+22-1675037226
+15-1344989950
 Views\HeaderView.xaml;Views\HomeView.xaml;Views\LoginView.xaml;Views\MainView.xaml;
 
 False

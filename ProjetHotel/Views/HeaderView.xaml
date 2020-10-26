@@ -3,10 +3,12 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:conv="clr-namespace:Makrisoft.Makfi.Converters"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.Resources>
+        <conv:ViewSelectedConverter x:Key="ViewSelectedConverterKey"/>
     </UserControl.Resources>
     <Border BorderBrush="White" BorderThickness="1" CornerRadius="10" Margin="10">
         <Grid>
@@ -18,7 +20,7 @@
             <!--Gauche-->
             <Border BorderBrush="Navy" BorderThickness="1" CornerRadius="15" Width="210" HorizontalAlignment="Right">
                 <DockPanel Margin="5">
-                    <ComboBox DockPanel.Dock="Bottom"  HorizontalAlignment="Center" FontSize="20"  
+                    <ComboBox DockPanel.Dock="Bottom"  HorizontalAlignment="Center" FontSize="20" IsEnabled="{Binding CurrentUtilisateur.CanChangeUtilisateur}"
                               ItemsSource="{Binding Utilisateurs}" 
                                DisplayMemberPath="Nom" 
                                SelectedItem="{Binding CurrentUtilisateur}">
@@ -44,7 +46,7 @@
                                 <ColumnDefinition Width="Auto"/>
                             </Grid.ColumnDefinitions>
                             <Button Background="Transparent" Command="{Binding BackCommand}" BorderBrush="Transparent"
-                                    Visibility="{Binding Main_ViewModel.ViewSelected}">
+                                    Visibility="{Binding Main_ViewModel.ViewSelected, Converter={StaticResource ViewSelectedConverterKey}, ConverterParameter=Back}">
                                 <Button.Content>
                                     <materialDesign:PackIcon Kind="ArrowBack" FontSize="22" Width="40" Height="Auto" Foreground="AliceBlue"/>
                                 </Button.Content>

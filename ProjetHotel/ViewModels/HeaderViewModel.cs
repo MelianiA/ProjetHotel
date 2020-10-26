@@ -1,4 +1,5 @@
 ﻿using Makrisoft.Makfi.Dal;
+using Makrisoft.Makfi.Tools;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -7,12 +8,23 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Timers;
 using System.Windows.Input;
+using System.Windows.Markup;
 
 namespace Makrisoft.Makfi.ViewModels
 {
     public class HeaderViewModel : ViewModelBase
     {
         #region Bindings
+
+ 
+        public MainViewModel Main_ViewModel
+        {
+            get;
+            set;
+        }
+
+
+
         public ObservableCollection<Utilisateur_VM> Utilisateurs { get; set; }
         public Utilisateur_VM CurrentUtilisateur
         {
@@ -80,7 +92,16 @@ namespace Makrisoft.Makfi.ViewModels
         //    DeconnectCommand = new RelayCommand(p => OnDeconnectCommand(), p => OnCanExecuteDeconnectCommand());
         //    BackCommand = new RelayCommand(p => OnBackCommand());
         //}
-
+        private void OnBackCommand()
+        {
+            throw new NotImplementedException();
+        }
+        private void OnDeconnectCommand()
+        {
+            Main_ViewModel.ViewSelected = ViewEnum.Login;
+            CurrentUtilisateur = Utilisateurs.FirstOrDefault(g => g.Nom == "danielle.lopez");
+            CurrentUtilisateur.CanChangeUtilisateur = true;
+        }
         #endregion
 
         #region Constructeur
@@ -95,11 +116,16 @@ namespace Makrisoft.Makfi.ViewModels
                     Nom = x.Nom,
                     Image = $"/Makrisoft.Makfi;component/Assets/Photos/{x.Image}"
                 }));
-            CurrentUtilisateur = Utilisateurs.FirstOrDefault();
+            CurrentUtilisateur = Utilisateurs.FirstOrDefault(g => g.Nom == "danielle.lopez");
 
+            Main_ViewModel = Reference_ViewModel.Main;
+            DeconnectCommand = new RelayCommand(p => OnDeconnectCommand());
+            BackCommand = new RelayCommand(p => OnBackCommand());
 
         }
+
         #endregion
+       
 
         #region Horloge
         private readonly Timer HeaderTimer = new Timer(10000);

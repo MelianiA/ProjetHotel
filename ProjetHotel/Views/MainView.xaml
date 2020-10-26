@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Makrisoft.Makfi.Views"
+        xmlns:conv="clr-namespace:Makrisoft.Makfi.Converters"
         xmlns:data="clr-namespace:Makrisoft.Makfi.Dal"
         mc:Ignorable="d" WindowState="Maximized"
         Title="Makfi V0.0" Height="800" Width="1280" ResizeMode="CanResize">
@@ -16,6 +17,7 @@
         </Border>
         <Grid>
             <Grid.Resources>
+                <conv:ViewSelectedConverter x:Key="ViewSelectedConverterKey"/>
             </Grid.Resources>
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
@@ -25,13 +27,14 @@
             <local:HeaderView x:Name="HeaderUC" />
             <!--Body-->
             <ContentControl  Content="{Binding Path=PageHeaderViewModel}"  />
-
-            <Border  Grid.Row="1">
-                <local:LoginView x:Name="LoginUC"/>
+            <Border  Grid.Row="1" Visibility="{Binding ViewSelected, Converter={StaticResource ViewSelectedConverterKey},
+                ConverterParameter={x:Static data:ViewEnum.Login}}">
+                <local:LoginView  />
             </Border>
 
-            <Border Grid.Row="1" Visibility="Collapsed">
-                <local:HomeView x:Name="HomeUC"/>
+            <Border Grid.Row="1" Visibility="{Binding ViewSelected, Converter={StaticResource ViewSelectedConverterKey},
+                ConverterParameter={x:Static data:ViewEnum.Home}}">
+                <local:HomeView />
             </Border>
             
             <!--<Border  Grid.Row="1" Visibility="{Binding ViewSelected, Converter={StaticResource ViewSelectedConverterKey}, ConverterParameter={x:Static data:ViewEnum.Intervention}}">

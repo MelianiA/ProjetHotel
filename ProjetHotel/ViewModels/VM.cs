@@ -10,8 +10,20 @@ namespace Makrisoft.Makfi.ViewModels
     {
         public Guid Id { get; set; }
         public string Nom { get; internal set; }
-        public string Image { get; set; }
+        public string Image { get; set; } 
         public Guid Gouvernante { get; set; }
+
+        private bool canChangeUtilisateur = true;
+
+        public bool CanChangeUtilisateur
+        {
+            get { return canChangeUtilisateur; }
+            set
+            {
+                canChangeUtilisateur = value;
+                OnPropertyChanged("CanChangeUtilisateur");
+            }
+        }
 
     }
 

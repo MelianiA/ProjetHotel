@@ -34,19 +34,19 @@
             <!--Stars-->
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                 <materialDesign:PackIcon Kind="Star"  Style="{StaticResource StarText}"
-                               Foreground="{Binding Login, Converter={StaticResource ConverterStarColorKey}, 
+                               Foreground="{Binding Password, Converter={StaticResource ConverterStarColorKey}, 
                                ConverterParameter=0}"/>
                 <materialDesign:PackIcon
                     Kind="Star"  Style="{StaticResource StarText}" 
-                    Foreground="{Binding Login, Converter={StaticResource ConverterStarColorKey},
+                    Foreground="{Binding Password, Converter={StaticResource ConverterStarColorKey},
                     ConverterParameter=1}" />
                 <materialDesign:PackIcon
                     Kind="Star"  Style="{StaticResource StarText}"
-                    Foreground="{Binding Login, Converter={StaticResource ConverterStarColorKey},
+                    Foreground="{Binding Password, Converter={StaticResource ConverterStarColorKey},
                     ConverterParameter=2}"/>
                 <materialDesign:PackIcon 
                     Kind="Star"  Style="{StaticResource StarText}" 
-                    Foreground="{Binding Login, Converter={StaticResource ConverterStarColorKey}, 
+                    Foreground="{Binding Password, Converter={StaticResource ConverterStarColorKey}, 
                     ConverterParameter=3}"/>
             </StackPanel>
             <!--NumericPad-->

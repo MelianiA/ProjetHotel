@@ -14,12 +14,10 @@ namespace Makrisoft.Makfi.ViewModels
 {
     public class LoginViewModel : ViewModelBase
     {
-        public HeaderViewModel Header_ViewModel;
-
         #region ICommand
         // Login
-        public string Login { get { return login; } set { login = value; OnPropertyChanged("Login"); } }
-        private string login = "";
+        public string Password { get { return password; } set { password = value; OnPropertyChanged("Password"); } }
+        private string password = "";
         public ICommand LoginKeyCommand { get; set; }
 
         #endregion
@@ -32,16 +30,18 @@ namespace Makrisoft.Makfi.ViewModels
         #endregion
         private void OnLoginKeyCommand(object key)
         {
-            if (key.ToString() == "B") Login = Login.Length == 0 ? "" : Login.Substring(0, Login.Length - 1);
+            if (key.ToString() == "B") Password = Password.Length == 0 ? "" : Password.Substring(0, Password.Length - 1);
             else
             {
-                Login += key.ToString();
-                if (Login.Length == 4)
+                Password += key.ToString();
+                if (Password.Length == 4)
                 {
-                    
-
-                    Login = "";
-                }
+#if PASSEDROIT
+                    Reference_ViewModel.Main.ViewSelected = Dal.ViewEnum.Home;
+#endif
+                    Reference_ViewModel.Header.CurrentUtilisateur.CanChangeUtilisateur = false;
+                    Password = "";
+                 }
             }
         }
     }

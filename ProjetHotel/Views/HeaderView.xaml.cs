@@ -10,8 +10,9 @@ namespace Makrisoft.Makfi.Views
     {
         public HeaderView()
         {
+            Reference_ViewModel.Header = new HeaderViewModel();
+            DataContext = Reference_ViewModel.Header;
             InitializeComponent();
-            DataContext = new HeaderViewModel();
         }
     }
 }

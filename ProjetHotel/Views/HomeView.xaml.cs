@@ -1,4 +1,5 @@
-﻿using System.Windows.Controls;
+﻿using Makrisoft.Makfi.ViewModels;
+using System.Windows.Controls;
 
 namespace Makrisoft.Makfi.Views
 {
@@ -10,7 +11,8 @@ namespace Makrisoft.Makfi.Views
         public HomeView()
         {
             InitializeComponent();
-
+            Reference_ViewModel.Home = new HomeViewModel();
+            DataContext = Reference_ViewModel.Home;
         }
     }
 }

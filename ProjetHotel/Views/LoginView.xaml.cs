@@ -9,8 +9,8 @@ namespace Makrisoft.Makfi.Views
         public LoginView()
         {
             InitializeComponent();
-            DataContext = new LoginViewModel();
-
+            Reference_ViewModel.Login = new LoginViewModel();
+            DataContext = Reference_ViewModel.Login;
         }
     }
 }
