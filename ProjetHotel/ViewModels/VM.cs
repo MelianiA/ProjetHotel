@@ -10,8 +10,25 @@ namespace Makrisoft.Makfi.ViewModels
     {
         public Guid Id { get; set; }
         public string Nom { get; internal set; }
-        public string Image { get; set; } 
+        public string Image { get; set; }
         public Guid Gouvernante { get; set; }
+        public byte Statut { get; set; }
+
+
+        public bool IsAdmin
+        {
+            get
+            {
+                return this.Statut == 1; ;
+            }
+            set
+            {
+                isAdmin = this.Statut == 1;
+                OnPropertyChanged("IsAdmin");
+            }
+        }
+        private bool isAdmin;
+
 
         private bool canChangeUtilisateur = true;
 
@@ -24,6 +41,8 @@ namespace Makrisoft.Makfi.ViewModels
                 OnPropertyChanged("CanChangeUtilisateur");
             }
         }
+
+  
 
     }
 

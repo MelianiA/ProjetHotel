@@ -74,6 +74,7 @@
     <Compile Include="Models\Utilisateur.cs" />
     <Compile Include="Tools\Log.cs" />
     <Compile Include="Tools\Tools.cs" />
+    <Compile Include="ViewModels\AdministrationViewModel.cs" />
     <Compile Include="ViewModels\HomeViewModel.cs" />
     <Compile Include="ViewModels\Reference_ViewModel.cs" />
     <Compile Include="ViewModels\HeaderViewModel.cs" />
@@ -81,6 +82,9 @@
     <Compile Include="ViewModels\MainViewModel.cs" />
     <Compile Include="ViewModels\ViewModelBase.cs" />
     <Compile Include="ViewModels\VM.cs" />
+    <Compile Include="Views\AdministrationView.xaml.cs">
+      <DependentUpon>AdministrationView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\HeaderView.xaml.cs">
       <DependentUpon>HeaderView.xaml</DependentUpon>
     </Compile>
@@ -122,6 +126,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Views\AdministrationView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Views\HeaderView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -153,6 +161,7 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Assets\photos\Ziani.png" />
+    <Resource Include="Assets\photos\meliani.png" />
     <Content Include="Dal\StoredProcedures.sql" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

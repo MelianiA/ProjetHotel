@@ -40,6 +40,7 @@ namespace Makrisoft.Makfi.ViewModels
                     Reference_ViewModel.Main.ViewSelected = Dal.ViewEnum.Home;
 #endif
                     Reference_ViewModel.Header.CurrentUtilisateur.CanChangeUtilisateur = false;
+                    Reference_ViewModel.Home.IsAdmin = Reference_ViewModel.Header.CurrentUtilisateur.IsAdmin;
                     Password = "";
                  }
             }

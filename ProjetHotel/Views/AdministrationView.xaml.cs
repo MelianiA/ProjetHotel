@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Makrisoft.Makfi.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -22,6 +23,8 @@ namespace Makrisoft.Makfi.Views
     {
         public AdministrationView()
         {
+            Reference_ViewModel.Administration = new AdministrationViewModel();
+            DataContext = Reference_ViewModel.Administration;
             InitializeComponent();
         }
     }

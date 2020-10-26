@@ -10,9 +10,10 @@ namespace Makrisoft.Makfi.Views
     {
         public HomeView()
         {
-            InitializeComponent();
             Reference_ViewModel.Home = new HomeViewModel();
             DataContext = Reference_ViewModel.Home;
+            InitializeComponent();
+
         }
     }
 }

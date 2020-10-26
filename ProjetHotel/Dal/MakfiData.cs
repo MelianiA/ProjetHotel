@@ -10,7 +10,8 @@ namespace Makrisoft.Makfi.Dal
 {
     public enum ViewEnum
     {
-        Header, Login, Home, Intervention, Chambre, InterventionNew, Employe, Synthese, Administration, ChambreGroupe, InterventionDetail, Utilisateur, None, Hotel, DecoupageNew, Decoupage
+        Header, Login, Home, Intervention, Chambre, InterventionNew, Employe, Synthese, Administration, ChambreGroupe, InterventionDetail,
+        Utilisateur, None, Hotel, DecoupageNew, Decoupage
     }
     public static class MakfiData
     {

@@ -94,7 +94,23 @@ namespace Makrisoft.Makfi.ViewModels
         //}
         private void OnBackCommand()
         {
-            throw new NotImplementedException();
+            switch (Main_ViewModel.ViewSelected)
+            {
+                case ViewEnum.Administration:
+                    Reference_ViewModel.Main.ViewSelected = Dal.ViewEnum.Home;
+                    break;
+
+                case ViewEnum.Utilisateur:
+                    Reference_ViewModel.Main.ViewSelected = Dal.ViewEnum.Administration;
+                    break;
+
+                case ViewEnum.Hotel:
+                    Reference_ViewModel.Main.ViewSelected = Dal.ViewEnum.Administration;
+                    break;
+
+
+            }
+ 
         }
         private void OnDeconnectCommand()
         {
@@ -114,7 +130,8 @@ namespace Makrisoft.Makfi.ViewModels
                 {
                     Id = x.Id,
                     Nom = x.Nom,
-                    Image = $"/Makrisoft.Makfi;component/Assets/Photos/{x.Image}"
+                    Image = $"/Makrisoft.Makfi;component/Assets/Photos/{x.Image}",
+                    Statut=x.Statut
                 }));
             CurrentUtilisateur = Utilisateurs.FirstOrDefault(g => g.Nom == "danielle.lopez");
 
