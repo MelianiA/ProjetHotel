@@ -1,11 +1,6 @@
 ﻿using Makrisoft.Makfi.Dal;
 using Makrisoft.Makfi.Tools;
 using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
-using System.Linq;
-using System.Threading.Tasks;
 using System.Windows;
 
 namespace Makrisoft.Makfi
@@ -15,7 +10,6 @@ namespace Makrisoft.Makfi
     /// </summary>
     public partial class App : Application
     {
- 
         protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
@@ -23,7 +17,7 @@ namespace Makrisoft.Makfi
                 Makfi.Properties.Settings.Default.MakfiConnectionString,
                 BoiteACoucou);
         }
-
+        
         private void BoiteACoucou(string exceptionMsg, string spName, string spParams)
         {
             var simpleMsg = $"{exceptionMsg}{Environment.NewLine}{spParams}";

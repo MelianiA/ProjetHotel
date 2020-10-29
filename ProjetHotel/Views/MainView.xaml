@@ -25,16 +25,12 @@
             </Grid.RowDefinitions>
             <!--En tête-->
             <local:HeaderView />
-            <!--Body-->
-            <ContentControl  Content="{Binding Path=PageHeaderViewModel}"  />
             <!--Login-->
-            <Border  Grid.Row="1" Visibility="{Binding ViewSelected, Converter={StaticResource ViewSelectedConverterKey},
-                ConverterParameter={x:Static data:ViewEnum.Login}}">
+            <Border  Grid.Row="1" Visibility="{Binding ViewSelected, Converter={StaticResource ViewSelectedConverterKey}, ConverterParameter={x:Static data:ViewEnum.Login}}">
                 <local:LoginView  />
             </Border>
             <!--Home-->
-            <Border Grid.Row="1" Visibility="{Binding ViewSelected, Converter={StaticResource ViewSelectedConverterKey},
-                ConverterParameter={x:Static data:ViewEnum.Home}}">
+            <Border Grid.Row="1" Visibility="{Binding ViewSelected, Converter={StaticResource ViewSelectedConverterKey}, ConverterParameter={x:Static data:ViewEnum.Home}}">
                 <local:HomeView />
             </Border>
                <!--Administration-->
@@ -49,7 +45,6 @@
             <Border  Grid.Row="1" Visibility="{Binding ViewSelected, Converter={StaticResource ViewSelectedConverterKey}, ConverterParameter={x:Static data:ViewEnum.Hotel}}">
                 <local:HotelView/>
             </Border>
-
             <!--<Border  Grid.Row="1" Visibility="{Binding ViewSelected, Converter={StaticResource ViewSelectedConverterKey}, ConverterParameter={x:Static data:ViewEnum.Intervention}}">
                 <local:InterventionView x:Name="InterventionUC"/>
             </Border>

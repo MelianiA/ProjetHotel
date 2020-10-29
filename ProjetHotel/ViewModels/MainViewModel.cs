@@ -9,8 +9,6 @@ namespace Makrisoft.Makfi.ViewModels
 {
     public class MainViewModel : ViewModelBase
     {
-        private ViewEnum viewSelected;
-
         public ViewEnum ViewSelected
         {
             get { return viewSelected; }
@@ -20,6 +18,7 @@ namespace Makrisoft.Makfi.ViewModels
                 OnPropertyChanged("ViewSelected");
             }
         }
+        private ViewEnum viewSelected;
 
         public MainViewModel()
         {

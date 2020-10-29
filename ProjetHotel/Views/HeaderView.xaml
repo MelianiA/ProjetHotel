@@ -105,7 +105,7 @@
                                TextAlignment="Center" TextWrapping="Wrap">
                             <!--<i:Interaction.Triggers>
                                 <i:EventTrigger EventName="MouseUp">
-                                    <i:InvokeCommandAction Command="{Binding PersistMessage}"/>
+                                    <i:InvokeCommandAction Command="{Binding PersistMessageCommand}"/>
                                 </i:EventTrigger>
                             </i:Interaction.Triggers>-->
                         </TextBlock>

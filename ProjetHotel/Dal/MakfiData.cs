@@ -116,15 +116,6 @@ namespace Makrisoft.Makfi.Dal
                 return false;
             }
         }
-        public static int CanDelete(string spName, string tableName, Guid id)
-        {
-            int c = 0;
-            if (ExecuteReader(spName, $"<{tableName}><id>{id}</id></{tableName}>"))
-                while (Reader.Read())
-                    c += (int)Reader["n"];
-            Close();
-            return c;
-        }
         public static List<T> ReadAll<T>(string spName, Action<T> p, string spParam = null) where T : new()
         {
             List<T> entities = new List<T>();
@@ -139,13 +130,6 @@ namespace Makrisoft.Makfi.Dal
             Close();
             return entities;
         }
-
-        internal static bool Utilisateur_Delete(string spParam = null)
-        {
-            return ExecuteNonQuery("Utilisateur_Delete", spParam);
-
-        }
-
         public static List<CanDelete> CanDelete(string spName, string spParam)
         {
             var list = ReadAll<CanDelete>
@@ -160,16 +144,26 @@ namespace Makrisoft.Makfi.Dal
                 );
             return list;
         }
-        public static IEnumerable<CanDelete> Utilisateur_CanDelete(string spParam = null)
-        {
-            return CanDelete("Utilisateur_CanDelete", spParam)
-                .Where(x => x.Nombre > 0 );
-        }
         #endregion
 
         #region Toutes les requêtes
 
-        #region Utilisateur
+        #region _Read
+        internal static IEnumerable<Hotel> Hotel_Read(string spParam = null)
+        {
+            return ReadAll<Hotel>
+                            (
+                            "Hotel_Read",
+                            e =>
+                            {
+                                e.Id = (Guid)Reader["Id"];
+                                e.Nom = Reader["Nom"] as string;
+                                e.Image = Reader["Image"] as string;
+                                e.Gouvernante = (Guid)Reader["Gouvernante"];
+                            },
+                            spParam
+                            );
+        }
         public static IEnumerable<Utilisateur> Utilisateur_Read(string spParam = null)
         {
             return ReadAll<Utilisateur>
@@ -189,45 +183,32 @@ namespace Makrisoft.Makfi.Dal
                 spParam
                 );
         }
+        #endregion
 
+        #region _Save
         public static bool Utilisateur_Save(string spParam = null)
         {
-             return ExecuteNonQuery("Utilisateur_Save", spParam);
+            return ExecuteNonQuery("Utilisateur_Save", spParam);
         }
+        #endregion
 
-      
-
-        public static bool SaveUtilisateurPassword(Guid id, string password)
+        #region _CanDelete
+        public static IEnumerable<CanDelete> Utilisateur_CanDelete(string spParam = null)
         {
-            Cnx = new SqlConnection();
-            Cnx.ConnectionString = ConnectionString;
-
-            // à finir quand j'aurai besoin ...
-            return true;
+            return CanDelete("Utilisateur_CanDelete", spParam)
+                .Where(x => x.Nombre > 0);
         }
         #endregion
 
-        #region Hotel
-        internal static IEnumerable<Hotel> Hotel_Read(string spParam = null)
+        #region _Delete
+        internal static bool Utilisateur_Delete(string spParam = null)
         {
-            return ReadAll<Hotel>
-                            (
-                            "Hotel_Read",
-                            e =>
-                            {
-                                e.Id = (Guid)Reader["Id"];
-                                e.Nom = Reader["Nom"] as string;
-                                e.Image = Reader["Image"] as string;
-                                e.Gouvernante = (Guid)Reader["Gouvernante"];
-                            },
-                            spParam
-                            );
+            return ExecuteNonQuery("Utilisateur_Delete", spParam);
+
         }
         #endregion
 
-
         #endregion
-
     }
     public partial class CanDelete
     {

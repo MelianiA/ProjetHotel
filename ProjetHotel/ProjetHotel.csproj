@@ -82,13 +82,13 @@
     <Compile Include="ViewModels\AdministrationViewModel.cs" />
     <Compile Include="ViewModels\HomeViewModel.cs" />
     <Compile Include="ViewModels\HotelViewModel.cs" />
-    <Compile Include="ViewModels\Reference_ViewModel.cs" />
+    <Compile Include="ViewModels\_Reference_ViewModel.cs" />
     <Compile Include="ViewModels\HeaderViewModel.cs" />
     <Compile Include="ViewModels\LoginViewModel.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
     <Compile Include="ViewModels\UtilisateurViewModel.cs" />
-    <Compile Include="ViewModels\ViewModelBase.cs" />
-    <Compile Include="ViewModels\VM.cs" />
+    <Compile Include="ViewModels\_ViewModelBase.cs" />
+    <Compile Include="ViewModels\_VM.cs" />
     <Compile Include="Views\AdministrationView.xaml.cs">
       <DependentUpon>AdministrationView.xaml</DependentUpon>
     </Compile>

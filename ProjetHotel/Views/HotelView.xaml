@@ -134,7 +134,7 @@
                 <TextBox FontSize="16"  Text="{Binding HotelSelected.Commentaire, UpdateSourceTrigger=PropertyChanged}" TextWrapping="Wrap" TextAlignment="Left"/>
 
                 <TextBlock Text="Gouvernante" Margin="0,15,0,0"/>
-                <ComboBox ItemsSource="{Binding GouvernanteList}" SelectedItem="{Binding HotelSelected.Gouvernante}" FontSize="16" SelectionChanged="ComboBox_SelectionChanged">
+                <ComboBox ItemsSource="{Binding GouvernanteList}" SelectedItem="{Binding HotelSelected.Gouvernante}" FontSize="16">
                     <ComboBox.ItemTemplate>
                         <DataTemplate>
                             <StackPanel Orientation="Horizontal">

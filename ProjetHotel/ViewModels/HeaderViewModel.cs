@@ -1,30 +1,22 @@
 ﻿using Makrisoft.Makfi.Dal;
 using Makrisoft.Makfi.Tools;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Timers;
 using System.Windows.Input;
-using System.Windows.Markup;
 
 namespace Makrisoft.Makfi.ViewModels
 {
     public class HeaderViewModel : ViewModelBase
     {
+        #region Propriété
+        private readonly Timer HeaderTimer = new Timer(10000);
+
+        #endregion
+
         #region Bindings
-
- 
-        public MainViewModel Main_ViewModel
-        {
-            get;
-            set;
-        }
-
-
-
+        // Utilisateur
         public ObservableCollection<Utilisateur_VM> Utilisateurs { get; set; }
         public Utilisateur_VM CurrentUtilisateur
         {
@@ -36,6 +28,8 @@ namespace Makrisoft.Makfi.ViewModels
             set
             {
                 currentUtilisateur = value;
+
+                // Hotel
                 Hotels = new ObservableCollection<Hotel_VM>(
                     MakfiData.Hotel_Read($"<hotel><gouvernante>{currentUtilisateur.Id}</gouvernante></hotel>")
                    .Select(x => new Hotel_VM
@@ -51,7 +45,7 @@ namespace Makrisoft.Makfi.ViewModels
         }
         private Utilisateur_VM currentUtilisateur;
 
-
+        // Hotel
         public ObservableCollection<Hotel_VM> Hotels
         {
             get { return hotels; }
@@ -62,8 +56,6 @@ namespace Makrisoft.Makfi.ViewModels
             }
         }
         private ObservableCollection<Hotel_VM> hotels;
-
-
         public Hotel_VM CurrentHotel
         {
             get
@@ -78,23 +70,30 @@ namespace Makrisoft.Makfi.ViewModels
             }
         }
         private Hotel_VM currentHotel;
+
+        // Horloge
+        public string Horloge
+        {
+            get { return horloge; }
+            set
+            {
+                OnPropertyChanged("Horloge");
+            }
+        }
+        private string horloge = DateTime.Now.ToString("dddd d MMM - HH:mm");
+
         #endregion
 
         #region Command
         // ICommand
-        public ICommand PersistMessage { get; set; }
+        public ICommand PersistMessageCommand { get; set; }
         public ICommand DeconnectCommand { get; set; }
         public ICommand BackCommand { get; set; }
-        // RelayCommand
-        //private void RelayCommand()
-        //{
-        //    PersistMessage = new RelayCommand(p => OnPersistMessage());
-        //    DeconnectCommand = new RelayCommand(p => OnDeconnectCommand(), p => OnCanExecuteDeconnectCommand());
-        //    BackCommand = new RelayCommand(p => OnBackCommand());
-        //}
+
+        // Méthode
         private void OnBackCommand()
         {
-            switch (Main_ViewModel.ViewSelected)
+            switch (Reference_ViewModel.Main.ViewSelected)
             {
                 case ViewEnum.Administration:
                     Reference_ViewModel.Main.ViewSelected = Dal.ViewEnum.Home;
@@ -108,11 +107,11 @@ namespace Makrisoft.Makfi.ViewModels
                     Reference_ViewModel.Main.ViewSelected = Dal.ViewEnum.Administration;
                     break;
             }
- 
+
         }
         private void OnDeconnectCommand()
         {
-            Main_ViewModel.ViewSelected = ViewEnum.Login;
+            Reference_ViewModel.Main.ViewSelected = ViewEnum.Login;
             CurrentUtilisateur = Utilisateurs.FirstOrDefault(g => g.Nom == "danielle.lopez");
             CurrentUtilisateur.CanChangeUtilisateur = true;
         }
@@ -121,6 +120,11 @@ namespace Makrisoft.Makfi.ViewModels
         #region Constructeur
         public HeaderViewModel()
         {
+            // ICommand
+            DeconnectCommand = new RelayCommand(p => OnDeconnectCommand());
+            BackCommand = new RelayCommand(p => OnBackCommand());
+
+            // Utilisateur
             Utilisateurs = new ObservableCollection<Utilisateur_VM>(
                 MakfiData.Utilisateur_Read()
                 .Where(x => x.Statut == 1 || x.Statut == 2)
@@ -129,29 +133,21 @@ namespace Makrisoft.Makfi.ViewModels
                     Id = x.Id,
                     Nom = x.Nom,
                     Image = $"/Makrisoft.Makfi;component/Assets/Photos/{x.Image}",
-                    Statut=x.Statut
+                    Statut = x.Statut
                 }));
-            CurrentUtilisateur = Utilisateurs.FirstOrDefault(g => g.Nom == "danielle.lopez");
+            CurrentUtilisateur = Utilisateurs.FirstOrDefault(g => g.Nom.ToUpper() == Properties.Settings.Default.Login.ToUpper());
 
-            Main_ViewModel = Reference_ViewModel.Main;
-            DeconnectCommand = new RelayCommand(p => OnDeconnectCommand());
-            BackCommand = new RelayCommand(p => OnBackCommand());
-
+            // Horloge
+            HeaderTimer.Elapsed += (s, e) => HorlogeLoop();
         }
-
         #endregion
-       
 
-        #region Horloge
-        private readonly Timer HeaderTimer = new Timer(10000);
-        public string Horloge { get { return horloge; } set { HorlogeLoop(); OnPropertyChanged("Horloge"); } }
-        private string horloge = DateTime.Now.ToString("dddd d MMM - HH:mm");
+        #region Divers
 
         private void HorlogeLoop()
         {
             // Horloge
-            horloge = DateTime.Now.ToString("dddd d MMM - HH:mm");
-
+            Horloge = DateTime.Now.ToString("dddd d MMM - HH:mm");
         }
         #endregion
     }
