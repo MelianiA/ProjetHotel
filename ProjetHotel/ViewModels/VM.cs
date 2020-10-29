@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Makrisoft.Makfi.Dal;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,10 +10,22 @@ namespace Makrisoft.Makfi.ViewModels
     public class Utilisateur_VM : ViewModelBase
     {
         public Guid Id { get; set; }
-        public string Nom { get; internal set; }
+        public string Nom
+        {
+            get { return nom; }
+            set
+            {
+                nom = value;
+                OnPropertyChanged("Nom");
+            }
+        }
+        public string nom;
+
         public string Image { get; set; }
         public Guid Gouvernante { get; set; }
         public byte Statut { get; set; }
+        public DateTime DateModified { get; set; }
+
 
 
         public bool IsAdmin
@@ -28,7 +41,20 @@ namespace Makrisoft.Makfi.ViewModels
             }
         }
         private bool isAdmin;
+        public RoleEnum Role
+        {
+            get { return role; }
+            set
+            {
+                role = value;
+                if (role == RoleEnum.Admin) this.Statut = 1;
+                if (role == RoleEnum.Gouvernante) this.Statut = 2;
+                if (role == RoleEnum.Reception) this.Statut = 4;
+                OnPropertyChanged("Role");
 
+            }
+        }
+        private RoleEnum role { get; set; }
 
         private bool canChangeUtilisateur = true;
 
@@ -42,7 +68,7 @@ namespace Makrisoft.Makfi.ViewModels
             }
         }
 
-  
+
 
     }
 

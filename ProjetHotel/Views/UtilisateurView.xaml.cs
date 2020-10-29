@@ -1,6 +1,7 @@
-﻿using System.Windows.Controls;
+﻿using Makrisoft.Makfi.ViewModels;
+using System.Windows.Controls;
 
-namespace ProjetHotel.Views
+namespace Makrisoft.Makfi.Views
 {
     /// <summary>
     /// Logique d'interaction pour EmployeView.xaml
@@ -9,6 +10,8 @@ namespace ProjetHotel.Views
     {
         public UtilisateurView()
         {
+            Reference_ViewModel.utilisateur = new UtilisateurViewModel();
+            DataContext = Reference_ViewModel.utilisateur;
             InitializeComponent();
         }
     }

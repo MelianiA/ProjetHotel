@@ -14,5 +14,8 @@ namespace Makrisoft.Makfi.ViewModels
         public static LoginViewModel Login;
         public static HomeViewModel Home;
         public static AdministrationViewModel Administration;
+        public static UtilisateurViewModel utilisateur;
+        public static HotelViewModel Hotel;
+
     }
 }

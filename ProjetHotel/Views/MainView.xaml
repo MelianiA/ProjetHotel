@@ -24,21 +24,30 @@
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
             <!--En tête-->
-            <local:HeaderView x:Name="HeaderUC" />
+            <local:HeaderView />
             <!--Body-->
             <ContentControl  Content="{Binding Path=PageHeaderViewModel}"  />
+            <!--Login-->
             <Border  Grid.Row="1" Visibility="{Binding ViewSelected, Converter={StaticResource ViewSelectedConverterKey},
                 ConverterParameter={x:Static data:ViewEnum.Login}}">
                 <local:LoginView  />
             </Border>
-
+            <!--Home-->
             <Border Grid.Row="1" Visibility="{Binding ViewSelected, Converter={StaticResource ViewSelectedConverterKey},
                 ConverterParameter={x:Static data:ViewEnum.Home}}">
                 <local:HomeView />
             </Border>
                <!--Administration-->
             <Border  Grid.Row="1" Visibility="{Binding ViewSelected, Converter={StaticResource ViewSelectedConverterKey}, ConverterParameter={x:Static data:ViewEnum.Administration}}">
-                <local:AdministrationView x:Name="AdministrationUC"/>
+                <local:AdministrationView />
+            </Border>
+            <!--Utilisateur-->
+            <Border  Grid.Row="1" Visibility="{Binding ViewSelected, Converter={StaticResource ViewSelectedConverterKey}, ConverterParameter={x:Static data:ViewEnum.Utilisateur}}">
+                <local:UtilisateurView />
+            </Border>
+            <!--Hotel-->
+            <Border  Grid.Row="1" Visibility="{Binding ViewSelected, Converter={StaticResource ViewSelectedConverterKey}, ConverterParameter={x:Static data:ViewEnum.Hotel}}">
+                <local:HotelView/>
             </Border>
 
             <!--<Border  Grid.Row="1" Visibility="{Binding ViewSelected, Converter={StaticResource ViewSelectedConverterKey}, ConverterParameter={x:Static data:ViewEnum.Intervention}}">
@@ -62,13 +71,7 @@
             <Border  Grid.Row="1" Visibility="{Binding ViewSelected, Converter={StaticResource ViewSelectedConverterKey}, ConverterParameter={x:Static data:ViewEnum.Synthese}}">
                 <local:SyntheseView x:Name="SyntheseUC"/>
             </Border>
-             
-            <Border  Grid.Row="1" Visibility="{Binding ViewSelected, Converter={StaticResource ViewSelectedConverterKey}, ConverterParameter={x:Static data:ViewEnum.Utilisateur}}">
-                <local:UtilisateurView x:Name="UtilisateurUC"/>
-            </Border>
-            <Border  Grid.Row="1" Visibility="{Binding ViewSelected, Converter={StaticResource ViewSelectedConverterKey}, ConverterParameter={x:Static data:ViewEnum.Hotel}}">
-                <local:HotelView x:Name="HotelUC"/>
-            </Border>
+                           
             <Border  Grid.Row="1" Visibility="{Binding ViewSelected, Converter={StaticResource ViewSelectedConverterKey}, ConverterParameter={x:Static data:ViewEnum.DecoupageNew}}">
                 <local:DecoupageNewView x:Name="DecoupageNewUC"/>
             </Border>

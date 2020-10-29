@@ -1,6 +1,7 @@
-﻿using System.Windows.Controls;
+﻿using Makrisoft.Makfi.ViewModels;
+using System.Windows.Controls;
  
-namespace ProjetHotel.Views
+namespace Makrisoft.Makfi.Views
 {
     /// <summary>
     /// Logique d'interaction pour HotelView.xaml
@@ -9,8 +10,10 @@ namespace ProjetHotel.Views
     {
         public HotelView()
         {
+            Reference_ViewModel.Hotel = new HotelViewModel();
+            DataContext = Reference_ViewModel.Hotel;
             InitializeComponent();
-         
+
         }
 
         private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)

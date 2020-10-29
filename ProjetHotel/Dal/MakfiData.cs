@@ -13,6 +13,8 @@ namespace Makrisoft.Makfi.Dal
         Header, Login, Home, Intervention, Chambre, InterventionNew, Employe, Synthese, Administration, ChambreGroupe, InterventionDetail,
         Utilisateur, None, Hotel, DecoupageNew, Decoupage
     }
+    public enum RoleEnum { None = 0, Admin = 1, Gouvernante = 2, Reception = 4 }
+
     public static class MakfiData
     {
         #region Constructeur
@@ -138,6 +140,31 @@ namespace Makrisoft.Makfi.Dal
             return entities;
         }
 
+        internal static bool Utilisateur_Delete(string spParam = null)
+        {
+            return ExecuteNonQuery("Utilisateur_Delete", spParam);
+
+        }
+
+        public static List<CanDelete> CanDelete(string spName, string spParam)
+        {
+            var list = ReadAll<CanDelete>
+                (
+                spName,
+                e =>
+                {
+                    e.Table = Reader["tableName"].ToString();
+                    e.Nombre = Reader["n"] as int?;
+                },
+                spParam
+                );
+            return list;
+        }
+        public static IEnumerable<CanDelete> Utilisateur_CanDelete(string spParam = null)
+        {
+            return CanDelete("Utilisateur_CanDelete", spParam)
+                .Where(x => x.Nombre > 0 );
+        }
         #endregion
 
         #region Toutes les requêtes
@@ -155,10 +182,20 @@ namespace Makrisoft.Makfi.Dal
                     e.Image = Reader["Image"] as string;
                     e.CodePin = Reader["CodePin"] as string;
                     e.Statut = (byte)Reader["Statut"];
+                    if ((byte)Reader["Statut"] == 1) e.Role = RoleEnum.Admin;
+                    if ((byte)Reader["Statut"] == 2) e.Role = RoleEnum.Gouvernante;
+                    if ((byte)Reader["Statut"] == 4) e.Role = RoleEnum.Reception;
                 },
                 spParam
                 );
         }
+
+        public static bool Utilisateur_Save(string spParam = null)
+        {
+             return ExecuteNonQuery("Utilisateur_Save", spParam);
+        }
+
+      
 
         public static bool SaveUtilisateurPassword(Guid id, string password)
         {
@@ -191,5 +228,10 @@ namespace Makrisoft.Makfi.Dal
 
         #endregion
 
+    }
+    public partial class CanDelete
+    {
+        public string Table { get; set; }
+        public Nullable<int> Nombre { get; set; }
     }
 }
