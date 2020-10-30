@@ -40,10 +40,21 @@ namespace Makrisoft.Makfi.ViewModels
                        Gouvernante = x.Gouvernante,
                    }));
                 CurrentHotel = Hotels.FirstOrDefault();
+
                 OnPropertyChanged("CurrentUtilisateur");
             }
         }
         private Utilisateur_VM currentUtilisateur;
+        public bool CanChangeUtilisateur
+        {
+            get { return canChangeUtilisateur; }
+            set
+            {
+                canChangeUtilisateur = value;
+                OnPropertyChanged("CanChangeUtilisateur");
+            }
+        }
+        private bool canChangeUtilisateur = true;
 
         // Hotel
         public ObservableCollection<Hotel_VM> Hotels
@@ -77,6 +88,7 @@ namespace Makrisoft.Makfi.ViewModels
             get { return horloge; }
             set
             {
+                horloge = value;
                 OnPropertyChanged("Horloge");
             }
         }
@@ -113,7 +125,7 @@ namespace Makrisoft.Makfi.ViewModels
         {
             Reference_ViewModel.Main.ViewSelected = ViewEnum.Login;
             CurrentUtilisateur = Utilisateurs.FirstOrDefault(g => g.Nom == "danielle.lopez");
-            CurrentUtilisateur.CanChangeUtilisateur = true;
+            CanChangeUtilisateur = true;
         }
         #endregion
 
@@ -127,11 +139,12 @@ namespace Makrisoft.Makfi.ViewModels
             // Utilisateur
             Utilisateurs = new ObservableCollection<Utilisateur_VM>(
                 MakfiData.Utilisateur_Read()
-                .Where(x => x.Statut == 1 || x.Statut == 2)
+                .Where(x => x.Statut == RoleEnum.Admin || x.Statut == RoleEnum.Gouvernante)
                 .Select(x => new Utilisateur_VM
                 {
                     Id = x.Id,
                     Nom = x.Nom,
+                    CodePin = x.CodePin,
                     Image = $"/Makrisoft.Makfi;component/Assets/Photos/{x.Image}",
                     Statut = x.Statut
                 }));
@@ -139,6 +152,7 @@ namespace Makrisoft.Makfi.ViewModels
 
             // Horloge
             HeaderTimer.Elapsed += (s, e) => HorlogeLoop();
+            HeaderTimer.Start();
         }
         #endregion
 

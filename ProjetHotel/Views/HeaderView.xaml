@@ -20,7 +20,7 @@
             <!--Gauche-->
             <Border BorderBrush="Navy" BorderThickness="1" CornerRadius="15" Width="210" HorizontalAlignment="Right">
                 <DockPanel Margin="5">
-                    <ComboBox DockPanel.Dock="Bottom"  HorizontalAlignment="Center" FontSize="20" IsEnabled="{Binding CurrentUtilisateur.CanChangeUtilisateur}"
+                    <ComboBox DockPanel.Dock="Bottom"  HorizontalAlignment="Center" FontSize="20" IsEnabled="{Binding CanChangeUtilisateur}"
                               ItemsSource="{Binding Utilisateurs}" 
                                DisplayMemberPath="Nom" 
                                SelectedItem="{Binding CurrentUtilisateur}">

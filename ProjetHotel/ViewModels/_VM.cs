@@ -7,71 +7,6 @@ using System.Threading.Tasks;
 
 namespace Makrisoft.Makfi.ViewModels
 {
-    public class Utilisateur_VM : ViewModelBase
-    {
-        public Guid Id { get; set; }
-        public string Nom
-        {
-            get { return nom; }
-            set
-            {
-                nom = value;
-                OnPropertyChanged("Nom");
-            }
-        }
-        public string nom;
-
-        public string Image { get; set; }
-        public Guid Gouvernante { get; set; }
-        public byte Statut { get; set; }
-        public DateTime DateModified { get; set; }
-
-
-
-        public bool IsAdmin
-        {
-            get
-            {
-                return this.Statut == 1; ;
-            }
-            set
-            {
-                isAdmin = this.Statut == 1;
-                OnPropertyChanged("IsAdmin");
-            }
-        }
-        private bool isAdmin;
-        public RoleEnum Role
-        {
-            get { return role; }
-            set
-            {
-                role = value;
-                if (role == RoleEnum.Admin) this.Statut = 1;
-                if (role == RoleEnum.Gouvernante) this.Statut = 2;
-                if (role == RoleEnum.Reception) this.Statut = 4;
-                OnPropertyChanged("Role");
-
-            }
-        }
-        private RoleEnum role { get; set; }
-
-        private bool canChangeUtilisateur = true;
-
-        public bool CanChangeUtilisateur
-        {
-            get { return canChangeUtilisateur; }
-            set
-            {
-                canChangeUtilisateur = value;
-                OnPropertyChanged("CanChangeUtilisateur");
-            }
-        }
-
-
-
-    }
-
     public class Hotel_VM : ViewModelBase
     {
         public Guid Id { get; set; }
@@ -81,4 +16,88 @@ namespace Makrisoft.Makfi.ViewModels
         public string Commentaire { get; internal set; }
         public string Image { get; set; }
     }
+    public class Utilisateur_VM : ViewModelBase
+    {
+        public Guid Id { get; set; }
+
+        public string Nom
+        {
+            get { return nom; }
+            set
+            {
+                nom = value;
+                SaveColor = "Red";
+                OnPropertyChanged("Nom");
+            }
+        }
+        private string nom;
+        public string SaveColor
+        {
+            get 
+            { return saveColor; }
+            set
+            {
+                saveColor = value;
+                OnPropertyChanged("SaveColor");
+            }
+        }
+        private string saveColor = "Navy";
+
+        public string Image { get; set; }
+
+        public Guid Gouvernante { get; set; }
+
+        public RoleEnum Statut
+        {
+            get { return statut; }
+            set
+            {
+                statut = value;
+                SaveColor = "Red";
+                OnPropertyChanged("Statut");
+            }
+        }
+        private RoleEnum statut;
+        public DateTime DateModified { get; set; }
+
+        /****************************************************/
+
+
+        public bool IsAdmin
+        {
+            get
+            {
+                return this.Statut == RoleEnum.Admin;
+            }
+            set
+            {
+                isAdmin = this.Statut == RoleEnum.Admin;
+                OnPropertyChanged("IsAdmin");
+            }
+        }
+        private bool isAdmin;
+
+        public RoleEnum Role
+        {
+            get { return role; }
+            set
+            {
+                role = value;
+                role = (RoleEnum)Statut;
+                OnPropertyChanged("Role");
+
+            }
+        }
+        private RoleEnum role { get; set; }
+
+        public string CodePin
+        {
+            get { return codePin; }
+            set { codePin = value; }
+        }
+        private string codePin;
+
+
+    }
+
 }

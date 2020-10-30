@@ -15,8 +15,7 @@ namespace Makrisoft.Makfi.Models
         public string Image;
         public string CodePin;
 
-        public byte Statut;
-        public RoleEnum Role { get; set; }
+        public RoleEnum Statut { get; set; }
 
     }
 }

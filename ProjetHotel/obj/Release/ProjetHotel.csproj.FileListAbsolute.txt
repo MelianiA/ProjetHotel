@@ -28,3 +28,9 @@ C:\Users\abdou\source\repos\ProjetHotel\ProjetHotel\obj\Release\ProjetHotel.cspr
 C:\Users\abdou\source\repos\ProjetHotel\ProjetHotel\obj\Release\ProjetHotel.csproj.CopyComplete
 C:\Users\abdou\source\repos\ProjetHotel\ProjetHotel\obj\Release\Makrisoft.Makfi.exe
 C:\Users\abdou\source\repos\ProjetHotel\ProjetHotel\obj\Release\Makrisoft.Makfi.pdb
+C:\Users\abdou\source\repos\ProjetHotel\ProjetHotel\obj\Release\Views\AdministrationView.g.cs
+C:\Users\abdou\source\repos\ProjetHotel\ProjetHotel\obj\Release\Views\HotelView.g.cs
+C:\Users\abdou\source\repos\ProjetHotel\ProjetHotel\obj\Release\Views\UtilisateurView.g.cs
+C:\Users\abdou\source\repos\ProjetHotel\ProjetHotel\obj\Release\Views\AdministrationView.baml
+C:\Users\abdou\source\repos\ProjetHotel\ProjetHotel\obj\Release\Views\HotelView.baml
+C:\Users\abdou\source\repos\ProjetHotel\ProjetHotel\obj\Release\Views\UtilisateurView.baml

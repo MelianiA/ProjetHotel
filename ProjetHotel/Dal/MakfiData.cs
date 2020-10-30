@@ -175,10 +175,7 @@ namespace Makrisoft.Makfi.Dal
                     e.Nom = Reader["Nom"] as string;
                     e.Image = Reader["Image"] as string;
                     e.CodePin = Reader["CodePin"] as string;
-                    e.Statut = (byte)Reader["Statut"];
-                    if ((byte)Reader["Statut"] == 1) e.Role = RoleEnum.Admin;
-                    if ((byte)Reader["Statut"] == 2) e.Role = RoleEnum.Gouvernante;
-                    if ((byte)Reader["Statut"] == 4) e.Role = RoleEnum.Reception;
+                    e.Statut = (RoleEnum)(byte) Reader["Statut"];
                 },
                 spParam
                 );

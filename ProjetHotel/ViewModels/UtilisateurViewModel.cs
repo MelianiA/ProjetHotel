@@ -14,6 +14,8 @@ namespace Makrisoft.Makfi.ViewModels
 {
     public class UtilisateurViewModel : ViewModelBase
     {
+  
+
         #region Binding
         // RoleFilter
         public bool RoleAdminFilter
@@ -21,85 +23,42 @@ namespace Makrisoft.Makfi.ViewModels
             get { return roleAdminFilter; }
             set
             {
+                CurrentUtilisateur = null;
                 roleAdminFilter = value;
-                if (value == true)
-                {
-                    var admins = Utilisateurs.Where(x => x.Role == RoleEnum.Admin).ToList();
-                    foreach (var item in admins)
-                    {
-                        if(!UtilisateursFiltre.Contains(item)) UtilisateursFiltre.Add(item);
-                    }
-                }
-                else
-                {
-                    var admins = Utilisateurs.Where(x => x.Role == RoleEnum.Admin).ToList();
-                    foreach (var item in admins) UtilisateursFiltre.Remove(item);
-                }
-
                 OnPropertyChanged("RoleAdminFilter");
-
+                UtilisateurCollectionView.Refresh();
             }
         }
         protected bool roleAdminFilter = true;
+
         public bool RoleGouvFilter
         {
             get { return roleGouvFilter; }
             set
             {
+                CurrentUtilisateur = null;
                 roleGouvFilter = value;
-                if (value == true)
-                {
-                    var Gouv = Utilisateurs.Where(x => x.Role == RoleEnum.Gouvernante).ToList();
-                    foreach (var item in Gouv)
-                    {
-                        if (!UtilisateursFiltre.Contains(item)) UtilisateursFiltre.Add(item);
-                    }
-                }
-                else
-                {
-                    var Gouv = Utilisateurs.Where(x => x.Role == RoleEnum.Gouvernante).ToList();
-                    foreach (var item in Gouv) UtilisateursFiltre.Remove(item);
-                }
-                OnPropertyChanged("RoleGouvFilter"); 
-
+                OnPropertyChanged("RoleGouvFilter");
+                UtilisateurCollectionView.Refresh();
             }
         }
         protected bool roleGouvFilter = true;
+
         public bool RoleReceptionFilter
         {
             get { return roleReceptionFilter; }
             set
             {
+                CurrentUtilisateur = null;
                 roleReceptionFilter = value;
-                if (value == true)
-                {
-                    var Reception = Utilisateurs.Where(x => x.Role == RoleEnum.Reception).ToList();
-                    foreach (var item in Reception)
-                    {
-                        if (!UtilisateursFiltre.Contains(item)) UtilisateursFiltre.Add(item);
-                    }
-                }
-                else
-                {
-                    var Reception = Utilisateurs.Where(x => x.Role == RoleEnum.Reception).ToList();
-                    foreach (var item in Reception) UtilisateursFiltre.Remove(item);                   
-                }
-                OnPropertyChanged("RoleReceptionFilter"); 
+                OnPropertyChanged("RoleReceptionFilter");
+                UtilisateurCollectionView.Refresh();
 
             }
         }
         protected bool roleReceptionFilter = true;
 
-        public ObservableCollection<Utilisateur_VM> UtilisateursFiltre
-        {
-            get { return utilisateursFiltre; }
-            set
-            {
-                utilisateursFiltre = value;
-                OnPropertyChanged("UtilisateursFiltre");
-            }
-        }
-        private ObservableCollection<Utilisateur_VM> utilisateursFiltre;
+
         public ObservableCollection<Utilisateur_VM> Utilisateurs
         {
             get { return utilisateurs; }
@@ -107,10 +66,10 @@ namespace Makrisoft.Makfi.ViewModels
             {
                 utilisateurs = value;
                 OnPropertyChanged("Utilisateurs");
+
             }
         }
         private ObservableCollection<Utilisateur_VM> utilisateurs;
-
         public Utilisateur_VM CurrentUtilisateur
         {
             get
@@ -123,97 +82,90 @@ namespace Makrisoft.Makfi.ViewModels
 
                 currentUtilisateur = value;
                 OnPropertyChanged("CurrentUtilisateur");
-                SaveColor = "Red";
+
+
             }
         }
         private Utilisateur_VM currentUtilisateur;
-        public ListCollectionView EntityCollectionView
+        public ListCollectionView UtilisateurCollectionView
         {
-            get { return entityCollectionView; }
-            set { entityCollectionView = value; OnPropertyChanged("EntityCollectionView"); }
+            get { return utilisateurCollectionView; }
+            set { utilisateurCollectionView = value; OnPropertyChanged("UtilisateurCollectionView"); }
         }
-        private ListCollectionView entityCollectionView = null;
-        public string SaveColor { get { return saveColor; } set { saveColor = value; OnPropertyChanged("SaveColor"); } }
-        private string saveColor = "Navy";
+        private ListCollectionView utilisateurCollectionView;
+
         #endregion
 
         #region Commands
+        //ICommand
         public ICommand UtilisateurModifiedSaveCommand { get; set; }
         public ICommand UtilisateurSelectedAddCommand { get; set; }
         public ICommand UtilisateurSelectedDeleteCommand { get; set; }
-        #endregion
+        public ICommand RoleCommand { get; set; }
+        public ICommand FilterClearCommand { get; set; }
 
-
-        #region Constructeur
-        public UtilisateurViewModel()
+        // Méthode
+        private void OnRoleCommand(object p)
         {
-            Utilisateur_Load();
-
-            RelayCommand();
-
+            if (currentUtilisateur == null) return;
+            var role = (RoleEnum)p;
+            CurrentUtilisateur.Statut = role;
+        }
+        private bool OnCanExecuteAddCommand()
+        {
+            if (CurrentUtilisateur!= null)
+            {
+                if (CurrentUtilisateur.SaveColor != "Red")
+                {
+                    CurrentUtilisateur = new Utilisateur_VM { Nom = "(A définir)", Statut = RoleEnum.Gouvernante };
+                    CurrentUtilisateur.SaveColor = "Navy";
+                    return true;
+                }
+                else return false;
+            }
+            else
+            {
+                CurrentUtilisateur = new Utilisateur_VM { Nom = "(A définir)", Statut = RoleEnum.Gouvernante };
+                return true;
+            }
+           
+        }
+        private void OnAddCommand()
+        {
+           
+            Utilisateurs.Add(CurrentUtilisateur);
+            UtilisateurCollectionView.Refresh();
 
         }
-        #endregion
-
-        #region Méthodes
         private void OnSaveCommand()
         {
             bool param;
             if (CurrentUtilisateur.Id != default)
             {
-                param = MakfiData.Utilisateur_Save($"<utilisateur><id>{CurrentUtilisateur.Id}</id><nom>{CurrentUtilisateur.Nom}</nom><statut>{CurrentUtilisateur.Statut}</statut></utilisateur>");
+                param = MakfiData.Utilisateur_Save($"<utilisateur><id>{CurrentUtilisateur.Id}</id><nom>{CurrentUtilisateur.Nom}</nom><statut>{(byte)CurrentUtilisateur.Statut}</statut></utilisateur>");
             }
             else
             {
-                param = MakfiData.Utilisateur_Save($"<utilisateur><nom>{CurrentUtilisateur.Nom}</nom><statut>{CurrentUtilisateur.Statut}</statut></utilisateur>");
+                param = MakfiData.Utilisateur_Save($"<utilisateur><nom>{CurrentUtilisateur.Nom}</nom><statut>{(byte)CurrentUtilisateur.Statut}</statut></utilisateur>");
             }
             if (param)
             {
-                Utilisateurs.Clear();
-                Utilisateur_Load();
-                SaveColor = "Navy";
+                CurrentUtilisateur.SaveColor = "Navy";
+                UtilisateurCollectionView.Refresh();
             }
-        }
-        private void Utilisateur_Load()
-        {
-            var tmp = MakfiData.Utilisateur_Read()
-               .Select(x => new Utilisateur_VM
-               {
-                   Id = x.Id,
-                   Nom = x.Nom,
-                   Image = $"/Makrisoft.Makfi;component/Assets/Photos/{x.Image}",
-                   Statut = x.Statut,
-                   Role = x.Role,
-                   DateModified = default
-               }).ToList();
-
-            Utilisateurs = new ObservableCollection<Utilisateur_VM>(tmp) ;
-            UtilisateursFiltre = new ObservableCollection<Utilisateur_VM>(tmp);
-
-           
         }
         private bool OnCanExecuteSaveCommand()
         {
-            if (SaveColor == "Red" && CurrentUtilisateur != null)
+            if (CurrentUtilisateur != null)
             {
                 return true;
             }
             else
             {
-                //EntityCollectionView.Refresh();
                 return false;
             }
 
         }
-
-        private void RelayCommand()
-        {
-            //FilterClearCommand = new RelayCommand(p => OnFilterClearCommand());
-            UtilisateurModifiedSaveCommand = new RelayCommand(p => OnSaveCommand(), p => OnCanExecuteSaveCommand());
-            UtilisateurSelectedDeleteCommand = new RelayCommand(p => OnDeleteCommand(), p => OnCanExecuteDeleteCommand());
-            UtilisateurSelectedAddCommand = new RelayCommand(p => OnAddCommand(), p => OnCanExecuteAddCommand());
-        }
-
         private bool OnCanExecuteDeleteCommand()
         {
             if (CurrentUtilisateur != null)
@@ -225,7 +177,6 @@ namespace Makrisoft.Makfi.ViewModels
                 return false;
             }
         }
-
         private void OnDeleteCommand()
         {
             var canDeletes = MakfiData.Utilisateur_CanDelete($"<utilisateur><id>{CurrentUtilisateur.Id}</id></utilisateur>");
@@ -235,39 +186,63 @@ namespace Makrisoft.Makfi.ViewModels
                 if (param)
                 {
                     Utilisateurs.Remove(CurrentUtilisateur);
-                    Utilisateur_Load();
                 }
             }
             else
             {
-                MessageBox.Show($" Suppression impossible :  {string.Join(",", canDeletes.Select(c => c.Table).ToList())}", "Utilisateur_CanDelete");
+                MessageBox.Show($" Suppression impossible de l'utilsateur : {CurrentUtilisateur.Nom }", "Utilisateur_CanDelete");
             }
             ///
 
 
         }
-
-        private bool OnCanExecuteAddCommand()
+        private void OnFilterClearCommand()
         {
-            if (SaveColor == "Navy") return true;
-            else return false;
+            RoleGouvFilter = RoleReceptionFilter = RoleAdminFilter = true;
         }
-
-        private void OnAddCommand()
+        private bool UtilisateurFilter(object u)
         {
-            CurrentUtilisateur = new Utilisateur_VM { Nom = "(A définir)", Role = RoleEnum.None };
-            Utilisateurs.Add(CurrentUtilisateur);
-            EntityCollectionView.Refresh();
+            var utilisateur = (Utilisateur_VM)u;
+            return
+                (RoleAdminFilter && utilisateur.Statut == RoleEnum.Admin) ||
+                (RoleGouvFilter && utilisateur.Statut == RoleEnum.Gouvernante) ||
+                (RoleReceptionFilter && utilisateur.Statut == RoleEnum.Reception);
         }
 
 
         #endregion
 
+        #region Constructeur
+        public UtilisateurViewModel()
+        {
+            // Icommand
+            UtilisateurModifiedSaveCommand = new RelayCommand(p => OnSaveCommand(), p => OnCanExecuteSaveCommand());
+            UtilisateurSelectedDeleteCommand = new RelayCommand(p => OnDeleteCommand(), p => OnCanExecuteDeleteCommand());
+            UtilisateurSelectedAddCommand = new RelayCommand(p => OnAddCommand(), p => OnCanExecuteAddCommand());
+            FilterClearCommand = new RelayCommand(p => OnFilterClearCommand());
+            RoleCommand = new RelayCommand(p => OnRoleCommand(p));
 
+            // ListeView
+            Utilisateurs = new ObservableCollection<Utilisateur_VM>(MakfiData.Utilisateur_Read()
+               .Select(x => new Utilisateur_VM
+               {
+                   Id = x.Id,
+                   Nom = x.Nom,
+                   Image = $"/Makrisoft.Makfi;component/Assets/Photos/{x.Image}",
+                   Statut = x.Statut,
+                   SaveColor = "Navy",
+                   DateModified = default
+               }).ToList());
+            UtilisateurCollectionView = new ListCollectionView(Utilisateurs);
 
+            //Filter
+            UtilisateurCollectionView.Filter += u => UtilisateurFilter(u);
 
+        }
 
+        
 
-
+        #endregion
+ 
     }
 }
