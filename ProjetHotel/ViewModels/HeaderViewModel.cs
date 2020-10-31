@@ -37,7 +37,7 @@ namespace Makrisoft.Makfi.ViewModels
                        Id = x.Id,
                        Nom = x.Nom,
                        Image = $"/Makrisoft.Makfi;component/Assets/hotels/{x.Image}",
-                       Gouvernante = x.Gouvernante,
+                       Gouvernante = Utilisateurs.Where(u => u.Id == x.Gouvernante).SingleOrDefault()
                    }));
                 CurrentHotel = Hotels.FirstOrDefault();
 

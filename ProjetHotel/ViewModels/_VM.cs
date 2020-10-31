@@ -10,11 +10,22 @@ namespace Makrisoft.Makfi.ViewModels
     public class Hotel_VM : ViewModelBase
     {
         public Guid Id { get; set; }
-        public string Nom { get; internal set; }
-        public Guid Reception { get; set; }
-        public Guid Gouvernante { get; set; }
-        public string Commentaire { get; internal set; }
+        public string Nom { get;  set; }
+        public Utilisateur_VM Reception { get; set; }
+        public Utilisateur_VM Gouvernante { get; set; }
+        public string Commentaire { get;  set; }
         public string Image { get; set; }
+        public string SaveColor
+        {
+            get
+            { return saveColor; }
+            set
+            {
+                saveColor = value;
+                OnPropertyChanged("SaveColor");
+            }
+        }
+        private string saveColor = "Navy";
     }
     public class Utilisateur_VM : ViewModelBase
     {
@@ -60,9 +71,6 @@ namespace Makrisoft.Makfi.ViewModels
         private RoleEnum statut;
         public DateTime DateModified { get; set; }
 
-        /****************************************************/
-
-
         public bool IsAdmin
         {
             get
@@ -76,19 +84,6 @@ namespace Makrisoft.Makfi.ViewModels
             }
         }
         private bool isAdmin;
-
-        public RoleEnum Role
-        {
-            get { return role; }
-            set
-            {
-                role = value;
-                role = (RoleEnum)Statut;
-                OnPropertyChanged("Role");
-
-            }
-        }
-        private RoleEnum role { get; set; }
 
         public string CodePin
         {
