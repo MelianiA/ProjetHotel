@@ -211,11 +211,16 @@ namespace Makrisoft.Makfi.ViewModels
               {
                   Id = x.Id,
                   Nom = x.Nom,
-                  Image = $"/Makrisoft.Makfi;component/Assets/Photos/{x.Image}",
+                  Image = x.Image,
                   Statut = x.Statut,
                   SaveColor = "Navy",
                   DateModified = default
               }).ToList());
+            foreach (var item in Utilisateurs)
+            {
+                if (item.Image != null) item.Image = $"/Makrisoft.Makfi;component/Assets/Photos/{item.Image}";
+                else { item.Image = $"/Makrisoft.Makfi;component/Assets/Photos/utilisateur.png"; }
+            }
             // ListeView
             UtilisateurCollectionView = new ListCollectionView(Utilisateurs);
             UtilisateurCollectionView.Refresh();

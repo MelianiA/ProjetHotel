@@ -10,10 +10,50 @@ namespace Makrisoft.Makfi.ViewModels
     public class Hotel_VM : ViewModelBase
     {
         public Guid Id { get; set; }
-        public string Nom { get;  set; }
-        public Utilisateur_VM Reception { get; set; }
-        public Utilisateur_VM Gouvernante { get; set; }
-        public string Commentaire { get;  set; }
+        public string Nom
+        {
+            get { return nom; }
+            set
+            {
+                nom = value;
+                SaveColor = "Red";
+                OnPropertyChanged("Nom");
+            }
+        }
+        private string nom;
+        public Utilisateur_VM Reception
+        {
+            get { return reception; }
+            set
+            {
+                reception = value;
+                SaveColor = "Red";
+                OnPropertyChanged("Reception");
+            }
+        }
+        private Utilisateur_VM reception;
+        public Utilisateur_VM Gouvernante
+        {
+            get { return gouvernante; }
+            set
+            {
+                gouvernante = value;
+                SaveColor = "Red";
+                OnPropertyChanged("Gouvernante");
+            }
+        }
+        private Utilisateur_VM gouvernante;
+        public string Commentaire
+        {
+            get { return commentaire; }
+            set
+            {
+                commentaire = value;
+                SaveColor = "Red";
+                OnPropertyChanged("Commentaire");
+            }
+        }
+        private string commentaire;
         public string Image { get; set; }
         public string SaveColor
         {
@@ -29,7 +69,15 @@ namespace Makrisoft.Makfi.ViewModels
     }
     public class Utilisateur_VM : ViewModelBase
     {
-        public Guid Id { get; set; }
+        public Guid Id
+        {
+            get
+            {
+                return id;
+            }
+            set { id = value; }
+        }
+        private Guid id;
 
         public string Nom
         {
@@ -44,7 +92,7 @@ namespace Makrisoft.Makfi.ViewModels
         private string nom;
         public string SaveColor
         {
-            get 
+            get
             { return saveColor; }
             set
             {

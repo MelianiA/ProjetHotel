@@ -116,6 +116,7 @@ namespace Makrisoft.Makfi.Dal
                 return false;
             }
         }
+
         public static List<T> ReadAll<T>(string spName, Action<T> p, string spParam = null) where T : new()
         {
             List<T> entities = new List<T>();
@@ -189,6 +190,10 @@ namespace Makrisoft.Makfi.Dal
         {
             return ExecuteNonQuery("Utilisateur_Save", spParam);
         }
+        internal static bool Hotel_Save(string spParam)
+        {
+            return ExecuteNonQuery("Hotel_Save", spParam);
+        }
         #endregion
 
         #region _CanDelete
@@ -197,6 +202,14 @@ namespace Makrisoft.Makfi.Dal
             return CanDelete("Utilisateur_CanDelete", spParam)
                 .Where(x => x.Nombre > 0);
         }
+
+        public static IEnumerable<CanDelete> Hotel_CanDelete(string spParam)
+        {
+            return CanDelete("Hotel_CanDelete", spParam)
+               .Where(x => x.Nombre > 0);
+        }
+
+     
         #endregion
 
         #region _Delete
@@ -204,6 +217,10 @@ namespace Makrisoft.Makfi.Dal
         {
             return ExecuteNonQuery("Utilisateur_Delete", spParam);
 
+        }
+        internal static bool Hotel_Delete(string spParam)
+        {
+            return ExecuteNonQuery("Hotel_Delete", spParam);
         }
         #endregion
 

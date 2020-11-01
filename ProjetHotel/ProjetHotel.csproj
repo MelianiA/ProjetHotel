@@ -183,6 +183,7 @@
   <ItemGroup>
     <Resource Include="Assets\photos\Ziani.png" />
     <Resource Include="Assets\photos\meliani.png" />
+    <Resource Include="Assets\photos\utilisateur.png" />
     <Content Include="Dal\StoredProcedures.sql" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

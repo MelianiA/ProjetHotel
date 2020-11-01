@@ -1,17 +1,20 @@
 ﻿using Makrisoft.Makfi.Dal;
 using Makrisoft.Makfi.Models;
+using Makrisoft.Makfi.Tools;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Data;
+using System.Windows.Input;
 
 namespace Makrisoft.Makfi.ViewModels
 {
-    
-    public class HotelViewModel : ViewModelBase   
+
+    public class HotelViewModel : ViewModelBase
     {
         #region Binding
         //Hotel
@@ -30,16 +33,14 @@ namespace Makrisoft.Makfi.ViewModels
         {
             get
             {
-                return
-                  currentHotel;
+
+                return currentHotel;
+
             }
             set
             {
-
                 currentHotel = value;
                 OnPropertyChanged("CurrentHotel");
-
-
             }
         }
         private Hotel_VM currentHotel;
@@ -62,6 +63,25 @@ namespace Makrisoft.Makfi.ViewModels
         }
         private ObservableCollection<Utilisateur_VM> gouvernanteList;
 
+        public Utilisateur_VM CurrentGouv
+        {
+            get
+            {
+                return
+                  currentGouv;
+            }
+            set
+            {
+
+                currentGouv = value;
+                CurrentHotel.SaveColor = "Red";
+                OnPropertyChanged("CurrentGouv");
+
+
+            }
+        }
+        private Utilisateur_VM currentGouv;
+
         //Reception
         public ObservableCollection<Utilisateur_VM> ReceptionList
         {
@@ -74,18 +94,151 @@ namespace Makrisoft.Makfi.ViewModels
             }
         }
         private ObservableCollection<Utilisateur_VM> receptionList;
+        public Utilisateur_VM CurrentRecep
+        {
+            get
+            {
+                return
+                  currentRecep;
+            }
+            set
+            {
+
+                currentRecep = value;
+                CurrentHotel.SaveColor = "Red";
+                OnPropertyChanged("CurrentRecep");
+
+
+            }
+        }
+        private Utilisateur_VM currentRecep;
 
         #endregion
 
         #region Commands
         //ICommand
-
+        public ICommand HotelModifiedSaveCommand { get; set; }
+        public ICommand  HotelSelectedAddCommand { get; set; }
+        public ICommand HotelSelectedDeleteCommand { get; set; }
         // Méthodes OnCommand
+        private void OnSaveCommand()
+        {
+            if((CurrentHotel.Reception==null && CurrentHotel.Gouvernante == null) &&( CurrentGouv==null||CurrentRecep==null))
+            {
+                MessageBox.Show($"Ajout impossible de l'hotel: {CurrentHotel.Nom}", "Important !");
+                return;
+            }
+            bool param = false ; 
+            Hotel_VM hotelTmp;
+            if (CurrentHotel.Id != default)
+            {
+                hotelTmp = CurrentHotel;
+                if (CurrentRecep == null && CurrentGouv != null)
+                {
+                    param = MakfiData.Hotel_Save($"<hotel><id>{CurrentHotel.Id}</id><nom>{CurrentHotel.Nom}</nom><reception>{CurrentHotel.Reception.Id}</reception><gouvernante>{CurrentGouv.Id}</gouvernante><commentaire>{CurrentHotel.Commentaire}</commentaire></hotel>");
+                }
+                if (CurrentRecep != null && CurrentGouv == null)
+                {
+                    param = MakfiData.Hotel_Save($"<hotel><id>{CurrentHotel.Id}</id><nom>{CurrentHotel.Nom}</nom><reception>{CurrentRecep.Id}</reception><gouvernante>{CurrentHotel.Gouvernante.Id}</gouvernante><commentaire>{CurrentHotel.Commentaire}</commentaire></hotel>");
+                }
+                if (CurrentRecep == null && CurrentGouv == null)
+                {
+                    param = MakfiData.Hotel_Save($"<hotel><id>{CurrentHotel.Id}</id><nom>{CurrentHotel.Nom}</nom><reception>{CurrentHotel.Reception.Id}</reception><gouvernante>{CurrentHotel.Gouvernante.Id}</gouvernante><commentaire>{CurrentHotel.Commentaire}</commentaire></hotel>");
+                }
+                if (CurrentRecep != null && CurrentGouv != null)
+                {
+                    param = MakfiData.Hotel_Save($"<hotel><id>{CurrentHotel.Id}</id><nom>{CurrentHotel.Nom}</nom><reception>{CurrentRecep.Id}</reception><gouvernante>{CurrentGouv.Id}</gouvernante><commentaire>{CurrentHotel.Commentaire}</commentaire></hotel>");
+                }
+            }
+            else
+            {
+                hotelTmp = CurrentHotel;
+                if (CurrentRecep == null && CurrentGouv != null)
+                {
+                    param = MakfiData.Hotel_Save($"<hotel><nom>{CurrentHotel.Nom}</nom><reception>{CurrentHotel.Reception.Id}</reception><gouvernante>{CurrentGouv.Id}</gouvernante><commentaire>{CurrentHotel.Commentaire}</commentaire></hotel>");
 
+                }
+                if (CurrentRecep != null && CurrentGouv == null)
+                {
+                    param = MakfiData.Hotel_Save($"<hotel><nom>{CurrentHotel.Nom}</nom><reception>{CurrentRecep.Id}</reception><gouvernante>{CurrentHotel.Gouvernante.Id}</gouvernante><commentaire>{CurrentHotel.Commentaire}</commentaire></hotel>");
+                }
+                if (CurrentRecep == null && CurrentGouv == null)
+                {
+                    param = MakfiData.Hotel_Save($"<hotel><nom>{CurrentHotel.Nom}</nom><reception>{CurrentHotel.Reception.Id}</reception><gouvernante>{CurrentHotel.Gouvernante.Id}</gouvernante><commentaire>{CurrentHotel.Commentaire}</commentaire></hotel>");
+                }
+                if (CurrentRecep != null && CurrentGouv != null)
+                {
+                    param = MakfiData.Hotel_Save($"<hotel><nom>{CurrentHotel.Nom}</nom><reception>{CurrentRecep.Id}</reception><gouvernante>{CurrentGouv.Id}</gouvernante><commentaire>{CurrentHotel.Commentaire}</commentaire></hotel>");
+                }
+            }
+            if (param)
+            {
+                CurrentHotel.SaveColor = "Navy";
+                Hotels.Clear();
+                Hotel_Load();
+                CurrentHotel = Hotels.Where(u => u.Nom == hotelTmp.Nom).FirstOrDefault();
+                CurrentRecep = null;
+                CurrentGouv = null;
+                CurrentHotel.SaveColor = "Navy";
+
+            }
+        }
+        private void OnAddCommand()
+        {
+            CurrentHotel = new Hotel_VM { Nom = "(A définir)" };
+            Hotels.Add(CurrentHotel);
+            HotelCollectionView.Refresh();
+        }
+        private void OnDeleteCommand()
+        {
+            var canDeletes = MakfiData.Hotel_CanDelete($"<hotel><id>{CurrentHotel.Id}</id></hotel>");
+            if (canDeletes.Count() == 0)
+            {
+                var param = MakfiData.Hotel_Delete($"<hotel><id>{CurrentHotel.Id}</id></hotel>");
+                if (param)
+                {
+                    Hotels.Remove(CurrentHotel);
+                }
+            }
+            else
+            {
+                MessageBox.Show($" Suppression impossible de l'Hotel : {CurrentHotel.Nom }", "Utilisateur_CanDelete");
+            }
+            ///
+
+
+        }
 
 
 
         // Méthodes OnCanExecuteXXXXCommand
+        private bool OnCanExecuteSaveCommand()
+        {
+            if (CurrentHotel != null)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+
+        }
+        private bool OnCanExecuteAddCommand()
+        {
+            return true;
+        }
+        private bool OnCanExecuteDeleteCommand()
+        {
+            if (CurrentHotel != null)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
 
 
 
@@ -97,25 +250,30 @@ namespace Makrisoft.Makfi.ViewModels
              {
                  Id = x.Id,
                  Nom = x.Nom,
-                 Image = $"/Makrisoft.Makfi;component/Assets/Photos/{x.Image}",
+                 Image = x.Image,
 
                  Gouvernante = Reference_ViewModel.utilisateur.Utilisateurs
-                                .Where(u => u.Id == x.Gouvernante).SingleOrDefault(), 
+                                .Where(u => u.Id == x.Gouvernante).SingleOrDefault(),
 
-                 Reception= Reference_ViewModel.utilisateur.Utilisateurs
+                 Reception = Reference_ViewModel.utilisateur.Utilisateurs
                                 .Where(u => u.Id == x.Reception).SingleOrDefault(),
 
-                 Commentaire=x.Commentaire,
+                 Commentaire = x.Commentaire,
                  SaveColor = "Navy"
-             }).ToList()) ;
+             }).ToList());
+            foreach (var item in Hotels)
+            {
+                if (item.Image != null) item.Image = $"/Makrisoft.Makfi;component/Assets/hotels/{item.Image}";
+                else { item.Image = $"/Makrisoft.Makfi;component/Assets/hotels/hotel.png"; }
+            }
             // ListeView
             HotelCollectionView = new ListCollectionView(Hotels);
             HotelCollectionView.Refresh();
         }
         private void GouvrnanteListLoad()
         {
-            GouvernanteList = new ObservableCollection<Utilisateur_VM>( Reference_ViewModel.utilisateur.Utilisateurs
-                                                            .Where(u=> u.Statut==RoleEnum.Gouvernante));;
+            GouvernanteList = new ObservableCollection<Utilisateur_VM>(Reference_ViewModel.utilisateur.Utilisateurs
+                                                            .Where(u => u.Statut == RoleEnum.Gouvernante)); ;
         }
         private void ReceptionListLoad()
         {
@@ -128,6 +286,9 @@ namespace Makrisoft.Makfi.ViewModels
         public HotelViewModel()
         {
             // Icommand
+            HotelModifiedSaveCommand = new RelayCommand(p => OnSaveCommand(), p => OnCanExecuteSaveCommand());
+            HotelSelectedAddCommand = new RelayCommand(p => OnAddCommand(), p => OnCanExecuteAddCommand());
+            HotelSelectedDeleteCommand = new RelayCommand(p => OnDeleteCommand(), p => OnCanExecuteDeleteCommand());
 
 
             // ListeView
