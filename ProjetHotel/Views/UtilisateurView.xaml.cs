@@ -10,8 +10,8 @@ namespace Makrisoft.Makfi.Views
     {
         public UtilisateurView()
         {
-            Reference_ViewModel.utilisateur = new UtilisateurViewModel();
-            DataContext = Reference_ViewModel.utilisateur;
+            Reference_ViewModel.Utilisateur = new UtilisateurViewModel();
+            DataContext = Reference_ViewModel.Utilisateur;
             InitializeComponent();
         }
     }

@@ -1,11 +1,7 @@
 ﻿using Makrisoft.Makfi.Dal;
 using Makrisoft.Makfi.Tools;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Data;
 using System.Windows.Input;
@@ -14,9 +10,27 @@ namespace Makrisoft.Makfi.ViewModels
 {
     public class UtilisateurViewModel : ViewModelBase
     {
+        #region Constructeur
+        public UtilisateurViewModel()
+        {
+            RelayCommand();
 
+            // ListeView
+            Utilisateur_Load();
 
-        #region Binding
+            //Filter
+            UtilisateurCollectionView.Filter += u =>
+            {
+                var utilisateur = (Utilisateur_VM)u;
+                return
+                    (RoleAdminFilter && utilisateur.Statut == RoleEnum.Admin) ||
+                    (RoleGouvFilter && utilisateur.Statut == RoleEnum.Gouvernante) ||
+                    (RoleReceptionFilter && utilisateur.Statut == RoleEnum.Reception);
+            };
+        }
+        #endregion
+
+        #region Bindings
         // RoleFilter
         public bool RoleAdminFilter
         {
@@ -58,7 +72,7 @@ namespace Makrisoft.Makfi.ViewModels
         }
         protected bool roleReceptionFilter = true;
 
-
+        // Utilisateurs
         public ObservableCollection<Utilisateur_VM> Utilisateurs
         {
             get { return utilisateurs; }
@@ -104,8 +118,17 @@ namespace Makrisoft.Makfi.ViewModels
         public ICommand RoleCommand { get; set; }
         public ICommand FilterClearCommand { get; set; }
 
-        // Méthodes OnCommand
+        // RelayCommand
+        private void RelayCommand()
+        {             // Icommand
+            UtilisateurModifiedSaveCommand = new RelayCommand(p => OnSaveCommand(), p => OnCanExecuteSaveCommand());
+            UtilisateurSelectedDeleteCommand = new RelayCommand(p => OnDeleteCommand(), p => OnCanExecuteDeleteCommand());
+            UtilisateurSelectedAddCommand = new RelayCommand(p => OnAddCommand(), p => OnCanExecuteAddCommand());
+            FilterClearCommand = new RelayCommand(p => OnFilterClearCommand());
+            RoleCommand = new RelayCommand(p => OnRoleCommand(p));
+        }
 
+        // Méthodes OnCommand
         private void OnRoleCommand(object p)
         {
             if (currentUtilisateur == null) return;
@@ -169,8 +192,7 @@ namespace Makrisoft.Makfi.ViewModels
         }
 
 
-        // Méthodes OnCanExecuteXXXXCommand
-
+        // Méthodes OnCanExecuteCommand
         private bool OnCanExecuteAddCommand()
         {
                  return true;
@@ -199,28 +221,21 @@ namespace Makrisoft.Makfi.ViewModels
                 return false;
             }
         }
-       
-        //Autres Méthodes
-        private bool UtilisateurFilter(object u)
-        {
-            var utilisateur = (Utilisateur_VM)u;
-            return
-                (RoleAdminFilter && utilisateur.Statut == RoleEnum.Admin) ||
-                (RoleGouvFilter && utilisateur.Statut == RoleEnum.Gouvernante) ||
-                (RoleReceptionFilter && utilisateur.Statut == RoleEnum.Reception);
-        }
+        #endregion
+
+        #region Divers
         private void Utilisateur_Load()
         {
-             Utilisateurs = new ObservableCollection<Utilisateur_VM>(MakfiData.Utilisateur_Read()
-              .Select(x => new Utilisateur_VM
-              {
-                  Id = x.Id,
-                  Nom = x.Nom,
-                  Image = x.Image,
-                  Statut = x.Statut,
-                  SaveColor = "Navy",
-                  DateModified = default
-              }).ToList());
+            Utilisateurs = new ObservableCollection<Utilisateur_VM>(MakfiData.Utilisateur_Read()
+             .Select(x => new Utilisateur_VM
+             {
+                 Id = x.Id,
+                 Nom = x.Nom,
+                 Image = x.Image,
+                 Statut = x.Statut,
+                 SaveColor = "Navy",
+                 DateModified = default
+             }).ToList());
             foreach (var item in Utilisateurs)
             {
                 if (item.Image != null) item.Image = $"/Makrisoft.Makfi;component/Assets/Photos/{item.Image}";
@@ -232,28 +247,5 @@ namespace Makrisoft.Makfi.ViewModels
         }
 
         #endregion
-
-        #region Constructeur
-        public UtilisateurViewModel()
-        {
-            // Icommand
-            UtilisateurModifiedSaveCommand = new RelayCommand(p => OnSaveCommand(), p => OnCanExecuteSaveCommand());
-            UtilisateurSelectedDeleteCommand = new RelayCommand(p => OnDeleteCommand(), p => OnCanExecuteDeleteCommand());
-            UtilisateurSelectedAddCommand = new RelayCommand(p => OnAddCommand(), p => OnCanExecuteAddCommand());
-            FilterClearCommand = new RelayCommand(p => OnFilterClearCommand());
-            RoleCommand = new RelayCommand(p => OnRoleCommand(p));
-
-            // ListeView
-            Utilisateur_Load();
-
-            //Filter
-            UtilisateurCollectionView.Filter += u => UtilisateurFilter(u);
-
-        }
-
-
-
-        #endregion
-
     }
 }

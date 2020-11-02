@@ -252,10 +252,10 @@ namespace Makrisoft.Makfi.ViewModels
                  Nom = x.Nom,
                  Image = x.Image,
 
-                 Gouvernante = Reference_ViewModel.utilisateur.Utilisateurs
+                 Gouvernante = Reference_ViewModel.Utilisateur.Utilisateurs
                                 .Where(u => u.Id == x.Gouvernante).SingleOrDefault(),
 
-                 Reception = Reference_ViewModel.utilisateur.Utilisateurs
+                 Reception = Reference_ViewModel.Utilisateur.Utilisateurs
                                 .Where(u => u.Id == x.Reception).SingleOrDefault(),
 
                  Commentaire = x.Commentaire,
@@ -272,12 +272,12 @@ namespace Makrisoft.Makfi.ViewModels
         }
         public void GouvrnanteListLoad()
         {
-            GouvernanteList = new ObservableCollection<Utilisateur_VM>(Reference_ViewModel.utilisateur.Utilisateurs
+            GouvernanteList = new ObservableCollection<Utilisateur_VM>(Reference_ViewModel.Utilisateur.Utilisateurs
                                                             .Where(u => u.Statut == RoleEnum.Gouvernante)); ;
         }
         public void ReceptionListLoad()
         {
-            ReceptionList = new ObservableCollection<Utilisateur_VM>(Reference_ViewModel.utilisateur.Utilisateurs
+            ReceptionList = new ObservableCollection<Utilisateur_VM>(Reference_ViewModel.Utilisateur.Utilisateurs
                                                             .Where(u => u.Statut == RoleEnum.Reception));
         }
         #endregion
