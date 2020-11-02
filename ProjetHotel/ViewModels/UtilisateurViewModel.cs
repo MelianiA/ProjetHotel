@@ -160,7 +160,7 @@ namespace Makrisoft.Makfi.ViewModels
                 Utilisateurs.Clear();
                 Utilisateur_Load();
                 CurrentUtilisateur = Utilisateurs.Where(u => u.Nom == utilTmp.Nom && u.Statut == utilTmp.Statut).FirstOrDefault();
-                Reference_ViewModel.Hotel.GouvrnanteListLoad();
+                Reference_ViewModel.Hotel.GouvernanteListLoad();
                 Reference_ViewModel.Hotel.ReceptionListLoad();
 
             }
@@ -174,7 +174,7 @@ namespace Makrisoft.Makfi.ViewModels
                 if (param)
                 {
                     Utilisateurs.Remove(CurrentUtilisateur);
-                    Reference_ViewModel.Hotel.GouvrnanteListLoad();
+                    Reference_ViewModel.Hotel.GouvernanteListLoad();
                     Reference_ViewModel.Hotel.ReceptionListLoad();
                 }
             }
@@ -223,7 +223,7 @@ namespace Makrisoft.Makfi.ViewModels
         }
         #endregion
 
-        #region Divers
+        #region Load
         private void Utilisateur_Load()
         {
             Utilisateurs = new ObservableCollection<Utilisateur_VM>(MakfiData.Utilisateur_Read()

@@ -1,21 +1,30 @@
 ﻿using Makrisoft.Makfi.Dal;
-using Makrisoft.Makfi.Models;
 using Makrisoft.Makfi.Tools;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Data;
 using System.Windows.Input;
 
 namespace Makrisoft.Makfi.ViewModels
 {
-
     public class HotelViewModel : ViewModelBase
     {
+        #region Constructeur
+        public HotelViewModel()
+        {
+            // Icommand
+            HotelModifiedSaveCommand = new RelayCommand(p => OnSaveCommand(), p => OnCanExecuteSaveCommand());
+            HotelSelectedAddCommand = new RelayCommand(p => OnAddCommand(), p => OnCanExecuteAddCommand());
+            HotelSelectedDeleteCommand = new RelayCommand(p => OnDeleteCommand(), p => OnCanExecuteDeleteCommand());
+
+            // ListeView
+            Hotel_Load();
+            GouvernanteListLoad();
+            ReceptionListLoad();
+        }
+        #endregion
+
         #region Binding
         //Hotel
         public ObservableCollection<Hotel_VM> Hotels
@@ -50,6 +59,7 @@ namespace Makrisoft.Makfi.ViewModels
             set { hotelCollectionView = value; OnPropertyChanged("HotelCollectionView"); }
         }
         private ListCollectionView hotelCollectionView;
+
         //Gouvernante
         public ObservableCollection<Utilisateur_VM> GouvernanteList
         {
@@ -62,7 +72,6 @@ namespace Makrisoft.Makfi.ViewModels
             }
         }
         private ObservableCollection<Utilisateur_VM> gouvernanteList;
-
         public Utilisateur_VM CurrentGouv
         {
             get
@@ -112,23 +121,23 @@ namespace Makrisoft.Makfi.ViewModels
             }
         }
         private Utilisateur_VM currentRecep;
-
         #endregion
 
         #region Commands
         //ICommand
         public ICommand HotelModifiedSaveCommand { get; set; }
-        public ICommand  HotelSelectedAddCommand { get; set; }
+        public ICommand HotelSelectedAddCommand { get; set; }
         public ICommand HotelSelectedDeleteCommand { get; set; }
+
         // Méthodes OnCommand
         private void OnSaveCommand()
         {
-            if((CurrentHotel.Reception==null && CurrentHotel.Gouvernante == null) &&( CurrentGouv==null||CurrentRecep==null))
+            if ((CurrentHotel.Reception == null && CurrentHotel.Gouvernante == null) && (CurrentGouv == null || CurrentRecep == null))
             {
                 MessageBox.Show($"Ajout impossible de l'hotel: {CurrentHotel.Nom}", "Important !");
                 return;
             }
-            bool param = false ; 
+            bool param = false;
             Hotel_VM hotelTmp;
             if (CurrentHotel.Id != default)
             {
@@ -209,8 +218,6 @@ namespace Makrisoft.Makfi.ViewModels
 
         }
 
-
-
         // Méthodes OnCanExecuteXXXXCommand
         private bool OnCanExecuteSaveCommand()
         {
@@ -239,71 +246,45 @@ namespace Makrisoft.Makfi.ViewModels
                 return false;
             }
         }
+        #endregion
 
-
-
-        //Autres Méthodes
+        #region Load
         private void Hotel_Load()
         {
-            Hotels = new ObservableCollection<Hotel_VM>(MakfiData.Hotel_Read()
-             .Select(x => new Hotel_VM
-             {
-                 Id = x.Id,
-                 Nom = x.Nom,
-                 Image = x.Image,
+            Hotels = new ObservableCollection<Hotel_VM>(
+                MakfiData.Hotel_Read()
+                .Select(x => new Hotel_VM
+                {
+                    Id = x.Id,
+                    Nom = x.Nom,
+                    Image = x.Image != null ? $"/Makrisoft.Makfi;component/Assets/hotels/{x.Image}" : $"/Makrisoft.Makfi;component/Assets/hotels/hotel.png",
 
-                 Gouvernante = Reference_ViewModel.Utilisateur.Utilisateurs
+                    Gouvernante = Reference_ViewModel.Utilisateur.Utilisateurs
                                 .Where(u => u.Id == x.Gouvernante).SingleOrDefault(),
 
-                 Reception = Reference_ViewModel.Utilisateur.Utilisateurs
+                    Reception = Reference_ViewModel.Utilisateur.Utilisateurs
                                 .Where(u => u.Id == x.Reception).SingleOrDefault(),
 
-                 Commentaire = x.Commentaire,
-                 SaveColor = "Navy"
-             }).ToList());
-            foreach (var item in Hotels)
-            {
-                if (item.Image != null) item.Image = $"/Makrisoft.Makfi;component/Assets/hotels/{item.Image}";
-                else { item.Image = $"/Makrisoft.Makfi;component/Assets/hotels/hotel.png"; }
-            }
+                    Commentaire = x.Commentaire,
+                    SaveColor = "Navy"
+                }).ToList());
+
             // ListeView
             HotelCollectionView = new ListCollectionView(Hotels);
             HotelCollectionView.Refresh();
         }
-        public void GouvrnanteListLoad()
+        public void GouvernanteListLoad()
         {
-            GouvernanteList = new ObservableCollection<Utilisateur_VM>(Reference_ViewModel.Utilisateur.Utilisateurs
-                                                            .Where(u => u.Statut == RoleEnum.Gouvernante)); ;
+            GouvernanteList = new ObservableCollection<Utilisateur_VM>(
+                Reference_ViewModel.Utilisateur.Utilisateurs
+                .Where(u => u.Statut == RoleEnum.Gouvernante));
         }
         public void ReceptionListLoad()
         {
-            ReceptionList = new ObservableCollection<Utilisateur_VM>(Reference_ViewModel.Utilisateur.Utilisateurs
-                                                            .Where(u => u.Statut == RoleEnum.Reception));
+            ReceptionList = new ObservableCollection<Utilisateur_VM>(
+                Reference_ViewModel.Utilisateur.Utilisateurs
+                .Where(u => u.Statut == RoleEnum.Reception));
         }
         #endregion
-
-        #region Constructeur
-        public HotelViewModel()
-        {
-            // Icommand
-            HotelModifiedSaveCommand = new RelayCommand(p => OnSaveCommand(), p => OnCanExecuteSaveCommand());
-            HotelSelectedAddCommand = new RelayCommand(p => OnAddCommand(), p => OnCanExecuteAddCommand());
-            HotelSelectedDeleteCommand = new RelayCommand(p => OnDeleteCommand(), p => OnCanExecuteDeleteCommand());
-
-
-            // ListeView
-            Hotel_Load();
-            GouvrnanteListLoad();
-            ReceptionListLoad();
-
-             
-
-        }
-
-
-
-        #endregion
-
-
     }
 }
