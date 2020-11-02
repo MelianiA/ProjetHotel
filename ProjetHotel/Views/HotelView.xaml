@@ -67,6 +67,7 @@
                         <materialDesign:PackIcon Height="25" Width="Auto" Kind="Floppy" Foreground="{Binding CurrentHotel.SaveColor, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,10,0" ToolTip="Enregistrer"/>
                     </Button.Content>
                 </Button>
+                 
             </Grid>
         </Border>
 
@@ -141,9 +142,10 @@
                 <TextBox FontSize="16" Text="{Binding CurrentHotel.Nom, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
 
                 <TextBlock Text="Commentaire" Margin="0,15,0,0"/>
-                <TextBox FontSize="16"  Text="{Binding CurrentHotel.Commentaire, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" TextWrapping="Wrap" TextAlignment="Left"/>
-
-                <TextBlock Text="Gouvernante" Margin="0,15,0,0"/>
+                
+                 <TextBox FontSize="16"  Text="{Binding CurrentHotel.Commentaire, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" TextWrapping="Wrap" TextAlignment="Left"/>
+                
+                 <TextBlock Text="Gouvernante" Margin="0,15,0,0"/>
                 <ComboBox ItemsSource="{Binding GouvernanteList, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
                           SelectedItem="{Binding CurrentGouv, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" FontSize="16">
                     <ComboBox.ItemTemplate>

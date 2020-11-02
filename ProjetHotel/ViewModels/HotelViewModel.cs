@@ -270,12 +270,12 @@ namespace Makrisoft.Makfi.ViewModels
             HotelCollectionView = new ListCollectionView(Hotels);
             HotelCollectionView.Refresh();
         }
-        private void GouvrnanteListLoad()
+        public void GouvrnanteListLoad()
         {
             GouvernanteList = new ObservableCollection<Utilisateur_VM>(Reference_ViewModel.utilisateur.Utilisateurs
                                                             .Where(u => u.Statut == RoleEnum.Gouvernante)); ;
         }
-        private void ReceptionListLoad()
+        public void ReceptionListLoad()
         {
             ReceptionList = new ObservableCollection<Utilisateur_VM>(Reference_ViewModel.utilisateur.Utilisateurs
                                                             .Where(u => u.Statut == RoleEnum.Reception));
@@ -296,7 +296,7 @@ namespace Makrisoft.Makfi.ViewModels
             GouvrnanteListLoad();
             ReceptionListLoad();
 
-            //Filter
+             
 
         }
 

@@ -137,6 +137,9 @@ namespace Makrisoft.Makfi.ViewModels
                 Utilisateurs.Clear();
                 Utilisateur_Load();
                 CurrentUtilisateur = Utilisateurs.Where(u => u.Nom == utilTmp.Nom && u.Statut == utilTmp.Statut).FirstOrDefault();
+                Reference_ViewModel.Hotel.GouvrnanteListLoad();
+                Reference_ViewModel.Hotel.ReceptionListLoad();
+
             }
         }
         private void OnDeleteCommand()
@@ -148,6 +151,8 @@ namespace Makrisoft.Makfi.ViewModels
                 if (param)
                 {
                     Utilisateurs.Remove(CurrentUtilisateur);
+                    Reference_ViewModel.Hotel.GouvrnanteListLoad();
+                    Reference_ViewModel.Hotel.ReceptionListLoad();
                 }
             }
             else
