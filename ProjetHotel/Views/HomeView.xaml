@@ -5,6 +5,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              mc:Ignorable="d" 
+                          xmlns:data="clr-namespace:Makrisoft.Makfi.Dal"
              d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.Resources>
         <!--Menu-->
@@ -48,14 +49,18 @@
                         />
 
                 <materialDesign:PackIcon Grid.Row="1" Grid.Column="3" Height="30" Width="Auto" Kind="FaceWoman" Foreground="Navy" VerticalAlignment="Center"/>
-                <Button Grid.Row="1" Grid.Column="4" Content="Les employées" Style="{StaticResource Menu}" Command="{Binding ChangeViewCommand}" />
+                <Button Grid.Row="1" Grid.Column="4" Content="Les employées" 
+                        Style="{StaticResource Menu}" 
+                        CommandParameter="{x:Static data:ViewEnum.Employe}"
+                        Command="{Binding ChangeViewCommand}" />
 
                 <materialDesign:PackIcon Grid.Row="2" Grid.Column="0" Height="30" Width="Auto" Kind="Calculator" Foreground="Navy" VerticalAlignment="Center"/>
                 <Button Grid.Row="2" Grid.Column="1" Content="Synthèse mensuelle" Style="{StaticResource Menu}" Command="{Binding ChangeViewCommand}"  />
 
                 <materialDesign:PackIcon Grid.Row="2" Grid.Column="3" Height="30" Width="Auto" Kind="Lock" Foreground="Navy"  VerticalAlignment="Center" />
                 <Button Grid.Row="2" Grid.Column="4" Content="Privé" Style="{StaticResource Menu}"  
-                        Command="{Binding ChangeViewCommand}"                         
+                        Command="{Binding ChangeViewCommand}"   
+                        CommandParameter="{x:Static data:ViewEnum.Administration}"
                         IsEnabled="{Binding IsAdmin}"/>
             </Grid>
         </Border>

@@ -143,4 +143,30 @@ namespace Makrisoft.Makfi.ViewModels
 
     }
 
+    public class Etat_VM
+    {
+        public Guid Id { get; set; }
+        public string Icone { get; set; }
+        public string Libelle { get; set; }
+        public string Couleur { get; set; }
+    }
+    public class Employe_VM :ViewModelBase
+    {
+        public Guid Id { get; set; }
+        public Guid Etat { get; set; } // a modifier en Etat_VM
+        public string Nom { get; set; }
+        public string Prenom { get; set; }
+        public string Commentaire { get; set; }
+        public string SaveColor
+        {
+            get
+            { return saveColor; }
+            set
+            {
+                saveColor = value;
+                OnPropertyChanged("SaveColor");
+            }
+        }
+        private string saveColor = "Navy";
+    }
 }

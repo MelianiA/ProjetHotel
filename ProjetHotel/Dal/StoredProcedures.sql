@@ -35,6 +35,13 @@ GO
 Exec Hotel_Read
 Exec Hotel_Read '<hotel><id>C65BFB16-6DBE-4BC9-8314-0DEABABB0404</id></hotel>'
 Exec Hotel_Read '<hotel><gouvernante>D4867483-472E-4432-AF36-28037FCD7FC7</gouvernante></hotel>'
+---------------------------------------------------------------------------------------------------
+CREATE PROC [dbo].[Employe_Read](@data xml=NULL)
+AS
+DECLARE @Id uniqueidentifier=NULL
+select @Id = T.N.value('id[1]', 'uniqueidentifier') from @data.nodes('employe') as T(N)
+Select Id, Nom,Prenom,Etat,Commentaire from Employe where @Id is null Or Id=@Id
+GO
 
 -- *************************************************************************************************
 -- save

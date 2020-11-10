@@ -81,7 +81,7 @@
                       SelectedItem="{Binding CurrentHotel, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
                       SelectionMode="Single"  SelectionUnit="FullRow" IsSynchronizedWithCurrentItem="False"
                       AutoGenerateColumns="False" HeadersVisibility="None" CanUserAddRows="False" VerticalScrollBarVisibility="Visible">
-                 <DataGrid.Columns>
+                 <DataGrid.Columns >
                     <DataGridTemplateColumn Width="100">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate >
@@ -89,8 +89,8 @@
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
-                    <DataGridTemplateColumn>
-                        <DataGridTemplateColumn.CellTemplate>
+                    <DataGridTemplateColumn >
+                        <DataGridTemplateColumn.CellTemplate  >
                             <DataTemplate>
                                 <TextBlock VerticalAlignment="Center" Foreground="{Binding SaveColor, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
                                                Text="{Binding Nom, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" FontWeight="Bold"/>

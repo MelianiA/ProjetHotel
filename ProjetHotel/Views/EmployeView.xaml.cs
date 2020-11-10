@@ -1,14 +1,14 @@
-﻿using System.Windows.Controls;
+﻿using Makrisoft.Makfi.ViewModels;
+using System.Windows.Controls;
 
-namespace ProjetHotel.Views
+namespace Makrisoft.Makfi.Views
 {
-    /// <summary>
-    /// Logique d'interaction pour EmployeView.xaml
-    /// </summary>
     public partial class EmployeView : UserControl
     {
         public EmployeView()
         {
+            Reference_ViewModel.Employe = new EmployeViewModel();
+            DataContext = Reference_ViewModel.Employe;
             InitializeComponent();
         }
     }

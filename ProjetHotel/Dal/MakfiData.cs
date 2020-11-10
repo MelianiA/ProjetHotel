@@ -1,4 +1,5 @@
 ﻿using Makrisoft.Makfi.Models;
+using Makrisoft.Makfi.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
@@ -183,6 +184,23 @@ namespace Makrisoft.Makfi.Dal
                 spParam
                 );
         }
+        internal static IEnumerable<Employe> Employe_Read(string spParam = null)
+        {
+            return ReadAll<Employe>
+                            (
+                            "Employe_Read",
+                            e =>
+                            {
+                                e.Id = (Guid)Reader["Id"];
+                                e.Nom = Reader["Nom"] as string;
+                                e.Prenom = Reader["Prenom"] as string;
+                                e.Commentaire = Reader["Commentaire"] as string;
+                                e.Etat = new Etat { Id=(Guid)Reader["Etat"] };
+                            },
+                            spParam
+                            );
+        }
+
         #endregion
 
         #region _Save

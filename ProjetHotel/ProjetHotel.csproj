@@ -74,12 +74,14 @@
     <Compile Include="Converters\ViewSelectedConverter.cs" />
     <Compile Include="Dal\MakfiData.cs" />
     <Compile Include="Models\Chambre.cs" />
+    <Compile Include="Models\Employe.cs" />
     <Compile Include="Models\Etat.cs" />
     <Compile Include="Models\Hotel.cs" />
     <Compile Include="Models\Utilisateur.cs" />
     <Compile Include="Tools\Log.cs" />
     <Compile Include="Tools\Tools.cs" />
     <Compile Include="ViewModels\AdministrationViewModel.cs" />
+    <Compile Include="ViewModels\EmployeViewModel.cs" />
     <Compile Include="ViewModels\HomeViewModel.cs" />
     <Compile Include="ViewModels\HotelViewModel.cs" />
     <Compile Include="ViewModels\_Reference_ViewModel.cs" />
@@ -91,6 +93,10 @@
     <Compile Include="ViewModels\_VM.cs" />
     <Compile Include="Views\AdministrationView.xaml.cs">
       <DependentUpon>AdministrationView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Converters\EmployeConverters.cs" />
+    <Compile Include="Views\EmployeView.xaml.cs">
+      <DependentUpon>EmployeView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\HeaderView.xaml.cs">
       <DependentUpon>HeaderView.xaml</DependentUpon>
@@ -140,6 +146,10 @@
   </ItemGroup>
   <ItemGroup>
     <Page Include="Views\AdministrationView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\EmployeView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

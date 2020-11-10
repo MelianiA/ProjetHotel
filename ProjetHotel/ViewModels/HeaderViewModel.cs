@@ -118,6 +118,10 @@ namespace Makrisoft.Makfi.ViewModels
                 case ViewEnum.Hotel:
                     Reference_ViewModel.Main.ViewSelected = Dal.ViewEnum.Administration;
                     break;
+
+                case ViewEnum.Employe:
+                    Reference_ViewModel.Main.ViewSelected = Dal.ViewEnum.Home;
+                    break;
             }
 
         }

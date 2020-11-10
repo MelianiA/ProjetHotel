@@ -1,4 +1,5 @@
-﻿using Makrisoft.Makfi.Tools;
+﻿using Makrisoft.Makfi.Dal;
+using Makrisoft.Makfi.Tools;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,8 +14,7 @@ namespace Makrisoft.Makfi.ViewModels
 
         #region Binding
 
-        private bool isAdmin = true;
-
+ 
         public bool IsAdmin
         {
             get { return isAdmin; }
@@ -24,6 +24,8 @@ namespace Makrisoft.Makfi.ViewModels
                 OnPropertyChanged("IsAdmin");
             }
         }
+        private bool isAdmin = true;
+
         #endregion
 
 
@@ -39,15 +41,13 @@ namespace Makrisoft.Makfi.ViewModels
         {
             ChangeViewCommand = new RelayCommand(p => OnChangeViewCommand(p));
            
-
-
         }
 
-        private void OnChangeViewCommand(object p)
+        private void OnChangeViewCommand(object view)
         {
-            Reference_ViewModel.Main.ViewSelected = Dal.ViewEnum.Administration;
-
+            Reference_ViewModel.Main.ViewSelected = (ViewEnum)view;
         }
+       
         #endregion
 
 

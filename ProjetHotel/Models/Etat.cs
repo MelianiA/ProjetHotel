@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Makrisoft.Makfi.Models
 {
-    class Etat
+    public class Etat
     {
         public Guid Id;
         public string Libelle;

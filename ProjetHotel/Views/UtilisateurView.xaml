@@ -131,15 +131,15 @@
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
-                    <DataGridTemplateColumn>
-                            <DataGridTemplateColumn.CellTemplate>
-                                <DataTemplate>
+                    <DataGridTemplateColumn  >
+                        <DataGridTemplateColumn.CellTemplate >
+                                <DataTemplate >
                                 <TextBlock VerticalAlignment="Center" Foreground="{Binding SaveColor, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
                                                Text="{Binding Nom, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" FontWeight="Bold"/>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
-                    <DataGridTemplateColumn>
+                    <DataGridTemplateColumn  >
                             <!--à gauche-->
                         <DataGridTemplateColumn.CellTemplate  >
                                 <DataTemplate>
@@ -150,8 +150,8 @@
                                     </Border>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
-                        </DataGridTemplateColumn>
-                        <DataGridTemplateColumn>
+                        </DataGridTemplateColumn >
+                    <DataGridTemplateColumn  >
                             <!--millieu-->
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
@@ -162,8 +162,8 @@
                                     </Border>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
-                        </DataGridTemplateColumn>
-                        <DataGridTemplateColumn>
+                     </DataGridTemplateColumn>
+                        <DataGridTemplateColumn >
                             <!--à droite-->
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
