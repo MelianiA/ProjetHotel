@@ -77,7 +77,7 @@
         </Border>
         <!--Milieu-->
          <Border Grid.Column="1" Grid.Row="1" BorderBrush="Transparent" BorderThickness="1" CornerRadius="10">
-            <DataGrid ItemsSource="{Binding HotelCollectionView}"
+            <DataGrid ItemsSource="{Binding HotelCollectionView}" x:Name="dg"
                       SelectedItem="{Binding CurrentHotel, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
                       SelectionMode="Single"  SelectionUnit="FullRow" IsSynchronizedWithCurrentItem="False"
                       AutoGenerateColumns="False" HeadersVisibility="None" CanUserAddRows="False" VerticalScrollBarVisibility="Visible">
@@ -147,7 +147,7 @@
                 
                  <TextBlock Text="Gouvernante" Margin="0,15,0,0"/>
                 <ComboBox ItemsSource="{Binding GouvernanteList, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
-                          SelectedItem="{Binding CurrentGouv, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" FontSize="16">
+                          SelectedItem="{Binding ElementName=dg,Path=SelectedItem.Gouvernante, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" FontSize="16">
                     <ComboBox.ItemTemplate>
                         <DataTemplate>
                             <StackPanel Orientation="Horizontal">
@@ -160,7 +160,7 @@
 
                 <TextBlock Text="Reception" Margin="0,15,0,0"/>
                 <ComboBox ItemsSource="{Binding ReceptionList, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
-                          SelectedItem="{Binding CurrentRecep, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" FontSize="16">
+                          SelectedItem="{Binding ElementName=dg,Path=SelectedItem.Reception, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" FontSize="16">
                     <ComboBox.ItemTemplate>
                         <DataTemplate>
                             <StackPanel Orientation="Horizontal">

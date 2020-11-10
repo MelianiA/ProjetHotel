@@ -1,4 +1,6 @@
 ﻿using Makrisoft.Makfi.ViewModels;
+using Microsoft.Win32;
+using System.IO;
 using System.Windows.Controls;
 
 namespace Makrisoft.Makfi.Views
@@ -14,5 +16,8 @@ namespace Makrisoft.Makfi.Views
             DataContext = Reference_ViewModel.Utilisateur;
             InitializeComponent();
         }
+
+        
+         
     }
 }

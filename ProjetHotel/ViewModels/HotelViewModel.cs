@@ -22,6 +22,7 @@ namespace Makrisoft.Makfi.ViewModels
             Hotel_Load();
             GouvernanteListLoad();
             ReceptionListLoad();
+
         }
         #endregion
 
@@ -72,24 +73,7 @@ namespace Makrisoft.Makfi.ViewModels
             }
         }
         private ObservableCollection<Utilisateur_VM> gouvernanteList;
-        public Utilisateur_VM CurrentGouv
-        {
-            get
-            {
-                return
-                  currentGouv;
-            }
-            set
-            {
 
-                currentGouv = value;
-                CurrentHotel.SaveColor = "Red";
-                OnPropertyChanged("CurrentGouv");
-
-
-            }
-        }
-        private Utilisateur_VM currentGouv;
 
         //Reception
         public ObservableCollection<Utilisateur_VM> ReceptionList
@@ -103,24 +87,7 @@ namespace Makrisoft.Makfi.ViewModels
             }
         }
         private ObservableCollection<Utilisateur_VM> receptionList;
-        public Utilisateur_VM CurrentRecep
-        {
-            get
-            {
-                return
-                  currentRecep;
-            }
-            set
-            {
 
-                currentRecep = value;
-                CurrentHotel.SaveColor = "Red";
-                OnPropertyChanged("CurrentRecep");
-
-
-            }
-        }
-        private Utilisateur_VM currentRecep;
         #endregion
 
         #region Commands
@@ -132,7 +99,7 @@ namespace Makrisoft.Makfi.ViewModels
         // Méthodes OnCommand
         private void OnSaveCommand()
         {
-            if ((CurrentHotel.Reception == null && CurrentHotel.Gouvernante == null) && (CurrentGouv == null || CurrentRecep == null))
+            if (CurrentHotel.Reception == null || CurrentHotel.Gouvernante == null)
             {
                 MessageBox.Show($"Ajout impossible de l'hotel: {CurrentHotel.Nom}", "Important !");
                 return;
@@ -142,43 +109,12 @@ namespace Makrisoft.Makfi.ViewModels
             if (CurrentHotel.Id != default)
             {
                 hotelTmp = CurrentHotel;
-                if (CurrentRecep == null && CurrentGouv != null)
-                {
-                    param = MakfiData.Hotel_Save($"<hotel><id>{CurrentHotel.Id}</id><nom>{CurrentHotel.Nom}</nom><reception>{CurrentHotel.Reception.Id}</reception><gouvernante>{CurrentGouv.Id}</gouvernante><commentaire>{CurrentHotel.Commentaire}</commentaire></hotel>");
-                }
-                if (CurrentRecep != null && CurrentGouv == null)
-                {
-                    param = MakfiData.Hotel_Save($"<hotel><id>{CurrentHotel.Id}</id><nom>{CurrentHotel.Nom}</nom><reception>{CurrentRecep.Id}</reception><gouvernante>{CurrentHotel.Gouvernante.Id}</gouvernante><commentaire>{CurrentHotel.Commentaire}</commentaire></hotel>");
-                }
-                if (CurrentRecep == null && CurrentGouv == null)
-                {
-                    param = MakfiData.Hotel_Save($"<hotel><id>{CurrentHotel.Id}</id><nom>{CurrentHotel.Nom}</nom><reception>{CurrentHotel.Reception.Id}</reception><gouvernante>{CurrentHotel.Gouvernante.Id}</gouvernante><commentaire>{CurrentHotel.Commentaire}</commentaire></hotel>");
-                }
-                if (CurrentRecep != null && CurrentGouv != null)
-                {
-                    param = MakfiData.Hotel_Save($"<hotel><id>{CurrentHotel.Id}</id><nom>{CurrentHotel.Nom}</nom><reception>{CurrentRecep.Id}</reception><gouvernante>{CurrentGouv.Id}</gouvernante><commentaire>{CurrentHotel.Commentaire}</commentaire></hotel>");
-                }
+                param = MakfiData.Hotel_Save($"<hotel><id>{CurrentHotel.Id}</id><nom>{CurrentHotel.Nom}</nom><reception>{CurrentHotel.Reception.Id}</reception><gouvernante>{CurrentHotel.Gouvernante.Id}</gouvernante><commentaire>{CurrentHotel.Commentaire}</commentaire></hotel>");
             }
             else
             {
                 hotelTmp = CurrentHotel;
-                if (CurrentRecep == null && CurrentGouv != null)
-                {
-                    param = MakfiData.Hotel_Save($"<hotel><nom>{CurrentHotel.Nom}</nom><reception>{CurrentHotel.Reception.Id}</reception><gouvernante>{CurrentGouv.Id}</gouvernante><commentaire>{CurrentHotel.Commentaire}</commentaire></hotel>");
-
-                }
-                if (CurrentRecep != null && CurrentGouv == null)
-                {
-                    param = MakfiData.Hotel_Save($"<hotel><nom>{CurrentHotel.Nom}</nom><reception>{CurrentRecep.Id}</reception><gouvernante>{CurrentHotel.Gouvernante.Id}</gouvernante><commentaire>{CurrentHotel.Commentaire}</commentaire></hotel>");
-                }
-                if (CurrentRecep == null && CurrentGouv == null)
-                {
-                    param = MakfiData.Hotel_Save($"<hotel><nom>{CurrentHotel.Nom}</nom><reception>{CurrentHotel.Reception.Id}</reception><gouvernante>{CurrentHotel.Gouvernante.Id}</gouvernante><commentaire>{CurrentHotel.Commentaire}</commentaire></hotel>");
-                }
-                if (CurrentRecep != null && CurrentGouv != null)
-                {
-                    param = MakfiData.Hotel_Save($"<hotel><nom>{CurrentHotel.Nom}</nom><reception>{CurrentRecep.Id}</reception><gouvernante>{CurrentGouv.Id}</gouvernante><commentaire>{CurrentHotel.Commentaire}</commentaire></hotel>");
-                }
+                param = MakfiData.Hotel_Save($"<hotel><nom>{CurrentHotel.Nom}</nom><reception>{CurrentHotel.Reception.Id}</reception><gouvernante>{CurrentHotel.Gouvernante.Id}</gouvernante><commentaire>{CurrentHotel.Commentaire}</commentaire></hotel>");
             }
             if (param)
             {
@@ -186,11 +122,8 @@ namespace Makrisoft.Makfi.ViewModels
                 Hotels.Clear();
                 Hotel_Load();
                 CurrentHotel = Hotels.Where(u => u.Nom == hotelTmp.Nom).FirstOrDefault();
-                CurrentRecep = null;
-                CurrentGouv = null;
-                CurrentHotel.SaveColor = "Navy";
-
             }
+
         }
         private void OnAddCommand()
         {
@@ -218,7 +151,7 @@ namespace Makrisoft.Makfi.ViewModels
 
         }
 
-        // Méthodes OnCanExecuteXXXXCommand
+        // Méthodes OnCanExecuteCommand
         private bool OnCanExecuteSaveCommand()
         {
             if (CurrentHotel != null)
@@ -267,11 +200,10 @@ namespace Makrisoft.Makfi.ViewModels
 
                     Commentaire = x.Commentaire,
                     SaveColor = "Navy"
-                }).ToList());
-
-            // ListeView
+                }).OrderBy(x => x.Nom).ToList());
             HotelCollectionView = new ListCollectionView(Hotels);
             HotelCollectionView.Refresh();
+
         }
         public void GouvernanteListLoad()
         {

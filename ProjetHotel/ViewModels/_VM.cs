@@ -104,7 +104,7 @@ namespace Makrisoft.Makfi.ViewModels
 
         public string Image { get; set; }
 
-        public Guid Gouvernante { get; set; }
+       // public Guid Gouvernante { get; set; }
 
         public RoleEnum Statut
         {
