@@ -73,47 +73,59 @@ GO
 exec Utilisateur_Save '<utilisateur><id>6FBA0732-FF0E-4AE0-871F-A710534F98FC</id><nom>teste</nom><statut>4</statut></utilisateur>'
 exec Utilisateur_Save '<utilisateur><nom>csdf</nom><statut>4</statut></utilisateur>'
 ----------------------------------------------------------------------------------------------------------
-   
 alter PROC [dbo].[Hotel_Save](@data xml=NULL)
 AS
 DECLARE @IDs TABLE(ID uniqueidentifier);
---
-update Hotel set Nom=t.nom, Reception=t.Reception, Gouvernante=t.Gouvernante, Commentaire=t.Commentaire
-	output inserted.Id into @IDs(ID)
-from 
-	(
-	select 
-		T.N.value('id[1]', 'uniqueidentifier') id, 
-		T.N.value('nom[1]', 'nvarchar(MAX)') nom, 
-		T.N.value('reception[1]', 'uniqueidentifier') Reception, 
-		T.N.value('gouvernante[1]', 'uniqueidentifier') Gouvernante,
-		T.N.value('commentaire[1]', 'nvarchar(MAX)') Commentaire
+DECLARE @message nvarchar(MAX)
+DECLARE @Id uniqueidentifier
+DECLARE @Nom nvarchar(MAX)
+DECLARE @Reception uniqueidentifier
+DECLARE @Gouvernante uniqueidentifier
+DECLARE @Commentaire nvarchar(MAX)
 
-		from @data.nodes('hotel') as T(N)
-	where T.N.value('id[1]', 'uniqueidentifier') is not null
-	)t
-where Hotel.Id = t.id
----
-insert Hotel(Nom, Reception,Gouvernante, Commentaire) 
-	output inserted.Id into @IDs(ID)
-	(
-	select 
-		T.N.value('nom[1]', 'nvarchar(MAX)'), 
-		T.N.value('reception[1]', 'uniqueidentifier')  , 
-		T.N.value('gouvernante[1]', 'uniqueidentifier'),
-		T.N.value('commentaire[1]', 'nvarchar(MAX)') 
+-- PARTIE recup XML :
+select 
+		T.N.value('(id/text())[1]', 'uniqueidentifier') Id, 
+		T.N.value('(nom/text())[1]', 'nvarchar(MAX)') Nom, 
+		T.N.value('(reception/text())[1]', 'uniqueidentifier') Reception, 
+		T.N.value('(gouvernante/text())[1]', 'uniqueidentifier') Gouvernante,
+		T.N.value('(commentaire/text())[1]', 'nvarchar(MAX)') Commentaire
+  	 into #_hotel
+	 from @data.nodes('hotel') as T(N)
 
-	from @data.nodes('hotel') as T(N)
-	where T.N.value('id[1]', 'uniqueidentifier') is null
-	);
-SELECT ID FROM @IDs;
+-- PARTIE2
+select @id=Id from #_hotel
+
+-- Update
+BEGIN TRY
+       update Hotel set 
+              Nom = t.Nom,
+			  Gouvernante = t.Gouvernante,
+			  Reception= t.Reception,
+			  Commentaire=t.Commentaire
+       output inserted.Id into @IDs(ID)
+       from (select Nom, Reception, Gouvernante, Commentaire from #_hotel where Id is not null) t
+       where Hotel.Id=@id
+END TRY
+BEGIN CATCH
+       select @message = ERROR_MESSAGE() 
+    RAISERROR (@message, 16, 1);  
+       RETURN;
+END CATCH
+
+-- Insert
+insert Hotel(Nom, Gouvernante, Reception, Commentaire )
+output inserted.Id into @IDs(ID)
+(
+select
+       Nom, Gouvernante, Reception, Commentaire
+from #_hotel where Id is null
+)
+IF @Id is null select @id=ID from @IDs
+select Id from @IDs
 GO
 
-exec [Hotel_Save] '<hotel><id>0427C384-3C87-4CB2-8FE1-75DD60708F28</id><nom>El Kasbah</nom><reception>8227B7CC-164F-41CC-83DA-A53AC7010D17</reception><gouvernante>2E789142-F1FF-4482-BD9C-280ED4F6A5FE</gouvernante><commentaire>aaaaaaa</commentaire></hotel>'
-select * from Utilisateur
-select * from Hotel
-delete from Hotel where Id=''
--- *************************************************************************************************
+ -- *************************************************************************************************
 -- Delete
 -- *************************************************************************************************
 

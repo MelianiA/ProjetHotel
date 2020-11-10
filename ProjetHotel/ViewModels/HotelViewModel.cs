@@ -1,5 +1,6 @@
 ﻿using Makrisoft.Makfi.Dal;
 using Makrisoft.Makfi.Tools;
+using System;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
@@ -104,26 +105,22 @@ namespace Makrisoft.Makfi.ViewModels
                 MessageBox.Show($"Ajout impossible de l'hotel: {CurrentHotel.Nom}", "Important !");
                 return;
             }
-            bool param = false;
-            Hotel_VM hotelTmp;
-            if (CurrentHotel.Id != default)
-            {
-                hotelTmp = CurrentHotel;
-                param = MakfiData.Hotel_Save($"<hotel><id>{CurrentHotel.Id}</id><nom>{CurrentHotel.Nom}</nom><reception>{CurrentHotel.Reception.Id}</reception><gouvernante>{CurrentHotel.Gouvernante.Id}</gouvernante><commentaire>{CurrentHotel.Commentaire}</commentaire></hotel>");
-            }
-            else
-            {
-                hotelTmp = CurrentHotel;
-                param = MakfiData.Hotel_Save($"<hotel><nom>{CurrentHotel.Nom}</nom><reception>{CurrentHotel.Reception.Id}</reception><gouvernante>{CurrentHotel.Gouvernante.Id}</gouvernante><commentaire>{CurrentHotel.Commentaire}</commentaire></hotel>");
-            }
-            if (param)
-            {
-                CurrentHotel.SaveColor = "Navy";
-                Hotels.Clear();
-                Hotel_Load();
-                CurrentHotel = Hotels.Where(u => u.Nom == hotelTmp.Nom).FirstOrDefault();
-            }
-
+            Guid? monID = null;
+            if (CurrentHotel.Id != default) monID = CurrentHotel.Id;
+            var param = $@"
+                    <hotel>
+                        <id>{monID}</id>
+                        <nom>{CurrentHotel.Nom}</nom>
+                        <reception>{CurrentHotel.Reception.Id}</reception>
+                        <gouvernante>{CurrentHotel.Gouvernante.Id}</gouvernante>
+                        <commentaire>{CurrentHotel.Commentaire}</commentaire>       
+                    </hotel>";
+            var ids = MakfiData.Hotel_Save(param);
+            if (ids.Count == 0) throw new Exception("Rien n'a été sauvgardé ! ");
+            CurrentHotel.SaveColor = "Navy";
+            Hotels.Clear();
+            Hotel_Load();
+            CurrentHotel = Hotels.Where(u => u.Id == ids[0].Id).SingleOrDefault();
         }
         private void OnAddCommand()
         {

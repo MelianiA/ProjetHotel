@@ -162,7 +162,7 @@ namespace Makrisoft.Makfi.Dal
                                 e.Image = Reader["Image"] as string;
                                 e.Gouvernante = (Guid)Reader["Gouvernante"];
                                 e.Reception = (Guid)Reader["Reception"];
-                                e.Commentaire= Reader["Commentaire"] as string;
+                                e.Commentaire = Reader["Commentaire"] as string;
                             },
                             spParam
                             );
@@ -178,7 +178,7 @@ namespace Makrisoft.Makfi.Dal
                     e.Nom = Reader["Nom"] as string;
                     e.Image = Reader["Image"] as string;
                     e.CodePin = Reader["CodePin"] as string;
-                    e.Statut = (RoleEnum)(byte) Reader["Statut"];
+                    e.Statut = (RoleEnum)(byte)Reader["Statut"];
                 },
                 spParam
                 );
@@ -190,9 +190,18 @@ namespace Makrisoft.Makfi.Dal
         {
             return ExecuteNonQuery("Utilisateur_Save", spParam);
         }
-        internal static bool Hotel_Save(string spParam)
+        internal static List<Utilisateur> Hotel_Save(string spParam)
         {
-            return ExecuteNonQuery("Hotel_Save", spParam);
+            return ReadAll<Utilisateur>
+               (
+               "Hotel_Save",
+               e =>
+               {
+                   e.Id = (Guid)Reader["Id"];
+               },
+               spParam
+               );
+
         }
         #endregion
 
@@ -209,7 +218,7 @@ namespace Makrisoft.Makfi.Dal
                .Where(x => x.Nombre > 0);
         }
 
-     
+
         #endregion
 
         #region _Delete
