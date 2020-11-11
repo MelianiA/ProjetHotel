@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Makrisoft.Makfi.Dal;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,6 +13,6 @@ namespace Makrisoft.Makfi.Models
         public string Libelle;
         public string Icone;
         public string Couleur;
-        public byte Entite;
+        public EntiteEnum Entite;
     }
 }

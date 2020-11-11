@@ -15,6 +15,7 @@ namespace Makrisoft.Makfi.Dal
         Utilisateur, None, Hotel, DecoupageNew, Decoupage
     }
     public enum RoleEnum { None = 0, Admin = 1, Gouvernante = 2, Reception = 4 }
+    public enum EntiteEnum {  Employe = 1, Chambre = 2, Intervention = 3 }
 
     public static class MakfiData
     {
@@ -117,7 +118,7 @@ namespace Makrisoft.Makfi.Dal
                 return false;
             }
         }
-
+ 
         public static List<T> ReadAll<T>(string spName, Action<T> p, string spParam = null) where T : new()
         {
             List<T> entities = new List<T>();
@@ -132,6 +133,8 @@ namespace Makrisoft.Makfi.Dal
             Close();
             return entities;
         }
+
+       
         public static List<CanDelete> CanDelete(string spName, string spParam)
         {
             var list = ReadAll<CanDelete>
@@ -201,6 +204,24 @@ namespace Makrisoft.Makfi.Dal
                             );
         }
 
+        internal static IEnumerable<Etat> Etat_Read(string spParam = null)
+        {
+            return ReadAll<Etat>
+                             (
+                             "Etat_Read",
+                             e =>
+                             {
+                                 e.Id = (Guid)Reader["Id"];
+                                 e.Libelle = Reader["Libelle"] as string;
+                                 e.Icone = Reader["Icone"] as string;
+                                 e.Couleur = Reader["Couleur"] as string;
+                                 e.Entite = (EntiteEnum)(byte)Reader["Entite"] ;
+                             },
+                             spParam
+                             );
+        }
+
+
         #endregion
 
         #region _Save
@@ -213,6 +234,19 @@ namespace Makrisoft.Makfi.Dal
             return ReadAll<Utilisateur>
                (
                "Hotel_Save",
+               e =>
+               {
+                   e.Id = (Guid)Reader["Id"];
+               },
+               spParam
+               );
+
+        }
+        internal static List<Employe> Employe_Save(string spParam)
+        {
+            return ReadAll<Employe>
+               (
+               "Employe_Save",
                e =>
                {
                    e.Id = (Guid)Reader["Id"];
@@ -236,6 +270,11 @@ namespace Makrisoft.Makfi.Dal
                .Where(x => x.Nombre > 0);
         }
 
+        public static IEnumerable<CanDelete> Employe_CanDelete(string spParam)
+        {
+            return CanDelete("Employe_CanDelete", spParam)
+                .Where(x => x.Nombre > 0);
+        }
 
         #endregion
 
@@ -248,6 +287,10 @@ namespace Makrisoft.Makfi.Dal
         internal static bool Hotel_Delete(string spParam)
         {
             return ExecuteNonQuery("Hotel_Delete", spParam);
+        }
+        internal static bool Employe_Delete(string spParam)
+        {
+            return ExecuteNonQuery("Employe_Delete", spParam);
         }
         #endregion
 

@@ -104,7 +104,7 @@ namespace Makrisoft.Makfi.ViewModels
 
         public string Image { get; set; }
 
-       // public Guid Gouvernante { get; set; }
+        // public Guid Gouvernante { get; set; }
 
         public RoleEnum Statut
         {
@@ -149,14 +149,55 @@ namespace Makrisoft.Makfi.ViewModels
         public string Icone { get; set; }
         public string Libelle { get; set; }
         public string Couleur { get; set; }
+        public EntiteEnum Entite { get; set; }
     }
-    public class Employe_VM :ViewModelBase
+    public class Employe_VM : ViewModelBase
     {
         public Guid Id { get; set; }
-        public Guid Etat { get; set; } // a modifier en Etat_VM
-        public string Nom { get; set; }
-        public string Prenom { get; set; }
-        public string Commentaire { get; set; }
+        public Etat_VM Etat
+        {
+            get { return etat; }
+            set
+            {
+                etat = value;
+                SaveColor = "Red";
+                OnPropertyChanged("Etat");
+            }
+        }
+        private Etat_VM etat;
+        public string Nom
+        {
+            get { return nom; }
+            set
+            {
+                nom = value;
+                SaveColor = "Red";
+                OnPropertyChanged("Nom");
+            }
+        }
+        private string nom;
+        public string Prenom
+        {
+            get { return prenom; }
+            set
+            {
+                prenom = value;
+                SaveColor = "Red";
+                OnPropertyChanged("Prenom");
+            }
+        }
+        private string prenom;
+        public string Commentaire
+        {
+            get { return commentaire; }
+            set
+            {
+                commentaire = value;
+                SaveColor = "Red";
+                OnPropertyChanged("Commentaire");
+            }
+        }
+        private string commentaire;
         public string SaveColor
         {
             get
