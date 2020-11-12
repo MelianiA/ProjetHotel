@@ -210,4 +210,67 @@ namespace Makrisoft.Makfi.ViewModels
         }
         private string saveColor = "Navy";
     }
+    public class Chambre_VM : ViewModelBase
+    {
+        public Guid Id { get; set; }
+        public string Nom
+        {
+            get { return nom; }
+            set
+            {
+                nom = value;
+                SaveColor = "Red";
+                OnPropertyChanged("Nom");
+            }
+        }
+        private string nom;
+        public Etat_VM Etat
+        {
+            get { return etat; }
+            set
+            {
+                etat = value;
+                SaveColor = "Red";
+                OnPropertyChanged("Etat");
+            }
+        }
+        private Etat_VM etat;
+        public string Commentaire
+        {
+            get { return commentaire; }
+            set
+            {
+                commentaire = value;
+                SaveColor = "Red";
+                OnPropertyChanged("Commentaire");
+            }
+        }
+        private string commentaire;
+        public Hotel_VM Hotel
+        {
+            get { return hotel; }
+            set
+            {
+                hotel = value;
+                SaveColor = "Red";
+                OnPropertyChanged("Hotel");
+            }
+        }
+        private Hotel_VM hotel;
+        public string SaveColor
+        {
+            get
+            { return saveColor; }
+            set
+            {
+                saveColor = value;
+                OnPropertyChanged("SaveColor");
+            }
+        }
+        private string saveColor = "Navy";
+    }
+    public class HotelEmploye_VM
+    {
+        public Guid Employe { get; set; }
+     }
 }

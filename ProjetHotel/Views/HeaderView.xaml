@@ -22,8 +22,8 @@
                 <DockPanel Margin="5">
                     <ComboBox DockPanel.Dock="Bottom"  HorizontalAlignment="Center" FontSize="20" IsEnabled="{Binding CanChangeUtilisateur}"
                               ItemsSource="{Binding Utilisateurs}" 
-                               DisplayMemberPath="Nom" 
-                               SelectedItem="{Binding CurrentUtilisateur}">
+                              DisplayMemberPath="Nom" 
+                              SelectedItem="{Binding CurrentUtilisateur}">
                     </ComboBox>
                     <!--<TextBlock DockPanel.Dock="Top" Text="{Binding CurrentUtilisateur.Image}" Foreground="Red" FontSize="8"></TextBlock>-->
                     <Image Source="{Binding CurrentUtilisateur.Image}" Width="130" Height="120"/>
@@ -118,7 +118,8 @@
                     <ComboBox  DockPanel.Dock="Bottom" HorizontalAlignment="Center" FontSize="20"  
                                ItemsSource="{Binding Hotels}" 
                                DisplayMemberPath="Nom"
-                               SelectedItem="{Binding CurrentHotel}">
+                               SelectedItem="{Binding CurrentHotel}"  
+                               IsEnabled="{Binding CanChangeUtilisateur}">
                     </ComboBox>
                     <Image Source="{Binding CurrentHotel.Image}" Width="130" Height="100"/>
                 </DockPanel>

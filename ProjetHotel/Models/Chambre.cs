@@ -10,9 +10,9 @@ namespace Makrisoft.Makfi.Models
     {
         public Guid Id;
         public string Nom;
-        public Guid Etat;
+        public Etat Etat;
         public string Commentaire;
-        public Guid Hotel;
+        public Hotel Hotel;
 
         //pas dans la BDD
         public Etat LastEtat { get; set; }

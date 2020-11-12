@@ -34,7 +34,7 @@ namespace Makrisoft.Makfi.ViewModels
 
         #region Binding
         //Employe
-        public ObservableCollection<Employe_VM> Employes
+        public ObservableCollection<Employe_VM> AllEmployes
         {
             get { return employes; }
             set
@@ -51,6 +51,18 @@ namespace Makrisoft.Makfi.ViewModels
             set { employeCollectionView = value; OnPropertyChanged("EmployeCollectionView"); }
         }
         private ListCollectionView employeCollectionView;
+
+        //Employe
+        public ObservableCollection<HotelEmploye_VM> HotelEmployesCurrentHotel
+        {
+            get { return employesCurrentHotel; }
+            set
+            {
+                employesCurrentHotel = value;
+                OnPropertyChanged("EmployesHotel");
+            }
+        }
+        private ObservableCollection<HotelEmploye_VM> employesCurrentHotel;
         public Employe_VM CurrentEmploye
         {
             get
@@ -155,14 +167,14 @@ namespace Makrisoft.Makfi.ViewModels
             var ids = MakfiData.Employe_Save(param);
             if (ids.Count == 0) throw new Exception("Rien n'a été sauvgardé ! ");
             CurrentEmploye.SaveColor = "Navy";
-            Employes.Clear();
+            AllEmployes.Clear();
             Load_Employes();
-            CurrentEmploye = Employes.Where(u => u.Id == ids[0].Id).SingleOrDefault();
+            CurrentEmploye = AllEmployes.Where(u => u.Id == ids[0].Id).SingleOrDefault();
         }
         private void OnAddCommand()
         {
             CurrentEmploye = new Employe_VM { Nom = "(A définir)" };
-            Employes.Add(CurrentEmploye);
+            AllEmployes.Add(CurrentEmploye);
             EmployeCollectionView.Refresh();
         }
         private void OnDeleteCommand()
@@ -173,7 +185,7 @@ namespace Makrisoft.Makfi.ViewModels
                 var param = MakfiData.Employe_Delete($"<employe><id>{CurrentEmploye.Id}</id></employe>");
                 if (param)
                 {
-                    Employes.Remove(CurrentEmploye);
+                    AllEmployes.Remove(CurrentEmploye);
                 }
             }
             else
@@ -222,9 +234,9 @@ namespace Makrisoft.Makfi.ViewModels
         #endregion
 
         #region Load
-        private void Load_Employes()
+        public void Load_Employes()
         {
-            Employes = new ObservableCollection<Employe_VM>(
+            AllEmployes = new ObservableCollection<Employe_VM>(
               MakfiData.Employe_Read()
               .Select(x => new Employe_VM
               {
@@ -236,7 +248,22 @@ namespace Makrisoft.Makfi.ViewModels
                   Commentaire = x.Commentaire,
                   SaveColor = "Navy"
               }).OrderBy(x => x.Nom).ToList());
-            EmployeCollectionView = new ListCollectionView(Employes);
+
+            //---------------------------------------------------
+            //contient la liste des Ids des employes 
+            HotelEmployesCurrentHotel = new ObservableCollection<HotelEmploye_VM>(
+                  MakfiData.HotelEmploye_Read($"<hotel><hotel>{Reference_ViewModel.Header.CurrentHotel.Id}</hotel></hotel>")
+                  .Select(x => new HotelEmploye_VM
+                  {
+                      Employe = x.Employe
+                  }).ToList());
+            //---------------------------------------------------
+            var EmployesCurrentHotel = new ObservableCollection<Employe_VM>();
+            foreach (var item in HotelEmployesCurrentHotel)
+            {
+                EmployesCurrentHotel.Add(AllEmployes.Where(x => x.Id == item.Employe).SingleOrDefault());
+            }
+            EmployeCollectionView = new ListCollectionView(EmployesCurrentHotel);
             EmployeCollectionView.Refresh();
         }
 

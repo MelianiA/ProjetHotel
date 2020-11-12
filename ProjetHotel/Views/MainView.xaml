@@ -49,6 +49,10 @@
             <Border  Grid.Row="1" Visibility="{Binding ViewSelected, Converter={StaticResource ViewSelectedConverterKey},ConverterParameter={x:Static data:ViewEnum.Employe}}">
                 <local:EmployeView/>
             </Border>
+            <!--Chambre-->
+            <Border  Grid.Row="1" Visibility="{Binding ViewSelected, Converter={StaticResource ViewSelectedConverterKey}, ConverterParameter={x:Static data:ViewEnum.Chambre}}">
+                <local:ChambreView />
+            </Border>
             <!--<Border  Grid.Row="1" Visibility="{Binding ViewSelected, Converter={StaticResource ViewSelectedConverterKey}, ConverterParameter={x:Static data:ViewEnum.Intervention}}">
                 <local:InterventionView x:Name="InterventionUC"/>
             </Border>
@@ -58,9 +62,7 @@
             <Border  Grid.Row="1" Visibility="{Binding ViewSelected, Converter={StaticResource ViewSelectedConverterKey}, ConverterParameter={x:Static data:ViewEnum.InterventionNew}}">
                 <local:InterventionNewView x:Name="InterventionNewUC"/>
             </Border>
-            <Border  Grid.Row="1" Visibility="{Binding ViewSelected, Converter={StaticResource ViewSelectedConverterKey}, ConverterParameter={x:Static data:ViewEnum.Chambre}}">
-                <local:ChambreView x:Name="ChambreUC"/>
-            </Border>
+            
             <Border  Grid.Row="1" Visibility="{Binding ViewSelected, Converter={StaticResource ViewSelectedConverterKey}, ConverterParameter={x:Static data:ViewEnum.ChambreGroupe}}">
                 <local:ChambreGroupeView x:Name="ChambreGroupeUC"/>
             </Border>

@@ -122,6 +122,9 @@ namespace Makrisoft.Makfi.ViewModels
                 case ViewEnum.Employe:
                     Reference_ViewModel.Main.ViewSelected = Dal.ViewEnum.Home;
                     break;
+                case ViewEnum.Chambre:
+                    Reference_ViewModel.Main.ViewSelected = Dal.ViewEnum.Home;
+                    break;
             }
 
         }
@@ -138,7 +141,7 @@ namespace Makrisoft.Makfi.ViewModels
         {
             // ICommand
             DeconnectCommand = new RelayCommand(p => OnDeconnectCommand());
-            BackCommand = new RelayCommand(p => OnBackCommand());
+            BackCommand = new RelayCommand(p => OnBackCommand(), p => OnCanExecuteBackCommand());
 
             // Utilisateur
             Utilisateurs = new ObservableCollection<Utilisateur_VM>(
@@ -157,6 +160,14 @@ namespace Makrisoft.Makfi.ViewModels
             // Horloge
             HeaderTimer.Elapsed += (s, e) => HorlogeLoop();
             HeaderTimer.Start();
+        }
+
+        private bool OnCanExecuteBackCommand()
+        {
+            if (Reference_ViewModel.Main.ViewSelected == ViewEnum.Home ||
+                Reference_ViewModel.Main.ViewSelected == ViewEnum.Login)
+                return false;
+            else return true;
         }
         #endregion
 

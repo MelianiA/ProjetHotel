@@ -3,7 +3,6 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
              xmlns:conv="clr-namespace:Makrisoft.Makfi.Converters"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d" 
@@ -50,9 +49,6 @@
                     <MenuItem Header="..." Foreground="Navy" FontSize="16">
                         <MenuItem Header="Ajouter" Foreground="Navy" Command="{Binding ChambreSelectedAddCommand}"/>
                         <MenuItem Header="Supprimer" Foreground="Navy" Command="{Binding ChambreSelectedDeleteCommand}"/>
-                        <Separator/>
-                        <MenuItem Header="Annuler toutes les modifications" Foreground="Navy" Command="{Binding ChambreModifiedCancelCommand}"/>
-                        <MenuItem Header="Gérer les groupes de chambre" Foreground="Navy" Command="{Binding ChambreGroupeViewCommand}"/>
                     </MenuItem>
                 </Menu>
             </Grid>
@@ -78,7 +74,7 @@
                 <Button Grid.Column="2" Background="Transparent" BorderBrush="Transparent" BorderThickness="1" ToolTip="Enregistrer les modifications"
                         Command="{Binding ChambreModifiedSaveCommand}" VerticalAlignment="Bottom">
                     <Button.Content>
-                        <materialDesign:PackIcon Height="20" Width="Auto" Kind="Floppy" Foreground="{Binding SaveColor}" Margin="0,0,10,0" />
+                        <materialDesign:PackIcon Height="20" Width="Auto" Kind="Floppy" Foreground="{Binding CurrentChambre.SaveColor}" Margin="0,0,10,0" />
                     </Button.Content>
                 </Button>
             </Grid>
@@ -118,29 +114,37 @@
         </Border>
         <!--Milieu-->
         <Border Grid.Column="1" Grid.Row="1" BorderBrush="Transparent" BorderThickness="1" CornerRadius="10" Margin="0" >
-            <DataGrid ItemsSource="{Binding EntityCollectionView}" SelectedItem="{Binding ChambreSelected}" 
+            <DataGrid ItemsSource="{Binding ChambreCollectionView}" SelectedItem="{Binding CurrentChambre}" 
                           AutoGenerateColumns="False" HeadersVisibility="None" CanUserAddRows="False" VerticalScrollBarVisibility="Visible">
                 <DataGrid.Columns>
-                    <DataGridTextColumn Binding="{Binding Libelle}" FontWeight="Bold" Width="Auto"/>
-                    <DataGridTextColumn Binding="{Binding Groupe.Libelle}" FontWeight="Normal" Width="Auto"/>
+                    <DataGridTemplateColumn  >
+                        <DataGridTemplateColumn.CellTemplate >
+                            <DataTemplate >
+                                <TextBlock VerticalAlignment="Center" Foreground="{Binding SaveColor, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                                               Text="{Binding Nom, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" FontWeight="Bold"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTextColumn Binding="{Binding Etat.Libelle}" FontWeight="Normal" Width="Auto" IsReadOnly="True"/>
                     <DataGridTemplateColumn >
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <materialDesign:PackIcon Height="20" Width="Auto" Kind="{Binding LastEtat.Icone}" Foreground="{Binding LastEtat.Couleur}"/>
+                                <!--{Binding Etat.Icone}-->
+                                <materialDesign:PackIcon Height="20" Width="Auto" Kind="{Binding Etat.Icone}" Foreground="{Binding Etat.Couleur}"/>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
                     <DataGridTemplateColumn Width="*">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <TextBlock Text="{Binding Commentaire}" TextWrapping="Wrap"/>
+                                <TextBlock Text="{Binding Hotel.Nom}" TextWrapping="Wrap" FontWeight="DemiBold"/>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
-                    <DataGridTemplateColumn Width="50">
+                    <DataGridTemplateColumn Width="*">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <materialDesign:PackIcon Height="20" Width="Auto" Kind="{Binding DateModifiedIcone}" Foreground="Navy"/>
+                                <TextBlock Text="{Binding Commentaire}" TextWrapping="Wrap" />
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
@@ -151,10 +155,12 @@
         <Border Grid.Column="2" Grid.Row="1" BorderBrush="Transparent" BorderThickness="1" CornerRadius="10" HorizontalAlignment="Left" >
             <StackPanel Margin="5" Width="220">
                 <TextBlock Text="Libellé" Margin="0,15,0,0"/>
-                <TextBox FontSize="16" Text="{Binding ChambreSelected.Libelle, UpdateSourceTrigger=PropertyChanged}"/>
+                <TextBox FontSize="16" Text="{Binding CurrentChambre.Nom, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
+                <TextBlock Text="Commentaire" Margin="0,15,0,0"/>
+                <TextBox FontSize="16"  Text="{Binding CurrentChambre.Commentaire, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" TextWrapping="Wrap" TextAlignment="Left"/>
 
-                <!--<TextBlock Text="Etat" Margin="0,15,0,0"/>
-                <ComboBox ItemsSource="{Binding ChambreEtatList}" SelectedItem="{Binding ChambreSelected.Etat}" FontSize="16">
+                <ComboBox FontSize="16" Margin="0 20 0 0"
+                    ItemsSource="{Binding EtatChambre}" SelectedItem="{Binding CurrentChambre.Etat}"  >
                     <ComboBox.ItemTemplate>
                         <DataTemplate>
                             <StackPanel Orientation="Horizontal">
@@ -163,22 +169,20 @@
                             </StackPanel>
                         </DataTemplate>
                     </ComboBox.ItemTemplate>
-                </ComboBox>-->
-
-                <TextBlock Text="Commentaire" Margin="0,15,0,0"/>
-                <TextBox FontSize="16"  Text="{Binding ChambreSelected.Commentaire, UpdateSourceTrigger=PropertyChanged}" TextWrapping="Wrap" TextAlignment="Left"/>
-
-                <TextBlock Text="{Binding DecoupageSelected.Libelle}" Margin="0,15,0,0"/>
-                <ComboBox ItemsSource="{Binding ChambreGroupeList}" SelectedItem="{Binding ChambreSelected.Groupe}" FontSize="16">
+                </ComboBox>
+                
+                <ComboBox FontSize="16" Margin="0 20 0 0" 
+                    ItemsSource="{Binding HotelsCollectionView}" SelectedItem="{Binding CurrentChambre.Hotel}"  >
                     <ComboBox.ItemTemplate>
                         <DataTemplate>
                             <StackPanel Orientation="Horizontal">
-                                <materialDesign:PackIcon Height="20" Width="Auto" Kind="Building" Foreground="{Binding Couleur}"/>
-                                <TextBlock Text="{Binding Libelle}" Margin="5,0,0,0"/>
+                                <materialDesign:PackIcon Height="20" Width="Auto" Kind="Hotel"/>
+                                <TextBlock Text="{Binding Nom}" Margin="5,0,0,0"/>
                             </StackPanel>
                         </DataTemplate>
                     </ComboBox.ItemTemplate>
                 </ComboBox>
+
             </StackPanel>
         </Border>
     </Grid>

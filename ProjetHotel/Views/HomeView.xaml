@@ -36,27 +36,34 @@
                     <RowDefinition Height="*"></RowDefinition>
                     <RowDefinition Height="*"></RowDefinition>
                 </Grid.RowDefinitions>
+                <!--Intervention du jour-->
                 <materialDesign:PackIcon Grid.Row="0" Grid.Column="0"  Height="30" Width="Auto" Kind="ViewDay" Foreground="Navy" VerticalAlignment="Center"/>
                 <Button Grid.Row="0" Grid.Column="1" Content ="Intervention du jour" 
-                        
-                        Style="{StaticResource Menu}" Command="{Binding ChangeViewCommand}"  />
-
+                        Style="{StaticResource Menu}"
+                        Command="{Binding ChangeViewCommand}"  />
+                <!--Les chambres-->
                 <materialDesign:PackIcon Grid.Row="0" Grid.Column="3"  Height="30" Width="Auto" Kind="Bed" Foreground="Navy" VerticalAlignment="Center"/>
-                <Button Grid.Row="0" Grid.Column="4" Content="Les chambres"   Style="{StaticResource Menu}" Command="{Binding ChangeViewCommand}" />
-
+                <Button Grid.Row="0" Grid.Column="4" Content="Les chambres"  
+                        Style="{StaticResource Menu}" 
+                        CommandParameter="{x:Static data:ViewEnum.Chambre}"
+                        Command="{Binding ChangeViewCommand}" />
+                <!--Les interventions-->
                 <materialDesign:PackIcon Grid.Row="1" Grid.Column="0" Height="30" Width="Auto" Kind="ViewHeadline" Foreground="Navy" VerticalAlignment="Center"/>
-                <Button Grid.Row="1" Grid.Column="1" Content="Les interventions"  Style="{StaticResource Menu}" Command="{Binding ChangeViewCommand}"
+                <Button Grid.Row="1" Grid.Column="1" Content="Les interventions" 
+                        Style="{StaticResource Menu}" 
+                        CommandParameter="{x:Static data:ViewEnum.Employe}"
+                        Command="{Binding ChangeViewCommand}"
                         />
-
+                <!--Les employées-->
                 <materialDesign:PackIcon Grid.Row="1" Grid.Column="3" Height="30" Width="Auto" Kind="FaceWoman" Foreground="Navy" VerticalAlignment="Center"/>
                 <Button Grid.Row="1" Grid.Column="4" Content="Les employées" 
                         Style="{StaticResource Menu}" 
                         CommandParameter="{x:Static data:ViewEnum.Employe}"
                         Command="{Binding ChangeViewCommand}" />
-
+                <!--Synthèse mensuelle-->
                 <materialDesign:PackIcon Grid.Row="2" Grid.Column="0" Height="30" Width="Auto" Kind="Calculator" Foreground="Navy" VerticalAlignment="Center"/>
                 <Button Grid.Row="2" Grid.Column="1" Content="Synthèse mensuelle" Style="{StaticResource Menu}" Command="{Binding ChangeViewCommand}"  />
-
+                <!--Privé-->
                 <materialDesign:PackIcon Grid.Row="2" Grid.Column="3" Height="30" Width="Auto" Kind="Lock" Foreground="Navy"  VerticalAlignment="Center" />
                 <Button Grid.Row="2" Grid.Column="4" Content="Privé" Style="{StaticResource Menu}"  
                         Command="{Binding ChangeViewCommand}"   

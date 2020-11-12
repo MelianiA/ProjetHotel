@@ -34,6 +34,7 @@ namespace Makrisoft.Makfi.ViewModels
                     Reference_ViewModel.Home.IsAdmin = Reference_ViewModel.Header.CurrentUtilisateur.IsAdmin;
                 }
                 Password = "";
+                Reference_ViewModel.Employe.Load_Employes();
             }
         }
 

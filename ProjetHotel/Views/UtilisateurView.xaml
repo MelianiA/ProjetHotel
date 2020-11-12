@@ -138,7 +138,7 @@
                                                Text="{Binding Nom, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" FontWeight="Bold"/>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
-                        </DataGridTemplateColumn>
+                     </DataGridTemplateColumn>
                     <DataGridTemplateColumn  >
                             <!--à gauche-->
                         <DataGridTemplateColumn.CellTemplate  >
