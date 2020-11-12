@@ -7,9 +7,10 @@ namespace Makrisoft.Makfi.Views
     {
         public EmployeView()
         {
+            InitializeComponent();
             Reference_ViewModel.Employe = new EmployeViewModel();
             DataContext = Reference_ViewModel.Employe;
-            InitializeComponent();
+             
         }
     }
 }

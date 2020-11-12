@@ -23,6 +23,7 @@ namespace Makrisoft.Makfi.ViewModels
             EmployeModifiedSaveCommand = new RelayCommand(p => OnSaveCommand(), p => OnCanExecuteSaveCommand());
             EmployeSelectedAddCommand = new RelayCommand(p => OnAddCommand(), p => true);
             EmployeSelectedDeleteCommand = new RelayCommand(p => OnDeleteCommand(), p => OnCanExecuteDeleteCommand());
+            FilterClearCommand = new RelayCommand(p => OnFilterClearCommand(), p => OnCanExecuteFilterClearCommand());
 
             // ListeView
             Load_Etat();
@@ -102,7 +103,26 @@ namespace Makrisoft.Makfi.ViewModels
         }
         private ListCollectionView etatEmployeCollectionView;
 
-        //........
+        //Filter
+        public Etat_VM CurrentFilter
+        {
+            get
+            {
+
+                return currentFilter;
+
+            }
+            set
+            {
+                currentFilter = value;
+                EmployeCollectionView.Filter = FilterEmployes;
+                OnPropertyChanged("CurrentFilter");
+
+
+            }
+        }
+        private Etat_VM currentFilter;
+
 
 
         #endregion
@@ -112,6 +132,7 @@ namespace Makrisoft.Makfi.ViewModels
         public ICommand EmployeModifiedSaveCommand { get; set; }
         public ICommand EmployeSelectedAddCommand { get; set; }
         public ICommand EmployeSelectedDeleteCommand { get; set; }
+        public ICommand FilterClearCommand { get; set; }
 
         // Méthodes OnCommand
         private void OnSaveCommand()
@@ -160,6 +181,10 @@ namespace Makrisoft.Makfi.ViewModels
                 MessageBox.Show($" Suppression impossible de l'employé : {CurrentEmploye.Nom }", "Remarque !");
             }
         }
+        private void OnFilterClearCommand()
+        {
+            CurrentFilter = null;
+        }
 
         // Méthodes OnCanExecuteCommand
         private bool OnCanExecuteSaveCommand()
@@ -169,10 +194,30 @@ namespace Makrisoft.Makfi.ViewModels
         }
         private bool OnCanExecuteDeleteCommand()
         {
-            if (CurrentEmploye != null)  return true;
+            if (CurrentEmploye != null) return true;
+            else return false;
+        }
+        private bool OnCanExecuteFilterClearCommand()
+        {
+            if (CurrentFilter != null) return true;
             else return false;
         }
 
+        // Divers
+        public bool FilterEmployes(object item)
+        {
+            if(item is Employe_VM employe)
+            {
+                if (CurrentFilter == null) return true;
+                if (CurrentFilter.Libelle == "Disponible")
+                    return (employe.Etat.Libelle == "Disponible");
+                if (CurrentFilter.Libelle == "Non disponible")
+                    return (employe.Etat.Libelle == "Non disponible");
+                if (CurrentFilter.Libelle == "Arrêt maladie")
+                    return (employe.Etat.Libelle == "Arrêt maladie");
+            }
+            return true;
+        }
 
         #endregion
 
@@ -213,9 +258,10 @@ namespace Makrisoft.Makfi.ViewModels
         private void Load_EtatEmploye()
         {
             EtatEmploye = new ObservableCollection<Etat_VM>(
-              EtatList.Where(x => x.Entite == EntiteEnum.Employe).ToList()); ;
+               EtatList.Where(x => x.Entite == EntiteEnum.Employe).ToList());
             EtatEmployeCollectionView = new ListCollectionView(EtatEmploye);
             EtatEmployeCollectionView.Refresh();
+            CurrentFilter = null;
         }
 
         #endregion

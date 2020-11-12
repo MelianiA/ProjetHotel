@@ -71,7 +71,7 @@
                 
                 <Button Grid.Column="2" Background="Transparent" BorderBrush="Transparent" BorderThickness="1" Command="{Binding EmployeModifiedSaveCommand}" VerticalAlignment="Bottom">
                     <Button.Content>
-                        <materialDesign:PackIcon Height="20" Width="Auto" Kind="Floppy" Foreground="{Binding CurrentEmploye.SaveColor}" Margin="0,0,10,0" />
+                        <materialDesign:PackIcon Height="20" Width="Auto" Kind="Floppy" Foreground="{Binding CurrentEmployeSaveColor}" Margin="0,0,10,0" />
                     </Button.Content>
                 </Button>
             </Grid>
@@ -83,9 +83,11 @@
             <StackPanel Margin="5">
 
                 <!--EmployeEtatFilterSelected-->
-                <TextBlock Text="Etat" Margin="0,30,0,0"/>
-                <ComboBox ItemsSource="{Binding EtatEmploye}" SelectedItem="{Binding EmployeEtatFilterSelected}" FontSize="16">
-                    <ComboBox.ItemTemplate>
+                <TextBlock Text="Etat" Margin="0,30,0,0" FontSize="16"  />
+                <ComboBox ItemsSource="{Binding EtatEmployeCollectionView,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged }"
+                          SelectedItem="{Binding CurrentFilter,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" SelectedValue=""
+                          FontSize="16">
+                     <ComboBox.ItemTemplate>
                         <DataTemplate>
                             <StackPanel Orientation="Horizontal">
                                 <materialDesign:PackIcon Height="20" Width="Auto" Kind="{Binding Icone}" Foreground="{Binding Couleur}" Margin="0,0,10,0"/>
@@ -94,13 +96,13 @@
                         </DataTemplate>
                     </ComboBox.ItemTemplate>
                 </ComboBox>
-            </StackPanel>
+             </StackPanel>
         </Border>
         <!--Milieu-->
         <Border Grid.Column="1" Grid.Row="1" BorderBrush="Transparent" BorderThickness="1" CornerRadius="10" Margin="0" >
             <StackPanel>
                 <!-- IsEnabled="{Binding PageNotModified.Value} "-->
-                <DataGrid ItemsSource="{Binding EmployeCollectionView}" 
+                <DataGrid ItemsSource="{Binding EmployeCollectionView,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" 
                           SelectedItem="{Binding CurrentEmploye , Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  
                           AutoGenerateColumns="False" HeadersVisibility="None" CanUserAddRows="False" VerticalScrollBarVisibility="Visible">
                     <DataGrid.Columns>
