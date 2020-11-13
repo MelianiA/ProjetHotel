@@ -173,7 +173,7 @@ namespace Makrisoft.Makfi.Dal
                             );
         }
 
-        
+       
 
         public static IEnumerable<Utilisateur> Utilisateur_Read(string spParam = null)
         {
@@ -208,6 +208,7 @@ namespace Makrisoft.Makfi.Dal
                             );
         }
 
+     
         internal static IEnumerable<Chambre> Chambre_Read(string spParam = null)
         {
             return ReadAll<Chambre>
@@ -302,6 +303,19 @@ namespace Makrisoft.Makfi.Dal
               spParam
               );
         }
+
+        internal static List<HotelEmploye> HotelEmploye_Save(string spParam)
+        {
+            return ReadAll<HotelEmploye>
+               (
+               "HotelEmploye_Save",
+               e =>
+               {
+                   e.Id = (Guid)Reader["Id"];
+               },
+               spParam
+               );
+        }
         #endregion
 
         #region _CanDelete
@@ -349,6 +363,12 @@ namespace Makrisoft.Makfi.Dal
         {
             return ExecuteNonQuery("Chambre_Delete", spParam);
         }
+
+        internal static bool HotelEmploye_Delete(string spParam)
+        {
+            return ExecuteNonQuery("HotelEmploye_Delete", spParam);
+        }
+
         #endregion
 
         #endregion

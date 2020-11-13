@@ -8,6 +8,8 @@ namespace Makrisoft.Makfi.Models
 {
     public class HotelEmploye
     {
+        public Guid Id { get; set; }
+
         public Guid Employe { get; set; }
         public Guid Hotel { get; set; }
 

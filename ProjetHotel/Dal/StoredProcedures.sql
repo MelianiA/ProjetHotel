@@ -60,13 +60,15 @@ select @Id = T.N.value('id[1]', 'uniqueidentifier') from @data.nodes('chambre') 
 Select Id,Nom,Etat,Commentaire,Hotel from Chambre where @Id is null Or Id=@Id
 GO
 ---------------------------------------------------------------------------------------------------
-create PROC [dbo].[HotelEmploye_Read](@data xml=NULL)
+alter PROC [dbo].[HotelEmploye_Read](@data xml=NULL)
 -- Retourne la liste des employés qui correspond à l'hôtel donné dans les paramètres 
 AS
-DECLARE @@hotel uniqueidentifier=NULL
-select @hotel = T.N.value('hotel[1]', 'uniqueidentifier') from @data.nodes('hotelEmploye') as T(N)
-Select Hotel,Employe from HotelEmploye where @hotel is null Or Hotel=@@hotel
+DECLARE @hotel uniqueidentifier=NULL
+select @hotel = T.N.value('hotel[1]', 'uniqueidentifier') from @data.nodes('hotel') as T(N)
+Select Employe from HotelEmploye where Hotel=@hotel
 GO
+
+exec HotelEmploye_Read '<hotel><hotel>6F04A94F-8129-4903-9506-2BAA05C4F0F2</hotel></hotel>'
 -- *************************************************************************************************
 -- save
 -- *************************************************************************************************
@@ -163,7 +165,38 @@ exec [Employe_Save] '<employe>
                         <etat>37DDF78D-E0D5-40B8-BE19-E47F2235B839</etat>
                         <commentaire>Commentaire ... 123 vive le code :)</commentaire>       
                     </employe>'
+ ----------------------------------------------------------------------------------------------------------
+Create PROC [dbo].[HotelEmploye_Save](@data xml=NULL)
+AS
+DECLARE @IDs TABLE(ID uniqueidentifier);
+DECLARE @message nvarchar(MAX)
+DECLARE @Id uniqueidentifier
+DECLARE @Hotel uniqueidentifier
+DECLARE @Employe uniqueidentifier
 
+-- PARTIE recup XML :
+select 
+ 		T.N.value('(hotel/text())[1]', 'uniqueidentifier') Hotel,
+		T.N.value('(employe/text())[1]', 'nvarchar(MAX)') Employe
+  	 into #_hotelEmploye
+	 from @data.nodes('hotelEmploye') as T(N)
+
+-- Insert
+insert HotelEmploye(Hotel, Employe )
+output inserted.Id into @IDs(ID)
+(
+select
+       Hotel, Employe
+from #_hotelEmploye  
+)
+IF @Id is null select @id=ID from @IDs
+select Id from @IDs
+GO
+
+exec [HotelEmploye_Save] '<hotelEmploye>
+							<hotel>c65bfb16-6dbe-4bc9-8314-0deababb0404</hotel>
+							<employe>Makrisoft.Makfi.Models.Employe</employe>
+						  </hotelEmploye>'
  ----------------------------------------------------------------------------------------------------------
 create PROC [dbo].[Chambre_Save](@data xml=NULL)
 AS
@@ -260,6 +293,25 @@ select @ID= T.N.value('id[1]', 'uniqueidentifier') from @data.nodes('employe') a
 delete from Employe where Id = @ID
 go
 -----------------------------------------------------------------------
+alter PROC [dbo].[HotelEmploye_Delete](@data xml=NULL)
+AS
+DECLARE @Employe uniqueidentifier;
+DECLARE @Hotel uniqueidentifier;
+DECLARE @n int;
+select 
+	   @Employe= T.N.value('(employe/text())[1]', 'uniqueidentifier')  ,
+	   @Hotel= T.N.value('(hotel/text())[1]', 'uniqueidentifier') 
+from @data.nodes('hotelEmploye') as T(N) 
+delete from HotelEmploye where Employe = @Employe and Hotel =@Hotel
+
+select @n = count(*) from HotelEmploye where Employe=@Employe
+IF @n=0
+BEGIN
+  delete from Employe where Id=@Employe
+END
+go
+-----------------------------------------------------------------------
+
 CREATE PROC [dbo].[Chambre_Delete](@data xml=NULL)
 AS
 DECLARE @ID uniqueidentifier;
