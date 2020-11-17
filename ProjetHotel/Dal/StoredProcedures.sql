@@ -42,11 +42,9 @@ DECLARE @Id uniqueidentifier=NULL
 select @Id = T.N.value('id[1]', 'uniqueidentifier') from @data.nodes('employe') as T(N)
 Select Id, Nom,Prenom,Etat,Commentaire from Employe where @Id is null Or Id=@Id
 GO
----------------------------------------------------------------------------------------------------
-
 exec Employe_Read
 ---------------------------------------------------------------------------------------------------
-alter PROC [dbo].[Etat_Read](@data xml=NULL)
+create PROC [dbo].[Etat_Read](@data xml=NULL)
 AS
 DECLARE @Id uniqueidentifier=NULL
 select @Id = T.N.value('id[1]', 'uniqueidentifier') from @data.nodes('etat') as T(N)
@@ -55,12 +53,14 @@ GO
 ---------------------------------------------------------------------------------------------------
 create PROC [dbo].[Chambre_Read](@data xml=NULL)
 AS
-DECLARE @Id uniqueidentifier=NULL
-select @Id = T.N.value('id[1]', 'uniqueidentifier') from @data.nodes('chambre') as T(N)
-Select Id,Nom,Etat,Commentaire,Hotel from Chambre where @Id is null Or Id=@Id
+DECLARE @Hotel uniqueidentifier=NULL
+select @Hotel = T.N.value('hotel[1]', 'uniqueidentifier') from @data.nodes('chambre') as T(N)
+Select Id,Nom,Etat,Commentaire  from Chambre where Hotel=@Hotel
 GO
+
+exec [Chambre_Read]
 ---------------------------------------------------------------------------------------------------
-alter PROC [dbo].[HotelEmploye_Read](@data xml=NULL)
+create PROC [dbo].[HotelEmploye_Read](@data xml=NULL)
 -- Retourne la liste des employés qui correspond à l'hôtel donné dans les paramètres 
 AS
 DECLARE @hotel uniqueidentifier=NULL
@@ -69,6 +69,41 @@ Select Employe from HotelEmploye where Hotel=@hotel
 GO
 
 exec HotelEmploye_Read '<hotel><hotel>6F04A94F-8129-4903-9506-2BAA05C4F0F2</hotel></hotel>'
+---------------------------------------------------------------------------------------------------
+alter PROC [dbo].[ChambreGroupeChambre_Read](@data xml=NULL)
+AS
+DECLARE @hotel uniqueidentifier=NULL 
+select @hotel = T.N.value('(hotel/text())[1]', 'uniqueidentifier') from @data.nodes('chambreGroupeChambre') as T(N)
+ select c.Id, c.Nom, e.id as Etat,c.Commentaire, STRING_AGG(gc.Nom,', ') GroupeChambre
+ from ChambreGroupeChambre cgc
+ right join Chambre c on c.Id=cgc.Chambre
+ left join GroupeChambre gc on gc.Id = cgc.GroupeChambre
+ left join Etat e on c.Etat=e.Id
+ where c.Hotel=@hotel
+ group by c.Id, c.Nom,e.id,c.Commentaire 
+ GO
+exec ChambreGroupeChambre_Read '<chambreGroupeChambre><hotel>C65BFB16-6DBE-4BC9-8314-0DEABABB0404</hotel></chambreGroupeChambre>'
+---------------------------------------------------------------------------------------------------
+create PROC [dbo].[GroupeChambre_Read](@data xml=NULL)
+AS
+DECLARE @Id uniqueidentifier=NULL
+select @Id = T.N.value('id[1]', 'uniqueidentifier') from @data.nodes('groupeChambre') as T(N)
+Select Id,Nom,Commentaire from GroupeChambre where @Id is null Or Id=@Id
+GO
+---------------------------------------------------------------------------------------------------
+alter PROC [dbo].[ChambreByGroupe_Read](@data xml=NULL)
+AS
+DECLARE @Hotel uniqueidentifier=NULL
+select @Hotel = T.N.value('hotel[1]', 'uniqueidentifier') from @data.nodes('chambreByGroupe') as T(N)
+select  c.id as IdDelaChambre ,cgc.GroupeChambre,gc.Nom ,c.Nom as NomChambre, c.Hotel
+ from ChambreGroupeChambre cgc
+ right join Chambre c on c.Id=cgc.Chambre
+ left join GroupeChambre gc on gc.Id = cgc.GroupeChambre
+ left join Etat e on c.Etat=e.Id
+where c.Hotel=@Hotel
+GO
+ exec [ChambreByGroupe_Read] '<chambreByGroupe><hotel>C65BFB16-6DBE-4BC9-8314-0DEABABB0404</hotel></chambreByGroupe>'
+  exec [ChambreByGroupe_Read] '<chambreByGroupe><hotel>c65bfb16-6dbe-4bc9-8314-0deababb0404</hotel></chambreByGroupe>'
 -- *************************************************************************************************
 -- save
 -- *************************************************************************************************
@@ -106,7 +141,7 @@ GO
 exec Utilisateur_Save '<utilisateur><id>6FBA0732-FF0E-4AE0-871F-A710534F98FC</id><nom>teste</nom><statut>4</statut></utilisateur>'
 exec Utilisateur_Save '<utilisateur><nom>csdf</nom><statut>4</statut></utilisateur>'
 ----------------------------------------------------------------------------------------------------------
-alter PROC [dbo].[Employe_Save](@data xml=NULL)
+create PROC [dbo].[Employe_Save](@data xml=NULL)
 AS
 DECLARE @IDs TABLE(ID uniqueidentifier);
 DECLARE @message nvarchar(MAX)
@@ -198,7 +233,7 @@ exec [HotelEmploye_Save] '<hotelEmploye>
 							<employe>Makrisoft.Makfi.Models.Employe</employe>
 						  </hotelEmploye>'
  ----------------------------------------------------------------------------------------------------------
-create PROC [dbo].[Chambre_Save](@data xml=NULL)
+alter PROC [dbo].[Chambre_Save](@data xml=NULL)
 AS
 DECLARE @IDs TABLE(ID uniqueidentifier);
 DECLARE @message nvarchar(MAX)
@@ -207,30 +242,28 @@ DECLARE @Nom nvarchar(MAX)
 DECLARE @Etat uniqueidentifier
 DECLARE @Commentaire nvarchar(MAX)
 DECLARE @Hotel uniqueidentifier
+ 
 
 -- PARTIE recup XML :
 select 
-		T.N.value('(id/text())[1]', 'uniqueidentifier') Id, 
+ 		T.N.value('(id/text())[1]', 'uniqueidentifier') Id, 
 		T.N.value('(nom/text())[1]', 'nvarchar(MAX)') Nom, 
  		T.N.value('(etat/text())[1]', 'uniqueidentifier') Etat,
 		T.N.value('(commentaire/text())[1]', 'nvarchar(MAX)') Commentaire,
 		T.N.value('(hotel/text())[1]', 'uniqueidentifier') Hotel
   	 into #_chambre
-	 from @data.nodes('chambre') as T(N)
+from @data.nodes('chambre') as T(N)
 
 -- PARTIE2
-select @id=Id from #_chambre
+select @id=Id  from #_chambre
 
--- Update
+-- Update  
 BEGIN TRY
-       update Chambre set 
-              Nom = t.Nom,
-			  Etat = t.Etat,
-			  Commentaire= t.Commentaire,
-			  Hotel=t.Hotel
-       output inserted.Id into @IDs(ID)
-       from (select Nom, Etat, Commentaire, Hotel from #_chambre where Id is not null) t
-       where Chambre.Id=@id
+ update Chambre set
+			Nom= t.Nom, Etat=t.Etat,Commentaire=t.Commentaire
+			       output inserted.Id into @IDs(ID)
+			from (select Id, Nom, Etat, Commentaire from #_chambre where Id is not null) t
+			where Chambre.Id=t.Id
 END TRY
 BEGIN CATCH
        select @message = ERROR_MESSAGE() 
@@ -258,6 +291,67 @@ exec Chambre_Save '<chambre>
 						<hotel>30E545B7-C604-4ED7-A6EB-20C3A1BE1730</hotel>
                     </chambre>'
 select * from Chambre
+ ----------------------------------------------------------------------------------------------------------
+create PROC [dbo].[GroupeChambre_Save](@data xml=NULL)
+ AS
+	DECLARE @IDs TABLE(ID uniqueidentifier);
+	DECLARE @message nvarchar(MAX)
+	DECLARE @Id uniqueidentifier
+	DECLARE @Nom nvarchar(MAX)
+	DECLARE @Commentaire nvarchar(MAX)
+
+-- PARTIE recup XML :
+select 
+ 		T.N.value('(id/text())[1]', 'uniqueidentifier') Id, 
+		T.N.value('(nom/text())[1]', 'nvarchar(MAX)') Nom, 
+ 		T.N.value('(commentaire/text())[1]', 'nvarchar(MAX)') Commentaire
+   	 into #_groupeChambre
+from @data.nodes('groupeChambre') as T(N)
+-- PARTIE2
+select @id=Id  from #_groupeChambre
+-- Update  
+BEGIN TRY
+	 update GroupeChambre set
+			Nom= t.Nom, Commentaire=t.Commentaire
+			       output inserted.Id into @IDs(ID)
+			from (select Id, Nom, Commentaire from #_groupeChambre where Id is not null) t
+			where GroupeChambre.Id=t.Id
+END TRY
+BEGIN CATCH
+       select @message = ERROR_MESSAGE() 
+    RAISERROR (@message, 16, 1);  
+       RETURN;
+END CATCH
+-- Insert
+insert GroupeChambre(Nom, Commentaire )
+	output inserted.Id into @IDs(ID)
+(select Nom, Commentaire from #_groupeChambre  )
+IF @Id is null select @id=ID from @IDs
+select Id from @IDs
+GO
+ ----------------------------------------------------------------------------------------------------------
+ create PROC [dbo].[ChambreGroupeChambre_Save](@data xml=NULL)
+ as
+ 	DECLARE @IDs TABLE(ID uniqueidentifier);
+	DECLARE @Id uniqueidentifier
+	DECLARE @message nvarchar(MAX)
+ 	DECLARE @Chambre nvarchar(MAX)
+	DECLARE @GroupeChambre nvarchar(MAX) 
+
+-- PARTIE recup XML :
+select 
+ 		T.N.value('(chambre/text())[1]', 'nvarchar(MAX)') chambre, 
+ 		T.N.value('(groupeChambre/text())[1]', 'nvarchar(MAX)') groupeChambre
+   	 into #_chambreGroupeChambre
+from @data.nodes('chambreGroupeChambre') as T(N)
+
+insert ChambreGroupeChambre(Chambre, GroupeChambre )
+	output inserted.Id into @IDs(ID)
+(select Chambre, GroupeChambre from #_chambreGroupeChambre  )
+IF @Id is null select @id=ID from @IDs
+select Id from @IDs
+GO
+
  -- *************************************************************************************************
 -- Delete
 -- *************************************************************************************************
@@ -293,7 +387,7 @@ select @ID= T.N.value('id[1]', 'uniqueidentifier') from @data.nodes('employe') a
 delete from Employe where Id = @ID
 go
 -----------------------------------------------------------------------
-alter PROC [dbo].[HotelEmploye_Delete](@data xml=NULL)
+create PROC [dbo].[HotelEmploye_Delete](@data xml=NULL)
 AS
 DECLARE @Employe uniqueidentifier;
 DECLARE @Hotel uniqueidentifier;
@@ -312,16 +406,28 @@ END
 go
 -----------------------------------------------------------------------
 
-CREATE PROC [dbo].[Chambre_Delete](@data xml=NULL)
+alter PROC [dbo].[Chambre_Delete](@data xml=NULL)
 AS
-DECLARE @ID uniqueidentifier;
-select @ID= T.N.value('id[1]', 'uniqueidentifier') from @data.nodes('chambre') as T(N) 
-delete from Chambre where Id = @ID
+DECLARE @id uniqueidentifier;
+select
+	@id= T.N.value('id[1]', 'uniqueidentifier') 
+from @data.nodes('chambre') as T(N) 
+delete from Chambre where Id = @id
 go
+-----------------------------------------------------------------------
+alter PROC [dbo].[ChambreGroupeChambre_Delete](@data xml=NULL)
+as
+DECLARE @GroupeChambre uniqueidentifier;
+select
+	@GroupeChambre= T.N.value('groupeChambre[1]', 'uniqueidentifier') 
+from @data.nodes('chambreGroupeChambre') as T(N) 
+delete from ChambreGroupeChambre where GroupeChambre = @GroupeChambre
+go
+
 -- *************************************************************************************************
 -- CanDelete
 -- *************************************************************************************************
-alter PROC [dbo].[Utilisateur_CanDelete](@data xml=NULL)
+create PROC [dbo].[Utilisateur_CanDelete](@data xml=NULL)
 AS
 DECLARE @id uniqueidentifier=NULL
 select @id=T.N.value('id[1]', 'uniqueidentifier') from @data.nodes('utilisateur') as T(N)
@@ -359,13 +465,12 @@ UNION ALL
 select 'InterventionDetail' tableName, COUNT(*) n from InterventionDetail where EmployeAffecte=@id  
 GO
 -----------------------------------------------------------------------------------------------------
-Create PROC [dbo].[Chambre_CanDelete](@data xml=NULL)
+alter PROC [dbo].[Chambre_CanDelete](@data xml=NULL)
 AS
 DECLARE @id uniqueidentifier=NULL
 select @id=T.N.value('id[1]', 'uniqueidentifier') from @data.nodes('chambre') as T(N)
-
-select 'ChambreGroupeChambre' tableName, COUNT(*) n from ChambreGroupeChambre where Chambre=@id  
-UNION ALL
 select 'InterventionDetail' tableName, COUNT(*) n from InterventionDetail where ChambreAffectee=@id  
+UNION ALL
+select 'ChambreGroupeChambre' tableName, COUNT(*) n from ChambreGroupeChambre where Chambre=@id  
 GO
  

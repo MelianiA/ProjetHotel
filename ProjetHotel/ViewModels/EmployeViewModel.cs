@@ -1,12 +1,8 @@
 ﻿using Makrisoft.Makfi.Dal;
-using Makrisoft.Makfi.Models;
-using Makrisoft.Makfi.Tools;
+ using Makrisoft.Makfi.Tools;
 using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
+ using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Data;
 using System.Windows.Input;
@@ -131,17 +127,13 @@ namespace Makrisoft.Makfi.ViewModels
         {
             get
             {
-
                 return currentFilter;
-
             }
             set
             {
                 currentFilter = value;
                 EmployeCollectionView.Filter = FilterEmployes;
                 OnPropertyChanged("CurrentFilter");
-
-
             }
         }
         private Etat_VM currentFilter;
@@ -162,6 +154,7 @@ namespace Makrisoft.Makfi.ViewModels
         {
             if (Reference_ViewModel.Header.CurrentHotel == null) {  
                 MessageBox.Show($"Aucun hôtel ne vous a été assigné  ", "Impossible d'enregistrer  !");
+                EmployesCurrentHotel.Remove(CurrentEmploye);
                 return;
             }
             if (CurrentEmploye.Nom == null || CurrentEmploye.Prenom == null || CurrentEmploye.Etat == null)
@@ -193,9 +186,8 @@ namespace Makrisoft.Makfi.ViewModels
                 if (ids2.Count == 0) throw new Exception("Rien n'a été sauvgardé ! ");
             }
             CurrentEmploye.SaveColor = "Navy";
-            AllEmployes.Clear();
-            Load_Employes();
-            CurrentEmploye = AllEmployes.Where(u => u.Id == ids[0].Id).SingleOrDefault();
+            EmployeCollectionView.Refresh();
+          
         }
         private void OnAddCommand()
         {

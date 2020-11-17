@@ -35,6 +35,7 @@ namespace Makrisoft.Makfi.ViewModels
                 }
                 Password = "";
                 Reference_ViewModel.Employe.Load_Employes();
+                Reference_ViewModel.Chambre.Load_Chambres();
             }
         }
 

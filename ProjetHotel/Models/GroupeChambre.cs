@@ -6,17 +6,10 @@ using System.Threading.Tasks;
 
 namespace Makrisoft.Makfi.Models
 {
-    public class Chambre
+    public class GroupeChambre
     {
         public Guid Id;
         public string Nom;
-        public Etat Etat;
         public string Commentaire;
-        public Hotel Hotel;
-
-        //pas dans la BDD
-        public Etat LastEtat { get; set; }
-
-
     }
 }

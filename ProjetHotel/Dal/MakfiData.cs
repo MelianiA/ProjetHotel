@@ -15,7 +15,7 @@ namespace Makrisoft.Makfi.Dal
         Utilisateur, None, Hotel, DecoupageNew, Decoupage
     }
     public enum RoleEnum { None = 0, Admin = 1, Gouvernante = 2, Reception = 4 }
-    public enum EntiteEnum {  Employe = 1, Chambre = 2, Intervention = 3 }
+    public enum EntiteEnum { Employe = 1, Chambre = 2, Intervention = 3 }
 
     public static class MakfiData
     {
@@ -80,6 +80,8 @@ namespace Makrisoft.Makfi.Dal
         {
             if (Reader != null) Reader.Close();
         }
+
+
         private static bool ExecuteNonQuery(string spName, string spParam = null)
         {
             string message;
@@ -118,7 +120,7 @@ namespace Makrisoft.Makfi.Dal
                 return false;
             }
         }
- 
+
         public static List<T> ReadAll<T>(string spName, Action<T> p, string spParam = null) where T : new()
         {
             List<T> entities = new List<T>();
@@ -134,7 +136,8 @@ namespace Makrisoft.Makfi.Dal
             return entities;
         }
 
-       
+     
+
         public static List<CanDelete> CanDelete(string spName, string spParam)
         {
             var list = ReadAll<CanDelete>
@@ -149,7 +152,7 @@ namespace Makrisoft.Makfi.Dal
                 );
             return list;
         }
- 
+
         #endregion
 
         #region Toutes les requêtes
@@ -173,7 +176,7 @@ namespace Makrisoft.Makfi.Dal
                             );
         }
 
-       
+      
 
         public static IEnumerable<Utilisateur> Utilisateur_Read(string spParam = null)
         {
@@ -202,13 +205,13 @@ namespace Makrisoft.Makfi.Dal
                                 e.Nom = Reader["Nom"] as string;
                                 e.Prenom = Reader["Prenom"] as string;
                                 e.Commentaire = Reader["Commentaire"] as string;
-                                e.Etat = new Etat { Id=(Guid)Reader["Etat"] };
+                                e.Etat = new Etat { Id = (Guid)Reader["Etat"] };
                             },
                             spParam
                             );
         }
 
-     
+
         internal static IEnumerable<Chambre> Chambre_Read(string spParam = null)
         {
             return ReadAll<Chambre>
@@ -220,7 +223,6 @@ namespace Makrisoft.Makfi.Dal
                                  e.Nom = Reader["Nom"] as string;
                                  e.Etat = new Etat { Id = (Guid)Reader["Etat"] };
                                  e.Commentaire = Reader["Commentaire"] as string;
-                                 e.Hotel = new Hotel { Id = (Guid)Reader["Hotel"] };
                              },
                              spParam
                              );
@@ -237,11 +239,14 @@ namespace Makrisoft.Makfi.Dal
                                  e.Libelle = Reader["Libelle"] as string;
                                  e.Icone = Reader["Icone"] as string;
                                  e.Couleur = Reader["Couleur"] as string;
-                                 e.Entite = (EntiteEnum)(byte)Reader["Entite"] ;
+                                 e.Entite = (EntiteEnum)(byte)Reader["Entite"];
                              },
                              spParam
                              );
         }
+
+
+
         internal static IEnumerable<HotelEmploye> HotelEmploye_Read(string spParam = null)
         {
             return ReadAll<HotelEmploye>
@@ -255,6 +260,55 @@ namespace Makrisoft.Makfi.Dal
                              );
         }
 
+
+
+        internal static IEnumerable<ChambreGroupeChambre> ChambreGroupeChambre_Read(string spParam = null)
+        {
+            return ReadAll<ChambreGroupeChambre>
+                          (
+                          "ChambreGroupeChambre_Read",
+                          e =>
+                          {
+                              e.Id = (Guid)Reader["Id"];
+                              e.Nom = Reader["Nom"] as string;
+                              e.Etat = (Guid)Reader["Etat"];
+                              e.Commentaire = Reader["Commentaire"] as string;
+                              e.GroupeChambre = Reader["GroupeChambre"] as string;
+
+                          },
+                          spParam
+                          );
+        }
+        internal static IEnumerable<GroupeChambre> GroupeChambre_Read(string spParam = null)
+        {
+            return ReadAll<GroupeChambre>
+                         (
+                         "GroupeChambre_Read",
+                         e =>
+                         {
+                             e.Id = (Guid)Reader["Id"];
+                             e.Nom = Reader["Nom"] as string;
+                             e.Commentaire = Reader["Commentaire"] as string;
+                         },
+                         spParam
+                         );
+        }
+
+        internal static IEnumerable<ChambreByGroupe> ChambreByGroupe_Read(string spParam = null)
+        {
+            return ReadAll<ChambreByGroupe>
+                          (
+                          "ChambreByGroupe_Read",
+                          e =>
+                          {
+                              e.IdDelaChambre = (Guid)Reader["IdDelaChambre"];
+                              e.GroupeChambre = Reader["GroupeChambre"] as Guid?;
+                              e.Nom = Reader["Nom"] as string;
+                              e.NomChambre = Reader["NomChambre"] as string;
+                          },
+                          spParam
+                          );
+        }
 
         #endregion
 
@@ -316,6 +370,32 @@ namespace Makrisoft.Makfi.Dal
                spParam
                );
         }
+
+        internal static List<GroupeChambre> GroupeChambre_Save(string spParam)
+        {
+            return ReadAll<GroupeChambre>
+              (
+              "GroupeChambre_Save",
+              e =>
+              {
+                  e.Id = (Guid)Reader["Id"];
+              },
+              spParam
+              );
+        }
+        internal static List<GroupeChambre> ChambreGroupeChambre_Save(string spParam)
+        {
+            return ReadAll<GroupeChambre>
+             (
+             "ChambreGroupeChambre_Save",
+             e =>
+             {
+                 e.Id = (Guid)Reader["Id"];
+             },
+             spParam
+             );
+        }
+
         #endregion
 
         #region _CanDelete
@@ -337,7 +417,7 @@ namespace Makrisoft.Makfi.Dal
                 .Where(x => x.Nombre > 0);
         }
 
-        public static IEnumerable<CanDelete>Chambre_CanDelete(string spParam)
+        public static IEnumerable<CanDelete> Chambre_CanDelete(string spParam)
         {
             return CanDelete("Chambre_CanDelete", spParam)
                  .Where(x => x.Nombre > 0);
@@ -367,6 +447,11 @@ namespace Makrisoft.Makfi.Dal
         internal static bool HotelEmploye_Delete(string spParam)
         {
             return ExecuteNonQuery("HotelEmploye_Delete", spParam);
+        }
+        internal static bool ChambreGroupeChambre_Delete(string spParam)
+        {
+            return ExecuteNonQuery("ChambreGroupeChambre_Delete", spParam);
+
         }
 
         #endregion

@@ -1,9 +1,11 @@
 ﻿using Makrisoft.Makfi.Dal;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Data;
 
 namespace Makrisoft.Makfi.ViewModels
 {
@@ -273,4 +275,176 @@ namespace Makrisoft.Makfi.ViewModels
     {
         public Guid Employe { get; set; }
      }
+    public class GroupeChambre_VM:ViewModelBase
+    {
+        public Guid Id;
+        public string Nom
+        {
+            get { return nom; }
+            set
+            {
+                nom = value;
+                SaveColor = "Red";
+                OnPropertyChanged("Nom");
+            }
+        }
+        private string nom;
+        public string Commentaire
+        {
+            get { return commentaire; }
+            set
+            {
+                commentaire = value;
+                SaveColor = "Red";
+                OnPropertyChanged("Commentaire");
+            }
+        }
+        private string commentaire;
+
+        public ObservableCollection<ChambreByGroupe_VM> ChambreCurrentGroupe
+        {
+            get { return chambreCurrentGroupe; }
+            set
+            {
+                chambreCurrentGroupe = value;
+                OnPropertyChanged("ChambreCurrentGroupe");
+
+            }
+        }
+        private ObservableCollection<ChambreByGroupe_VM> chambreCurrentGroupe;
+        public ObservableCollection<ChambreByGroupe_VM> ChambreNotCurrentGroupe
+        {
+            get { return chambreNotCurrentGroupe; }
+            set
+            {
+                chambreNotCurrentGroupe = value;
+                OnPropertyChanged("ChambreNotCurrentGroupe");
+
+            }
+        }
+        private ObservableCollection<ChambreByGroupe_VM> chambreNotCurrentGroupe;
+        public ListCollectionView ChambreCurrentGroupeListview
+        {
+            get { return chambreCurrentGroupeListview; }
+            set { chambreCurrentGroupeListview = value; OnPropertyChanged("ChambreCurrentGroupeListview"); }
+        }
+        private ListCollectionView chambreCurrentGroupeListview;
+        public ListCollectionView ChambreNotCurrentGroupeListview
+        {
+            get { return chambreNotCurrentGroupeListview; }
+            set { chambreNotCurrentGroupeListview = value; OnPropertyChanged("ChambreNotCurrentGroupeListview"); }
+        }
+        private ListCollectionView chambreNotCurrentGroupeListview;
+        public ChambreByGroupe_VM CurrentChambreCG
+        {
+            get { return currentChambreCG; }
+            set
+            {
+                currentChambreCG = value;
+                OnPropertyChanged("CurrentChambreCG");
+            }
+        }
+        private ChambreByGroupe_VM currentChambreCG;
+        public ChambreByGroupe_VM CurrentNotChambreCG
+        {
+            get { return currentNotChambreCG; }
+            set
+            {
+                currentNotChambreCG = value;
+                OnPropertyChanged("CurrentNotChambreCG");
+            }
+        }
+        private ChambreByGroupe_VM currentNotChambreCG;
+
+        public string SaveColor
+        {
+            get
+            { return saveColor; }
+            set
+            {
+                saveColor = value;
+                OnPropertyChanged("SaveColor");
+            }
+        }
+        private string saveColor = "Navy";
+    }
+    public class ChambreGroupeChambre_VM : ViewModelBase
+    {
+        public Guid Id;
+        public string Nom
+        {
+            get { return nom; }
+            set
+            {
+                nom = value;
+                SaveColor = "Red";
+                OnPropertyChanged("Nom");
+            }
+        }
+        private string nom;
+        public Etat_VM Etat
+        {
+            get { return etat; }
+            set
+            {
+                etat = value;
+                SaveColor = "Red";
+                OnPropertyChanged("Etat");
+            }
+        }
+        private Etat_VM etat;
+        public string Commentaire
+        {
+            get { return commentaire; }
+            set
+            {
+                commentaire = value;
+                SaveColor = "Red";
+                OnPropertyChanged("Commentaire");
+            }
+        }
+        private string commentaire;
+        public string GroupeChambre
+        {
+            get { return groupeChambre; }
+            set
+            {
+                groupeChambre = value;
+                SaveColor = "Red";
+                OnPropertyChanged("GroupeChambre");
+            }
+        }
+        private string groupeChambre;
+        public string SaveColor
+        {
+            get
+            { return saveColor; }
+            set
+            {
+                saveColor = value;
+                OnPropertyChanged("SaveColor");
+            }
+        }
+        private string saveColor = "Navy";
+
+    }
+
+    public class ChambreByGroupe_VM : ViewModelBase
+    {
+        public Guid? GroupeChambre;
+        public string Nom;
+        public Guid IdDelaChambre;
+        public string NomChambre
+        {
+            get
+            { return nomChambre; }
+            set
+            {
+                nomChambre = value;
+                OnPropertyChanged("NomChambre");
+            }
+        }
+        private string nomChambre;
+
+    }
 }

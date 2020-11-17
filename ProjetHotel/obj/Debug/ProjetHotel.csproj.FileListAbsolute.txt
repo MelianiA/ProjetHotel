@@ -74,3 +74,5 @@ C:\Users\abdou\source\repos\ProjetHotel\ProjetHotel\obj\Debug\Makrisoft.Makfi.pd
 C:\Users\abdou\source\repos\ProjetHotel\ProjetHotel\obj\Debug\ProjetHotel.csprojAssemblyReference.cache
 C:\Users\abdou\source\repos\ProjetHotel\ProjetHotel\obj\Debug\Views\ChambreView.g.cs
 C:\Users\abdou\source\repos\ProjetHotel\ProjetHotel\obj\Debug\Views\ChambreView.baml
+C:\Users\abdou\source\repos\ProjetHotel\ProjetHotel\obj\Debug\Views\ChambreGroupeView.g.cs
+C:\Users\abdou\source\repos\ProjetHotel\ProjetHotel\obj\Debug\Views\ChambreGroupeView.baml
