@@ -131,7 +131,9 @@ namespace Makrisoft.Makfi.ViewModels
             var ids = MakfiData.GroupeChambre_Save(param);
             if (ids.Count == 0) throw new Exception("Rien n'a été sauvgardé ! ");
             //Etape02
-            var chambreGroupeChambre_Delete = MakfiData.ChambreGroupeChambre_Delete($"<chambreGroupeChambre><groupeChambre>{CurrentGroupeChambre.Id}</groupeChambre></chambreGroupeChambre>");
+            var chambreGroupeChambre_Delete = MakfiData.ChambreGroupeChambre_Delete(
+                $"<chambreGroupeChambre><groupeChambre>{CurrentGroupeChambre.Id}</groupeChambre><hotel>{Reference_ViewModel.Header.CurrentHotel.Id}</hotel></chambreGroupeChambre>"
+                );
             if (!chambreGroupeChambre_Delete) throw new Exception("Rien n'a été sauvgardé ! ");
 
             //Etape03
@@ -147,7 +149,9 @@ namespace Makrisoft.Makfi.ViewModels
                 if (ids.Count == 0) throw new Exception("Rien n'a été sauvgardé ! ");
             }
             CurrentGroupeChambre.SaveColor = "Navy";
-        }
+            Load_AllChambres();
+            Load_ChambreCurrentGroupe();
+         }
 
         // Méthodes OnCanExecuteCommand
         private bool OnCanExecuteAddChambreAuGroupe()
@@ -207,6 +211,7 @@ namespace Makrisoft.Makfi.ViewModels
                     );
                 CurrentGroupeChambre.ChambreCurrentGroupeListview = new ListCollectionView(CurrentGroupeChambre.ChambreCurrentGroupe);
                 CurrentGroupeChambre.ChambreCurrentGroupeListview.Refresh();
+                if (CurrentGroupeChambre.ChambreNotCurrentGroupe!=null) CurrentGroupeChambre.ChambreNotCurrentGroupe.Clear();
                 CurrentGroupeChambre.ChambreNotCurrentGroupe = new ObservableCollection<ChambreByGroupe_VM>(
                   AllChambres.Where(c => c.GroupeChambre != CurrentGroupeChambre.Id && !CurrentGroupeChambre.ChambreCurrentGroupe.Any(a => a.IdDelaChambre == c.IdDelaChambre))
                             .Select(x => new ChambreByGroupe_VM { IdDelaChambre = x.IdDelaChambre, NomChambre = x.NomChambre })

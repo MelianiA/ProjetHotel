@@ -292,8 +292,8 @@ exec Chambre_Save '<chambre>
                     </chambre>'
 select * from Chambre
  ----------------------------------------------------------------------------------------------------------
-create PROC [dbo].[GroupeChambre_Save](@data xml=NULL)
- AS
+alter PROC [dbo].[GroupeChambre_Save](@data xml=NULL)
+AS
 	DECLARE @IDs TABLE(ID uniqueidentifier);
 	DECLARE @message nvarchar(MAX)
 	DECLARE @Id uniqueidentifier
@@ -313,8 +313,8 @@ select @id=Id  from #_groupeChambre
 BEGIN TRY
 	 update GroupeChambre set
 			Nom= t.Nom, Commentaire=t.Commentaire
-			       output inserted.Id into @IDs(ID)
-			from (select Id, Nom, Commentaire from #_groupeChambre where Id is not null) t
+					output inserted.Id into @IDs(ID)
+			from (select Id, Nom, Commentaire from #_groupeChambre) t
 			where GroupeChambre.Id=t.Id
 END TRY
 BEGIN CATCH
@@ -323,12 +323,20 @@ BEGIN CATCH
        RETURN;
 END CATCH
 -- Insert
-insert GroupeChambre(Nom, Commentaire )
-	output inserted.Id into @IDs(ID)
-(select Nom, Commentaire from #_groupeChambre  )
-IF @Id is null select @id=ID from @IDs
+if @id is null insert GroupeChambre(Nom, Commentaire )
+		output inserted.Id into @IDs(ID)
+	(select Nom, Commentaire from #_groupeChambre  )
+select @id=ID from @IDs
 select Id from @IDs
 GO
+
+exec GroupeChambre_Save '<groupeChambre>
+							<id>6de56433-e0d5-4326-9805-1d22fb29fc4b</id>
+							<nom>Etage3</nom>
+							<commentaire></commentaire>    
+					    </groupeChambre>'
+
+select * from GroupeChambre
  ----------------------------------------------------------------------------------------------------------
  create PROC [dbo].[ChambreGroupeChambre_Save](@data xml=NULL)
  as
@@ -418,12 +426,36 @@ go
 alter PROC [dbo].[ChambreGroupeChambre_Delete](@data xml=NULL)
 as
 DECLARE @GroupeChambre uniqueidentifier;
+DECLARE @Hotel uniqueidentifier;
 select
-	@GroupeChambre= T.N.value('groupeChambre[1]', 'uniqueidentifier') 
+	@GroupeChambre= T.N.value('groupeChambre[1]', 'uniqueidentifier') ,
+	@Hotel= T.N.value('hotel[1]', 'uniqueidentifier') 
 from @data.nodes('chambreGroupeChambre') as T(N) 
-delete from ChambreGroupeChambre where GroupeChambre = @GroupeChambre
+
+delete from ChambreGroupeChambre
+where Id in 
+(
+select cgc.Id  
+from ChambreGroupeChambre cgc
+inner join Chambre c on cgc.Chambre = c.Id
+where c.Hotel=@Hotel and cgc.GroupeChambre=@GroupeChambre
+ )
 go
 
+3D5C9810-08A0-454B-8E02-7FAA127C32E2
+exec ChambreGroupeChambre_Delete '<chambreGroupeChambre>
+										<groupeChambre>6DE56433-E0D5-4326-9805-1D22FB29FC4B</groupeChambre>
+										<hotel>C65BFB16-6DBE-4BC9-8314-0DEABABB0404</hotel>
+								  </chambreGroupeChambre>'
+--/////---
+delete from ChambreGroupeChambre
+where GroupeChambre in 
+(
+select cgc.Id  
+from ChambreGroupeChambre cgc
+inner join Chambre c on cgc.Chambre = c.Id
+where c.Hotel='C65BFB16-6DBE-4BC9-8314-0DEABABB0404' and cgc.GroupeChambre='6DE56433-E0D5-4326-9805-1D22FB29FC4B'
+ )
 -- *************************************************************************************************
 -- CanDelete
 -- *************************************************************************************************
