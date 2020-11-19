@@ -152,7 +152,7 @@
             <StackPanel Margin="5" Width="220">
                 <TextBlock Text="Libellé" Margin="0,15,0,0"/>
                 <TextBox FontSize="16" Text="{Binding CurrentChambreGChambre.Nom, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
-                
+                <TextBlock Text="Etat" Margin="0,15,0,0"/>
                 <ComboBox FontSize="16" Margin="0 20 0 0"
                     ItemsSource="{Binding EtatChambre}" SelectedItem="{Binding CurrentChambreGChambre.Etat}"  >
                     <ComboBox.ItemTemplate>

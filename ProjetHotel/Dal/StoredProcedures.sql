@@ -84,12 +84,20 @@ select @hotel = T.N.value('(hotel/text())[1]', 'uniqueidentifier') from @data.no
  GO
 exec ChambreGroupeChambre_Read '<chambreGroupeChambre><hotel>C65BFB16-6DBE-4BC9-8314-0DEABABB0404</hotel></chambreGroupeChambre>'
 ---------------------------------------------------------------------------------------------------
-create PROC [dbo].[GroupeChambre_Read](@data xml=NULL)
+alter PROC [dbo].[GroupeChambre_Read](@data xml=NULL)
 AS
-DECLARE @Id uniqueidentifier=NULL
-select @Id = T.N.value('id[1]', 'uniqueidentifier') from @data.nodes('groupeChambre') as T(N)
-Select Id,Nom,Commentaire from GroupeChambre where @Id is null Or Id=@Id
-GO
+DECLARE @hotel uniqueidentifier=NULL
+select @hotel= T.N.value('hotel[1]', 'uniqueidentifier') from @data.nodes('groupeChambre') as T(N)
+
+Select distinct gc.Id,gc.Nom,gc.Commentaire from GroupeChambre gc
+inner join ChambreGroupeChambre cgc on gc.Id = cgc.GroupeChambre
+inner join Chambre c on c.Id = cgc.Chambre
+where c.Hotel = @hotel
+ GO
+ 
+
+ 
+
 ---------------------------------------------------------------------------------------------------
 alter PROC [dbo].[ChambreByGroupe_Read](@data xml=NULL)
 AS
@@ -442,20 +450,22 @@ where c.Hotel=@Hotel and cgc.GroupeChambre=@GroupeChambre
  )
 go
 
-3D5C9810-08A0-454B-8E02-7FAA127C32E2
-exec ChambreGroupeChambre_Delete '<chambreGroupeChambre>
-										<groupeChambre>6DE56433-E0D5-4326-9805-1D22FB29FC4B</groupeChambre>
+ exec ChambreGroupeChambre_Delete '<chambreGroupeChambre>
+										<groupeChambre>3D5C9810-08A0-454B-8E02-7FAA127C32E2</groupeChambre>
 										<hotel>C65BFB16-6DBE-4BC9-8314-0DEABABB0404</hotel>
 								  </chambreGroupeChambre>'
---/////---
-delete from ChambreGroupeChambre
-where GroupeChambre in 
-(
-select cgc.Id  
-from ChambreGroupeChambre cgc
-inner join Chambre c on cgc.Chambre = c.Id
-where c.Hotel='C65BFB16-6DBE-4BC9-8314-0DEABABB0404' and cgc.GroupeChambre='6DE56433-E0D5-4326-9805-1D22FB29FC4B'
- )
+ -----------------------------------------------------------------------
+create PROC [dbo].[GroupeChambre_Delete](@data xml=NULL)
+ as
+DECLARE @Id uniqueidentifier;
+ select
+	@Id= T.N.value('id[1]', 'uniqueidentifier') 
+ from @data.nodes('groupeChambre') as T(N) 
+
+delete from GroupeChambre
+where Id = @Id
+go
+
 -- *************************************************************************************************
 -- CanDelete
 -- *************************************************************************************************
@@ -505,4 +515,12 @@ select 'InterventionDetail' tableName, COUNT(*) n from InterventionDetail where 
 UNION ALL
 select 'ChambreGroupeChambre' tableName, COUNT(*) n from ChambreGroupeChambre where Chambre=@id  
 GO
- 
+-----------------------------------------------------------------------------------------------------
+create PROC [dbo].[GroupeChambre_CanDelete](@data xml=NULL)
+AS
+DECLARE @id uniqueidentifier=NULL
+select @id=T.N.value('id[1]', 'uniqueidentifier') from @data.nodes('groupeChambre') as T(N)
+select 'Intervention' tableName, COUNT(*) n from Intervention where GroupeChambre=@id  
+UNION ALL
+select 'ChambreGroupeChambre' tableName, COUNT(*) n from ChambreGroupeChambre where GroupeChambre=@id  
+GO

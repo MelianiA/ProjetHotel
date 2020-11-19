@@ -34,38 +34,12 @@ namespace Makrisoft.Makfi.ViewModels
 
         #region Binding
         //Chambre
-        public ObservableCollection<Chambre_VM> Chambres
-        {
-            get { return chambres; }
-            set
-            {
-                chambres = value;
-                OnPropertyChanged("Chambres");
-
-            }
-        }
-        private ObservableCollection<Chambre_VM> chambres;
         public ListCollectionView ChambreCollectionView
         {
             get { return chambreCollectionView; }
             set { chambreCollectionView = value; OnPropertyChanged("ChambreCollectionView"); }
         }
         private ListCollectionView chambreCollectionView;
-        public Chambre_VM CurrentChambre
-        {
-            get
-            {
-
-                return currentChambre;
-
-            }
-            set
-            {
-                currentChambre = value;
-                OnPropertyChanged("CurrentChambre");
-            }
-        }
-        private Chambre_VM currentChambre;
 
         //GroupeChambre
         public ObservableCollection<GroupeChambre_VM> GroupeChambre
@@ -176,13 +150,6 @@ namespace Makrisoft.Makfi.ViewModels
         }
         private GroupeChambre_VM currentFilterGroupe;
 
-        //
-        public ListCollectionView HotelsCollectionView
-        {
-            get { return hotelsCollectionView; }
-            set { hotelsCollectionView = value; OnPropertyChanged("HotelCollectionView"); }
-        }
-        private ListCollectionView hotelsCollectionView;
 
         #endregion
 
@@ -223,7 +190,6 @@ namespace Makrisoft.Makfi.ViewModels
             CurrentChambreGChambre.SaveColor = "Navy";
             ChambreCollectionView.Refresh();
         }
-
         private void OnAddCommand()
         {
             CurrentChambreGChambre = new ChambreGroupeChambre_VM { Nom = "( A définir !)" };
@@ -246,9 +212,10 @@ namespace Makrisoft.Makfi.ViewModels
 
         private void OnChambreGroupeViewCommand()
         {
+            Reference_ViewModel.ChambreGroupe.Load_AllChambres();
+            Reference_ViewModel.ChambreGroupe.Load_GroupeChambres();
             Reference_ViewModel.Main.ViewSelected = ViewEnum.ChambreGroupe;
         }
-
         private void OnFilterEtatClearCommand()
         {
             CurrentFilterEtat = null;
@@ -343,7 +310,6 @@ namespace Makrisoft.Makfi.ViewModels
             CurrentFilterEtat = null;
             CurrentFilterGroupe = null;
         }
-
         private void Load_Etat()
         {
             EtatList = new ObservableCollection<Etat_VM>(

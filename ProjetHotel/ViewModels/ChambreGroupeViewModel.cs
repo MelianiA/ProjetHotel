@@ -21,16 +21,15 @@ namespace Makrisoft.Makfi.ViewModels
             AddChambreAuGroupe = new RelayCommand(p => OnAddChambreAuGroupe(), p => OnCanExecuteAddChambreAuGroupe());
             RemoveChambreAuGroupe = new RelayCommand(p => OnRemoveChambreAuGroupe(), p => OnCanExecuteRemoveChambreAuGroupe());
             ChambreGroupeModifiedSaveCommand = new RelayCommand(p => OnChambreGroupeModifiedSaveCommand(), p => OnCanExecuteChambreGroupeModifiedSaveCommand());
+            ChambreGroupeSelectedAddCommand = new RelayCommand(p => OnChambreGroupeSelectedAddCommand(), p => true);
+            ChambreGroupeSelectedDeleteCommand = new RelayCommand(p => OnChambreGroupeSelectedDeleteCommand(), p => OnCanExecuteChambreGroupeSelectedDeleteCommand());
+
             // ListeView
             Load_GroupeChambres();
             Load_AllChambres();
             //Load_ChambreCurrentGroupe();
 
         }
-
-
-
-
 
         #endregion
 
@@ -57,7 +56,7 @@ namespace Makrisoft.Makfi.ViewModels
             set
             {
                 currentGroupeChambre = value;
-                if (CurrentGroupeChambre.SaveColor == "Navy")
+                if (CurrentGroupeChambre != null && CurrentGroupeChambre.SaveColor == "Navy")
                     Load_ChambreCurrentGroupe();
                 OnPropertyChanged("CurrentGroupeChambre");
             }
@@ -90,7 +89,8 @@ namespace Makrisoft.Makfi.ViewModels
         public ICommand AddChambreAuGroupe { get; set; }
         public ICommand RemoveChambreAuGroupe { get; set; }
         public ICommand ChambreGroupeModifiedSaveCommand { get; set; }
-
+        public ICommand ChambreGroupeSelectedAddCommand { get; set; }
+        public ICommand ChambreGroupeSelectedDeleteCommand { get; set; }
 
         // Méthodes OnCommand
         private void OnAddChambreAuGroupe()
@@ -105,7 +105,6 @@ namespace Makrisoft.Makfi.ViewModels
             CurrentGroupeChambre.ChambreCurrentGroupe.Remove(CurrentGroupeChambre.CurrentChambreCG);
             CurrentGroupeChambre.SaveColor = "Red";
         }
-
         private void OnChambreGroupeModifiedSaveCommand()
         {
             if (Reference_ViewModel.Header.CurrentHotel == null)
@@ -114,11 +113,13 @@ namespace Makrisoft.Makfi.ViewModels
                 GroupeChambres.Remove(CurrentGroupeChambre);
                 return;
             }
-            if (CurrentGroupeChambre.Nom == null)
+            if (CurrentGroupeChambre.Nom == null || CurrentGroupeChambre.Nom == "(A définir ! )")
             {
-                MessageBox.Show($"Impossible de sauvgarder cette chambre !", "Remarque !");
+                MessageBox.Show($"Impossible de sauvgarder ce groupe !" +
+                    $"\nVous devez choisir un nom pour ce groupe de chambre.", "Remarque !");
                 return;
             }
+       
             //Etape01
             Guid? monID = null;
             if (CurrentGroupeChambre.Id != default) monID = CurrentGroupeChambre.Id;
@@ -130,20 +131,19 @@ namespace Makrisoft.Makfi.ViewModels
                       </groupeChambre>";
             var ids = MakfiData.GroupeChambre_Save(param);
             if (ids.Count == 0) throw new Exception("Rien n'a été sauvgardé ! ");
+            if (monID == null) CurrentGroupeChambre.Id = ids[0].Id;
             //Etape02
             var chambreGroupeChambre_Delete = MakfiData.ChambreGroupeChambre_Delete(
                 $"<chambreGroupeChambre><groupeChambre>{CurrentGroupeChambre.Id}</groupeChambre><hotel>{Reference_ViewModel.Header.CurrentHotel.Id}</hotel></chambreGroupeChambre>"
                 );
             if (!chambreGroupeChambre_Delete) throw new Exception("Rien n'a été sauvgardé ! ");
-
             //Etape03
-            //Sauvgarder (CurrentGroupeChambre.ChambreCurrentGroupeListview) dans la table ChambreGroupeChambre
             foreach (var item in CurrentGroupeChambre.ChambreCurrentGroupe)
             {
                 param = $@"
                     <chambreGroupeChambre>
                         <chambre>{item.IdDelaChambre}</chambre>
-                        <groupeChambre>{CurrentGroupeChambre.Id}</groupeChambre>    
+                        <groupeChambre>{ids[0].Id}</groupeChambre>    
                       </chambreGroupeChambre>";
                 ids = MakfiData.ChambreGroupeChambre_Save(param);
                 if (ids.Count == 0) throw new Exception("Rien n'a été sauvgardé ! ");
@@ -151,7 +151,31 @@ namespace Makrisoft.Makfi.ViewModels
             CurrentGroupeChambre.SaveColor = "Navy";
             Load_AllChambres();
             Load_ChambreCurrentGroupe();
-         }
+        }
+        private void OnChambreGroupeSelectedAddCommand()
+        {
+            CurrentGroupeChambre = new GroupeChambre_VM { Nom = "(A définir ! )" };
+            Load_ChambreCurrentGroupe();
+            GroupeChambres.Add(CurrentGroupeChambre);
+        }
+        private void OnChambreGroupeSelectedDeleteCommand()
+        {
+            if (CurrentGroupeChambre.ChambreCurrentGroupe.Count != 0)
+            {
+                MessageBox.Show($"Vérifiez s'il y a des chambres qui sont attachées à ce groupe ! ", "Impossible de supprimer  !");
+                return;
+            }
+            var canDeletes = MakfiData.GroupeChambre_CanDelete($"<groupeChambre><id>{ CurrentGroupeChambre.Id}</id></groupeChambre>");
+            if (canDeletes.Count() == 0)
+            {
+                var param = MakfiData.GroupeChambre_Delete($"<groupeChambre><id>{CurrentGroupeChambre.Id}</id></groupeChambre>");
+                if (param) GroupeChambres.Remove(CurrentGroupeChambre);
+            }
+            else
+            {
+                MessageBox.Show($" Suppression impossible du groupe : {CurrentGroupeChambre.Nom }", "Remarque !");
+            }
+        }
 
         // Méthodes OnCanExecuteCommand
         private bool OnCanExecuteAddChambreAuGroupe()
@@ -169,28 +193,43 @@ namespace Makrisoft.Makfi.ViewModels
             if (CurrentGroupeChambre != null) return true;
             else return false;
         }
-        // Divers
-
-
+        private bool OnCanExecuteChambreGroupeSelectedDeleteCommand()
+        {
+            if (CurrentGroupeChambre == null) return false;
+            else return true;
+        }
+  
         #endregion
 
         #region Load
         public void Load_GroupeChambres()
         {
+            if (Reference_ViewModel.Header.CurrentHotel == null)
+            {
+                MessageBox.Show($"Aucun hôtel ne vous a été assigné  ", "Impossible d'enregistrer  !");
+                GroupeChambres.Remove(CurrentGroupeChambre);
+                return;
+            }
             GroupeChambres = new ObservableCollection<GroupeChambre_VM>(
-              MakfiData.GroupeChambre_Read()
+              MakfiData.GroupeChambre_Read($"<groupeChambre><hotel>{Reference_ViewModel.Header.CurrentHotel.Id}</hotel></groupeChambre>")
               .Select(x => new GroupeChambre_VM
               {
                   Id = x.Id,
                   Nom = x.Nom,
                   Commentaire = x.Commentaire,
                   SaveColor = "Navy"
-              }).ToList());
+              }).OrderBy(x => x.Nom).ToList());
             GroupeChambreCollectionView = new ListCollectionView(GroupeChambres);
             GroupeChambreCollectionView.Refresh();
         }
         public void Load_AllChambres()
         {
+            if (Reference_ViewModel.Header.CurrentHotel == null)
+            {
+                MessageBox.Show($"Aucun hôtel ne vous a été assigné  ", "Impossible d'enregistrer  !");
+                GroupeChambres.Remove(CurrentGroupeChambre);
+                return;
+            }
             AllChambres = new ObservableCollection<ChambreByGroupe_VM>(
                MakfiData.ChambreByGroupe_Read($"<chambreByGroupe><hotel>{Reference_ViewModel.Header.CurrentHotel.Id}</hotel></chambreByGroupe>")
                .Select(x => new ChambreByGroupe_VM
@@ -211,7 +250,7 @@ namespace Makrisoft.Makfi.ViewModels
                     );
                 CurrentGroupeChambre.ChambreCurrentGroupeListview = new ListCollectionView(CurrentGroupeChambre.ChambreCurrentGroupe);
                 CurrentGroupeChambre.ChambreCurrentGroupeListview.Refresh();
-                if (CurrentGroupeChambre.ChambreNotCurrentGroupe!=null) CurrentGroupeChambre.ChambreNotCurrentGroupe.Clear();
+                if (CurrentGroupeChambre.ChambreNotCurrentGroupe != null) CurrentGroupeChambre.ChambreNotCurrentGroupe.Clear();
                 CurrentGroupeChambre.ChambreNotCurrentGroupe = new ObservableCollection<ChambreByGroupe_VM>(
                   AllChambres.Where(c => c.GroupeChambre != CurrentGroupeChambre.Id && !CurrentGroupeChambre.ChambreCurrentGroupe.Any(a => a.IdDelaChambre == c.IdDelaChambre))
                             .Select(x => new ChambreByGroupe_VM { IdDelaChambre = x.IdDelaChambre, NomChambre = x.NomChambre })

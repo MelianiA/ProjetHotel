@@ -136,7 +136,7 @@ namespace Makrisoft.Makfi.Dal
             return entities;
         }
 
-     
+
 
         public static List<CanDelete> CanDelete(string spName, string spParam)
         {
@@ -176,7 +176,7 @@ namespace Makrisoft.Makfi.Dal
                             );
         }
 
-      
+
 
         public static IEnumerable<Utilisateur> Utilisateur_Read(string spParam = null)
         {
@@ -210,8 +210,7 @@ namespace Makrisoft.Makfi.Dal
                             spParam
                             );
         }
-
-
+ 
         internal static IEnumerable<Chambre> Chambre_Read(string spParam = null)
         {
             return ReadAll<Chambre>
@@ -423,6 +422,12 @@ namespace Makrisoft.Makfi.Dal
                  .Where(x => x.Nombre > 0);
         }
 
+
+        public static IEnumerable<CanDelete> GroupeChambre_CanDelete(string spParam)
+        {
+            return CanDelete("GroupeChambre_CanDelete", spParam)
+                 .Where(x => x.Nombre > 0);
+        }
         #endregion
 
         #region _Delete
@@ -453,6 +458,12 @@ namespace Makrisoft.Makfi.Dal
             return ExecuteNonQuery("ChambreGroupeChambre_Delete", spParam);
 
         }
+
+        internal static bool GroupeChambre_Delete(string spParam)
+        {
+            return ExecuteNonQuery("GroupeChambre_Delete", spParam);
+        }
+
 
         #endregion
 
