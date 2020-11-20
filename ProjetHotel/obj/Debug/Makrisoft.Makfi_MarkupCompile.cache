@@ -10,11 +10,11 @@ none
 false
 TRACE;DEBUG;PASSEDROIT
 C:\Users\abdou\source\repos\ProjetHotel\ProjetHotel\App.xaml
-1077751493
+121213474127
 1784467754
-44128078374
+50-1384407033
 15-1344989950
-Views\AdministrationView.xaml;Views\ChambreGroupeView.xaml;Views\ChambreView.xaml;Views\EmployeView.xaml;Views\HeaderView.xaml;Views\HomeView.xaml;Views\HotelView.xaml;Views\LoginView.xaml;Views\MainView.xaml;Views\UtilisateurView.xaml;
+Views\AdministrationView.xaml;Views\ChambreGroupeView.xaml;Views\ChambreView.xaml;Views\EmployeView.xaml;Views\HeaderView.xaml;Views\HomeView.xaml;Views\HotelView.xaml;Views\InterventionDetailView.xaml;Views\InterventionView.xaml;Views\LoginView.xaml;Views\MainView.xaml;Views\UtilisateurView.xaml;
 
 False
 

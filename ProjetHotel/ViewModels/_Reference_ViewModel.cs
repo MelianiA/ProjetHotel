@@ -19,5 +19,7 @@ namespace Makrisoft.Makfi.ViewModels
         public static EmployeViewModel Employe;
         public static ChambreViewModel Chambre;
         public static ChambreGroupeViewModel ChambreGroupe;
+        public static InterventionViewModel Intervention;
+        public static InterventionDetailViewModel InterventionDetail;
     }
 }

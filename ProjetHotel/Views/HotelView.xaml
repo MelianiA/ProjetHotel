@@ -11,10 +11,10 @@
              d:DesignHeight="450" d:DesignWidth="800">
 
     <Grid>
-        <Grid.Resources>
+        <!--<Grid.Resources>
             <conv:ChambreEtatIconeConverter x:Key="ChambreEtatIconeConverterKey"/>
             <conv:ChambreEtatColorConverter x:Key="ChambreEtatColorConverterKey"/>
-        </Grid.Resources>
+        </Grid.Resources>-->
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="240"/>
             <ColumnDefinition Width="*"/>

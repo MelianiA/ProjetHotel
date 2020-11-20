@@ -1,10 +1,9 @@
-﻿<UserControl x:Class="ProjetHotel.Views.InterventionDetailView"
+﻿<UserControl x:Class="Makrisoft.Makfi.Views.InterventionDetailView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
-             xmlns:conv="clr-namespace:ProjetHotel.Converters"
+             xmlns:conv="clr-namespace:Makrisoft.Makfi.Converters"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
@@ -34,7 +33,7 @@
                 <TextBlock Text="Filtrer" FontSize="22" Foreground="Navy" VerticalAlignment="Bottom" Margin="0,0,0,0"/>
                 <Button Grid.Column="1" Background="Transparent" BorderBrush="Transparent" BorderThickness="1" Command="{Binding FilterClearCommand}" VerticalAlignment="Bottom">
                     <Button.Content>
-                        <materialDesign:PackIcon Height="20" Width="Auto" Kind="Clear" Foreground="Navy" Margin="0,0,10,0"/>
+                        <materialDesign:PackIcon Height="20" Width="Auto" Kind="TimelineHelp"  Foreground="Navy" Margin="0,0,10,0"/>
                     </Button.Content>
                 </Button>
             </Grid>
@@ -51,13 +50,13 @@
                     <Run Text="{Binding Intervention_ViewModel.InterventionSelected.Libelle}"/>
                     <Run Text="]"/>
                     <Run Text="{Binding InterventionDetailDate, StringFormat=dddd d MMMM yyy HH:mm}"/>
+                     <Run Text="à faire ...."/>
                 </TextBlock>
                 <Menu Grid.Column="1" Cursor="Hand" Margin="0">
                     <MenuItem Header="..." Foreground="Navy" FontSize="16">
                         <MenuItem Header="Ajouter" Foreground="Navy" Command="{Binding InterventionDetailSelectedAddCommand}"/>
                         <MenuItem Header="Supprimer" Foreground="Navy" Command="{Binding InterventionDetailSelectedDeleteCommand}"/>
-                        <MenuItem Header="Annuler les modifications" Foreground="Navy" Command="{Binding InterventionDetailSelectedRestoreCommand}"/>
-                    </MenuItem>
+                     </MenuItem>
                 </Menu>
             </Grid>
         </Border>

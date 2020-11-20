@@ -73,9 +73,8 @@ namespace Makrisoft.Makfi.Dal
                 return false;
             }
         }
-
-
-
+ 
+    
         private static void Close()
         {
             if (Reader != null) Reader.Close();
@@ -120,6 +119,8 @@ namespace Makrisoft.Makfi.Dal
                 return false;
             }
         }
+
+    
 
         public static List<T> ReadAll<T>(string spName, Action<T> p, string spParam = null) where T : new()
         {
@@ -309,6 +310,26 @@ namespace Makrisoft.Makfi.Dal
                           );
         }
 
+
+        internal static IEnumerable<Intervention> Interventions_Read(string spParam)
+        {
+            return ReadAll<Intervention>
+                                    (
+                                    "Intervention_Read",
+                                    e =>
+                                    {
+                                        e.Id = (Guid)Reader["Id"];
+                                        e.Libelle = Reader["Libelle"] as string;
+                                        e.Etat =  Reader["Etat"] as Guid?;
+                                        e.Date1=  (DateTime)Reader["Date1"];
+                                        e.Commentaire = Reader["Commentaire"] as string;
+                                        e.GroupeChambre = Reader["GroupeChambre"] as Guid?;
+                                    },
+                                    spParam
+                                    );
+        }
+
+
         #endregion
 
         #region _Save
@@ -394,6 +415,20 @@ namespace Makrisoft.Makfi.Dal
              spParam
              );
         }
+        internal static List<Intervention> Intervention_Save(string spParam)
+        {
+            {
+                return ReadAll<Intervention>
+                 (
+                 "Intervention_Save",
+                 e =>
+                 {
+                     e.Id = (Guid)Reader["Id"];
+                 },
+                 spParam
+                 );
+            }
+        }
 
         #endregion
 
@@ -428,6 +463,12 @@ namespace Makrisoft.Makfi.Dal
             return CanDelete("GroupeChambre_CanDelete", spParam)
                  .Where(x => x.Nombre > 0);
         }
+        public static IEnumerable<CanDelete> Intervention_CanDelete(string spParam)
+        {
+            return CanDelete("Intervention_CanDelete", spParam)
+                .Where(x => x.Nombre > 0);
+        }
+
         #endregion
 
         #region _Delete
@@ -464,6 +505,10 @@ namespace Makrisoft.Makfi.Dal
             return ExecuteNonQuery("GroupeChambre_Delete", spParam);
         }
 
+        internal static bool Intervention_Delete(string spParam)
+        {
+            return ExecuteNonQuery("Intervention_Delete", spParam);
+        }
 
         #endregion
 

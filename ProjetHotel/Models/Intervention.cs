@@ -6,13 +6,16 @@ using System.Threading.Tasks;
 
 namespace Makrisoft.Makfi.Models
 {
-    public class Chambre
+    public class Intervention
     {
         public Guid Id;
-        public string Nom;
-        public Etat Etat;
+        public string Libelle;
+        public Guid? Etat;
+        public DateTime Date1;
         public string Commentaire;
-        public Hotel Hotel;
+        public Guid? GroupeChambre;
+
+
 
     }
 }

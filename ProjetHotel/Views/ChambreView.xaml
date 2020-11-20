@@ -8,10 +8,10 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
-        <Grid.Resources>
+        <!--<Grid.Resources>
             <conv:ChambreEtatIconeConverter x:Key="ChambreEtatIconeConverterKey"/>
             <conv:ChambreEtatColorConverter x:Key="ChambreEtatColorConverterKey"/>
-        </Grid.Resources>
+        </Grid.Resources>-->
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="240"/>
             <ColumnDefinition Width="*"/>
@@ -84,7 +84,7 @@
 
                 <!--ChambreGroupeFilterSelected-->
                 <TextBlock Text="Grouope de chambres" Margin="0,15,0,0"/>
-                <ComboBox ItemsSource="{Binding GroupeChambre}" SelectedItem="{Binding CurrentFilterGroupe}" FontSize="16">
+                <ComboBox ItemsSource="{Binding GroupeChambreCollectionView, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" SelectedItem="{Binding CurrentFilterGroupe}" FontSize="16">
                     <ComboBox.ItemTemplate>
                         <DataTemplate>
                             <StackPanel Orientation="Horizontal">

@@ -128,6 +128,12 @@ namespace Makrisoft.Makfi.ViewModels
                 case ViewEnum.ChambreGroupe:
                     Reference_ViewModel.Main.ViewSelected = Dal.ViewEnum.Chambre;
                     break;
+                case ViewEnum.Intervention:
+                    Reference_ViewModel.Main.ViewSelected = Dal.ViewEnum.Home;
+                    break;
+                case ViewEnum.InterventionDetail:
+                    Reference_ViewModel.Main.ViewSelected = Dal.ViewEnum.Home;
+                    break;
             }
 
         }

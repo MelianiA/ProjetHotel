@@ -69,6 +69,7 @@
     </Compile>
     <Compile Include="Converters\ChambreConverter.cs" />
     <Compile Include="Converters\ColorConverter.cs" />
+    <Compile Include="Converters\InterventionConverter.cs" />
     <Compile Include="Converters\RoleConverter.cs" />
     <Compile Include="Converters\StringConverter.cs" />
     <Compile Include="Converters\ViewSelectedConverter.cs" />
@@ -80,6 +81,7 @@
     <Compile Include="Models\GroupeChambre.cs" />
     <Compile Include="Models\Hotel.cs" />
     <Compile Include="Models\HotelEmploye.cs" />
+    <Compile Include="Models\Intervention.cs" />
     <Compile Include="Models\Utilisateur.cs" />
     <Compile Include="Tools\Log.cs" />
     <Compile Include="Tools\Tools.cs" />
@@ -89,6 +91,8 @@
     <Compile Include="ViewModels\EmployeViewModel.cs" />
     <Compile Include="ViewModels\HomeViewModel.cs" />
     <Compile Include="ViewModels\HotelViewModel.cs" />
+    <Compile Include="ViewModels\InterventionDetailViewModel.cs" />
+    <Compile Include="ViewModels\InterventionViewModel.cs" />
     <Compile Include="ViewModels\_Reference_ViewModel.cs" />
     <Compile Include="ViewModels\HeaderViewModel.cs" />
     <Compile Include="ViewModels\LoginViewModel.cs" />
@@ -117,6 +121,12 @@
     </Compile>
     <Compile Include="Views\HotelView.xaml.cs">
       <DependentUpon>HotelView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\InterventionDetailView.xaml.cs">
+      <DependentUpon>InterventionDetailView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\InterventionView.xaml.cs">
+      <DependentUpon>InterventionView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\LoginView.xaml.cs">
       <DependentUpon>LoginView.xaml</DependentUpon>
@@ -181,6 +191,14 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\HotelView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\InterventionDetailView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\InterventionView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

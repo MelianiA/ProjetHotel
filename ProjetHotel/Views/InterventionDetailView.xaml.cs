@@ -1,6 +1,7 @@
-﻿using System.Windows.Controls;
+﻿using Makrisoft.Makfi.ViewModels;
+using System.Windows.Controls;
 
-namespace ProjetHotel.Views
+namespace Makrisoft.Makfi.Views
 {
     /// <summary>
     /// Logique d'interaction pour InterventionDetailView.xaml
@@ -9,6 +10,8 @@ namespace ProjetHotel.Views
     {
         public InterventionDetailView()
         {
+            Reference_ViewModel.InterventionDetail = new InterventionDetailViewModel();
+            DataContext = Reference_ViewModel.InterventionDetail;
             InitializeComponent();
         }
     }

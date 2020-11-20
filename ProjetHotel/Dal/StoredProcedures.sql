@@ -94,10 +94,6 @@ inner join ChambreGroupeChambre cgc on gc.Id = cgc.GroupeChambre
 inner join Chambre c on c.Id = cgc.Chambre
 where c.Hotel = @hotel
  GO
- 
-
- 
-
 ---------------------------------------------------------------------------------------------------
 alter PROC [dbo].[ChambreByGroupe_Read](@data xml=NULL)
 AS
@@ -111,8 +107,17 @@ select  c.id as IdDelaChambre ,cgc.GroupeChambre,gc.Nom ,c.Nom as NomChambre, c.
 where c.Hotel=@Hotel
 GO
  exec [ChambreByGroupe_Read] '<chambreByGroupe><hotel>C65BFB16-6DBE-4BC9-8314-0DEABABB0404</hotel></chambreByGroupe>'
-  exec [ChambreByGroupe_Read] '<chambreByGroupe><hotel>c65bfb16-6dbe-4bc9-8314-0deababb0404</hotel></chambreByGroupe>'
--- *************************************************************************************************
+---------------------------------------------------------------------------------------------------
+alter PROC [dbo].[Intervention_Read](@data xml=NULL)
+AS
+DECLARE @Hotel uniqueidentifier=NULL
+select @Hotel = T.N.value('hotel[1]', 'uniqueidentifier') from @data.nodes('intervention') as T(N)
+ select i.Id,Libelle, Etat,convert(date, Date1, 120) as Date1 , i.Commentaire, i.GroupeChambre from Intervention i
+ left join InterventionDetail itd on i.Id = itd.Intervention 
+ where i.Hotel=@Hotel
+ GO
+ exec [Intervention_Read] '<intervention><hotel>C65BFB16-6DBE-4BC9-8314-0DEABABB0404</hotel></intervention>'
+ -- *************************************************************************************************
 -- save
 -- *************************************************************************************************
 
@@ -367,7 +372,52 @@ insert ChambreGroupeChambre(Chambre, GroupeChambre )
 IF @Id is null select @id=ID from @IDs
 select Id from @IDs
 GO
+ ----------------------------------------------------------------------------------------------------------
+ alter PROC [dbo].[Intervention_Save](@data xml=NULL)
+ AS
+	DECLARE @IDs TABLE(ID uniqueidentifier);
+	DECLARE @message nvarchar(MAX)
+	DECLARE @Id uniqueidentifier
+	DECLARE @Libelle nvarchar(MAX)
+	DECLARE @Commentaire nvarchar(MAX)
+	DECLARE @Date1 date
+	DECLARE @GroupeChambre uniqueidentifier
 
+
+ 	DECLARE @Hotel uniqueidentifier
+
+-- PARTIE recup XML :
+select 
+ 		T.N.value('(id/text())[1]', 'uniqueidentifier') Id, 
+		T.N.value('(nom/text())[1]', 'nvarchar(MAX)') Libelle, 
+ 		T.N.value('(commentaire/text())[1]', 'nvarchar(MAX)') Commentaire,
+  		T.N.value('(hotel/text())[1]', 'uniqueidentifier') Hotel,
+  		T.N.value('(date1/text())[1]', 'date') Date1,
+  		T.N.value('(groupeChambre/text())[1]', 'uniqueidentifier') GroupeChambre
+		into #_intervention
+from @data.nodes('intervention') as T(N)
+-- PARTIE2
+select @id=Id  from #_intervention
+-- Update  
+BEGIN TRY
+	 update Intervention set
+			Libelle= t.Libelle, Commentaire=t.Commentaire, Date1=t.Date1,GroupeChambre=t.GroupeChambre
+					output inserted.Id into @IDs(ID)
+			from (select Id, Libelle, Commentaire, Date1, GroupeChambre from #_intervention) t
+			where Intervention.Id=t.Id
+END TRY
+BEGIN CATCH
+       select @message = ERROR_MESSAGE() 
+    RAISERROR (@message, 16, 1);  
+       RETURN;
+END CATCH
+-- Insert
+if @id is null insert Intervention(Libelle, Commentaire, Date1, GroupeChambre, Hotel )
+		output inserted.Id into @IDs(ID)
+	(select Libelle, Commentaire, Date1, GroupeChambre, Hotel from #_intervention  )
+select @id=ID from @IDs
+select Id from @IDs
+GO
  -- *************************************************************************************************
 -- Delete
 -- *************************************************************************************************
@@ -465,6 +515,16 @@ DECLARE @Id uniqueidentifier;
 delete from GroupeChambre
 where Id = @Id
 go
+-----------------------------------------------------------------------
+create PROC [dbo].[Intervention_Delete](@data xml=NULL)
+as
+DECLARE @id uniqueidentifier;
+select
+	@id= T.N.value('id[1]', 'uniqueidentifier') 
+ from @data.nodes('intervention') as T(N) 
+delete from Intervention
+where Id = @id
+go
 
 -- *************************************************************************************************
 -- CanDelete
@@ -523,4 +583,11 @@ select @id=T.N.value('id[1]', 'uniqueidentifier') from @data.nodes('groupeChambr
 select 'Intervention' tableName, COUNT(*) n from Intervention where GroupeChambre=@id  
 UNION ALL
 select 'ChambreGroupeChambre' tableName, COUNT(*) n from ChambreGroupeChambre where GroupeChambre=@id  
+GO
+-----------------------------------------------------------------------------------------------------
+create PROC [dbo].[Intervention_CanDelete](@data xml=NULL)
+AS
+DECLARE @id uniqueidentifier=NULL
+select @id=T.N.value('id[1]', 'uniqueidentifier') from @data.nodes('intervention') as T(N)
+select 'InterventionDetail' tableName, COUNT(*) n from InterventionDetail where Intervention=@id  
 GO

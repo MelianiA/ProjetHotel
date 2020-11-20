@@ -53,6 +53,12 @@ namespace Makrisoft.Makfi.ViewModels
             }
         }
         private ObservableCollection<GroupeChambre_VM> groupeChambre;
+        public ListCollectionView GroupeChambreCollectionView
+        {
+            get { return groupeChambreCollectionView; }
+            set { groupeChambreCollectionView = value; OnPropertyChanged("GroupeChambreCollectionView"); }
+        }
+        private ListCollectionView groupeChambreCollectionView;
 
         //ChambreGroupeChambre
         public ObservableCollection<ChambreGroupeChambre_VM> ChambreGroupeChambre
@@ -300,13 +306,15 @@ namespace Makrisoft.Makfi.ViewModels
 
             //Load_GroupeChambre
             GroupeChambre = new ObservableCollection<GroupeChambre_VM>(
-              MakfiData.GroupeChambre_Read()
+              MakfiData.GroupeChambre_Read($"<groupeChambre><hotel>{Reference_ViewModel.Header.CurrentHotel.Id}</hotel></groupeChambre>")
               .Select(x => new GroupeChambre_VM
               {
                   Id = x.Id,
                   Nom = x.Nom,
                   Commentaire = x.Commentaire
               }).ToList());
+            GroupeChambreCollectionView = new ListCollectionView(GroupeChambre);
+            GroupeChambreCollectionView.Refresh();
             CurrentFilterEtat = null;
             CurrentFilterGroupe = null;
         }

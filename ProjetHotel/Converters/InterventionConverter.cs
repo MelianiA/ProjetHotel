@@ -11,15 +11,12 @@ using System.Windows.Media;
 
 namespace Makrisoft.Makfi.Converters
 {
-    public class ChambreSelectedEtatConverter : IValueConverter
+    public class InterventionEtatIconeConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (value == null) return null;
-            Guid id = (Guid)value;
-            var liste = (ObservableCollection<Etat>)parameter;
-            var chambreEtat = liste.Where(c => c.Id == id).SingleOrDefault();
-            return chambreEtat == null ? null : chambreEtat;
+            return null;
+            //return $"{((Intervention)value).Etat.Icone}";
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
@@ -27,5 +24,17 @@ namespace Makrisoft.Makfi.Converters
             throw new NotImplementedException();
         }
     }
-    
+    public class InterventionEtatColorConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            return null;
+            //return ((Intervention)value).Etat.Couleur;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
 }

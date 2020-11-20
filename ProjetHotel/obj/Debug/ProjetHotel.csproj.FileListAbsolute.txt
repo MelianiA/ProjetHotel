@@ -76,3 +76,7 @@ C:\Users\abdou\source\repos\ProjetHotel\ProjetHotel\obj\Debug\Views\ChambreView.
 C:\Users\abdou\source\repos\ProjetHotel\ProjetHotel\obj\Debug\Views\ChambreView.baml
 C:\Users\abdou\source\repos\ProjetHotel\ProjetHotel\obj\Debug\Views\ChambreGroupeView.g.cs
 C:\Users\abdou\source\repos\ProjetHotel\ProjetHotel\obj\Debug\Views\ChambreGroupeView.baml
+C:\Users\abdou\source\repos\ProjetHotel\ProjetHotel\obj\Debug\Views\InterventionView.g.cs
+C:\Users\abdou\source\repos\ProjetHotel\ProjetHotel\obj\Debug\Views\InterventionView.baml
+C:\Users\abdou\source\repos\ProjetHotel\ProjetHotel\obj\Debug\Views\InterventionDetailView.g.cs
+C:\Users\abdou\source\repos\ProjetHotel\ProjetHotel\obj\Debug\Views\InterventionDetailView.baml
