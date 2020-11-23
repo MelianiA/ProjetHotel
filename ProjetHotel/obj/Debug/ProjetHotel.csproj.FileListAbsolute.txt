@@ -80,3 +80,13 @@ C:\Users\abdou\source\repos\ProjetHotel\ProjetHotel\obj\Debug\Views\Intervention
 C:\Users\abdou\source\repos\ProjetHotel\ProjetHotel\obj\Debug\Views\InterventionView.baml
 C:\Users\abdou\source\repos\ProjetHotel\ProjetHotel\obj\Debug\Views\InterventionDetailView.g.cs
 C:\Users\abdou\source\repos\ProjetHotel\ProjetHotel\obj\Debug\Views\InterventionDetailView.baml
+C:\Users\alima\Source\Repos\ProjetHotel\ProjetHotel\obj\Debug\Views\ChambreGroupeView.g.cs
+C:\Users\alima\Source\Repos\ProjetHotel\ProjetHotel\obj\Debug\Views\ChambreView.g.cs
+C:\Users\alima\Source\Repos\ProjetHotel\ProjetHotel\obj\Debug\Views\EmployeView.g.cs
+C:\Users\alima\Source\Repos\ProjetHotel\ProjetHotel\obj\Debug\Views\InterventionDetailView.g.cs
+C:\Users\alima\Source\Repos\ProjetHotel\ProjetHotel\obj\Debug\Views\InterventionView.g.cs
+C:\Users\alima\Source\Repos\ProjetHotel\ProjetHotel\obj\Debug\Views\ChambreGroupeView.baml
+C:\Users\alima\Source\Repos\ProjetHotel\ProjetHotel\obj\Debug\Views\ChambreView.baml
+C:\Users\alima\Source\Repos\ProjetHotel\ProjetHotel\obj\Debug\Views\EmployeView.baml
+C:\Users\alima\Source\Repos\ProjetHotel\ProjetHotel\obj\Debug\Views\InterventionDetailView.baml
+C:\Users\alima\Source\Repos\ProjetHotel\ProjetHotel\obj\Debug\Views\InterventionView.baml

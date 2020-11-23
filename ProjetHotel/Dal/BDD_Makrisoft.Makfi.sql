@@ -10,39 +10,38 @@ DROP DATABASE [MakfiBD]
 GO
 
 /*************************************************************************************************/
-/****** Object:  Database [MakfiBD]    Script Date: 23/11/2020 08:51:22 ******/
+-- DATABASE
 /*************************************************************************************************/
-
-CREATE DATABASE [MakfiBD]
- CONTAINMENT = NONE
- ON  PRIMARY 
-( NAME = N'MakfiBD', FILENAME = N'C:\Program Files\Microsoft SQL Server\MSSQL15.SQLEXPRESS\MSSQL\DATA\MakfiBD.mdf' , SIZE = 8192KB , MAXSIZE = UNLIMITED, FILEGROWTH = 65536KB )
- LOG ON 
-( NAME = N'MakfiBD_log', FILENAME = N'C:\Program Files\Microsoft SQL Server\MSSQL15.SQLEXPRESS\MSSQL\DATA\MakfiBD_log.ldf' , SIZE = 8192KB , MAXSIZE = 2048GB , FILEGROWTH = 65536KB )
- WITH CATALOG_COLLATION = DATABASE_DEFAULT
+CREATE DATABASE [MakfiBD] ON PRIMARY
+	( 
+	NAME = N'MakfiBD', 
+	FILENAME = N'C:\Program Files\Microsoft SQL Server\MSSQL14.SQLEXPRESS\MSSQL\DATA\MakfiBD.mdf'
+	)
+	LOG ON 
+	( 
+	NAME = N'MakfiBD_log', 
+	FILENAME = N'C:\Program Files\Microsoft SQL Server\MSSQL14.SQLEXPRESS\MSSQL\DATA\MakfiBD_log.ldf'
+	)
 GO
  
 /*************************************************************************************************/
-/****** Object:  Table [dbo].[Chambre]    Script Date: 23/11/2020 08:53:31 ******/
+-- CHAMBRE
 /*************************************************************************************************/
+use MakfiBD
+go
 
-SET ANSI_NULLS ON
-GO
-
-SET QUOTED_IDENTIFIER ON
-GO
-
-CREATE TABLE [dbo].[Chambre](
+CREATE TABLE [dbo].[Chambre]
+	(
 	[Id] [uniqueidentifier] NOT NULL,
 	[Nom] [nvarchar](max) NOT NULL,
 	[Etat] [uniqueidentifier] NOT NULL,
 	[Commentaire] [nvarchar](max) NULL,
 	[Hotel] [uniqueidentifier] NOT NULL,
- CONSTRAINT [PK_Chambre] PRIMARY KEY CLUSTERED 
-(
+	CONSTRAINT [PK_Chambre] PRIMARY KEY CLUSTERED 
+	(
 	[Id] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
-) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+	)
+	)
 GO
 
 ALTER TABLE [dbo].[Chambre] ADD  CONSTRAINT [DF_Chambre_Id]  DEFAULT (newid()) FOR [Id]
@@ -65,15 +64,8 @@ USE [MakfiBD]
 GO
 
 /*************************************************************************************************/
-/****** Object:  Table [dbo].[ChambreGroupeChambre]    Script Date: 23/11/2020 08:54:11 ******/
+-- GROUPECHAMBRE
 /*************************************************************************************************/
-
-SET ANSI_NULLS ON
-GO
-
-SET QUOTED_IDENTIFIER ON
-GO
-
 CREATE TABLE [dbo].[ChambreGroupeChambre](
 	[Id] [uniqueidentifier] NOT NULL,
 	[Chambre] [uniqueidentifier] NOT NULL,
@@ -81,8 +73,7 @@ CREATE TABLE [dbo].[ChambreGroupeChambre](
  CONSTRAINT [PK_ChambreGroupeChambre] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
-) ON [PRIMARY]
+)) ON [PRIMARY]
 GO
 
 ALTER TABLE [dbo].[ChambreGroupeChambre] ADD  CONSTRAINT [DF_ChambreGroupeChambre_Id]  DEFAULT (newid()) FOR [Id]
@@ -104,15 +95,6 @@ GO
 USE [MakfiBD]
 GO
 
-/*************************************************************************************************/
-/****** Object:  Table [dbo].[Employe]    Script Date: 23/11/2020 08:54:28 ******/
-/*************************************************************************************************/
-
-SET ANSI_NULLS ON
-GO
-
-SET QUOTED_IDENTIFIER ON
-GO
 
 CREATE TABLE [dbo].[Employe](
 	[Id] [uniqueidentifier] NOT NULL,
@@ -123,7 +105,7 @@ CREATE TABLE [dbo].[Employe](
  CONSTRAINT [PK_Employe] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) 
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
 
@@ -138,15 +120,7 @@ ALTER TABLE [dbo].[Employe] CHECK CONSTRAINT [FK_Employe_Etat]
 GO
 USE [MakfiBD]
 GO
-/*************************************************************************************************/
-/****** Object:  Table [dbo].[Etat]    Script Date: 23/11/2020 08:54:42 ******/
-/*************************************************************************************************/
 
-SET ANSI_NULLS ON
-GO
-
-SET QUOTED_IDENTIFIER ON
-GO
 
 CREATE TABLE [dbo].[Etat](
 	[Id] [uniqueidentifier] NOT NULL,
@@ -157,7 +131,7 @@ CREATE TABLE [dbo].[Etat](
  CONSTRAINT [PK_Etat] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) 
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
 
@@ -165,15 +139,7 @@ ALTER TABLE [dbo].[Etat] ADD  CONSTRAINT [DF_Etat_Id]  DEFAULT (newid()) FOR [Id
 GO
 USE [MakfiBD]
 GO
-/*************************************************************************************************/
-/****** Object:  Table [dbo].[GroupeChambre]    Script Date: 23/11/2020 08:54:52 ******/
-/*************************************************************************************************/
 
-SET ANSI_NULLS ON
-GO
-
-SET QUOTED_IDENTIFIER ON
-GO
 
 CREATE TABLE [dbo].[GroupeChambre](
 	[Id] [uniqueidentifier] NOT NULL,
@@ -182,7 +148,7 @@ CREATE TABLE [dbo].[GroupeChambre](
  CONSTRAINT [PK_GroupeChambre] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) 
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
 
@@ -190,15 +156,7 @@ ALTER TABLE [dbo].[GroupeChambre] ADD  CONSTRAINT [DF_GroupeChambre_Id]  DEFAULT
 GO
 USE [MakfiBD]
 GO
-/*************************************************************************************************/
-/****** Object:  Table [dbo].[Hotel]    Script Date: 23/11/2020 08:55:01 ******/
-/*************************************************************************************************/
 
-SET ANSI_NULLS ON
-GO
-
-SET QUOTED_IDENTIFIER ON
-GO
 
 CREATE TABLE [dbo].[Hotel](
 	[Id] [uniqueidentifier] NOT NULL,
@@ -210,7 +168,7 @@ CREATE TABLE [dbo].[Hotel](
  CONSTRAINT [PK_Hotel] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) 
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
 
@@ -233,15 +191,7 @@ GO
 USE [MakfiBD]
 GO
 
-/*************************************************************************************************/
-/****** Object:  Table [dbo].[HotelEmploye]    Script Date: 23/11/2020 08:55:14 ******/
-/*************************************************************************************************/
 
-SET ANSI_NULLS ON
-GO
-
-SET QUOTED_IDENTIFIER ON
-GO
 
 CREATE TABLE [dbo].[HotelEmploye](
 	[Id] [uniqueidentifier] NOT NULL,
@@ -250,7 +200,7 @@ CREATE TABLE [dbo].[HotelEmploye](
  CONSTRAINT [PK_HotelEmploye] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) 
 ) ON [PRIMARY]
 GO
 
@@ -293,7 +243,7 @@ CREATE TABLE [dbo].[Intervention](
  CONSTRAINT [PK_Intervention] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) 
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
 
@@ -335,7 +285,7 @@ CREATE TABLE [dbo].[InterventionDetail](
  CONSTRAINT [PK_InterventionDetail] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) 
 ) ON [PRIMARY]
 GO
 
@@ -395,7 +345,7 @@ CREATE TABLE [dbo].[Message](
  CONSTRAINT [PK_Message] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) 
 ) ON [PRIMARY]
 GO
 
@@ -437,7 +387,7 @@ CREATE TABLE [dbo].[Utilisateur](
  CONSTRAINT [PK_Utilisateur] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) 
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
 
