@@ -6,7 +6,7 @@
 /*************************************************************************************************/
 USE [master]
 GO
---DROP DATABASE [MakfiBD]
+DROP DATABASE [MakfiBD]
 GO
 /*************************************************************************************************/
 -- DATABASE
@@ -360,8 +360,8 @@ GO
 /************************************************************************************************************/
 insert into Utilisateur(Nom, CodePin, Statut,[Image])
 values ('MELIANI','1234',1,'meliani.png' )
-insert into Utilisateur(Nom, CodePin, Statut,[Image])
-values ('Danielle!.LOPEZ','1234',2,'lopez.png' )
+insert into Utilisateur(Id, Nom, CodePin, Statut,[Image])
+values ('09CF2DD2-83DD-43B0-82B8-973C027B132F','Danielle!.LOPEZ','1234',2,'lopez.png' )
 insert into Utilisateur(Nom, CodePin, Statut,[Image])
 values ('Traore','1234',2,'traore.png' )
 insert into Hotel(Nom,Gouvernante, [Image])
