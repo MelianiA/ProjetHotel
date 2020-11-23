@@ -6,7 +6,6 @@ Declare @sql nvarchar(MAX)='';
 select @sql = @sql + 'DROP PROC [' + name + '];' from sys.objects where type='p' and name not like 'sp[_]%'  order by name;
 exec(@sql);
 GO
- 
 -- *************************************************************************************************
 -- _Read_
 -- *************************************************************************************************
@@ -70,7 +69,7 @@ GO
 
 exec HotelEmploye_Read '<hotel><hotel>6F04A94F-8129-4903-9506-2BAA05C4F0F2</hotel></hotel>'
 ---------------------------------------------------------------------------------------------------
-alter PROC [dbo].[ChambreGroupeChambre_Read](@data xml=NULL)
+CREATE PROC [dbo].[ChambreGroupeChambre_Read](@data xml=NULL)
 AS
 DECLARE @hotel uniqueidentifier=NULL 
 select @hotel = T.N.value('(hotel/text())[1]', 'uniqueidentifier') from @data.nodes('chambreGroupeChambre') as T(N)
@@ -84,7 +83,7 @@ select @hotel = T.N.value('(hotel/text())[1]', 'uniqueidentifier') from @data.no
  GO
 exec ChambreGroupeChambre_Read '<chambreGroupeChambre><hotel>C65BFB16-6DBE-4BC9-8314-0DEABABB0404</hotel></chambreGroupeChambre>'
 ---------------------------------------------------------------------------------------------------
-alter PROC [dbo].[GroupeChambre_Read](@data xml=NULL)
+CREATE PROC [dbo].[GroupeChambre_Read](@data xml=NULL)
 AS
 DECLARE @hotel uniqueidentifier=NULL
 select @hotel= T.N.value('hotel[1]', 'uniqueidentifier') from @data.nodes('groupeChambre') as T(N)
@@ -95,7 +94,7 @@ inner join Chambre c on c.Id = cgc.Chambre
 where c.Hotel = @hotel
  GO
 ---------------------------------------------------------------------------------------------------
-alter PROC [dbo].[ChambreByGroupe_Read](@data xml=NULL)
+CREATE PROC [dbo].[ChambreByGroupe_Read](@data xml=NULL)
 AS
 DECLARE @Hotel uniqueidentifier=NULL
 select @Hotel = T.N.value('hotel[1]', 'uniqueidentifier') from @data.nodes('chambreByGroupe') as T(N)
@@ -108,7 +107,7 @@ where c.Hotel=@Hotel
 GO
  exec [ChambreByGroupe_Read] '<chambreByGroupe><hotel>C65BFB16-6DBE-4BC9-8314-0DEABABB0404</hotel></chambreByGroupe>'
 ---------------------------------------------------------------------------------------------------
-alter PROC [dbo].[Intervention_Read](@data xml=NULL)
+CREATE PROC [dbo].[Intervention_Read](@data xml=NULL)
 AS
 DECLARE @Hotel uniqueidentifier=NULL
 select @Hotel = T.N.value('hotel[1]', 'uniqueidentifier') from @data.nodes('intervention') as T(N)
@@ -120,8 +119,7 @@ select @Hotel = T.N.value('hotel[1]', 'uniqueidentifier') from @data.nodes('inte
  -- *************************************************************************************************
 -- save
 -- *************************************************************************************************
-
-  
+ 
 CREATE PROC [dbo].[Utilisateur_Save](@data xml=NULL)
 AS
 DECLARE @IDs TABLE(ID uniqueidentifier);
@@ -246,7 +244,7 @@ exec [HotelEmploye_Save] '<hotelEmploye>
 							<employe>Makrisoft.Makfi.Models.Employe</employe>
 						  </hotelEmploye>'
  ----------------------------------------------------------------------------------------------------------
-alter PROC [dbo].[Chambre_Save](@data xml=NULL)
+CREATE PROC [dbo].[Chambre_Save](@data xml=NULL)
 AS
 DECLARE @IDs TABLE(ID uniqueidentifier);
 DECLARE @message nvarchar(MAX)
@@ -305,7 +303,7 @@ exec Chambre_Save '<chambre>
                     </chambre>'
 select * from Chambre
  ----------------------------------------------------------------------------------------------------------
-alter PROC [dbo].[GroupeChambre_Save](@data xml=NULL)
+CREATE PROC [dbo].[GroupeChambre_Save](@data xml=NULL)
 AS
 	DECLARE @IDs TABLE(ID uniqueidentifier);
 	DECLARE @message nvarchar(MAX)
@@ -351,7 +349,7 @@ exec GroupeChambre_Save '<groupeChambre>
 
 select * from GroupeChambre
  ----------------------------------------------------------------------------------------------------------
- create PROC [dbo].[ChambreGroupeChambre_Save](@data xml=NULL)
+create PROC [dbo].[ChambreGroupeChambre_Save](@data xml=NULL)
  as
  	DECLARE @IDs TABLE(ID uniqueidentifier);
 	DECLARE @Id uniqueidentifier
@@ -373,7 +371,7 @@ IF @Id is null select @id=ID from @IDs
 select Id from @IDs
 GO
  ----------------------------------------------------------------------------------------------------------
- alter PROC [dbo].[Intervention_Save](@data xml=NULL)
+ CREATE PROC [dbo].[Intervention_Save](@data xml=NULL)
  AS
 	DECLARE @IDs TABLE(ID uniqueidentifier);
 	DECLARE @message nvarchar(MAX)
@@ -472,7 +470,7 @@ END
 go
 -----------------------------------------------------------------------
 
-alter PROC [dbo].[Chambre_Delete](@data xml=NULL)
+CREATE PROC [dbo].[Chambre_Delete](@data xml=NULL)
 AS
 DECLARE @id uniqueidentifier;
 select
@@ -481,7 +479,7 @@ from @data.nodes('chambre') as T(N)
 delete from Chambre where Id = @id
 go
 -----------------------------------------------------------------------
-alter PROC [dbo].[ChambreGroupeChambre_Delete](@data xml=NULL)
+CREATE PROC [dbo].[ChambreGroupeChambre_Delete](@data xml=NULL)
 as
 DECLARE @GroupeChambre uniqueidentifier;
 DECLARE @Hotel uniqueidentifier;
@@ -567,7 +565,7 @@ UNION ALL
 select 'InterventionDetail' tableName, COUNT(*) n from InterventionDetail where EmployeAffecte=@id  
 GO
 -----------------------------------------------------------------------------------------------------
-alter PROC [dbo].[Chambre_CanDelete](@data xml=NULL)
+CREATE PROC [dbo].[Chambre_CanDelete](@data xml=NULL)
 AS
 DECLARE @id uniqueidentifier=NULL
 select @id=T.N.value('id[1]', 'uniqueidentifier') from @data.nodes('chambre') as T(N)

@@ -8,6 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("dal/bdd_makrisoft.makfi.sql")]
 [assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("dal/storedprocedures.sql")]
 
 

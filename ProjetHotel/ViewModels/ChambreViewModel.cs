@@ -305,8 +305,10 @@ namespace Makrisoft.Makfi.ViewModels
             ChambreCollectionView.Refresh();
 
             //Load_GroupeChambre
-            GroupeChambre = new ObservableCollection<GroupeChambre_VM>(
-              MakfiData.GroupeChambre_Read($"<groupeChambre><hotel>{Reference_ViewModel.Header.CurrentHotel.Id}</hotel></groupeChambre>")
+            Guid idHotel = default;
+            if (Reference_ViewModel.Header.CurrentHotel != null) idHotel = Reference_ViewModel.Header.CurrentHotel.Id;
+             GroupeChambre = new ObservableCollection<GroupeChambre_VM>(
+              MakfiData.GroupeChambre_Read($"<groupeChambre><hotel>{idHotel}</hotel></groupeChambre>")
               .Select(x => new GroupeChambre_VM
               {
                   Id = x.Id,

@@ -204,12 +204,15 @@ namespace Makrisoft.Makfi.ViewModels
         #region Load
         public void Load_GroupeChambres()
         {
+
             if (Reference_ViewModel.Header.CurrentHotel == null)
             {
+                GroupeChambres.Clear();
                 MessageBox.Show($"Aucun hôtel ne vous a été assigné  ", "Impossible d'enregistrer  !");
                 GroupeChambres.Remove(CurrentGroupeChambre);
                 return;
             }
+             
             GroupeChambres = new ObservableCollection<GroupeChambre_VM>(
               MakfiData.GroupeChambre_Read($"<groupeChambre><hotel>{Reference_ViewModel.Header.CurrentHotel.Id}</hotel></groupeChambre>")
               .Select(x => new GroupeChambre_VM

@@ -50,7 +50,6 @@
                     <Run Text="{Binding Intervention_ViewModel.InterventionSelected.Libelle}"/>
                     <Run Text="]"/>
                     <Run Text="{Binding InterventionDetailDate, StringFormat=dddd d MMMM yyy HH:mm}"/>
-                     <Run Text="à faire ...."/>
                 </TextBlock>
                 <Menu Grid.Column="1" Cursor="Hand" Margin="0">
                     <MenuItem Header="..." Foreground="Navy" FontSize="16">

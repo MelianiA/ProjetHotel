@@ -278,6 +278,12 @@ namespace Makrisoft.Makfi.ViewModels
         #region Load
         public void Load_Intervention()
         {
+            if (Reference_ViewModel.Header.CurrentHotel == null)
+            {
+                Interventions.Clear();
+                MessageBox.Show($"Aucun hôtel ne vous a été assigné  ", "Impossible d'enregistrer  !");
+                return;
+            }
             Guid monId = default;
             if (Reference_ViewModel.Header.CurrentHotel != null)
                 monId = Reference_ViewModel.Header.CurrentHotel.Id;
