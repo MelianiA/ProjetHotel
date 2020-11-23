@@ -337,9 +337,9 @@ namespace Makrisoft.Makfi.Dal
         {
             return ExecuteNonQuery("Utilisateur_Save", spParam);
         }
-        internal static List<Utilisateur> Hotel_Save(string spParam)
+        internal static List<Hotel> Hotel_Save(string spParam)
         {
-            return ReadAll<Utilisateur>
+            return ReadAll<Hotel>
                (
                "Hotel_Save",
                e =>

@@ -379,6 +379,49 @@ if @id is null insert Intervention(Libelle, Commentaire, Date1, GroupeChambre, H
 select @id=ID from @IDs
 select Id from @IDs
 GO
+ ----------------------------------------------------------------------------------------------------------
+Create PROC [dbo].[Hotel_Save](@data xml=NULL)
+ AS
+	DECLARE @IDs TABLE(ID uniqueidentifier);
+	DECLARE @message nvarchar(MAX)
+	DECLARE @Id uniqueidentifier
+	DECLARE @Nom nvarchar(MAX)
+	DECLARE @Commentaire nvarchar(MAX)
+ 	DECLARE @Reception uniqueidentifier
+	DECLARE @Gouvernante uniqueidentifier
+
+-- PARTIE recup XML :
+select 
+ 		T.N.value('(id/text())[1]', 'uniqueidentifier') Id, 
+		T.N.value('(nom/text())[1]', 'nvarchar(MAX)') Nom, 
+ 		T.N.value('(reception/text())[1]', 'uniqueidentifier') Reception,
+  		T.N.value('(gouvernante/text())[1]', 'uniqueidentifier') Gouvernante,
+  		T.N.value('(commentaire/text())[1]', 'nvarchar(MAX)') Commentaire
+		into #_hotel
+from @data.nodes('hotel') as T(N)
+-- PARTIE2
+select @id=Id  from #_hotel
+-- Update  
+BEGIN TRY
+	 update Hotel set
+			Nom= t.Nom, Commentaire=t.Commentaire, Reception=t.Reception,Gouvernante=t.Gouvernante
+					output inserted.Id into @IDs(ID)
+			from (select Id, Nom, Commentaire, Reception, Gouvernante from #_hotel) t
+			where Hotel.Id=t.Id
+END TRY
+BEGIN CATCH
+       select @message = ERROR_MESSAGE() 
+    RAISERROR (@message, 16, 1);  
+       RETURN;
+END CATCH
+-- Insert
+if @id is null insert Hotel(Nom, Commentaire, Reception, Gouvernante )
+		output inserted.Id into @IDs(ID)
+	(select Nom, Commentaire, Reception, Gouvernante from #_hotel )
+select @id=ID from @IDs
+select Id from @IDs
+GO
+ 
  -- *************************************************************************************************
 -- Delete
 -- *************************************************************************************************

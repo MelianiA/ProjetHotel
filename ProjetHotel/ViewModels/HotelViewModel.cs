@@ -100,19 +100,21 @@ namespace Makrisoft.Makfi.ViewModels
         // Méthodes OnCommand
         private void OnSaveCommand()
         {
-            if (CurrentHotel.Reception == null || CurrentHotel.Gouvernante == null)
+            if (CurrentHotel.Nom == null )
             {
-                MessageBox.Show($"Ajout impossible de l'hotel: {CurrentHotel.Nom}", "Important !");
+                MessageBox.Show($"Il faut préciser le nom de l'hôtel", "Important !");
                 return;
             }
             Guid? monID = null;
             if (CurrentHotel.Id != default) monID = CurrentHotel.Id;
+            Guid? rec = CurrentHotel.Reception != null? (Guid?)CurrentHotel.Reception.Id: null;
+            Guid? gouv = CurrentHotel.Gouvernante != null ? (Guid?)CurrentHotel.Gouvernante.Id :null;
             var param = $@"
                     <hotel>
                         <id>{monID}</id>
                         <nom>{CurrentHotel.Nom}</nom>
-                        <reception>{CurrentHotel.Reception.Id}</reception>
-                        <gouvernante>{CurrentHotel.Gouvernante.Id}</gouvernante>
+                        <reception>{rec}</reception>
+                        <gouvernante>{gouv}</gouvernante>
                         <commentaire>{CurrentHotel.Commentaire}</commentaire>       
                     </hotel>";
             var ids = MakfiData.Hotel_Save(param);
