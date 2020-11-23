@@ -280,7 +280,7 @@ namespace Makrisoft.Makfi.ViewModels
         {
             if (Reference_ViewModel.Header.CurrentHotel == null)
             {
-                Interventions.Clear();
+                if(Interventions!= null) Interventions.Clear();
                 MessageBox.Show($"Aucun hôtel ne vous a été assigné  ", "Impossible d'enregistrer  !");
                 return;
             }

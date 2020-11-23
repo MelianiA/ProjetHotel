@@ -6,9 +6,8 @@
 /*************************************************************************************************/
 USE [master]
 GO
-DROP DATABASE [MakfiBD]
+--DROP DATABASE [MakfiBD]
 GO
-
 /*************************************************************************************************/
 -- DATABASE
 /*************************************************************************************************/
@@ -23,13 +22,8 @@ CREATE DATABASE [MakfiBD] ON PRIMARY
 	FILENAME = N'C:\Program Files\Microsoft SQL Server\MSSQL14.SQLEXPRESS\MSSQL\DATA\MakfiBD_log.ldf'
 	)
 GO
- 
-/*************************************************************************************************/
--- CHAMBRE
-/*************************************************************************************************/
 use MakfiBD
 go
-
 CREATE TABLE [dbo].[Chambre]
 	(
 	[Id] [uniqueidentifier] NOT NULL,
@@ -43,29 +37,11 @@ CREATE TABLE [dbo].[Chambre]
 	)
 	)
 GO
-
-ALTER TABLE [dbo].[Chambre] ADD  CONSTRAINT [DF_Chambre_Id]  DEFAULT (newid()) FOR [Id]
-GO
-
-ALTER TABLE [dbo].[Chambre]  WITH CHECK ADD  CONSTRAINT [FK_Chambre_Etat] FOREIGN KEY([Etat])
-REFERENCES [dbo].[Etat] ([Id])
-GO
-
-ALTER TABLE [dbo].[Chambre] CHECK CONSTRAINT [FK_Chambre_Etat]
-GO
-
-ALTER TABLE [dbo].[Chambre]  WITH CHECK ADD  CONSTRAINT [FK_Chambre_Hotel] FOREIGN KEY([Hotel])
-REFERENCES [dbo].[Hotel] ([Id])
-GO
-
-ALTER TABLE [dbo].[Chambre] CHECK CONSTRAINT [FK_Chambre_Hotel]
-GO
-USE [MakfiBD]
-GO
-
 /*************************************************************************************************/
 -- GROUPECHAMBRE
 /*************************************************************************************************/
+USE [MakfiBD]
+GO
 CREATE TABLE [dbo].[ChambreGroupeChambre](
 	[Id] [uniqueidentifier] NOT NULL,
 	[Chambre] [uniqueidentifier] NOT NULL,
@@ -76,26 +52,8 @@ CREATE TABLE [dbo].[ChambreGroupeChambre](
 )) ON [PRIMARY]
 GO
 
-ALTER TABLE [dbo].[ChambreGroupeChambre] ADD  CONSTRAINT [DF_ChambreGroupeChambre_Id]  DEFAULT (newid()) FOR [Id]
-GO
-
-ALTER TABLE [dbo].[ChambreGroupeChambre]  WITH CHECK ADD  CONSTRAINT [FK_ChambreGroupeChambre_Chambre] FOREIGN KEY([Chambre])
-REFERENCES [dbo].[Chambre] ([Id])
-GO
-
-ALTER TABLE [dbo].[ChambreGroupeChambre] CHECK CONSTRAINT [FK_ChambreGroupeChambre_Chambre]
-GO
-
-ALTER TABLE [dbo].[ChambreGroupeChambre]  WITH CHECK ADD  CONSTRAINT [FK_ChambreGroupeChambre_GroupeChambre] FOREIGN KEY([GroupeChambre])
-REFERENCES [dbo].[GroupeChambre] ([Id])
-GO
-
-ALTER TABLE [dbo].[ChambreGroupeChambre] CHECK CONSTRAINT [FK_ChambreGroupeChambre_GroupeChambre]
-GO
 USE [MakfiBD]
 GO
-
-
 CREATE TABLE [dbo].[Employe](
 	[Id] [uniqueidentifier] NOT NULL,
 	[Nom] [nvarchar](max) NOT NULL,
@@ -108,20 +66,8 @@ CREATE TABLE [dbo].[Employe](
 ) 
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
-
-ALTER TABLE [dbo].[Employe] ADD  CONSTRAINT [DF_Employe_Id]  DEFAULT (newid()) FOR [Id]
-GO
-
-ALTER TABLE [dbo].[Employe]  WITH CHECK ADD  CONSTRAINT [FK_Employe_Etat] FOREIGN KEY([Etat])
-REFERENCES [dbo].[Etat] ([Id])
-GO
-
-ALTER TABLE [dbo].[Employe] CHECK CONSTRAINT [FK_Employe_Etat]
-GO
 USE [MakfiBD]
 GO
-
-
 CREATE TABLE [dbo].[Etat](
 	[Id] [uniqueidentifier] NOT NULL,
 	[Libelle] [nvarchar](max) NULL,
@@ -135,11 +81,8 @@ CREATE TABLE [dbo].[Etat](
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
 
-ALTER TABLE [dbo].[Etat] ADD  CONSTRAINT [DF_Etat_Id]  DEFAULT (newid()) FOR [Id]
-GO
 USE [MakfiBD]
 GO
-
 
 CREATE TABLE [dbo].[GroupeChambre](
 	[Id] [uniqueidentifier] NOT NULL,
@@ -152,9 +95,7 @@ CREATE TABLE [dbo].[GroupeChambre](
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
 
-ALTER TABLE [dbo].[GroupeChambre] ADD  CONSTRAINT [DF_GroupeChambre_Id]  DEFAULT (newid()) FOR [Id]
-GO
-USE [MakfiBD]
+ USE [MakfiBD]
 GO
 
 
@@ -172,22 +113,6 @@ CREATE TABLE [dbo].[Hotel](
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
 
-ALTER TABLE [dbo].[Hotel] ADD  CONSTRAINT [DF_Hotel_Id]  DEFAULT (newid()) FOR [Id]
-GO
-
-ALTER TABLE [dbo].[Hotel]  WITH CHECK ADD  CONSTRAINT [FK_Hotel_Utilisateur] FOREIGN KEY([Reception])
-REFERENCES [dbo].[Utilisateur] ([Id])
-GO
-
-ALTER TABLE [dbo].[Hotel] CHECK CONSTRAINT [FK_Hotel_Utilisateur]
-GO
-
-ALTER TABLE [dbo].[Hotel]  WITH CHECK ADD  CONSTRAINT [FK_Hotel_Utilisateur2] FOREIGN KEY([Gouvernante])
-REFERENCES [dbo].[Utilisateur] ([Id])
-GO
-
-ALTER TABLE [dbo].[Hotel] CHECK CONSTRAINT [FK_Hotel_Utilisateur2]
-GO
 USE [MakfiBD]
 GO
 
@@ -204,6 +129,140 @@ CREATE TABLE [dbo].[HotelEmploye](
 ) ON [PRIMARY]
 GO
 
+ 
+USE [MakfiBD]
+GO
+
+ 
+CREATE TABLE [dbo].[Intervention](
+	[Id] [uniqueidentifier] NOT NULL,
+	[Commentaire] [nvarchar](max) NULL,
+	[Date1] [date] NOT NULL,
+	[Libelle] [nvarchar](max) NULL,
+	[GroupeChambre] [uniqueidentifier] NULL,
+	[Hotel] [uniqueidentifier] NOT NULL,
+ CONSTRAINT [PK_Intervention] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+) 
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+ USE [MakfiBD]
+GO
+CREATE TABLE [dbo].[InterventionDetail](
+	[Id] [uniqueidentifier] NOT NULL,
+	[EmployeAffecte] [uniqueidentifier] NOT NULL,
+	[ChambreAffectee] [uniqueidentifier] NOT NULL,
+	[Commentaire] [nvarchar](10) NULL,
+	[Intervention] [uniqueidentifier] NOT NULL,
+	[Etat] [uniqueidentifier] NOT NULL,
+ CONSTRAINT [PK_InterventionDetail] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+) 
+) ON [PRIMARY]
+GO
+ 
+USE [MakfiBD]
+GO
+ 
+CREATE TABLE [dbo].[Message](
+	[Id] [uniqueidentifier] NOT NULL,
+	[De] [uniqueidentifier] NOT NULL,
+	[A] [uniqueidentifier] NOT NULL,
+	[EnvoyeLe] [nchar](10) NOT NULL,
+	[Libelle] [nchar](10) NULL,
+	[Statut] [nchar](10) NOT NULL,
+ CONSTRAINT [PK_Message] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+) 
+) ON [PRIMARY]
+GO
+ USE [MakfiBD]
+GO
+ 
+CREATE TABLE [dbo].[Utilisateur](
+	[Id] [uniqueidentifier] NOT NULL,
+	[Nom] [nvarchar](max) NOT NULL,
+	[Identifiant] [int] NULL,
+	[CodePin] [nvarchar](max) NOT NULL,
+	[Statut] [tinyint] NOT NULL,
+	[Image] [nvarchar](max) NULL,
+ CONSTRAINT [PK_Utilisateur] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+) 
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+ 
+/**********************************************************************/
+/**********                  Clés                     *****************/
+/**********************************************************************/
+
+USE [MakfiBD]
+GO
+ALTER TABLE [dbo].[Chambre] ADD  CONSTRAINT [DF_Chambre_Id]  DEFAULT (newid()) FOR [Id]
+GO
+
+ALTER TABLE [dbo].[Chambre]  WITH CHECK ADD  CONSTRAINT [FK_Chambre_Etat] FOREIGN KEY([Etat])
+REFERENCES [dbo].[Etat] ([Id])
+GO
+
+ALTER TABLE [dbo].[Chambre] CHECK CONSTRAINT [FK_Chambre_Etat]
+GO
+
+ALTER TABLE [dbo].[Chambre]  WITH CHECK ADD  CONSTRAINT [FK_Chambre_Hotel] FOREIGN KEY([Hotel])
+REFERENCES [dbo].[Hotel] ([Id])
+GO
+
+ALTER TABLE [dbo].[Chambre] CHECK CONSTRAINT [FK_Chambre_Hotel]
+GO
+ALTER TABLE [dbo].[ChambreGroupeChambre] ADD  CONSTRAINT [DF_ChambreGroupeChambre_Id]  DEFAULT (newid()) FOR [Id]
+GO
+
+ALTER TABLE [dbo].[ChambreGroupeChambre]  WITH CHECK ADD  CONSTRAINT [FK_ChambreGroupeChambre_Chambre] FOREIGN KEY([Chambre])
+REFERENCES [dbo].[Chambre] ([Id])
+GO
+
+ALTER TABLE [dbo].[ChambreGroupeChambre] CHECK CONSTRAINT [FK_ChambreGroupeChambre_Chambre]
+GO
+
+ALTER TABLE [dbo].[ChambreGroupeChambre]  WITH CHECK ADD  CONSTRAINT [FK_ChambreGroupeChambre_GroupeChambre] FOREIGN KEY([GroupeChambre])
+REFERENCES [dbo].[GroupeChambre] ([Id])
+GO
+
+ALTER TABLE [dbo].[ChambreGroupeChambre] CHECK CONSTRAINT [FK_ChambreGroupeChambre_GroupeChambre]
+GO
+ALTER TABLE [dbo].[Employe] ADD  CONSTRAINT [DF_Employe_Id]  DEFAULT (newid()) FOR [Id]
+GO
+
+ALTER TABLE [dbo].[Employe]  WITH CHECK ADD  CONSTRAINT [FK_Employe_Etat] FOREIGN KEY([Etat])
+REFERENCES [dbo].[Etat] ([Id])
+GO
+
+ALTER TABLE [dbo].[Employe] CHECK CONSTRAINT [FK_Employe_Etat]
+GO
+ALTER TABLE [dbo].[Etat] ADD  CONSTRAINT [DF_Etat_Id]  DEFAULT (newid()) FOR [Id]
+GO
+ALTER TABLE [dbo].[GroupeChambre] ADD  CONSTRAINT [DF_GroupeChambre_Id]  DEFAULT (newid()) FOR [Id]
+GO
+ALTER TABLE [dbo].[Hotel] ADD  CONSTRAINT [DF_Hotel_Id]  DEFAULT (newid()) FOR [Id]
+GO
+
+ALTER TABLE [dbo].[Hotel]  WITH CHECK ADD  CONSTRAINT [FK_Hotel_Utilisateur] FOREIGN KEY([Reception])
+REFERENCES [dbo].[Utilisateur] ([Id])
+GO
+
+ALTER TABLE [dbo].[Hotel] CHECK CONSTRAINT [FK_Hotel_Utilisateur]
+GO
+
+ALTER TABLE [dbo].[Hotel]  WITH CHECK ADD  CONSTRAINT [FK_Hotel_Utilisateur2] FOREIGN KEY([Gouvernante])
+REFERENCES [dbo].[Utilisateur] ([Id])
+GO
+
+ALTER TABLE [dbo].[Hotel] CHECK CONSTRAINT [FK_Hotel_Utilisateur2]
+GO
 ALTER TABLE [dbo].[HotelEmploye] ADD  CONSTRAINT [DF_HotelEmploye_Id]  DEFAULT (newid()) FOR [Id]
 GO
 
@@ -219,32 +278,6 @@ REFERENCES [dbo].[Hotel] ([Id])
 GO
 
 ALTER TABLE [dbo].[HotelEmploye] CHECK CONSTRAINT [FK_HotelEmploye_Hotel]
-GO
-USE [MakfiBD]
-GO
-
-/*************************************************************************************************/
-/****** Object:  Table [dbo].[Intervention]    Script Date: 23/11/2020 08:55:22 ******/
-/*************************************************************************************************/
-
-SET ANSI_NULLS ON
-GO
-
-SET QUOTED_IDENTIFIER ON
-GO
-
-CREATE TABLE [dbo].[Intervention](
-	[Id] [uniqueidentifier] NOT NULL,
-	[Commentaire] [nvarchar](max) NULL,
-	[Date1] [date] NOT NULL,
-	[Libelle] [nvarchar](max) NULL,
-	[GroupeChambre] [uniqueidentifier] NULL,
-	[Hotel] [uniqueidentifier] NOT NULL,
- CONSTRAINT [PK_Intervention] PRIMARY KEY CLUSTERED 
-(
-	[Id] ASC
-) 
-) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
 
 ALTER TABLE [dbo].[Intervention] ADD  CONSTRAINT [DF_Intervention_Id]  DEFAULT (newid()) FOR [Id]
@@ -262,31 +295,6 @@ REFERENCES [dbo].[Hotel] ([Id])
 GO
 
 ALTER TABLE [dbo].[Intervention] CHECK CONSTRAINT [FK_Intervention_Hotel]
-GO
-USE [MakfiBD]
-GO
-/*************************************************************************************************/
-/****** Object:  Table [dbo].[InterventionDetail]    Script Date: 23/11/2020 08:55:30 ******/
-/*************************************************************************************************/
-
-SET ANSI_NULLS ON
-GO
-
-SET QUOTED_IDENTIFIER ON
-GO
-
-CREATE TABLE [dbo].[InterventionDetail](
-	[Id] [uniqueidentifier] NOT NULL,
-	[EmployeAffecte] [uniqueidentifier] NOT NULL,
-	[ChambreAffectee] [uniqueidentifier] NOT NULL,
-	[Commentaire] [nvarchar](10) NULL,
-	[Intervention] [uniqueidentifier] NOT NULL,
-	[Etat] [uniqueidentifier] NOT NULL,
- CONSTRAINT [PK_InterventionDetail] PRIMARY KEY CLUSTERED 
-(
-	[Id] ASC
-) 
-) ON [PRIMARY]
 GO
 
 ALTER TABLE [dbo].[InterventionDetail] ADD  CONSTRAINT [DF_InterventionDetail_Id]  DEFAULT (newid()) FOR [Id]
@@ -319,34 +327,7 @@ GO
 ALTER TABLE [dbo].[InterventionDetail]  WITH CHECK ADD  CONSTRAINT [FK_InterventionDetail_Intervention] FOREIGN KEY([Intervention])
 REFERENCES [dbo].[Intervention] ([Id])
 GO
-
 ALTER TABLE [dbo].[InterventionDetail] CHECK CONSTRAINT [FK_InterventionDetail_Intervention]
-GO
-USE [MakfiBD]
-GO
-
-/*************************************************************************************************/
-/****** Object:  Table [dbo].[Message]    Script Date: 23/11/2020 08:55:36 ******/
-/*************************************************************************************************/
-
-SET ANSI_NULLS ON
-GO
-
-SET QUOTED_IDENTIFIER ON
-GO
-
-CREATE TABLE [dbo].[Message](
-	[Id] [uniqueidentifier] NOT NULL,
-	[De] [uniqueidentifier] NOT NULL,
-	[A] [uniqueidentifier] NOT NULL,
-	[EnvoyeLe] [nchar](10) NOT NULL,
-	[Libelle] [nchar](10) NULL,
-	[Statut] [nchar](10) NOT NULL,
- CONSTRAINT [PK_Message] PRIMARY KEY CLUSTERED 
-(
-	[Id] ASC
-) 
-) ON [PRIMARY]
 GO
 
 ALTER TABLE [dbo].[Message] ADD  CONSTRAINT [DF_Message_Id]  DEFAULT (newid()) FOR [Id]
@@ -365,31 +346,6 @@ GO
 
 ALTER TABLE [dbo].[Message] CHECK CONSTRAINT [FK_Message_Utilisateur1]
 GO
-USE [MakfiBD]
-GO
-/*************************************************************************************************/
-/****** Object:  Table [dbo].[Utilisateur]    Script Date: 23/11/2020 08:55:43 ******/
-/*************************************************************************************************/
-
-SET ANSI_NULLS ON
-GO
-
-SET QUOTED_IDENTIFIER ON
-GO
-
-CREATE TABLE [dbo].[Utilisateur](
-	[Id] [uniqueidentifier] NOT NULL,
-	[Nom] [nvarchar](max) NOT NULL,
-	[Identifiant] [int] NULL,
-	[CodePin] [nvarchar](max) NOT NULL,
-	[Statut] [tinyint] NOT NULL,
-	[Image] [nvarchar](max) NULL,
- CONSTRAINT [PK_Utilisateur] PRIMARY KEY CLUSTERED 
-(
-	[Id] ASC
-) 
-) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
-GO
 
 ALTER TABLE [dbo].[Utilisateur] ADD  CONSTRAINT [DF_Utilisateur_Id]  DEFAULT (newid()) FOR [Id]
 GO
@@ -399,6 +355,21 @@ GO
 
 ALTER TABLE [dbo].[Utilisateur] ADD  CONSTRAINT [DF_Utilisateur_Statut]  DEFAULT ((1)) FOR [Statut]
 GO
+/************************************************************************************************************/
+									/* Insertions importantes */
+/************************************************************************************************************/
+insert into Utilisateur(Nom, CodePin, Statut,[Image])
+values ('MELIANI','1234',1,'meliani.png' )
+insert into Utilisateur(Nom, CodePin, Statut,[Image])
+values ('Danielle!.LOPEZ','1234',2,'lopez.png' )
+insert into Utilisateur(Nom, CodePin, Statut,[Image])
+values ('Traore','1234',2,'traore.png' )
+insert into Hotel(Nom,Gouvernante, [Image])
+values('Ibis-Style','09CF2DD2-83DD-43B0-82B8-973C027B132F','IbisStyle.png')
+insert into Hotel(Nom, [Image])
+values('Ibis-Budget','IbisBudget.png')
+
+
 
 
 

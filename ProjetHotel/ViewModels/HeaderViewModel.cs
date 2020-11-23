@@ -28,10 +28,11 @@ namespace Makrisoft.Makfi.ViewModels
             set
             {
                 currentUtilisateur = value;
-
+                Guid monID = default;
+                if (currentUtilisateur != null) monID = currentUtilisateur.Id;
                 // Hotel
                 Hotels = new ObservableCollection<Hotel_VM>(
-                    MakfiData.Hotel_Read($"<hotel><gouvernante>{currentUtilisateur.Id}</gouvernante></hotel>")
+                    MakfiData.Hotel_Read($"<hotel><gouvernante>{monID}</gouvernante></hotel>")
                    .Select(x => new Hotel_VM
                    {
                        Id = x.Id,

@@ -10,8 +10,8 @@ namespace Makrisoft.Makfi.Models
     {
         public Guid Id;
         public string Nom;   
-        public Guid Reception;
-        public Guid Gouvernante;
+        public Guid? Reception;
+        public Guid? Gouvernante;
         public string Commentaire;
         public string Image;
     }

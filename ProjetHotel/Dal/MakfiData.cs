@@ -169,8 +169,8 @@ namespace Makrisoft.Makfi.Dal
                                 e.Id = (Guid)Reader["Id"];
                                 e.Nom = Reader["Nom"] as string;
                                 e.Image = Reader["Image"] as string;
-                                e.Gouvernante = (Guid)Reader["Gouvernante"];
-                                e.Reception = (Guid)Reader["Reception"];
+                                e.Gouvernante =Reader["Gouvernante"] as Guid?;
+                                e.Reception =  Reader["Reception"] as Guid?;
                                 e.Commentaire = Reader["Commentaire"] as string;
                             },
                             spParam

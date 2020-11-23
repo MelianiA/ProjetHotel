@@ -207,9 +207,9 @@ namespace Makrisoft.Makfi.ViewModels
 
             if (Reference_ViewModel.Header.CurrentHotel == null)
             {
-                GroupeChambres.Clear();
+                if(GroupeChambres!=null) GroupeChambres.Clear();
                 MessageBox.Show($"Aucun hôtel ne vous a été assigné  ", "Impossible d'enregistrer  !");
-                GroupeChambres.Remove(CurrentGroupeChambre);
+                if (CurrentGroupeChambre != null)  GroupeChambres.Remove(CurrentGroupeChambre);
                 return;
             }
              
@@ -230,7 +230,7 @@ namespace Makrisoft.Makfi.ViewModels
             if (Reference_ViewModel.Header.CurrentHotel == null)
             {
                 MessageBox.Show($"Aucun hôtel ne vous a été assigné  ", "Impossible d'enregistrer  !");
-                GroupeChambres.Remove(CurrentGroupeChambre);
+                if (CurrentGroupeChambre != null) GroupeChambres.Remove(CurrentGroupeChambre);
                 return;
             }
             AllChambres = new ObservableCollection<ChambreByGroupe_VM>(
