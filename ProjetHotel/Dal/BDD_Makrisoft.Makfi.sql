@@ -361,17 +361,49 @@ GO
 insert into Utilisateur(Nom, CodePin, Statut,[Image])
 values ('MELIANI','1234',1,'meliani.png' )
 insert into Utilisateur(Id, Nom, CodePin, Statut,[Image])
-values ('09CF2DD2-83DD-43B0-82B8-973C027B132F','Danielle!.LOPEZ','1234',2,'lopez.png' )
+values ('09CF2DD2-83DD-43B0-82B8-973C027B132F','danielle.lopez','1234',2,'lopez.png' )
 insert into Utilisateur(Nom, CodePin, Statut,[Image])
 values ('Traore','1234',2,'traore.png' )
 insert into Hotel(Nom,Gouvernante, [Image])
 values('Ibis-Style','09CF2DD2-83DD-43B0-82B8-973C027B132F','IbisStyle.png')
 insert into Hotel(Nom, [Image])
 values('Ibis-Budget','IbisBudget.png')
+----------------------------------------------------
+--Les Etats :
 
+insert into Etat(Libelle, Icone, Couleur,Entite)
+values('Pas encore fait','TimelineHelp','red',3)
 
+insert into Etat(Libelle, Icone, Couleur,Entite)
+values('Retardée
+','TimelineHelp','orange
+',3)
 
+insert into Etat(Libelle, Icone, Couleur,Entite)
+values('Aucune information !
+','TimelineHelp','gray
+',3)
 
+insert into Etat(Libelle, Icone, Couleur,Entite)
+values('Fait
+','TimelineHelp','green
+',3)
+
+insert into Etat(Libelle, Icone, Couleur,Entite)
+values('Non disponible','FaceWomanShimmer
+','black
+',1)
+insert into Etat(Libelle, Icone, Couleur,Entite)
+values('Arrêt maladie','FaceWomanShimmer','red',1)
+
+insert into Etat(Libelle, Icone, Couleur,Entite)
+values('Pas encore fait','TableLock','red',2)
+
+insert into Etat(Libelle, Icone, Couleur,Entite)
+values('Fait','TableLock','green',2)
+
+insert into Etat(Libelle, Icone, Couleur,Entite)
+values('Disponible','FaceWomanShimmer','green',1)
 
 
 
