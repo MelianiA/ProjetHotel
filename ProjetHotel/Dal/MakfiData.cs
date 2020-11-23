@@ -429,6 +429,20 @@ namespace Makrisoft.Makfi.Dal
                  );
             }
         }
+        internal static List<Etat> Etat_Save(string spParam)
+        {
+            {
+                return ReadAll<Etat>
+                 (
+                 "Etat_Save",
+                 e =>
+                 {
+                     e.Id = (Guid)Reader["Id"];
+                 },
+                 spParam
+                 );
+            }
+        }
 
         #endregion
 

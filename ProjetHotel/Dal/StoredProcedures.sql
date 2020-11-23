@@ -421,6 +421,24 @@ if @id is null insert Hotel(Nom, Commentaire, Reception, Gouvernante )
 select @id=ID from @IDs
 select Id from @IDs
 GO
+ ----------------------------------------------------------------------------------------------------------
+Create PROC [dbo].[Etat_Save](@data xml=NULL)
+ AS
+	DECLARE @IDs TABLE(ID uniqueidentifier);
+-- PARTIE recup XML :
+select 
+ 		T.N.value('(libelle/text())[1]', 'nvarchar(MAX)') Libelle, 
+ 		T.N.value('(icone/text())[1]', 'nvarchar(MAX)') Icone,
+  		T.N.value('(couleur/text())[1]', 'nvarchar(MAX)') Couleur,
+  		T.N.value('(entite/text())[1]', 'tinyint') Entite
+		into #_etat
+from @data.nodes('etat') as T(N)
+-- Insert
+insert Etat(Libelle, Icone, Couleur, Entite )
+		output inserted.Id into @IDs(ID)
+	(select Libelle, Icone, Couleur, Entite from #_etat )
+select Id from @IDs
+GO
  
  -- *************************************************************************************************
 -- Delete
