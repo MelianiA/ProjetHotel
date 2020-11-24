@@ -29,19 +29,35 @@ namespace Makrisoft.Makfi.ViewModels
             {
                 currentUtilisateur = value;
                 Guid monID = default;
-                if (currentUtilisateur != null) monID = currentUtilisateur.Id;
-                // Hotel
-                Hotels = new ObservableCollection<Hotel_VM>(
-                    MakfiData.Hotel_Read($"<hotel><gouvernante>{monID}</gouvernante></hotel>")
-                   .Select(x => new Hotel_VM
-                   {
-                       Id = x.Id,
-                       Nom = x.Nom,
-                       Image = $"/Makrisoft.Makfi;component/Assets/hotels/{x.Image}",
-                       Gouvernante = Utilisateurs.Where(u => u.Id == x.Gouvernante).SingleOrDefault()
-                   }));
-                CurrentHotel = Hotels.FirstOrDefault();
+                if (currentUtilisateur == null) return;
+                monID = currentUtilisateur.Id;
 
+                if (currentUtilisateur.IsAdmin)
+                {
+                    Hotels = new ObservableCollection<Hotel_VM>(
+                       MakfiData.Hotel_Read()
+                      .Select(x => new Hotel_VM
+                      {
+                          Id = x.Id,
+                          Nom = x.Nom,
+                          Image = $"/Makrisoft.Makfi;component/Assets/hotels/{x.Image}",
+                          Gouvernante = Utilisateurs.Where(u => u.Id == x.Gouvernante).SingleOrDefault()
+                      }));
+                }
+                else
+                {
+                    // Hotel
+                    Hotels = new ObservableCollection<Hotel_VM>(
+                        MakfiData.Hotel_Read($"<hotel><gouvernante>{monID}</gouvernante></hotel>")
+                       .Select(x => new Hotel_VM
+                       {
+                           Id = x.Id,
+                           Nom = x.Nom,
+                           Image = $"/Makrisoft.Makfi;component/Assets/hotels/{x.Image}",
+                           Gouvernante = Utilisateurs.Where(u => u.Id == x.Gouvernante).SingleOrDefault()
+                       }));
+                }
+                CurrentHotel = Hotels.FirstOrDefault();
                 OnPropertyChanged("CurrentUtilisateur");
             }
         }
@@ -82,6 +98,20 @@ namespace Makrisoft.Makfi.ViewModels
             }
         }
         private Hotel_VM currentHotel;
+
+
+        //PremiereConnexion
+        public string Message
+        {
+            get { return premiereConnexion; }
+            set
+            {
+                premiereConnexion = value;
+                OnPropertyChanged("Message");
+            }
+        }
+        private string premiereConnexion ;
+
 
         // Horloge
         public string Horloge
@@ -162,10 +192,18 @@ namespace Makrisoft.Makfi.ViewModels
                     Id = x.Id,
                     Nom = x.Nom,
                     CodePin = x.CodePin,
-                    Image = $"/Makrisoft.Makfi;component/Assets/Photos/{x.Image}",
+                    Image = $"/Makrisoft.Makfi;component/Assets/Photos/{x.Nom.ToLower()}.png",
                     Statut = x.Statut
                 }));
-            CurrentUtilisateur = Utilisateurs.FirstOrDefault(g => g.Nom.ToUpper() == Properties.Settings.Default.Login.ToUpper());
+            if (Utilisateurs.Count == 1) CurrentUtilisateur = Utilisateurs.First();
+            if (CurrentUtilisateur == null)
+                CurrentUtilisateur = Utilisateurs.FirstOrDefault(g => g.Nom.ToUpper() == Properties.Settings.Default.Login.ToUpper());
+
+            if (string.IsNullOrEmpty(currentUtilisateur.CodePin))
+            {
+                Message = "Tapez votre code pin";
+
+            }
 
             // Horloge
             HeaderTimer.Elapsed += (s, e) => HorlogeLoop();

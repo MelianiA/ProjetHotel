@@ -1,5 +1,6 @@
 ﻿using Makrisoft.Makfi.Dal;
 using Makrisoft.Makfi.Tools;
+using System;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
@@ -80,7 +81,6 @@ namespace Makrisoft.Makfi.ViewModels
             {
                 utilisateurs = value;
                 OnPropertyChanged("Utilisateurs");
-
             }
         }
         private ObservableCollection<Utilisateur_VM> utilisateurs;
@@ -93,11 +93,10 @@ namespace Makrisoft.Makfi.ViewModels
             }
             set
             {
-
                 currentUtilisateur = value;
+                if (value == null) IsEnabled = false;
+                else IsEnabled = true;
                 OnPropertyChanged("CurrentUtilisateur");
-
-
             }
         }
         private Utilisateur_VM currentUtilisateur;
@@ -107,6 +106,18 @@ namespace Makrisoft.Makfi.ViewModels
             set { utilisateurCollectionView = value; OnPropertyChanged("UtilisateurCollectionView"); }
         }
         private ListCollectionView utilisateurCollectionView;
+
+        //IsEnabled
+        public bool IsEnabled
+        {
+            get { return isEnabled; }
+            set
+            {
+                isEnabled = value;
+                OnPropertyChanged("IsEnabled");
+            }
+        }
+        private bool isEnabled;
 
         #endregion
 
@@ -143,27 +154,20 @@ namespace Makrisoft.Makfi.ViewModels
         }
         private void OnSaveCommand()
         {
-             bool param; Utilisateur_VM utilTmp;
-            if (CurrentUtilisateur.Id != default)
-            {
-                utilTmp = CurrentUtilisateur;
-                param = MakfiData.Utilisateur_Save($"<utilisateur><id>{CurrentUtilisateur.Id}</id><nom>{CurrentUtilisateur.Nom}</nom><statut>{(byte)CurrentUtilisateur.Statut}</statut></utilisateur>");
-            }
-            else
-            {
-                utilTmp = CurrentUtilisateur;
-                param = MakfiData.Utilisateur_Save($"<utilisateur><nom>{CurrentUtilisateur.Nom}</nom><statut>{(byte)CurrentUtilisateur.Statut}</statut></utilisateur>");
-            }
-            if (param)
-            {
-                CurrentUtilisateur.SaveColor = "Navy";
-                Utilisateurs.Clear();
-                Utilisateur_Load();
-                CurrentUtilisateur = Utilisateurs.Where(u => u.Nom == utilTmp.Nom && u.Statut == utilTmp.Statut).FirstOrDefault();
-                Reference_ViewModel.Hotel.GouvernanteListLoad();
-                Reference_ViewModel.Hotel.ReceptionListLoad();
-
-            }
+            Guid? monID = null;
+            if (CurrentUtilisateur.Id != default) monID = CurrentUtilisateur.Id;
+            var param = $@"<utilisateur>
+                                    <id>{monID}</id>
+                                    <nom>{CurrentUtilisateur.Nom}</nom>
+                                    <codePin>{CurrentUtilisateur.CodePin}</codePin>
+                                    <statut>{(byte)CurrentUtilisateur.Statut}</statut>
+                                </utilisateur>";
+            var ids = MakfiData.Utilisateur_Save(param);
+            if (ids.Count == 0) throw new Exception("Rien n'a été sauvgardé ! ");
+            if (monID == null) CurrentUtilisateur.Id = ids[0].Id;
+            CurrentUtilisateur.SaveColor = "Navy";
+            Reference_ViewModel.Hotel.GouvernanteListLoad();
+            Reference_ViewModel.Hotel.ReceptionListLoad();
         }
         private void OnDeleteCommand()
         {
@@ -195,9 +199,9 @@ namespace Makrisoft.Makfi.ViewModels
         // Méthodes OnCanExecuteCommand
         private bool OnCanExecuteAddCommand()
         {
-                 return true;
-         
-        }  
+            return true;
+
+        }
         private bool OnCanExecuteSaveCommand()
         {
             if (CurrentUtilisateur != null)
@@ -231,16 +235,12 @@ namespace Makrisoft.Makfi.ViewModels
              {
                  Id = x.Id,
                  Nom = x.Nom,
-                 Image = x.Image,
+                 Image = $"/Makrisoft.Makfi;component/Assets/Photos/{x.Nom.ToLower()}.png",
                  Statut = x.Statut,
                  SaveColor = "Navy",
                  DateModified = default
              }).ToList());
-            foreach (var item in Utilisateurs)
-            {
-                if (item.Image != null) item.Image = $"/Makrisoft.Makfi;component/Assets/Photos/{item.Image}";
-                else { item.Image = $"/Makrisoft.Makfi;component/Assets/Photos/utilisateur.png"; }
-            }
+
             // ListeView
             UtilisateurCollectionView = new ListCollectionView(Utilisateurs);
             UtilisateurCollectionView.Refresh();

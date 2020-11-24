@@ -9,11 +9,11 @@ GO
 -- *************************************************************************************************
 -- _Read_
 -- *************************************************************************************************
-CREATE PROC [dbo].[Utilisateur_Read](@data xml=NULL)
+create PROC [dbo].[Utilisateur_Read](@data xml=NULL)
 AS
 DECLARE @Id uniqueidentifier=NULL
 select @Id = T.N.value('id[1]', 'uniqueidentifier') from @data.nodes('utilisateur') as T(N)
-Select Id, Nom, Identifiant, CodePin, Statut, [Image] from Utilisateur where @Id is null Or Id=@Id
+Select Id, Nom, CodePin, Statut from Utilisateur where @Id is null Or Id=@Id
 GO
 ---------------------------------------------------------------------------------------------------
 CREATE PROC [dbo].[Hotel_Read](@data xml=NULL)
@@ -107,6 +107,12 @@ select @Hotel = T.N.value('hotel[1]', 'uniqueidentifier') from @data.nodes('inte
  left join InterventionDetail itd on i.Id = itd.Intervention 
  where i.Hotel=@Hotel
  GO
+ ---------------------------------------------------------------------------------------------------
+CREATE PROC [dbo].[Info_Read](@data xml=NULL)
+AS
+select Id,Cle, Valeur from Info
+GO
+
  -- *************************************************************************************************
 -- save
 -- *************************************************************************************************
@@ -114,30 +120,46 @@ select @Hotel = T.N.value('hotel[1]', 'uniqueidentifier') from @data.nodes('inte
 CREATE PROC [dbo].[Utilisateur_Save](@data xml=NULL)
 AS
 DECLARE @IDs TABLE(ID uniqueidentifier);
---
-update Utilisateur set Nom=t.nom, Statut=t.Statut
-	output inserted.Id into @IDs(ID)
-from 
-	(
-	select 
+DECLARE @message nvarchar(MAX)
+DECLARE @Id uniqueidentifier
+
+select 
 		T.N.value('id[1]', 'uniqueidentifier') id, 
 		T.N.value('nom[1]', 'nvarchar(MAX)') Nom, 
+		T.N.value('codePin[1]', 'nvarchar(MAX)') CodePin,
 		T.N.value('statut[1]', 'nvarchar(MAX)') Statut
-		from @data.nodes('utilisateur') as T(N)
-	where T.N.value('id[1]', 'uniqueidentifier') is not null
-	)t
-where Utilisateur.Id = t.id
----
-insert Utilisateur (Nom, Statut) 
-	output inserted.Id into @IDs(ID)
-	(
-	select 
-		T.N.value('nom[1]', 'nvarchar(MAX)'), 
-		T.N.value('statut[1]', 'nvarchar(MAX)') 
-	from @data.nodes('utilisateur') as T(N)
-	where T.N.value('id[1]', 'uniqueidentifier') is null
-	);
-SELECT ID FROM @IDs;
+into #_utilisateur	
+from @data.nodes('utilisateur') as T(N)
+
+-- PARTIE2
+select @id=Id from #_utilisateur
+
+-- Update
+BEGIN TRY
+       update Utilisateur set 
+				  Nom = t.Nom,
+				  CodePin = t.CodePin,
+				  Statut= t.Statut
+			output inserted.Id into @IDs(ID)
+       from (select Nom, CodePin, Statut  from #_utilisateur where Id is not null) t
+       where Utilisateur.Id=@id
+END TRY
+BEGIN CATCH
+       select @message = ERROR_MESSAGE() 
+    RAISERROR (@message, 16, 1);  
+       RETURN;
+END CATCH
+
+-- Insert
+insert Utilisateur( Nom, CodePin, Statut )
+output inserted.Id into @IDs(ID)
+(
+select
+        Nom, CodePin, Statut 
+from #_utilisateur where Id is null
+)
+IF @Id is null select @id=ID from @IDs
+select Id from @IDs
 GO
 
 ----------------------------------------------------------------------------------------------------------
@@ -422,7 +444,7 @@ select @id=ID from @IDs
 select Id from @IDs
 GO
  ----------------------------------------------------------------------------------------------------------
-Create PROC [dbo].[Etat_Save](@data xml=NULL)
+alter PROC [dbo].[Etat_Save](@data xml=NULL)
  AS
 	DECLARE @IDs TABLE(ID uniqueidentifier);
 -- PARTIE recup XML :
@@ -432,13 +454,53 @@ select
   		T.N.value('(couleur/text())[1]', 'nvarchar(MAX)') Couleur,
   		T.N.value('(entite/text())[1]', 'tinyint') Entite
 		into #_etat
-from @data.nodes('etat') as T(N)
+from @data.nodes('etats/etat') as T(N)
 -- Insert
 insert Etat(Libelle, Icone, Couleur, Entite )
 		output inserted.Id into @IDs(ID)
 	(select Libelle, Icone, Couleur, Entite from #_etat )
 select Id from @IDs
 GO
+
+exec Etat_Save ' <etats>
+                    <etat>
+                        <libelle>Aucune information !</libelle>  <icone>TimelineHelp</icone>             <couleur>gray</couleur>            <entite>3</entite> 
+                        <libelle>Retardée</libelle>              <icone>TableLock</icone>                <couleur>orange</couleur>          <entite>3</entite> 
+                        <libelle>Fait</libelle>                  <icone>TimelineHelp</icone>             <couleur>green</couleur>           <entite>3</entite> 
+                        <libelle>Pas encore fait</libelle>       <icone>TimelineHelp</icone>             <couleur>red</couleur>             <entite>3</entite> 
+                        <libelle>Disponible</libelle>            <icone>FaceWomanShimmer</icone>         <couleur>green</couleur>           <entite>1</entite> 
+                        <libelle>Arrêt maladie</libelle>         <icone>FaceWomanShimmer</icone>         <couleur>red</couleur>             <entite>1</entite> 
+                        <libelle>Non disponible</libelle>        <icone>FaceWomanShimmer</icone>         <couleur>black</couleur>           <entite>1</entite> 
+                        <libelle>Fait</libelle>                  <icone>TableLock</icone>                <couleur>green</couleur>           <entite>2</entite> 
+                        <libelle>Pas encore fait</libelle>       <icone>TableLock</icone>                <couleur>Red</couleur>             <entite>2</entite> 
+                    </etat>
+                </etats>'
+
+ ----------------------------------------------------------------------------------------------------------
+Create PROC [dbo].[Info_Save](@data xml=NULL)
+AS
+DECLARE @message nvarchar(MAX)
+-- PARTIE recup XML :
+select 
+ 		T.N.value('(id/text())[1]', 'uniqueidentifier') id, 
+ 		T.N.value('(cle/text())[1]', 'nvarchar(MAX)') cle ,
+  		T.N.value('(valeur/text())[1]', 'nvarchar(MAX)') valeur
+ 		into #_info
+from @data.nodes('info') as T(N)
+ 
+-- Update  
+BEGIN TRY
+	 update Info set
+			Valeur=t.valeur 
+ 			from (select id, cle, valeur from #_info) t
+			where Info.Cle=t.cle
+END TRY
+BEGIN CATCH
+       select @message = ERROR_MESSAGE() 
+    RAISERROR (@message, 16, 1);  
+       RETURN;
+END CATCH
+ GO
  
  -- *************************************************************************************************
 -- Delete

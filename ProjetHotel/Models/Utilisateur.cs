@@ -12,7 +12,6 @@ namespace Makrisoft.Makfi.Models
         public Guid Id;
         public string Nom;
         public Guid Gouvernante;
-        public string Image;
         public string CodePin;
 
         public RoleEnum Statut { get; set; }

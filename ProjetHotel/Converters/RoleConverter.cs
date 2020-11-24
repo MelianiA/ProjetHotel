@@ -19,14 +19,13 @@ namespace Makrisoft.Makfi.Converters
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             if (value == null) return null;
-            var utilisateur = (Utilisateur_VM)value;
-            if (((RoleEnum)parameter & utilisateur.Statut) == (RoleEnum)parameter)
-                switch ((RoleEnum)parameter)
-                {
-                    case RoleEnum.Admin: return "Person";
-                    case RoleEnum.Gouvernante: return "FaceWoman";
-                    case RoleEnum.Reception: return "Building";
-                }
+            var statut = (RoleEnum)value;
+            switch (statut)
+            {
+                case RoleEnum.Admin: return "Person";
+                case RoleEnum.Gouvernante: return "FaceWoman";
+                case RoleEnum.Reception: return "Building";
+            }
             return "None";
         }
 
@@ -40,8 +39,8 @@ namespace Makrisoft.Makfi.Converters
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             if (value == null) return null;
-            var utilisateur = (Utilisateur_VM)value;
-            switch ((RoleEnum)parameter & utilisateur.Statut)
+            var statut = (RoleEnum)value;
+            switch (statut)
             {
                 case RoleEnum.Admin: return new SolidColorBrush(Colors.Red);
                 case RoleEnum.Gouvernante: return new SolidColorBrush(Colors.Navy);
@@ -57,12 +56,10 @@ namespace Makrisoft.Makfi.Converters
     }
     public class RoleBoolConverter : IValueConverter
     {
-        private Utilisateur_VM Selected;
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             if (value == null) return null;
-            Selected = (Utilisateur_VM)value;
-            return ((RoleEnum)parameter & Selected.Statut) == (RoleEnum)parameter;
+            return (RoleEnum)parameter == (RoleEnum)value;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
@@ -70,9 +67,9 @@ namespace Makrisoft.Makfi.Converters
             //CurrentUtilisateur
             if (value == null) return null;
             if ((bool)value)
-                Selected.Statut = (RoleEnum)parameter;
-            
-            return Selected;
+                return (RoleEnum)parameter;
+
+            return RoleEnum.None ;
         }
     }
     public class BoolRoleConverter : IValueConverter

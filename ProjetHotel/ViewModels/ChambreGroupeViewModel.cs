@@ -25,8 +25,12 @@ namespace Makrisoft.Makfi.ViewModels
             ChambreGroupeSelectedDeleteCommand = new RelayCommand(p => OnChambreGroupeSelectedDeleteCommand(), p => OnCanExecuteChambreGroupeSelectedDeleteCommand());
 
             // ListeView
-            Load_GroupeChambres();
-            Load_AllChambres();
+            if (Reference_ViewModel.Header.CurrentHotel != null)
+            {
+                Load_GroupeChambres();
+                Load_AllChambres();
+            }
+              
             //Load_ChambreCurrentGroupe();
 
         }

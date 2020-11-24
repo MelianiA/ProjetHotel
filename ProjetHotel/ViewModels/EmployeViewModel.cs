@@ -22,9 +22,13 @@ namespace Makrisoft.Makfi.ViewModels
             FilterClearCommand = new RelayCommand(p => OnFilterClearCommand(), p => OnCanExecuteFilterClearCommand());
 
             // ListeView
-            Load_Etat();
-            Load_Employes();
-            Load_EtatEmploye();
+            if (Reference_ViewModel.Header.CurrentHotel != null)
+            {
+                Load_Etat();
+                Load_Employes();
+                Load_EtatEmploye();
+            }
+      
         }
         #endregion
 

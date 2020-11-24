@@ -10,15 +10,18 @@ namespace Makrisoft.Makfi
     /// </summary>
     public partial class App : Application
     {
- 
+
         protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
-            MakfiData.Init(
-                Makfi.Properties.Settings.Default.MakfiConnectionString,
-                BoiteACoucou);
+            if (MakfiData.Init(
+                 Makfi.Properties.Settings.Default.MakfiConnectionString,
+                 BoiteACoucou) != "")
+            {
+                MessageBox.Show("Erreur système"); Shutdown();            
+            }
         }
-        
+
         private void BoiteACoucou(string exceptionMsg, string spName, string spParams)
         {
             var simpleMsg = $"{exceptionMsg}{Environment.NewLine}{spParams}";

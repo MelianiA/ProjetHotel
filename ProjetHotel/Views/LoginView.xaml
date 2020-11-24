@@ -73,9 +73,8 @@
                 <Button Grid.Column="2" Grid.Row="2" Content="9" Style="{StaticResource NumericPad}" CommandParameter="9"/>
                 <Button Grid.Column="0" Grid.Row="3" Content="#" Style="{StaticResource NumericPad}" CommandParameter="#"/>
                 <Button Grid.Column="1" Grid.Row="3" Content="0" Style="{StaticResource NumericPad}" CommandParameter="0"/>
-                <Button Grid.Column="2" Grid.Row="3" Style="{StaticResource NumericPad}" CommandParameter="B">
-                    <materialDesign:PackIcon Kind="Backspace"  Width="Auto" Height="35"/>
-                </Button>
+                <Button Grid.Column="2" Grid.Row="3" Content="!" Style="{StaticResource NumericPad}" CommandParameter="!"/>
+                 
             </Grid>
         </StackPanel>
     </Border>

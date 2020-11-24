@@ -24,9 +24,13 @@ namespace Makrisoft.Makfi.ViewModels
             FilterClearCommand = new RelayCommand(p => OnFilterEtatClearCommand(), p => OnCanExecuteFilterEtatClearCommand());
             ChambreGroupeViewCommand = new RelayCommand(p => OnChambreGroupeViewCommand());
             // ListeView
-            Load_Etat();
-            Load_EtatChambre();
-            Load_Chambres();
+            if (Reference_ViewModel.Header.CurrentHotel != null)
+            {
+                Load_Etat();
+                Load_EtatChambre();
+                Load_Chambres();
+            }
+
 
         }
 
@@ -247,11 +251,11 @@ namespace Makrisoft.Makfi.ViewModels
         }
 
         // Divers
-        public bool FilterChambres (object item)
+        public bool FilterChambres(object item)
         {
-            if(CurrentFilterGroupe != null && CurrentFilterEtat != null)
+            if (CurrentFilterGroupe != null && CurrentFilterEtat != null)
             {
-                if (item is ChambreGroupeChambre_VM chambre && chambre.GroupeChambre!= null)
+                if (item is ChambreGroupeChambre_VM chambre && chambre.GroupeChambre != null)
                 {
                     var tab = chambre.GroupeChambre.Split(new string[] { ", " }, StringSplitOptions.RemoveEmptyEntries);
                     return (GroupeChambre.Any(gc => tab.Contains(CurrentFilterGroupe.Nom)) && EtatChambre.Any(e => chambre.Etat.Libelle == CurrentFilterEtat.Libelle));
@@ -307,14 +311,14 @@ namespace Makrisoft.Makfi.ViewModels
             //Load_GroupeChambre
             Guid idHotel = default;
             if (Reference_ViewModel.Header.CurrentHotel != null) idHotel = Reference_ViewModel.Header.CurrentHotel.Id;
-             GroupeChambre = new ObservableCollection<GroupeChambre_VM>(
-              MakfiData.GroupeChambre_Read($"<groupeChambre><hotel>{idHotel}</hotel></groupeChambre>")
-              .Select(x => new GroupeChambre_VM
-              {
-                  Id = x.Id,
-                  Nom = x.Nom,
-                  Commentaire = x.Commentaire
-              }).ToList());
+            GroupeChambre = new ObservableCollection<GroupeChambre_VM>(
+             MakfiData.GroupeChambre_Read($"<groupeChambre><hotel>{idHotel}</hotel></groupeChambre>")
+             .Select(x => new GroupeChambre_VM
+             {
+                 Id = x.Id,
+                 Nom = x.Nom,
+                 Commentaire = x.Commentaire
+             }).ToList());
             GroupeChambreCollectionView = new ListCollectionView(GroupeChambre);
             GroupeChambreCollectionView.Refresh();
             CurrentFilterEtat = null;

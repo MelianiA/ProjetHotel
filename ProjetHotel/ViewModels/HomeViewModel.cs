@@ -24,7 +24,12 @@ namespace Makrisoft.Makfi.ViewModels
                 OnPropertyChanged("IsAdmin");
             }
         }
-        private bool isAdmin = true;
+        private bool isAdmin = true;    
+        
+        public bool WithHotel
+        {
+            get { return Reference_ViewModel.Header.CurrentHotel!=null; }
+        }
 
         #endregion
 

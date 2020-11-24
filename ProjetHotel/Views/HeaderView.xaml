@@ -101,13 +101,9 @@
                     </StackPanel>
                     <!--Erreur-->
                     <ScrollViewer Grid.Row="2" Margin="20,0,20,0" VerticalScrollBarVisibility="Auto">
-                        <TextBlock Text="{Binding Erreur.Message}" Foreground="{Binding Erreur.Couleur}" FontSize="16" Visibility="{Binding Erreur.Visibilite}" 
-                               TextAlignment="Center" TextWrapping="Wrap">
-                            <!--<i:Interaction.Triggers>
-                                <i:EventTrigger EventName="MouseUp">
-                                    <i:InvokeCommandAction Command="{Binding PersistMessageCommand}"/>
-                                </i:EventTrigger>
-                            </i:Interaction.Triggers>-->
+                        <TextBlock Text="{Binding Message}" Foreground="Red" FontSize="18"  
+                               TextAlignment="Center" TextWrapping="Wrap" FontWeight="ExtraBold">
+                         
                         </TextBlock>
                     </ScrollViewer>
                 </Grid>

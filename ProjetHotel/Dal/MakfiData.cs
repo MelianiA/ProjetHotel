@@ -2,6 +2,7 @@
 using Makrisoft.Makfi.ViewModels;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
@@ -14,18 +15,76 @@ namespace Makrisoft.Makfi.Dal
         Header, Login, Home, Intervention, Chambre, InterventionNew, Employe, Synthese, Administration, ChambreGroupe, InterventionDetail,
         Utilisateur, None, Hotel, DecoupageNew, Decoupage
     }
-    public enum RoleEnum { None = 0, Admin = 1, Gouvernante = 2, Reception = 4 }
+    public enum RoleEnum { None = 0, Admin = 255, Gouvernante = 1, Reception = 2 }
     public enum EntiteEnum { Employe = 1, Chambre = 2, Intervention = 3 }
 
     public static class MakfiData
     {
+        public static string PasswordAdmin;
+        public static string PasswordChange;
         #region Constructeur
         private static Action<string, string, string> OnError;
-        public static void Init(string connectionString, Action<string, string, string> onError)
+        public static string Init(string connectionString, Action<string, string, string> onError)
         {
             ConnectionString = connectionString;
             OnError = onError;
+
+            //Premier accès
+            var infoList = new ObservableCollection<Info_VM>(
+             MakfiData.Info_Read()
+             .Select(x => new Info_VM
+             {
+                 Id = x.Id,
+                 Cle = x.Cle,
+                 Valeur = x.Valeur
+             }).ToList());
+            var etat = infoList.Where(i => i.Cle == "Etat").Select(i => i.Valeur).FirstOrDefault();
+            PasswordAdmin = infoList.Where(i => i.Cle == "PasswordAdmin").Select(i => i.Valeur).FirstOrDefault();
+            PasswordChange = infoList.Where(i => i.Cle == "PasswordChange").Select(i => i.Valeur).FirstOrDefault();
+            if (etat == "0")
+            {
+                if (PremierAcces())
+                {
+                    try
+                    {
+                        Info_Save("<info><cle>Etat</cle><valeur>1</valeur></info>");
+
+                    }
+                    catch (Exception ex)
+                    {
+                        return ex.Message;
+                    }
+                }
+            }
+            return "";
         }
+
+
+
+        private static bool PremierAcces()
+        {
+            // Ajoût admin
+            Utilisateur_Save("<utilisateur><nom>Admin</nom><codePin>#69!</codePin><statut>255</statut></utilisateur>");
+            // Table Etat
+            Etat_Save(@"
+                <etats>
+                         <etat><libelle>Aucune information !</libelle>  <icone>TimelineHelp</icone>             <couleur>gray</couleur>            <entite>3</entite> </etat>
+                         <etat> <libelle>Retardée</libelle>              <icone>TableLock</icone>                <couleur>orange</couleur>         <entite>3</entite> </etat>
+                         <etat><libelle>Fait</libelle>                  <icone>TimelineHelp</icone>             <couleur>green</couleur>           <entite>3</entite> </etat>
+                         <etat> <libelle>Pas encore fait</libelle>       <icone>TimelineHelp</icone>             <couleur>red</couleur>            <entite>3</entite> </etat>
+                         <etat><libelle>Disponible</libelle>            <icone>FaceWomanShimmer</icone>         <couleur>green</couleur>           <entite>1</entite> </etat>
+                         <etat><libelle>Arrêt maladie</libelle>         <icone>FaceWomanShimmer</icone>         <couleur>red</couleur>             <entite>1</entite> </etat>
+                         <etat><libelle>Non disponible</libelle>        <icone>FaceWomanShimmer</icone>         <couleur>black</couleur>           <entite>1</entite> </etat>
+                         <etat><libelle>Fait</libelle>                  <icone>TableLock</icone>                <couleur>green</couleur>           <entite>2</entite> </etat>
+                         <etat><libelle>Pas encore fait</libelle>       <icone>TableLock</icone>                <couleur>Red</couleur>             <entite>2</entite> </etat>
+                </etats>
+            ");
+            return true;
+        }
+
+        
+
+
         #endregion
 
         #region SqlServer objects
@@ -73,8 +132,8 @@ namespace Makrisoft.Makfi.Dal
                 return false;
             }
         }
- 
-    
+
+
         private static void Close()
         {
             if (Reader != null) Reader.Close();
@@ -120,7 +179,7 @@ namespace Makrisoft.Makfi.Dal
             }
         }
 
-    
+
 
         public static List<T> ReadAll<T>(string spName, Action<T> p, string spParam = null) where T : new()
         {
@@ -169,8 +228,8 @@ namespace Makrisoft.Makfi.Dal
                                 e.Id = (Guid)Reader["Id"];
                                 e.Nom = Reader["Nom"] as string;
                                 e.Image = Reader["Image"] as string;
-                                e.Gouvernante =Reader["Gouvernante"] as Guid?;
-                                e.Reception =  Reader["Reception"] as Guid?;
+                                e.Gouvernante = Reader["Gouvernante"] as Guid?;
+                                e.Reception = Reader["Reception"] as Guid?;
                                 e.Commentaire = Reader["Commentaire"] as string;
                             },
                             spParam
@@ -188,7 +247,6 @@ namespace Makrisoft.Makfi.Dal
                 {
                     e.Id = (Guid)Reader["Id"];
                     e.Nom = Reader["Nom"] as string;
-                    e.Image = Reader["Image"] as string;
                     e.CodePin = Reader["CodePin"] as string;
                     e.Statut = (RoleEnum)(byte)Reader["Statut"];
                 },
@@ -211,7 +269,7 @@ namespace Makrisoft.Makfi.Dal
                             spParam
                             );
         }
- 
+
         internal static IEnumerable<Chambre> Chambre_Read(string spParam = null)
         {
             return ReadAll<Chambre>
@@ -320,8 +378,8 @@ namespace Makrisoft.Makfi.Dal
                                     {
                                         e.Id = (Guid)Reader["Id"];
                                         e.Libelle = Reader["Libelle"] as string;
-                                        e.Etat =  Reader["Etat"] as Guid?;
-                                        e.Date1=  (DateTime)Reader["Date1"];
+                                        e.Etat = Reader["Etat"] as Guid?;
+                                        e.Date1 = (DateTime)Reader["Date1"];
                                         e.Commentaire = Reader["Commentaire"] as string;
                                         e.GroupeChambre = Reader["GroupeChambre"] as Guid?;
                                     },
@@ -330,12 +388,35 @@ namespace Makrisoft.Makfi.Dal
         }
 
 
+        private static IEnumerable<Info> Info_Read(string spParam = null)
+        {
+            return ReadAll<Info>
+                                    (
+                                    "Info_Read",
+                                    e =>
+                                    {
+                                        e.Id = (Guid)Reader["Id"];
+                                        e.Cle = Reader["Cle"] as string;
+                                        e.Valeur = Reader["Valeur"] as string;
+                                    },
+                                    spParam
+                                    );
+        }
+
         #endregion
 
         #region _Save
-        public static bool Utilisateur_Save(string spParam = null)
+        internal static List<Utilisateur> Utilisateur_Save(string spParam = null)
         {
-            return ExecuteNonQuery("Utilisateur_Save", spParam);
+             return ReadAll<Utilisateur>
+               (
+               "Utilisateur_Save",
+               e =>
+               {
+                   e.Id = (Guid)Reader["Id"];
+               },
+               spParam
+               );
         }
         internal static List<Hotel> Hotel_Save(string spParam)
         {
@@ -443,6 +524,19 @@ namespace Makrisoft.Makfi.Dal
                  );
             }
         }
+        internal static List<Info> Info_Save(string spParam)
+        {
+            return ReadAll<Info>
+             (
+             "Info_Save",
+             e =>
+             {
+                 e.Id = (Guid)Reader["Id"];
+             },
+             spParam
+             );
+        }
+
 
         #endregion
 

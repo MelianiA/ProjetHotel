@@ -1,5 +1,6 @@
 ﻿using Makrisoft.Makfi.Dal;
 using Makrisoft.Makfi.Tools;
+using System;
 using System.Windows.Input;
 
 namespace Makrisoft.Makfi.ViewModels
@@ -25,8 +26,22 @@ namespace Makrisoft.Makfi.ViewModels
             if (Password.Length == 4)
             {
 #if PASSEDROIT
-                Password = "1234";
+                //Password = "#69!";
 #endif
+                if(Reference_ViewModel.Header.Message == "Tapez votre code pin")
+                {
+                    Reference_ViewModel.Header.CurrentUtilisateur.CodePin = Password;
+                    var param = $@"<utilisateur>
+                                    <id>{Reference_ViewModel.Header.CurrentUtilisateur.Id}</id>
+                                    <nom>{Reference_ViewModel.Header.CurrentUtilisateur.Nom}</nom>
+                                    <codePin>{Reference_ViewModel.Header.CurrentUtilisateur.CodePin}</codePin>
+                                    <statut>{(byte)Reference_ViewModel.Header.CurrentUtilisateur.Statut}</statut>
+                                </utilisateur>";
+                    var ids = MakfiData.Utilisateur_Save(param);
+                    if (ids.Count == 0) throw new Exception("Rien n'a été sauvgardé ! ");
+                    Reference_ViewModel.Header.Message = "";
+                }
+
                 if (Password == Reference_ViewModel.Header.CurrentUtilisateur.CodePin)
                 {
                     Reference_ViewModel.Main.ViewSelected = ViewEnum.Home;
@@ -34,8 +49,11 @@ namespace Makrisoft.Makfi.ViewModels
                     Reference_ViewModel.Home.IsAdmin = Reference_ViewModel.Header.CurrentUtilisateur.IsAdmin;
                 }
                 Password = "";
-                Reference_ViewModel.Employe.Load_Employes();
-                Reference_ViewModel.Chambre.Load_Chambres();
+                if (Reference_ViewModel.Header.CurrentHotel != null)
+                {
+                    Reference_ViewModel.Employe.Load_Employes();
+                    Reference_ViewModel.Chambre.Load_Chambres();
+                }
             }
         }
 

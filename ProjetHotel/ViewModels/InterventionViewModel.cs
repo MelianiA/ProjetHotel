@@ -24,9 +24,12 @@ namespace Makrisoft.Makfi.ViewModels
             FilterClearCommand = new RelayCommand(p => OnFilterEtatClearCommand(), p => OnCanExecuteFilterEtatClearCommand());
 
             // ListeView
-            Load_Etat();
-            Load_EtatIntervention();
-            Load_Intervention();
+            if (Reference_ViewModel.Header.CurrentHotel != null)
+            {
+                Load_Etat();
+                Load_EtatIntervention();
+                Load_Intervention();
+            }
             //
             GroupeChambreCollectionView = Reference_ViewModel.ChambreGroupe.GroupeChambreCollectionView;
         }

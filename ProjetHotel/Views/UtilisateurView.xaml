@@ -119,7 +119,8 @@
         <!--Milieu-->
         <Border Grid.Column="1" Grid.Row="1" BorderBrush="Transparent" BorderThickness="1" CornerRadius="10" Margin="0" >
                 <!-- IsEnabled="{Binding PageNotModified.Value} "-->
-            <DataGrid  AutoGenerateColumns="False" HeadersVisibility="None" CanUserAddRows="False" VerticalScrollBarVisibility="Visible"   GridLinesVisibility="Horizontal"
+            <DataGrid  AutoGenerateColumns="False" HeadersVisibility="None" 
+                       CanUserAddRows="False" VerticalScrollBarVisibility="Visible"   GridLinesVisibility="Horizontal"
                     ItemsSource="{Binding UtilisateurCollectionView, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
                     SelectedItem="{Binding CurrentUtilisateur, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" >
 
@@ -127,7 +128,7 @@
                     <DataGridTemplateColumn Width="100">
                         <DataGridTemplateColumn.CellTemplate  >
                             <DataTemplate >
-                                <Image HorizontalAlignment="Left" Source="{Binding Image}" Width="50" Height="50"/>
+                                <Image HorizontalAlignment="Left" Source="{Binding Image, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Width="50" Height="50"/>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
@@ -145,36 +146,13 @@
                                 <DataTemplate>
                                     <Border Style="{StaticResource BorderRole}">
                                         <materialDesign:PackIcon Height="20" Width="Auto" 
-                                                             Kind="{Binding Converter={StaticResource RoleConverterKey}, ConverterParameter={x:Static data:RoleEnum.Admin}}" 
-                                                             Foreground="{Binding Converter={StaticResource RoleColorConverterKey}, ConverterParameter={x:Static data:RoleEnum.Admin}}"/>
+                                                             Kind="{Binding  Statut, Converter={StaticResource RoleConverterKey}}" 
+                                                             Foreground="{Binding Statut, Converter={StaticResource RoleColorConverterKey}}"/>
                                     </Border>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn >
-                    <DataGridTemplateColumn  >
-                            <!--millieu-->
-                            <DataGridTemplateColumn.CellTemplate>
-                                <DataTemplate>
-                                    <Border Style="{StaticResource BorderRole}">
-                                    <materialDesign:PackIcon Height="20" Width="Auto" 
-                                                             Kind="{Binding Converter={StaticResource RoleConverterKey}, ConverterParameter={x:Static data:RoleEnum.Gouvernante}}" 
-                                                             Foreground="{Binding Converter={StaticResource RoleColorConverterKey},ConverterParameter={x:Static data:RoleEnum.Gouvernante}}"/>
-                                    </Border>
-                                </DataTemplate>
-                            </DataGridTemplateColumn.CellTemplate>
-                     </DataGridTemplateColumn>
-                        <DataGridTemplateColumn >
-                            <!--à droite-->
-                            <DataGridTemplateColumn.CellTemplate>
-                                <DataTemplate>
-                                    <Border Style="{StaticResource BorderRole}">
-                                        <materialDesign:PackIcon Height="20" Width="Auto" 
-                                                             Kind="{Binding Converter={StaticResource RoleConverterKey}, ConverterParameter={x:Static data:RoleEnum.Reception}}" 
-                                                             Foreground="{Binding Converter={StaticResource RoleColorConverterKey}, ConverterParameter={x:Static data:RoleEnum.Reception}}"/>
-                                    </Border>
-                                </DataTemplate>
-                            </DataGridTemplateColumn.CellTemplate>
-                        </DataGridTemplateColumn>
+                   
                         
                       
                     </DataGrid.Columns>
@@ -184,26 +162,29 @@
         <Border Grid.Column="2" Grid.Row="1" BorderBrush="Transparent" BorderThickness="1" CornerRadius="10" HorizontalAlignment="Left" >
             <StackPanel Margin="5" Width="220">
                 <TextBlock Text="Nom" Margin="0,15,0,0"/>
-                <TextBox FontSize="16" Text="{Binding CurrentUtilisateur.Nom, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                <TextBox FontSize="16" Text="{Binding CurrentUtilisateur.Nom, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding IsEnabled}"/>
 
                 <StackPanel Orientation="Horizontal" Margin="0,30,0,0">
                     <materialDesign:PackIcon Height="20" Width="Auto" Kind="Person" Foreground="Silver" Margin="0,0,10,0"/>
-                    <RadioButton GroupName="Group1" 
-                                 IsChecked="{Binding CurrentUtilisateur, Converter={StaticResource RoleBoolConverterKey}, ConverterParameter={x:Static data:RoleEnum.Admin}}" 
+                    <RadioButton GroupName="Group1" IsEnabled="{Binding IsEnabled}"
+                                 IsChecked="{Binding CurrentUtilisateur.Statut, Converter={StaticResource RoleBoolConverterKey}, ConverterParameter={x:Static data:RoleEnum.Admin},
+                        UpdateSourceTrigger=PropertyChanged}" 
                                   />
                     <TextBlock Text="Administrateur" Margin="10,0,0,0" />
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" Margin="0,30,0,0">
                     <materialDesign:PackIcon Height="20" Width="Auto" Kind="FaceWoman" Foreground="Silver" Margin="0,0,10,0"/>
-                    <RadioButton GroupName="Group1"
-                                 IsChecked="{Binding CurrentUtilisateur, Converter={StaticResource RoleBoolConverterKey}, ConverterParameter={x:Static data:RoleEnum.Gouvernante}}"
+                    <RadioButton GroupName="Group1" IsEnabled="{Binding IsEnabled}"
+                                 IsChecked="{Binding CurrentUtilisateur.Statut, Converter={StaticResource RoleBoolConverterKey}, ConverterParameter={x:Static data:RoleEnum.Gouvernante},
+                        UpdateSourceTrigger=PropertyChanged}"
                                   />
                     <TextBlock Text="Gouvernante" Margin="10,0,0,0" />
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" Margin="0,30,0,0">
                     <materialDesign:PackIcon Height="20" Width="Auto" Kind="Building" Foreground="Silver" Margin="0,0,10,0"/>
-                    <RadioButton GroupName="Group1"
-                                 IsChecked="{Binding CurrentUtilisateur, Converter={StaticResource RoleBoolConverterKey}, ConverterParameter={x:Static data:RoleEnum.Reception}}"
+                    <RadioButton GroupName="Group1" IsEnabled="{Binding IsEnabled}"
+                                 IsChecked="{Binding CurrentUtilisateur.Statut, Converter={StaticResource RoleBoolConverterKey}, ConverterParameter={x:Static data:RoleEnum.Reception},
+                        UpdateSourceTrigger=PropertyChanged}"
                                   />
                     <TextBlock Text="Réception" Margin="10,0,0,0" />
                 </StackPanel>

@@ -87,6 +87,7 @@ namespace Makrisoft.Makfi.ViewModels
             set
             {
                 nom = value;
+                Image = $"/Makrisoft.Makfi;component/Assets/Photos/{nom.ToLower()}.png";
                 SaveColor = "Red";
                 OnPropertyChanged("Nom");
             }
@@ -104,9 +105,16 @@ namespace Makrisoft.Makfi.ViewModels
         }
         private string saveColor = "Navy";
 
-        public string Image { get; set; }
-
-        // public Guid Gouvernante { get; set; }
+        public string Image
+        {
+            get { return image; }
+            set
+            {
+                image = value;
+                OnPropertyChanged("Image");
+            }
+        }
+        private string image;
 
         public RoleEnum Statut
         {
@@ -274,8 +282,8 @@ namespace Makrisoft.Makfi.ViewModels
     public class HotelEmploye_VM
     {
         public Guid Employe { get; set; }
-     }
-    public class GroupeChambre_VM:ViewModelBase
+    }
+    public class GroupeChambre_VM : ViewModelBase
     {
         public Guid? Id;
         public string Nom
@@ -446,7 +454,7 @@ namespace Makrisoft.Makfi.ViewModels
         private string nomChambre;
 
     }
-    public class Intervention_VM :ViewModelBase
+    public class Intervention_VM : ViewModelBase
     {
         public Guid Id;
         public string Libelle
@@ -496,7 +504,7 @@ namespace Makrisoft.Makfi.ViewModels
             }
         }
         private string commentaire;
-        public GroupeChambre_VM GroupeChambre 
+        public GroupeChambre_VM GroupeChambre
         {
             get { return groupeChambre; }
             set
@@ -521,5 +529,11 @@ namespace Makrisoft.Makfi.ViewModels
         private string saveColor = "Navy";
 
     }
+    public class Info_VM
+    {
+        public Guid Id;
+        public string Cle { get; set; }
+        public string Valeur { get; set; }
 
+    }
 }
