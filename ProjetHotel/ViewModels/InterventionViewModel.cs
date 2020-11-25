@@ -177,6 +177,8 @@ namespace Makrisoft.Makfi.ViewModels
                      </intervention>";
             var ids = MakfiData.Intervention_Save(param);
             if (ids.Count == 0) throw new Exception("Rien n'a été sauvgardé ! ");
+            CurrentIntervention.Id = ids[0].Id;
+
             if (CurrentIntervention.Etat == null)
                 CurrentIntervention.Etat = EtatIntervention.Where(e => e.Libelle == "Aucune information !").SingleOrDefault();
             CurrentIntervention.SaveColor = "Navy";
@@ -189,7 +191,7 @@ namespace Makrisoft.Makfi.ViewModels
             {
                 Libelle = "(A définir ! )",
                 Date1 = DateTime.Now,
-                Etat = null
+                Etat = EtatIntervention.Where(e=>e.Libelle== "Aucune information !").SingleOrDefault()
             };
             Interventions.Add(CurrentIntervention);
         }

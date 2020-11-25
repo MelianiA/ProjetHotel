@@ -90,3 +90,14 @@ C:\Users\alima\Source\Repos\ProjetHotel\ProjetHotel\obj\Debug\Views\ChambreView.
 C:\Users\alima\Source\Repos\ProjetHotel\ProjetHotel\obj\Debug\Views\EmployeView.baml
 C:\Users\alima\Source\Repos\ProjetHotel\ProjetHotel\obj\Debug\Views\InterventionDetailView.baml
 C:\Users\alima\Source\Repos\ProjetHotel\ProjetHotel\obj\Debug\Views\InterventionView.baml
+C:\Users\abdou\source\repos\ProjetHotel\ProjetHotel\bin\Debug\ControlzEx.dll
+C:\Users\abdou\source\repos\ProjetHotel\ProjetHotel\bin\Debug\MahApps.Metro.dll
+C:\Users\abdou\source\repos\ProjetHotel\ProjetHotel\bin\Debug\MetroChart.WPF.dll
+C:\Users\abdou\source\repos\ProjetHotel\ProjetHotel\bin\Debug\Microsoft.Xaml.Behaviors.dll
+C:\Users\abdou\source\repos\ProjetHotel\ProjetHotel\bin\Debug\Panteam.MetroChart.dll
+C:\Users\abdou\source\repos\ProjetHotel\ProjetHotel\bin\Debug\ControlzEx.pdb
+C:\Users\abdou\source\repos\ProjetHotel\ProjetHotel\bin\Debug\ControlzEx.xml
+C:\Users\abdou\source\repos\ProjetHotel\ProjetHotel\bin\Debug\MahApps.Metro.pdb
+C:\Users\abdou\source\repos\ProjetHotel\ProjetHotel\bin\Debug\MahApps.Metro.xml
+C:\Users\abdou\source\repos\ProjetHotel\ProjetHotel\bin\Debug\Microsoft.Xaml.Behaviors.pdb
+C:\Users\abdou\source\repos\ProjetHotel\ProjetHotel\bin\Debug\Microsoft.Xaml.Behaviors.xml

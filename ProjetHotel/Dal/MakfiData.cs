@@ -68,10 +68,10 @@ namespace Makrisoft.Makfi.Dal
             // Table Etat
             Etat_Save(@"
                 <etats>
-                         <etat><libelle>Aucune information !</libelle>  <icone>TimelineHelp</icone>             <couleur>gray</couleur>            <entite>3</entite> </etat>
-                         <etat> <libelle>Retardée</libelle>              <icone>TableLock</icone>                <couleur>orange</couleur>         <entite>3</entite> </etat>
-                         <etat><libelle>Fait</libelle>                  <icone>TimelineHelp</icone>             <couleur>green</couleur>           <entite>3</entite> </etat>
-                         <etat> <libelle>Pas encore fait</libelle>       <icone>TimelineHelp</icone>             <couleur>red</couleur>            <entite>3</entite> </etat>
+                         <etat><libelle>Fait</libelle>                  <icone>TimelineHelp</icone>             <couleur>gray</couleur>            <entite>3</entite> </etat>
+                         <etat> <libelle>En cours</libelle>             <icone>TableLock</icone>                <couleur>orange</couleur>          <entite>3</entite> </etat>
+                         <etat><libelle>None</libelle>                  <icone>TimelineHelp</icone>             <couleur>green</couleur>           <entite>3</entite> </etat>
+                         <etat> <libelle>Incident</libelle>             <icone>TimelineHelp</icone>             <couleur>red</couleur>             <entite>3</entite> </etat>
                          <etat><libelle>Disponible</libelle>            <icone>FaceWomanShimmer</icone>         <couleur>green</couleur>           <entite>1</entite> </etat>
                          <etat><libelle>Arrêt maladie</libelle>         <icone>FaceWomanShimmer</icone>         <couleur>red</couleur>             <entite>1</entite> </etat>
                          <etat><libelle>Non disponible</libelle>        <icone>FaceWomanShimmer</icone>         <couleur>black</couleur>           <entite>1</entite> </etat>
@@ -82,7 +82,7 @@ namespace Makrisoft.Makfi.Dal
             return true;
         }
 
-        
+
 
 
         #endregion
@@ -227,7 +227,6 @@ namespace Makrisoft.Makfi.Dal
                             {
                                 e.Id = (Guid)Reader["Id"];
                                 e.Nom = Reader["Nom"] as string;
-                                e.Image = Reader["Image"] as string;
                                 e.Gouvernante = Reader["Gouvernante"] as Guid?;
                                 e.Reception = Reader["Reception"] as Guid?;
                                 e.Commentaire = Reader["Commentaire"] as string;
@@ -408,15 +407,15 @@ namespace Makrisoft.Makfi.Dal
         #region _Save
         internal static List<Utilisateur> Utilisateur_Save(string spParam = null)
         {
-             return ReadAll<Utilisateur>
-               (
-               "Utilisateur_Save",
-               e =>
-               {
-                   e.Id = (Guid)Reader["Id"];
-               },
-               spParam
-               );
+            return ReadAll<Utilisateur>
+              (
+              "Utilisateur_Save",
+              e =>
+              {
+                  e.Id = (Guid)Reader["Id"];
+              },
+              spParam
+              );
         }
         internal static List<Hotel> Hotel_Save(string spParam)
         {

@@ -22,13 +22,18 @@ namespace Makrisoft.Makfi.ViewModels
         // Méthode
         private void OnLoginKeyCommand(object key)
         {
+            if (Reference_ViewModel.Header.CurrentUtilisateur == null)
+            {
+                Reference_ViewModel.Header.Message = "Redémarrage nécessaire";
+                return;
+            }
             Password += key.ToString();
             if (Password.Length == 4)
             {
 #if PASSEDROIT
                 //Password = "#69!";
 #endif
-                if(Reference_ViewModel.Header.Message == "Tapez votre code pin")
+                if (Reference_ViewModel.Header.Message == "Tapez votre code pin" || Reference_ViewModel.Header.Message == "Nouveau code pin")
                 {
                     Reference_ViewModel.Header.CurrentUtilisateur.CodePin = Password;
                     var param = $@"<utilisateur>
@@ -41,18 +46,26 @@ namespace Makrisoft.Makfi.ViewModels
                     if (ids.Count == 0) throw new Exception("Rien n'a été sauvgardé ! ");
                     Reference_ViewModel.Header.Message = "";
                 }
-
-                if (Password == Reference_ViewModel.Header.CurrentUtilisateur.CodePin)
+                 
+                if (password == MakfiData.PasswordChange && Reference_ViewModel.Header.CurrentUtilisateur.Statut == RoleEnum.Gouvernante)
                 {
-                    Reference_ViewModel.Main.ViewSelected = ViewEnum.Home;
-                    Reference_ViewModel.Header.CanChangeUtilisateur = false;
-                    Reference_ViewModel.Home.IsAdmin = Reference_ViewModel.Header.CurrentUtilisateur.IsAdmin;
+                    Reference_ViewModel.Header.Message = "Nouveau code pin";
+                    password = "";
                 }
-                Password = "";
-                if (Reference_ViewModel.Header.CurrentHotel != null)
+                else
                 {
-                    Reference_ViewModel.Employe.Load_Employes();
-                    Reference_ViewModel.Chambre.Load_Chambres();
+                    if (Password == Reference_ViewModel.Header.CurrentUtilisateur.CodePin)
+                    {
+                        Reference_ViewModel.Main.ViewSelected = ViewEnum.Home;
+                        Reference_ViewModel.Header.CanChangeUtilisateur = false;
+                        Reference_ViewModel.Home.IsAdmin = Reference_ViewModel.Header.CurrentUtilisateur.IsAdmin;
+                    }
+                    Password = "";
+                    if (Reference_ViewModel.Header.CurrentHotel != null)
+                    {
+                        Reference_ViewModel.Employe.Load_Employes();
+                        Reference_ViewModel.Chambre.Load_Chambres();
+                    }
                 }
             }
         }

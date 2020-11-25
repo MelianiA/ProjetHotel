@@ -8,6 +8,9 @@ USE [master]
 GO
 DROP DATABASE [MakfiBD]
 GO
+
+--SP_WHO 
+--KILL 53
 /*************************************************************************************************/
 -- DATABASE
 /*************************************************************************************************/
@@ -132,21 +135,22 @@ GO
  
 USE [MakfiBD]
 GO
-
  
 CREATE TABLE [dbo].[Intervention](
 	[Id] [uniqueidentifier] NOT NULL,
 	[Commentaire] [nvarchar](max) NULL,
 	[Date1] [date] NOT NULL,
 	[Libelle] [nvarchar](max) NULL,
-	[GroupeChambre] [uniqueidentifier] NULL,
-	[Hotel] [uniqueidentifier] NOT NULL,
+	[Etat] [uniqueidentifier] NOT NULL,
+	[Model] bit NOT NULL,
+ 	[Hotel] [uniqueidentifier] NOT NULL,
  CONSTRAINT [PK_Intervention] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
 ) 
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
+
  USE [MakfiBD]
 GO
 CREATE TABLE [dbo].[InterventionDetail](
@@ -195,7 +199,18 @@ CREATE TABLE [dbo].[Utilisateur](
 ) 
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
- 
+
+ CREATE TABLE [dbo].[Info](
+	[Id] [uniqueidentifier] NOT NULL,
+	[Cle] [nvarchar](max) NOT NULL,
+	[Valeur] [nvarchar](max) NOT NULL,
+ CONSTRAINT [PK_Info] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+
 /**********************************************************************/
 /**********                  Clés                     *****************/
 /**********************************************************************/
@@ -203,6 +218,9 @@ GO
 USE [MakfiBD]
 GO
 ALTER TABLE [dbo].[Chambre] ADD  CONSTRAINT [DF_Chambre_Id]  DEFAULT (newid()) FOR [Id]
+GO
+
+ALTER TABLE [dbo].[Info] ADD  CONSTRAINT [DF_Info_Id]  DEFAULT (newid()) FOR [Id]
 GO
 
 ALTER TABLE [dbo].[Chambre]  WITH CHECK ADD  CONSTRAINT [FK_Chambre_Etat] FOREIGN KEY([Etat])
@@ -283,12 +301,6 @@ GO
 ALTER TABLE [dbo].[Intervention] ADD  CONSTRAINT [DF_Intervention_Id]  DEFAULT (newid()) FOR [Id]
 GO
 
-ALTER TABLE [dbo].[Intervention]  WITH CHECK ADD  CONSTRAINT [FK_Intervention_GroupeChambre] FOREIGN KEY([GroupeChambre])
-REFERENCES [dbo].[GroupeChambre] ([Id])
-GO
-
-ALTER TABLE [dbo].[Intervention] CHECK CONSTRAINT [FK_Intervention_GroupeChambre]
-GO
 
 ALTER TABLE [dbo].[Intervention]  WITH CHECK ADD  CONSTRAINT [FK_Intervention_Hotel] FOREIGN KEY([Hotel])
 REFERENCES [dbo].[Hotel] ([Id])
@@ -358,18 +370,16 @@ GO
 /************************************************************************************************************/
 									/* Insertions importantes */
 /************************************************************************************************************/
-insert into Utilisateur(Nom, CodePin, Statut,[Image])
-values ('MELIANI','1234',1,'meliani.png' )
-insert into Utilisateur(Id, Nom, CodePin, Statut,[Image])
-values ('09CF2DD2-83DD-43B0-82B8-973C027B132F','danielle.lopez','1234',2,'lopez.png' )
-insert into Utilisateur(Nom, CodePin, Statut,[Image])
-values ('Traore','1234',2,'traore.png' )
-insert into Hotel(Nom,Gouvernante, [Image])
-values('Ibis-Style','09CF2DD2-83DD-43B0-82B8-973C027B132F','IbisStyle.png')
-insert into Hotel(Nom, [Image])
-values('Ibis-Budget','IbisBudget.png')
+ 
+ insert into Info(Cle,Valeur)
+ values('PasswordAdmin','#69!')
+  insert into Info(Cle,Valeur)
+ values('Version','0')
+  insert into Info(Cle,Valeur)
+ values('Etat','0')
+  insert into Info(Cle,Valeur)
+ values('PasswordChange','#11#')
 
-select * from Utilisateur
 ----------------------------------------------------
 
 

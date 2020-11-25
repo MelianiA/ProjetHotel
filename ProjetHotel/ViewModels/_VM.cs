@@ -18,6 +18,7 @@ namespace Makrisoft.Makfi.ViewModels
             set
             {
                 nom = value;
+                Image = $"/Makrisoft.Makfi;component/Assets/hotels/{Nom.ToLower()}.png";
                 SaveColor = "Red";
                 OnPropertyChanged("Nom");
             }
@@ -56,7 +57,16 @@ namespace Makrisoft.Makfi.ViewModels
             }
         }
         private string commentaire;
-        public string Image { get; set; }
+        public string Image
+        {
+            get { return image; }
+            set
+            {
+                image = value;
+                OnPropertyChanged("Image");
+            }
+        }
+        private string image;
         public string SaveColor
         {
             get

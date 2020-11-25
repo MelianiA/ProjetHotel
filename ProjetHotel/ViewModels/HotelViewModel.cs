@@ -189,17 +189,14 @@ namespace Makrisoft.Makfi.ViewModels
                 {
                     Id = x.Id,
                     Nom = x.Nom,
-                    Image = x.Image != null ? $"/Makrisoft.Makfi;component/Assets/hotels/{x.Image}" : $"/Makrisoft.Makfi;component/Assets/hotels/hotel.png",
-
+                    Image = $"/Makrisoft.Makfi;component/Assets/hotels/{x.Nom.ToLower()}.png",
                     Gouvernante = Reference_ViewModel.Utilisateur.Utilisateurs
                                 .Where(u => u.Id == x.Gouvernante).SingleOrDefault(),
-
                     Reception = Reference_ViewModel.Utilisateur.Utilisateurs
                                 .Where(u => u.Id == x.Reception).SingleOrDefault(),
-
                     Commentaire = x.Commentaire,
                     SaveColor = "Navy"
-                }).OrderBy(x => x.Nom).ToList());
+                }).OrderBy(x => x.Nom).ToList()); 
             HotelCollectionView = new ListCollectionView(Hotels);
             HotelCollectionView.Refresh();
 

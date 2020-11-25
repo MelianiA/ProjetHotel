@@ -28,6 +28,7 @@ namespace Makrisoft.Makfi.ViewModels
             set
             {
                 currentUtilisateur = value;
+                Message = "";
                 Guid monID = default;
                 if (currentUtilisateur == null) return;
                 monID = currentUtilisateur.Id;
@@ -40,7 +41,7 @@ namespace Makrisoft.Makfi.ViewModels
                       {
                           Id = x.Id,
                           Nom = x.Nom,
-                          Image = $"/Makrisoft.Makfi;component/Assets/hotels/{x.Image}",
+                          Image = $"/Makrisoft.Makfi;component/Assets/hotels/{x.Nom.ToLower()}.png",
                           Gouvernante = Utilisateurs.Where(u => u.Id == x.Gouvernante).SingleOrDefault()
                       }));
                 }
@@ -53,7 +54,7 @@ namespace Makrisoft.Makfi.ViewModels
                        {
                            Id = x.Id,
                            Nom = x.Nom,
-                           Image = $"/Makrisoft.Makfi;component/Assets/hotels/{x.Image}",
+                           Image = $"/Makrisoft.Makfi;component/Assets/hotels/{x.Nom.ToLower()}.png",
                            Gouvernante = Utilisateurs.Where(u => u.Id == x.Gouvernante).SingleOrDefault()
                        }));
                 }
@@ -110,7 +111,7 @@ namespace Makrisoft.Makfi.ViewModels
                 OnPropertyChanged("Message");
             }
         }
-        private string premiereConnexion ;
+        private string premiereConnexion;
 
 
         // Horloge
@@ -171,7 +172,7 @@ namespace Makrisoft.Makfi.ViewModels
         private void OnDeconnectCommand()
         {
             Reference_ViewModel.Main.ViewSelected = ViewEnum.Login;
-            CurrentUtilisateur = Utilisateurs.FirstOrDefault(g => g.Nom == "danielle.lopez");
+            CurrentUtilisateur = Utilisateurs.FirstOrDefault(g => g.Nom == Properties.Settings.Default.Login);
             CanChangeUtilisateur = true;
         }
         #endregion
@@ -200,10 +201,7 @@ namespace Makrisoft.Makfi.ViewModels
                 CurrentUtilisateur = Utilisateurs.FirstOrDefault(g => g.Nom.ToUpper() == Properties.Settings.Default.Login.ToUpper());
 
             if (string.IsNullOrEmpty(currentUtilisateur.CodePin))
-            {
                 Message = "Tapez votre code pin";
-
-            }
 
             // Horloge
             HeaderTimer.Elapsed += (s, e) => HorlogeLoop();

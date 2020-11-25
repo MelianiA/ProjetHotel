@@ -1,0 +1,5 @@
+﻿Gouv : change mot de passe : #11#
+Admin : mdp: #69!
+
+Acces sql:  #!#!
+Redémarrage de l'application nécessaire après création gouvernante.

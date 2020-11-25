@@ -49,6 +49,7 @@
                     <MenuItem Header="..." Foreground="Navy" FontSize="16">
                         <MenuItem Header="Ajouter" Foreground="Navy" Command="{Binding InterventionSelectedAddCommand}"/>
                         <MenuItem Header="Supprimer" Foreground="Navy" Command="{Binding InterventionSelectedDeleteCommand}"/>
+                        <MenuItem Header="Détails" Foreground="Navy" Command="{Binding }"/>
                      </MenuItem>
                 </Menu>
             </Grid>

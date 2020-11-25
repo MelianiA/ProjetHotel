@@ -124,7 +124,7 @@ namespace Makrisoft.Makfi.ViewModels
                 return;
             }
        
-            //Etape01
+            //Etape01 : Insertion dans la table GroupeChambre
             Guid? monID = null;
             if (CurrentGroupeChambre.Id != default) monID = CurrentGroupeChambre.Id;
             var param = $@"
@@ -149,12 +149,13 @@ namespace Makrisoft.Makfi.ViewModels
                         <chambre>{item.IdDelaChambre}</chambre>
                         <groupeChambre>{ids[0].Id}</groupeChambre>    
                       </chambreGroupeChambre>";
-                ids = MakfiData.ChambreGroupeChambre_Save(param);
-                if (ids.Count == 0) throw new Exception("Rien n'a été sauvgardé ! ");
+                var ids2 = MakfiData.ChambreGroupeChambre_Save(param);
+                if (ids2.Count == 0) throw new Exception("Rien n'a été sauvgardé ! ");
             }
             CurrentGroupeChambre.SaveColor = "Navy";
             Load_AllChambres();
             Load_ChambreCurrentGroupe();
+            Reference_ViewModel.Chambre.Load_Chambres();
         }
         private void OnChambreGroupeSelectedAddCommand()
         {

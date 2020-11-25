@@ -16,7 +16,7 @@ select @Id = T.N.value('id[1]', 'uniqueidentifier') from @data.nodes('utilisateu
 Select Id, Nom, CodePin, Statut from Utilisateur where @Id is null Or Id=@Id
 GO
 ---------------------------------------------------------------------------------------------------
-CREATE PROC [dbo].[Hotel_Read](@data xml=NULL)
+create PROC [dbo].[Hotel_Read](@data xml=NULL)
 AS
 DECLARE @id uniqueidentifier=NULL
 DECLARE @gouvernante uniqueidentifier=NULL
@@ -27,7 +27,7 @@ select
 from 
 	@data.nodes('hotel') as T(N)
 
-Select Id, Nom, [Reception], [Gouvernante] ,[Commentaire],[Image] 
+Select Id, Nom, [Reception], [Gouvernante] ,[Commentaire] 
 from Hotel 
 where (@id is null Or Id=@id) and (@gouvernante is null Or gouvernante=@gouvernante)
 GO
@@ -117,17 +117,17 @@ GO
 -- save
 -- *************************************************************************************************
  
-CREATE PROC [dbo].[Utilisateur_Save](@data xml=NULL)
+create PROC [dbo].[Utilisateur_Save](@data xml=NULL)
 AS
 DECLARE @IDs TABLE(ID uniqueidentifier);
 DECLARE @message nvarchar(MAX)
 DECLARE @Id uniqueidentifier
 
 select 
-		T.N.value('id[1]', 'uniqueidentifier') id, 
+		T.N.value('(id/text())[1]', 'uniqueidentifier') id, 
 		T.N.value('nom[1]', 'nvarchar(MAX)') Nom, 
 		T.N.value('codePin[1]', 'nvarchar(MAX)') CodePin,
-		T.N.value('statut[1]', 'nvarchar(MAX)') Statut
+		T.N.value('statut[1]', 'tinyint') Statut
 into #_utilisateur	
 from @data.nodes('utilisateur') as T(N)
 
@@ -158,10 +158,9 @@ select
         Nom, CodePin, Statut 
 from #_utilisateur where Id is null
 )
-IF @Id is null select @id=ID from @IDs
 select Id from @IDs
 GO
-
+ 
 ----------------------------------------------------------------------------------------------------------
 create PROC [dbo].[Employe_Save](@data xml=NULL)
 AS
@@ -332,7 +331,7 @@ if @id is null insert GroupeChambre(Nom, Commentaire )
 select @id=ID from @IDs
 select Id from @IDs
 GO
-
+ 
  ----------------------------------------------------------------------------------------------------------
 create PROC [dbo].[ChambreGroupeChambre_Save](@data xml=NULL)
  as
@@ -444,7 +443,7 @@ select @id=ID from @IDs
 select Id from @IDs
 GO
  ----------------------------------------------------------------------------------------------------------
-alter PROC [dbo].[Etat_Save](@data xml=NULL)
+create PROC [dbo].[Etat_Save](@data xml=NULL)
  AS
 	DECLARE @IDs TABLE(ID uniqueidentifier);
 -- PARTIE recup XML :
@@ -462,19 +461,17 @@ insert Etat(Libelle, Icone, Couleur, Entite )
 select Id from @IDs
 GO
 
-exec Etat_Save ' <etats>
-                    <etat>
-                        <libelle>Aucune information !</libelle>  <icone>TimelineHelp</icone>             <couleur>gray</couleur>            <entite>3</entite> 
-                        <libelle>Retardée</libelle>              <icone>TableLock</icone>                <couleur>orange</couleur>          <entite>3</entite> 
-                        <libelle>Fait</libelle>                  <icone>TimelineHelp</icone>             <couleur>green</couleur>           <entite>3</entite> 
-                        <libelle>Pas encore fait</libelle>       <icone>TimelineHelp</icone>             <couleur>red</couleur>             <entite>3</entite> 
-                        <libelle>Disponible</libelle>            <icone>FaceWomanShimmer</icone>         <couleur>green</couleur>           <entite>1</entite> 
-                        <libelle>Arrêt maladie</libelle>         <icone>FaceWomanShimmer</icone>         <couleur>red</couleur>             <entite>1</entite> 
-                        <libelle>Non disponible</libelle>        <icone>FaceWomanShimmer</icone>         <couleur>black</couleur>           <entite>1</entite> 
-                        <libelle>Fait</libelle>                  <icone>TableLock</icone>                <couleur>green</couleur>           <entite>2</entite> 
-                        <libelle>Pas encore fait</libelle>       <icone>TableLock</icone>                <couleur>Red</couleur>             <entite>2</entite> 
-                    </etat>
-                </etats>'
+--exec Etat_Save '  <etats>
+--                         <etat><libelle>Fait</libelle>                  <icone>TimelineHelp</icone>             <couleur>gray</couleur>            <entite>3</entite> </etat>
+--                         <etat> <libelle>En cours</libelle>             <icone>TableLock</icone>                <couleur>orange</couleur>          <entite>3</entite> </etat>
+--                         <etat><libelle>None</libelle>                  <icone>TimelineHelp</icone>             <couleur>green</couleur>           <entite>3</entite> </etat>
+--                         <etat> <libelle>Incident</libelle>             <icone>TimelineHelp</icone>             <couleur>red</couleur>             <entite>3</entite> </etat>
+--                         <etat><libelle>Disponible</libelle>            <icone>FaceWomanShimmer</icone>         <couleur>green</couleur>           <entite>1</entite> </etat>
+--                         <etat><libelle>Arrêt maladie</libelle>         <icone>FaceWomanShimmer</icone>         <couleur>red</couleur>             <entite>1</entite> </etat>
+--                         <etat><libelle>Non disponible</libelle>        <icone>FaceWomanShimmer</icone>         <couleur>black</couleur>           <entite>1</entite> </etat>
+--                         <etat><libelle>Fait</libelle>                  <icone>TableLock</icone>                <couleur>green</couleur>           <entite>2</entite> </etat>
+--                         <etat><libelle>Pas encore fait</libelle>       <icone>TableLock</icone>                <couleur>Red</couleur>             <entite>2</entite> </etat>
+--                </etats>'
 
  ----------------------------------------------------------------------------------------------------------
 Create PROC [dbo].[Info_Save](@data xml=NULL)

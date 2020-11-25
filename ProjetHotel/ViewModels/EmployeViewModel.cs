@@ -178,6 +178,7 @@ namespace Makrisoft.Makfi.ViewModels
                     </employe>";
             var ids = MakfiData.Employe_Save(param);
             if (ids.Count == 0) throw new Exception("Rien n'a été sauvgardé ! ");
+            CurrentEmploye.Id = ids[0].Id;
             /* --------------------------------------*/
             if(monID == default)
             {
@@ -188,6 +189,7 @@ namespace Makrisoft.Makfi.ViewModels
                     </hotelEmploye>";
                 var ids2 = MakfiData.HotelEmploye_Save(param);
                 if (ids2.Count == 0) throw new Exception("Rien n'a été sauvgardé ! ");
+
             }
             CurrentEmploye.SaveColor = "Navy";
             EmployeCollectionView.Refresh();
@@ -195,7 +197,7 @@ namespace Makrisoft.Makfi.ViewModels
         }
         private void OnAddCommand()
         {
-            CurrentEmploye = new Employe_VM { Nom = "(A définir)" };
+            CurrentEmploye = new Employe_VM { Nom = "(A définir)" , Etat= EtatEmploye.Where(e=>e.Libelle== "Non disponible").SingleOrDefault() };
             EmployesCurrentHotel.Add(CurrentEmploye);
             EmployeCollectionView.Refresh();
         }

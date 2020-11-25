@@ -197,12 +197,13 @@ namespace Makrisoft.Makfi.ViewModels
                      </chambre>";
             var ids = MakfiData.Chambre_Save(param);
             if (ids.Count == 0) throw new Exception("Rien n'a été sauvgardé ! ");
+            CurrentChambreGChambre.Id = ids[0].Id;
             CurrentChambreGChambre.SaveColor = "Navy";
             ChambreCollectionView.Refresh();
         }
         private void OnAddCommand()
         {
-            CurrentChambreGChambre = new ChambreGroupeChambre_VM { Nom = "( A définir !)" };
+            CurrentChambreGChambre = new ChambreGroupeChambre_VM { Nom = "( A définir !)", Etat = EtatChambre.Where(e => e.Libelle == "Pas encore fait").SingleOrDefault() };
             ChambreGroupeChambre.Add(CurrentChambreGChambre);
             ChambreCollectionView.Refresh();
         }
@@ -324,6 +325,7 @@ namespace Makrisoft.Makfi.ViewModels
             CurrentFilterEtat = null;
             CurrentFilterGroupe = null;
         }
+
         private void Load_Etat()
         {
             EtatList = new ObservableCollection<Etat_VM>(

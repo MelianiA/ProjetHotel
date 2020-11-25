@@ -102,7 +102,7 @@
                     <!--Erreur-->
                     <ScrollViewer Grid.Row="2" Margin="20,0,20,0" VerticalScrollBarVisibility="Auto">
                         <TextBlock Text="{Binding Message}" Foreground="Red" FontSize="18"  
-                               TextAlignment="Center" TextWrapping="Wrap" FontWeight="ExtraBold">
+                               TextAlignment="Center" TextWrapping="Wrap" FontWeight="ExtraBold" VerticalAlignment="Bottom">
                          
                         </TextBlock>
                     </ScrollViewer>
@@ -114,10 +114,10 @@
                     <ComboBox  DockPanel.Dock="Bottom" HorizontalAlignment="Center" FontSize="20"  
                                ItemsSource="{Binding Hotels}" 
                                DisplayMemberPath="Nom"
-                               SelectedItem="{Binding CurrentHotel}"  
+                               SelectedItem="{Binding CurrentHotel, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"  
                                IsEnabled="{Binding CanChangeUtilisateur}">
                     </ComboBox>
-                    <Image Source="{Binding CurrentHotel.Image}" Width="130" Height="100"/>
+                    <Image Source="{Binding CurrentHotel.Image,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Width="130" Height="100"/>
                 </DockPanel>
             </Border>
         </Grid>
