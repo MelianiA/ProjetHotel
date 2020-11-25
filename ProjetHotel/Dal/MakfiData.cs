@@ -380,7 +380,7 @@ namespace Makrisoft.Makfi.Dal
                                         e.Etat = Reader["Etat"] as Guid?;
                                         e.Date1 = (DateTime)Reader["Date1"];
                                         e.Commentaire = Reader["Commentaire"] as string;
-                                        e.GroupeChambre = Reader["GroupeChambre"] as Guid?;
+                                        e.Model = (bool)Reader["Model"];
                                     },
                                     spParam
                                     );

@@ -15,6 +15,7 @@ namespace Makrisoft.Makfi.Models
         public string Commentaire;
         public Guid? GroupeChambre;
 
+        public bool Model;
 
 
     }

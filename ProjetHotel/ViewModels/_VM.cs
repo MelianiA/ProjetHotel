@@ -514,17 +514,17 @@ namespace Makrisoft.Makfi.ViewModels
             }
         }
         private string commentaire;
-        public GroupeChambre_VM GroupeChambre
+        public bool Model
         {
-            get { return groupeChambre; }
+            get { return model; }
             set
             {
-                groupeChambre = value;
+                model = value;
                 SaveColor = "Red";
-                OnPropertyChanged("GroupeChambre");
+                OnPropertyChanged("Model");
             }
         }
-        private GroupeChambre_VM groupeChambre;
+        private bool model;
 
         public string SaveColor
         {

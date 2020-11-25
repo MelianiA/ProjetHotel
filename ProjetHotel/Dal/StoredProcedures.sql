@@ -103,7 +103,7 @@ CREATE PROC [dbo].[Intervention_Read](@data xml=NULL)
 AS
 DECLARE @Hotel uniqueidentifier=NULL
 select @Hotel = T.N.value('hotel[1]', 'uniqueidentifier') from @data.nodes('intervention') as T(N)
- select i.Id,Libelle, Etat,convert(date, Date1, 120) as Date1 , i.Commentaire, i.GroupeChambre from Intervention i
+ select i.Id,Libelle, i.Etat,convert(date, Date1, 120) as Date1 , i.Commentaire, Model from Intervention i
  left join InterventionDetail itd on i.Id = itd.Intervention 
  where i.Hotel=@Hotel
  GO
@@ -375,7 +375,7 @@ select
  		T.N.value('(commentaire/text())[1]', 'nvarchar(MAX)') Commentaire,
   		T.N.value('(hotel/text())[1]', 'uniqueidentifier') Hotel,
   		T.N.value('(date1/text())[1]', 'date') Date1,
-  		T.N.value('(groupeChambre/text())[1]', 'uniqueidentifier') GroupeChambre
+  		T.N.value('(model/text())[1]', 'bit') Model
 		into #_intervention
 from @data.nodes('intervention') as T(N)
 -- PARTIE2
@@ -383,9 +383,9 @@ select @id=Id  from #_intervention
 -- Update  
 BEGIN TRY
 	 update Intervention set
-			Libelle= t.Libelle, Commentaire=t.Commentaire, Date1=t.Date1,GroupeChambre=t.GroupeChambre
+			Libelle= t.Libelle, Commentaire=t.Commentaire, Date1=t.Date1,Model=t.Model
 					output inserted.Id into @IDs(ID)
-			from (select Id, Libelle, Commentaire, Date1, GroupeChambre from #_intervention) t
+			from (select Id, Libelle, Commentaire, Date1, Model from #_intervention) t
 			where Intervention.Id=t.Id
 END TRY
 BEGIN CATCH
@@ -394,9 +394,9 @@ BEGIN CATCH
        RETURN;
 END CATCH
 -- Insert
-if @id is null insert Intervention(Libelle, Commentaire, Date1, GroupeChambre, Hotel )
+if @id is null insert Intervention(Libelle, Commentaire, Date1, Model, Hotel )
 		output inserted.Id into @IDs(ID)
-	(select Libelle, Commentaire, Date1, GroupeChambre, Hotel from #_intervention  )
+	(select Libelle, Commentaire, Date1, Model, Hotel from #_intervention  )
 select @id=ID from @IDs
 select Id from @IDs
 GO
@@ -646,8 +646,6 @@ create PROC [dbo].[GroupeChambre_CanDelete](@data xml=NULL)
 AS
 DECLARE @id uniqueidentifier=NULL
 select @id=T.N.value('id[1]', 'uniqueidentifier') from @data.nodes('groupeChambre') as T(N)
-select 'Intervention' tableName, COUNT(*) n from Intervention where GroupeChambre=@id  
-UNION ALL
 select 'ChambreGroupeChambre' tableName, COUNT(*) n from ChambreGroupeChambre where GroupeChambre=@id  
 GO
 -----------------------------------------------------------------------------------------------------

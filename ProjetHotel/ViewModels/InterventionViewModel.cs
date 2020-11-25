@@ -165,15 +165,14 @@ namespace Makrisoft.Makfi.ViewModels
             }
             Guid? monID = null;
             if (CurrentIntervention.Id != default) monID = CurrentIntervention.Id;
-            var gc = CurrentIntervention.GroupeChambre == null ? null : CurrentIntervention.GroupeChambre.Id;
-            var param = $@"
+             var param = $@"
                     <intervention>
                         <id>{monID}</id>
                         <nom>{CurrentIntervention.Libelle}</nom>
                         <commentaire>{CurrentIntervention.Commentaire}</commentaire>    
 						<hotel>{Reference_ViewModel.Header.CurrentHotel.Id}</hotel>
                         <date1>{CurrentIntervention.Date1}</date1>    
-                        <groupeChambre>{gc}</groupeChambre>    
+                        <model>{currentIntervention.Model}</model>    
                      </intervention>";
             var ids = MakfiData.Intervention_Save(param);
             if (ids.Count == 0) throw new Exception("Rien n'a été sauvgardé ! ");
@@ -191,7 +190,8 @@ namespace Makrisoft.Makfi.ViewModels
             {
                 Libelle = "(A définir ! )",
                 Date1 = DateTime.Now,
-                Etat = EtatIntervention.Where(e=>e.Libelle== "Aucune information !").SingleOrDefault()
+                Etat = EtatIntervention.Where(e => e.Libelle == "Aucune information !").SingleOrDefault(),
+                Model = true
             };
             Interventions.Add(CurrentIntervention);
         }
@@ -302,7 +302,7 @@ namespace Makrisoft.Makfi.ViewModels
                    Etat = x.Etat == null ? EtatIntervention.Where(e => e.Libelle == "Aucune information !").SingleOrDefault() : EtatIntervention.Where(e => e.Id == x.Etat).SingleOrDefault(),
                    Date1 = x.Date1,
                    Commentaire = x.Commentaire,
-                   GroupeChambre = Reference_ViewModel.ChambreGroupe.GroupeChambres.Where(g => g.Id == x.GroupeChambre).SingleOrDefault(),
+                   Model =x.Model,
                    SaveColor = "Navy"
                }).OrderBy(x => x.Libelle).ToList());
             InterventionCollectionView = new ListCollectionView(Interventions);

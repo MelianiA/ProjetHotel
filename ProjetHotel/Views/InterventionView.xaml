@@ -7,6 +7,9 @@
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="VisibleIfTrueConverter" />
+    </UserControl.Resources>
     <Grid>
         <Grid.Resources>
             <conv:InterventionEtatIconeConverter x:Key="InterventionEtatIconeConverterKey"/>
@@ -127,10 +130,11 @@
                         </DataGridTemplateColumn>
                         <DataGridTextColumn Binding="{Binding Etat.Libelle}" Width="auto" IsReadOnly="true"/>
                         <DataGridTextColumn Binding="{Binding Date1, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged, StringFormat=dd/MM/yyy}" IsReadOnly="true" Width="auto"/>
-                        <DataGridTemplateColumn Width="*">
+                        <DataGridTemplateColumn Width="auto">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
-                                    <TextBlock Text="{Binding GroupeChambre.Nom}" TextWrapping="Wrap"/>
+                                    <TextBlock Text="Model" TextWrapping="Wrap" Foreground="BlueViolet" FontWeight="DemiBold" 
+                                               Visibility="{Binding Model, Converter={StaticResource VisibleIfTrueConverter}}"/>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
@@ -141,6 +145,7 @@
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
+                    
 
 
                     </DataGrid.Columns>
@@ -163,23 +168,25 @@
                             SelectedDate="{Binding CurrentIntervention.Date1, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" FontSize="16">
                     
                 </DatePicker>
-                <TextBlock Text="Groupe" Margin="0,15,0,0"/>
-                <ComboBox FontSize="16" Margin="0 20 0 0"
-                    ItemsSource="{Binding GroupeChambreCollectionView, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
-                    SelectedItem="{Binding CurrentIntervention.GroupeChambre}"  >
+                <TextBlock Text="Etat" Margin="0,30,0,0"/>
+                <ComboBox ItemsSource="{Binding EtatInterventionCollectionView, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                          SelectedItem="{Binding CurrentIntervention.Etat, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" FontSize="16">
                     <ComboBox.ItemTemplate>
                         <DataTemplate>
                             <StackPanel Orientation="Horizontal">
-                                 <TextBlock Text="{Binding Nom}" Margin="5,0,0,0"/>
+                                <materialDesign:PackIcon Height="20" Width="Auto" Kind="{Binding Icone}" Foreground="{Binding Couleur}" Margin="0,0,10,0"/>
+                                <TextBlock Text="{Binding Libelle}" TextWrapping="Wrap"/>
                             </StackPanel>
                         </DataTemplate>
                     </ComboBox.ItemTemplate>
                 </ComboBox>
 
-                <!--<StackPanel Orientation="Horizontal" Margin="0,15,0,0">
-                    <CheckBox FontSize="16" IsChecked="{Binding CurrentIntervention.IsModele}"/>
-                    <TextBlock Text="Utilisé comme modèle" Margin="10,0,0,0" FontSize="16"/>
-                </StackPanel>-->
+                <StackPanel Orientation="Horizontal" Margin="0,20,0,0">
+                    <CheckBox  IsChecked="{Binding CurrentIntervention.Model}" />
+                    <TextBlock Text="Modèl" Margin="10,0,0,0" FontSize="16" />
+                </StackPanel>
+
+       
                  
             </StackPanel>
         </Border>
