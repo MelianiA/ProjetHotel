@@ -50,8 +50,8 @@ namespace Makrisoft.Makfi.ViewModels
 
         private void OnChangeViewCommand(object view)
         {
-            if ((ViewEnum)view == ViewEnum.Intervention)
-                Reference_ViewModel.Intervention.Load_Intervention();
+            //if ((ViewEnum)view == ViewEnum.Intervention)
+            //    Reference_ViewModel.Intervention.Load_Intervention();
             Reference_ViewModel.Main.ViewSelected = (ViewEnum)view;
             
         }

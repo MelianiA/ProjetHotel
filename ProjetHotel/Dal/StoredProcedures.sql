@@ -371,9 +371,10 @@ GO
 -- PARTIE recup XML :
 select 
  		T.N.value('(id/text())[1]', 'uniqueidentifier') Id, 
-		T.N.value('(nom/text())[1]', 'nvarchar(MAX)') Libelle, 
+		T.N.value('(libelle/text())[1]', 'nvarchar(MAX)') Libelle, 
  		T.N.value('(commentaire/text())[1]', 'nvarchar(MAX)') Commentaire,
   		T.N.value('(hotel/text())[1]', 'uniqueidentifier') Hotel,
+		T.N.value('(etat/text())[1]', 'uniqueidentifier') Etat,
   		T.N.value('(date1/text())[1]', 'date') Date1,
   		T.N.value('(model/text())[1]', 'bit') Model
 		into #_intervention
@@ -383,9 +384,9 @@ select @id=Id  from #_intervention
 -- Update  
 BEGIN TRY
 	 update Intervention set
-			Libelle= t.Libelle, Commentaire=t.Commentaire, Date1=t.Date1,Model=t.Model
+			Libelle= t.Libelle, Commentaire=t.Commentaire, Date1=t.Date1,Model=t.Model,Etat=t.Etat
 					output inserted.Id into @IDs(ID)
-			from (select Id, Libelle, Commentaire, Date1, Model from #_intervention) t
+			from (select Id, Libelle, Commentaire, Date1, Model, Etat from #_intervention where Id is not null) t
 			where Intervention.Id=t.Id
 END TRY
 BEGIN CATCH
@@ -394,12 +395,24 @@ BEGIN CATCH
        RETURN;
 END CATCH
 -- Insert
-if @id is null insert Intervention(Libelle, Commentaire, Date1, Model, Hotel )
+if @id is null insert Intervention(Libelle, Commentaire, Date1, Model, Hotel,Etat )
 		output inserted.Id into @IDs(ID)
-	(select Libelle, Commentaire, Date1, Model, Hotel from #_intervention  )
+	(select Libelle, Commentaire, Date1, Model, Hotel,Etat from #_intervention  )
 select @id=ID from @IDs
 select Id from @IDs
 GO
+
+ exec [Intervention_Save] '<intervention>
+								<id></id>
+								<libelle>(A définir ! )</libelle>
+								<commentaire></commentaire>    
+								<hotel>96176477-13a9-46b9-b729-197741a53cc7</hotel>
+								<date1>25/11/2020 19:32:58</date1>    
+								<model>True</model>   
+								<etat>b12f9d9c-c0b8-4509-9234-a543c1b777e8</etat> 
+						 </intervention>' 
+	 select * from Intervention
+
  ----------------------------------------------------------------------------------------------------------
 Create PROC [dbo].[Hotel_Save](@data xml=NULL)
  AS

@@ -10,7 +10,7 @@ namespace Makrisoft.Makfi.Models
     {
         public Guid Id;
         public string Libelle;
-        public Guid? Etat;
+        public Guid Etat;
         public DateTime Date1;
         public string Commentaire;
         public Guid? GroupeChambre;

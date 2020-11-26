@@ -47,12 +47,12 @@
                     <ColumnDefinition Width="*"></ColumnDefinition>
                     <ColumnDefinition Width="Auto"></ColumnDefinition>
                 </Grid.ColumnDefinitions>
-                <TextBlock FontSize="20" FontWeight="Normal" Foreground="Navy" Text="Liste des interventions " VerticalAlignment="Bottom"/>
+                <TextBlock FontSize="20" FontWeight="Normal" Foreground="Navy" Text="Interventions " VerticalAlignment="Bottom"/>
                 <Menu Grid.Column="1" Cursor="Hand" Margin="0">
                     <MenuItem Header="..." Foreground="Navy" FontSize="16">
                         <MenuItem Header="Ajouter" Foreground="Navy" Command="{Binding InterventionSelectedAddCommand}"/>
                         <MenuItem Header="Supprimer" Foreground="Navy" Command="{Binding InterventionSelectedDeleteCommand}"/>
-                        <MenuItem Header="Détails" Foreground="Navy" Command="{Binding }"/>
+                        <MenuItem Header="Détails" Foreground="Navy" Command="{Binding InterventionDetailChange}"/>
                      </MenuItem>
                 </Menu>
             </Grid>
@@ -169,7 +169,7 @@
                     
                 </DatePicker>
                 <TextBlock Text="Etat" Margin="0,30,0,0"/>
-                <ComboBox ItemsSource="{Binding EtatInterventionCollectionView, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                <ComboBox ItemsSource="{Binding EtatIntervention, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                           SelectedItem="{Binding CurrentIntervention.Etat, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" FontSize="16">
                     <ComboBox.ItemTemplate>
                         <DataTemplate>

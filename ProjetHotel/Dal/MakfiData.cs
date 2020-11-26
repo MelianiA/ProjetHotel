@@ -368,7 +368,7 @@ namespace Makrisoft.Makfi.Dal
         }
 
 
-        internal static IEnumerable<Intervention> Interventions_Read(string spParam)
+        internal static IEnumerable<Intervention> Intervention_Read(string spParam)
         {
             return ReadAll<Intervention>
                                     (
@@ -377,7 +377,7 @@ namespace Makrisoft.Makfi.Dal
                                     {
                                         e.Id = (Guid)Reader["Id"];
                                         e.Libelle = Reader["Libelle"] as string;
-                                        e.Etat = Reader["Etat"] as Guid?;
+                                        e.Etat = (Guid)Reader["Etat"];
                                         e.Date1 = (DateTime)Reader["Date1"];
                                         e.Commentaire = Reader["Commentaire"] as string;
                                         e.Model = (bool)Reader["Model"];

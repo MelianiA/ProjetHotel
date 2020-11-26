@@ -22,7 +22,7 @@ namespace Makrisoft.Makfi.ViewModels
             InterventionSelectedAddCommand = new RelayCommand(p => OnAddCommand(), p => true);
             InterventionSelectedDeleteCommand = new RelayCommand(p => OnDeleteCommand(), p => OnCanExecuteDeleteCommand());
             FilterClearCommand = new RelayCommand(p => OnFilterEtatClearCommand(), p => OnCanExecuteFilterEtatClearCommand());
-
+            InterventionDetailChange = new RelayCommand(p => OnInterventionDetailChange(), p => OnCanExecuteInterventionDetailChange());
             // ListeView
             if (Reference_ViewModel.Header.CurrentHotel != null)
             {
@@ -32,6 +32,18 @@ namespace Makrisoft.Makfi.ViewModels
             }
             //
             GroupeChambreCollectionView = Reference_ViewModel.ChambreGroupe.GroupeChambreCollectionView;
+        }
+
+        private bool OnCanExecuteInterventionDetailChange()
+        {
+            if (CurrentIntervention != null) return true;
+            else return false;
+        }
+
+        private void OnInterventionDetailChange()
+        {
+            Reference_ViewModel.Main.ViewSelected = ViewEnum.InterventionDetail;
+            RevienIci = true;
         }
 
         #endregion
@@ -140,6 +152,8 @@ namespace Makrisoft.Makfi.ViewModels
         }
         private ListCollectionView groupeChambreCollectionView;
 
+        //Retour à cette page; 
+        public bool RevienIci = false;
         #endregion
 
         #region Commands
@@ -148,6 +162,7 @@ namespace Makrisoft.Makfi.ViewModels
         public ICommand InterventionSelectedAddCommand { get; set; }
         public ICommand InterventionSelectedDeleteCommand { get; set; }
         public ICommand FilterClearCommand { get; set; }
+        public ICommand InterventionDetailChange { get; set; }
 
         // Méthodes OnCommand
         private void OnSaveCommand()
@@ -165,14 +180,17 @@ namespace Makrisoft.Makfi.ViewModels
             }
             Guid? monID = null;
             if (CurrentIntervention.Id != default) monID = CurrentIntervention.Id;
-             var param = $@"
+            string libelle = null;
+            if (!CurrentIntervention.Libelle.Contains("Intervention du")) libelle = CurrentIntervention.Libelle;
+            var param = $@"
                     <intervention>
                         <id>{monID}</id>
-                        <nom>{CurrentIntervention.Libelle}</nom>
+                        <libelle>{libelle}</libelle>
                         <commentaire>{CurrentIntervention.Commentaire}</commentaire>    
 						<hotel>{Reference_ViewModel.Header.CurrentHotel.Id}</hotel>
                         <date1>{CurrentIntervention.Date1}</date1>    
-                        <model>{currentIntervention.Model}</model>    
+                        <model>{currentIntervention.Model}</model>   
+                        <etat>{currentIntervention.Etat.Id}</etat> 
                      </intervention>";
             var ids = MakfiData.Intervention_Save(param);
             if (ids.Count == 0) throw new Exception("Rien n'a été sauvgardé ! ");
@@ -188,9 +206,8 @@ namespace Makrisoft.Makfi.ViewModels
         {
             CurrentIntervention = new Intervention_VM
             {
-                Libelle = "(A définir ! )",
                 Date1 = DateTime.Now,
-                Etat = EtatIntervention.Where(e => e.Libelle == "Aucune information !").SingleOrDefault(),
+                Etat = EtatIntervention.Where(e => e.Libelle == "None").SingleOrDefault(),
                 Model = true
             };
             Interventions.Add(CurrentIntervention);
@@ -235,37 +252,37 @@ namespace Makrisoft.Makfi.ViewModels
         {
             if (CurrentFilterDateDebutSelected != null && CurrentFilterDateFinSelected != null && CurrentFilterEtat != null)
             {
-                if (item is Intervention_VM intervention  )
-                     return intervention.Date1 >= CurrentFilterDateDebutSelected && 
-                        intervention.Date1 <=CurrentFilterDateFinSelected &&
-                        EtatIntervention.Any(e => intervention.Etat.Libelle == CurrentFilterEtat.Libelle);
+                if (item is Intervention_VM intervention)
+                    return intervention.Date1 >= CurrentFilterDateDebutSelected &&
+                       intervention.Date1 <= CurrentFilterDateFinSelected &&
+                       EtatIntervention.Any(e => intervention.Etat.Libelle == CurrentFilterEtat.Libelle);
             }
             if (CurrentFilterDateDebutSelected != null && CurrentFilterDateFinSelected != null)
             {
-                if (item is Intervention_VM intervention  )
+                if (item is Intervention_VM intervention)
                     return intervention.Date1 >= CurrentFilterDateDebutSelected && intervention.Date1 <= CurrentFilterDateFinSelected;
                 return false;
             }
             if (CurrentFilterDateDebutSelected != null && CurrentFilterEtat != null)
             {
-                if (item is Intervention_VM intervention )
-                    return intervention.Date1 >= CurrentFilterDateDebutSelected  &&
+                if (item is Intervention_VM intervention)
+                    return intervention.Date1 >= CurrentFilterDateDebutSelected &&
                        EtatIntervention.Any(e => intervention.Etat.Libelle == CurrentFilterEtat.Libelle);
             }
             if (CurrentFilterDateFinSelected != null && CurrentFilterEtat != null)
             {
-                if (item is Intervention_VM intervention  )
+                if (item is Intervention_VM intervention)
                     return intervention.Date1 <= CurrentFilterDateFinSelected &&
                        EtatIntervention.Any(e => intervention.Etat.Libelle == CurrentFilterEtat.Libelle);
             }
-            if (CurrentFilterDateFinSelected != null  )
+            if (CurrentFilterDateFinSelected != null)
             {
-                if (item is Intervention_VM intervention )
+                if (item is Intervention_VM intervention)
                     return intervention.Date1 <= CurrentFilterDateFinSelected;
             }
             if (CurrentFilterDateDebutSelected != null)
             {
-                if (item is Intervention_VM intervention  )
+                if (item is Intervention_VM intervention)
                     return intervention.Date1 >= CurrentFilterDateDebutSelected;
             }
             if (CurrentFilterEtat != null)
@@ -285,7 +302,7 @@ namespace Makrisoft.Makfi.ViewModels
         {
             if (Reference_ViewModel.Header.CurrentHotel == null)
             {
-                if(Interventions!= null) Interventions.Clear();
+                if (Interventions != null) Interventions.Clear();
                 MessageBox.Show($"Aucun hôtel ne vous a été assigné  ", "Impossible d'enregistrer  !");
                 return;
             }
@@ -294,19 +311,20 @@ namespace Makrisoft.Makfi.ViewModels
                 monId = Reference_ViewModel.Header.CurrentHotel.Id;
 
             Interventions = new ObservableCollection<Intervention_VM>(
-               MakfiData.Interventions_Read($"<intervention><hotel>{monId}</hotel></intervention>")
+               MakfiData.Intervention_Read($"<intervention><hotel>{monId}</hotel></intervention>")
                .Select(x => new Intervention_VM
                {
                    Id = x.Id,
-                   Libelle = x.Libelle,
-                   Etat = x.Etat == null ? EtatIntervention.Where(e => e.Libelle == "Aucune information !").SingleOrDefault() : EtatIntervention.Where(e => e.Id == x.Etat).SingleOrDefault(),
+                   Libelle = "Intervention du " + x.Date1,
+                   Etat = EtatIntervention.Where(e => e.Id == x.Etat).SingleOrDefault(),
                    Date1 = x.Date1,
                    Commentaire = x.Commentaire,
-                   Model =x.Model,
+                   Model = x.Model,
                    SaveColor = "Navy"
                }).OrderBy(x => x.Libelle).ToList());
             InterventionCollectionView = new ListCollectionView(Interventions);
             InterventionCollectionView.Refresh();
+            CurrentIntervention = Interventions[0];
             CurrentFilterEtat = null;
             CurrentFilterDateDebutSelected = null;
             CurrentFilterDateFinSelected = null;

@@ -497,6 +497,7 @@ namespace Makrisoft.Makfi.ViewModels
             set
             {
                 date1 = value;
+                Libelle = "Intervention du " + date1.ToShortDateString();
                 SaveColor = "Red";
                 OnPropertyChanged("Date1");
             }
