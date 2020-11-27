@@ -103,11 +103,26 @@ CREATE PROC [dbo].[Intervention_Read](@data xml=NULL)
 AS
 DECLARE @Hotel uniqueidentifier=NULL
 select @Hotel = T.N.value('hotel[1]', 'uniqueidentifier') from @data.nodes('intervention') as T(N)
- select i.Id,Libelle, i.Etat,convert(date, Date1, 120) as Date1 , i.Commentaire, Model from Intervention i
- left join InterventionDetail itd on i.Id = itd.Intervention 
- where i.Hotel=@Hotel
+ select Id,Libelle,Etat,convert(date, Date1, 120) as Date1 , Commentaire, Model from Intervention i
+  where i.Hotel=@Hotel
  GO
- ---------------------------------------------------------------------------------------------------
+
+--exec Intervention_Read '<intervention><hotel>96176477-13a9-46b9-b729-197741a53cc7</hotel></intervention>'
+--select  * from Etat
+--select * from Intervention
+
+  ---------------------------------------------------------------------------------------------------
+CREATE PROC [dbo].[InterventionDetail_Read](@data xml=NULL)
+AS
+DECLARE @Intervention uniqueidentifier=NULL
+select @Intervention = T.N.value('intervention[1]', 'uniqueidentifier') from @data.nodes('interventionDetail') as T(N)
+
+select Id,EmployeAffecte, ChambreAffectee,Etat, Commentaire
+from InterventionDetail  
+where Intervention=@Intervention
+GO
+  ---------------------------------------------------------------------------------------------------
+
 CREATE PROC [dbo].[Info_Read](@data xml=NULL)
 AS
 select Id,Cle, Valeur from Info
@@ -402,16 +417,16 @@ select @id=ID from @IDs
 select Id from @IDs
 GO
 
- exec [Intervention_Save] '<intervention>
-								<id></id>
-								<libelle>(A définir ! )</libelle>
-								<commentaire></commentaire>    
-								<hotel>96176477-13a9-46b9-b729-197741a53cc7</hotel>
-								<date1>25/11/2020 19:32:58</date1>    
-								<model>True</model>   
-								<etat>b12f9d9c-c0b8-4509-9234-a543c1b777e8</etat> 
-						 </intervention>' 
-	 select * from Intervention
+ --exec [Intervention_Save] '<intervention>
+	--							<id></id>
+	--							<libelle>(A définir ! )</libelle>
+	--							<commentaire></commentaire>    
+	--							<hotel>96176477-13a9-46b9-b729-197741a53cc7</hotel>
+	--							<date1>25/11/2020 19:32:58</date1>    
+	--							<model>True</model>   
+	--							<etat>b12f9d9c-c0b8-4509-9234-a543c1b777e8</etat> 
+	--					 </intervention>' 
+	-- select * from Intervention
 
  ----------------------------------------------------------------------------------------------------------
 Create PROC [dbo].[Hotel_Save](@data xml=NULL)

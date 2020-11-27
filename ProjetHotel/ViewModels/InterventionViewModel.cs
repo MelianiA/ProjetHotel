@@ -42,6 +42,11 @@ namespace Makrisoft.Makfi.ViewModels
 
         private void OnInterventionDetailChange()
         {
+            if (Reference_ViewModel.InterventionDetail != null)
+            {
+                Reference_ViewModel.InterventionDetail.Load_InterventionDetail();
+                Reference_ViewModel.InterventionDetail.CurrentIntervention = CurrentIntervention;
+            }
             Reference_ViewModel.Main.ViewSelected = ViewEnum.InterventionDetail;
             RevienIci = true;
         }
@@ -60,7 +65,12 @@ namespace Makrisoft.Makfi.ViewModels
         public Intervention_VM CurrentIntervention
         {
             get { return currentIntervention; }
-            set { currentIntervention = value; OnPropertyChanged("CurrentIntervention"); }
+            set
+            {
+                currentIntervention = value;
+                 
+                OnPropertyChanged("CurrentIntervention");
+            }
         }
         private Intervention_VM currentIntervention;
         public ListCollectionView InterventionCollectionView

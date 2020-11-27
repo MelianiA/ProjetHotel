@@ -13,7 +13,7 @@ namespace Makrisoft.Makfi.Dal
     public enum ViewEnum
     {
         Header, Login, Home, Intervention, Chambre, InterventionNew, Employe, Synthese, Administration, ChambreGroupe, InterventionDetail,
-        Utilisateur, None, Hotel, DecoupageNew, Decoupage
+        Utilisateur, None, Hotel,InterventionAjouter, InterventionSupprimer
     }
     public enum RoleEnum { None = 0, Admin = 255, Gouvernante = 1, Reception = 2 }
     public enum EntiteEnum { Employe = 1, Chambre = 2, Intervention = 3 }
@@ -81,7 +81,7 @@ namespace Makrisoft.Makfi.Dal
             ");
             return true;
         }
-
+ 
 
 
 
@@ -401,6 +401,25 @@ namespace Makrisoft.Makfi.Dal
                                     spParam
                                     );
         }
+
+
+        internal static IEnumerable<InterventionDetail> InterventionDetail_Read(string spParam)
+        {
+            return ReadAll<InterventionDetail>
+                                     (
+                                     "InterventionDetail_Read",
+                                     e =>
+                                     {
+                                         e.Id = (Guid)Reader["Id"];
+                                         e.Employe = (Guid)Reader["EmployeAffecte"];
+                                         e.Chambre = (Guid)Reader["ChambreAffectee"];
+                                         e.Etat = (Guid)Reader["Etat"];
+                                         e.Commentaire= Reader["Commentaire"] as string;
+                                     },
+                                     spParam
+                                     );
+        }
+
 
         #endregion
 

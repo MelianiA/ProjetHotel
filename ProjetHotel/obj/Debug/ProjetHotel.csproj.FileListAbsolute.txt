@@ -101,3 +101,7 @@ C:\Users\abdou\source\repos\ProjetHotel\ProjetHotel\bin\Debug\MahApps.Metro.pdb
 C:\Users\abdou\source\repos\ProjetHotel\ProjetHotel\bin\Debug\MahApps.Metro.xml
 C:\Users\abdou\source\repos\ProjetHotel\ProjetHotel\bin\Debug\Microsoft.Xaml.Behaviors.pdb
 C:\Users\abdou\source\repos\ProjetHotel\ProjetHotel\bin\Debug\Microsoft.Xaml.Behaviors.xml
+C:\Users\abdou\source\repos\ProjetHotel\ProjetHotel\obj\Debug\Views\InterventionAjouter.g.cs
+C:\Users\abdou\source\repos\ProjetHotel\ProjetHotel\obj\Debug\Views\InterventionAjouter.baml
+C:\Users\abdou\source\repos\ProjetHotel\ProjetHotel\obj\Debug\Views\InterventionSupprimer.g.cs
+C:\Users\abdou\source\repos\ProjetHotel\ProjetHotel\obj\Debug\Views\InterventionSupprimer.baml

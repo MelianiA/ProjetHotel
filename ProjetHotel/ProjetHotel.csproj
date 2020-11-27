@@ -117,6 +117,7 @@
     <Compile Include="Models\HotelEmploye.cs" />
     <Compile Include="Models\Info.cs" />
     <Compile Include="Models\Intervention.cs" />
+    <Compile Include="Models\InterventionDetail.cs" />
     <Compile Include="Models\Utilisateur.cs" />
     <Compile Include="Tools\Log.cs" />
     <Compile Include="Tools\Tools.cs" />
@@ -156,6 +157,12 @@
     </Compile>
     <Compile Include="Views\HotelView.xaml.cs">
       <DependentUpon>HotelView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\InterventionSupprimer.xaml.cs">
+      <DependentUpon>InterventionSupprimer.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\InterventionAjouter.xaml.cs">
+      <DependentUpon>InterventionAjouter.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\InterventionDetailView.xaml.cs">
       <DependentUpon>InterventionDetailView.xaml</DependentUpon>
@@ -228,6 +235,14 @@
     <Page Include="Views\HotelView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\InterventionSupprimer.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\InterventionAjouter.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\InterventionDetailView.xaml">
       <Generator>MSBuild:Compile</Generator>

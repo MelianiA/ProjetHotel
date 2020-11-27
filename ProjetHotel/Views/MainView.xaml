@@ -65,6 +65,14 @@
             <Border  Grid.Row="1" Visibility="{Binding ViewSelected, Converter={StaticResource ViewSelectedConverterKey}, ConverterParameter={x:Static data:ViewEnum.InterventionDetail}}">
                 <local:InterventionDetailView />
             </Border>
+            <!--InterventionAjouter-->
+            <Border  Grid.Row="1" Visibility="{Binding ViewSelected, Converter={StaticResource ViewSelectedConverterKey}, ConverterParameter={x:Static data:ViewEnum.InterventionAjouter}}">
+                <local:InterventionAjouter />
+            </Border>
+            <!--InterventionSupprimer-->
+            <Border  Grid.Row="1" Visibility="{Binding ViewSelected, Converter={StaticResource ViewSelectedConverterKey}, ConverterParameter={x:Static data:ViewEnum.InterventionSupprimer}}">
+                <local:InterventionSupprimer/>
+            </Border>
 
             <!--
             <Border  Grid.Row="1" Visibility="{Binding ViewSelected, Converter={StaticResource ViewSelectedConverterKey}, ConverterParameter={x:Static data:ViewEnum.InterventionNew}}">

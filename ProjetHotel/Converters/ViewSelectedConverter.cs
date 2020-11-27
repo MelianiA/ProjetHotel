@@ -27,8 +27,8 @@ namespace Makrisoft.Makfi.Converters
                     s == $"{ViewEnum.ChambreGroupe}Messagerie" ||
                     s == $"{ViewEnum.Utilisateur}Messagerie" ||
                     s == $"{ViewEnum.Hotel}Messagerie" ||
-                    s == $"{ViewEnum.DecoupageNew}Messagerie" ||
-                    s == $"{ViewEnum.Decoupage}Messagerie" ||
+                    s == $"{ViewEnum.InterventionAjouter}Messagerie" ||
+                    s == $"{ViewEnum.InterventionSupprimer}Messagerie" ||
 
                     s == $"{ViewEnum.Intervention}Back" ||
                     s == $"{ViewEnum.InterventionDetail}Back" ||
@@ -40,8 +40,8 @@ namespace Makrisoft.Makfi.Converters
                     s == $"{ViewEnum.Utilisateur}Back" ||
                     s == $"{ViewEnum.Hotel}Back" ||
                     s == $"{ViewEnum.ChambreGroupe}Back" ||
-                    s == $"{ViewEnum.DecoupageNew}Back" ||
-                    s == $"{ViewEnum.Decoupage}Back"
+                    s == $"{ViewEnum.InterventionAjouter}Back" ||
+                    s == $"{ViewEnum.InterventionSupprimer}Back"
                     ? Visibility.Visible : Visibility.Hidden;
             return v;
         }

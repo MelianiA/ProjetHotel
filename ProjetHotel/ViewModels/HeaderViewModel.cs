@@ -169,6 +169,12 @@ namespace Makrisoft.Makfi.ViewModels
                     else
                         Reference_ViewModel.Main.ViewSelected = Dal.ViewEnum.Home;
                     break;
+                case ViewEnum.InterventionAjouter:
+                    Reference_ViewModel.Main.ViewSelected = Dal.ViewEnum.InterventionDetail;
+                    break;
+                case ViewEnum.InterventionSupprimer:
+                    Reference_ViewModel.Main.ViewSelected = Dal.ViewEnum.InterventionDetail;
+                    break;
             }
         }
             private void OnDeconnectCommand()

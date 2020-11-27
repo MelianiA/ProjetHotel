@@ -100,7 +100,7 @@
                      <DataGridTemplateColumn Width="Auto">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <StackPanel Orientation="Horizontal">
+                                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                                     <materialDesign:PackIcon Height="20" Width="Auto" Kind="Face" Foreground="Navy"/>
                                     <TextBlock Text="{Binding Gouvernante.Nom}" TextWrapping="Wrap" Margin="10,0,0,0"/>
                                 </StackPanel>
@@ -110,7 +110,7 @@
                     <DataGridTemplateColumn Width="Auto">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <StackPanel Orientation="Horizontal">
+                                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                                     <materialDesign:PackIcon Height="20" Width="Auto" Kind="Building" Foreground="Navy"/>
                                     <TextBlock Text="{Binding Reception.Nom}" TextWrapping="Wrap" Margin="10,0,0,0"/>
                                 </StackPanel>

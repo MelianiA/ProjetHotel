@@ -540,6 +540,85 @@ namespace Makrisoft.Makfi.ViewModels
         private string saveColor = "Navy";
 
     }
+
+    public class InterventionDetail_VM : ViewModelBase
+    {
+        public Guid Id;
+
+        public string Libelle
+        {
+            get { return libelle; }
+            set
+            {
+                libelle = value;
+                SaveColor = "Red";
+                OnPropertyChanged("Libelle");
+            }
+        }
+        private string libelle;
+
+        public Employe_VM Employe
+        {
+            get { return employe; }
+            set
+            {
+                employe = value;
+                SaveColor = "Red";
+                OnPropertyChanged("Employe");
+            }
+        }
+        private Employe_VM employe;
+
+        public Chambre_VM Chambre
+        {
+            get { return chambre; }
+            set
+            {
+                chambre = value;
+                SaveColor = "Red";
+                OnPropertyChanged("Chambre");
+            }
+        }
+        private Chambre_VM chambre;
+
+
+        public Etat_VM Etat
+        {
+            get { return etat; }
+            set
+            {
+                etat = value;
+                SaveColor = "Red";
+                OnPropertyChanged("Etat");
+            }
+        }
+        private Etat_VM etat;
+
+        public string Commentaire
+        {
+            get { return commentaire; }
+            set
+            {
+                commentaire = value;
+                SaveColor = "Red";
+                OnPropertyChanged("Commentaire");
+            }
+        }
+        private string commentaire;
+
+        public string SaveColor
+        {
+            get
+            { return saveColor; }
+            set
+            {
+                saveColor = value;
+                OnPropertyChanged("SaveColor");
+            }
+        }
+        private string saveColor = "Navy";
+
+    }
     public class Info_VM
     {
         public Guid Id;
