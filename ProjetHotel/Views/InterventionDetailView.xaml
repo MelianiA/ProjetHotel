@@ -52,8 +52,12 @@
                  </TextBlock>
                 <Menu Grid.Column="1" Cursor="Hand" Margin="0">
                     <MenuItem Header="..." Foreground="Navy" FontSize="16">
-                        <MenuItem Header="Ajouter" Foreground="Navy" Command="{Binding InterventionDetailSelectedAddCommand}"/>
-                        <MenuItem Header="Supprimer" Foreground="Navy" Command="{Binding InterventionDetailSelectedDeleteCommand}"/>
+                        <MenuItem Header="Ajouter" Foreground="Navy" 
+                                  Command="{Binding InterventionDetailSelectedAddCommand}"/>
+                        
+                        <MenuItem Header="Supprimer" Foreground="Navy" 
+                                  Command="{Binding InterventionDetailSelectedDeleteCommand}"/>
+                        
                      </MenuItem>
                 </Menu>
             </Grid>
@@ -155,21 +159,24 @@
                     </DataGrid.Columns>
                 </DataGrid>
         </Border>
+        
         <!--Droite-->
         <Border Grid.Column="2" Grid.Row="1" BorderBrush="Transparent" BorderThickness="1" CornerRadius="10" HorizontalAlignment="Left" >
             <StackPanel Margin="5" Width="220">
-                <TextBlock Text="Commentaire" Margin="0,15,0,0"/>
+                <TextBlock Text="Commentaire" Margin="0,15,0,0" />
                 <TextBox FontSize="16"  Text="{Binding CurrentInterventionDetail.Commentaire, UpdateSourceTrigger=PropertyChanged}" TextWrapping="Wrap" TextAlignment="Left">
                 </TextBox>
 
                 <!--Employé-->
                 <TextBlock Text="Employé" Margin="0,15,0,0"/>
-                <ComboBox ItemsSource="{Binding EmployeIntervention, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
-                          SelectedItem="{Binding ElementName=dg,Path=SelectedItem.Employe, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" FontSize="16">
+                <ComboBox ItemsSource="{Binding EmployeInterventionCollectionView, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                          SelectedItem="{Binding CurrentInterventionDetail.Employe, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                          FontSize="16">
                     <ComboBox.ItemTemplate>
                         <DataTemplate>
                             <StackPanel Orientation="Horizontal">
-                                <materialDesign:PackIcon Height="20" Width="Auto" Kind="Person" Foreground="{Binding Couleur}" Margin="0,0,10,0"/>
+                                <materialDesign:PackIcon Height="20" Width="Auto" Kind="Person" 
+                                                            Foreground="{Binding Couleur}" Margin="0,0,10,0"/>
                                 <TextBlock Text="{Binding Nom}" TextWrapping="Wrap"/>
                             </StackPanel>
                         </DataTemplate>
@@ -177,7 +184,7 @@
                 </ComboBox>
                 <!--Chambre-->
                 <TextBlock Text="Chambre" Margin="0,15,0,0"/>
-                <ComboBox ItemsSource="{Binding ChambreIntervention , Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                <ComboBox ItemsSource="{Binding ChambreInterventionCollectionView , Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
                           SelectedItem="{Binding ElementName=dg,Path=SelectedItem.Chambre, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
                           SelectedValue="0"
                           FontSize="16">
@@ -190,8 +197,7 @@
                         </DataTemplate>
                     </ComboBox.ItemTemplate>
                 </ComboBox>
-       
-                <TextBlock Text="{Binding ElementName=dg,Path=SelectedItem.Employe.Nom}" TextWrapping="Wrap"/>
+                <TextBlock Text="{Binding CurrentInterventionDetail.Employe.Nom}" TextWrapping="Wrap"/>
 
                 <!--Etat-->
                 <TextBlock Text="Etat" Margin="0,15,0,0"/>

@@ -21,5 +21,7 @@ namespace Makrisoft.Makfi.ViewModels
         public static ChambreGroupeViewModel ChambreGroupe;
         public static InterventionViewModel Intervention;
         public static InterventionDetailViewModel InterventionDetail;
+        public static InterventionAjouterModel InterventionAjouter;
+
     }
 }

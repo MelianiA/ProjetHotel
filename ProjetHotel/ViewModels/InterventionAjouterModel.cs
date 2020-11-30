@@ -12,13 +12,13 @@ using System.Windows.Input;
 
 namespace Makrisoft.Makfi.ViewModels
 {
-    public class InterventionDetailViewModel : ViewModelBase
+    public class InterventionAjouterModel : ViewModelBase
     {
         #region Constructeur
-        public InterventionDetailViewModel()
+        public InterventionAjouterModel()
         {
             // Icommand
-            InterventionDetailSelectedAddCommand= new RelayCommand(p => OnAddCommand(), p => true);
+            InterventionDetailSelectedAddCommand = new RelayCommand(p => OnAddCommand(), p => true);
             InterventionDetailSelectedDeleteCommand = new RelayCommand(p => OnSupprimeCommand(), p => true);
             // ListeView
             Load_Etat();
@@ -26,11 +26,11 @@ namespace Makrisoft.Makfi.ViewModels
             //Autres
             EmployeIntervention = Reference_ViewModel.Employe.AllEmployes;
             EmployeInterventionCollectionView = new ListCollectionView(EmployeIntervention);
- 
+
             ChambreIntervention = new ObservableCollection<Chambre_VM>(Reference_ViewModel.Chambre.ChambreGroupeChambre.Select(c => new Chambre_VM { Id = c.Id, Nom = c.Nom }).ToList());
             ChambreInterventionCollectionView = new ListCollectionView(ChambreIntervention);
         }
- 
+
 
 
 
@@ -54,7 +54,11 @@ namespace Makrisoft.Makfi.ViewModels
         public ObservableCollection<InterventionDetail_VM> InterventionDetails
         {
             get { return interventionDetails; }
-            set { interventionDetails = value; OnPropertyChanged("InterventionDetails"); }
+            set
+            {
+                interventionDetails = value;
+                OnPropertyChanged("InterventionDetails");
+            }
         }
         private ObservableCollection<InterventionDetail_VM> interventionDetails;
         public InterventionDetail_VM CurrentInterventionDetail
@@ -70,7 +74,11 @@ namespace Makrisoft.Makfi.ViewModels
         public ListCollectionView InterventionDetailCollectionView
         {
             get { return interventionDetailCollectionView; }
-            set { interventionDetailCollectionView = value; OnPropertyChanged("InterventionDetailCollectionView"); }
+            set
+            {
+                interventionDetailCollectionView = value;
+                OnPropertyChanged("InterventionDetailCollectionView");
+            }
         }
         private ListCollectionView interventionDetailCollectionView;
 
@@ -106,7 +114,11 @@ namespace Makrisoft.Makfi.ViewModels
         public ListCollectionView EtatInterventionCollectionView
         {
             get { return etatInterventionCollectionView; }
-            set { etatInterventionCollectionView = value; OnPropertyChanged("EtatInterventionCollectionView"); }
+            set
+            {
+                etatInterventionCollectionView = value;
+                OnPropertyChanged("EtatInterventionCollectionView");
+            }
         }
         private ListCollectionView etatInterventionCollectionView;
 
@@ -121,6 +133,7 @@ namespace Makrisoft.Makfi.ViewModels
             }
         }
         private ObservableCollection<Employe_VM> employeIntervention;
+
         public ListCollectionView EmployeInterventionCollectionView
         {
             get { return employeInterventionCollectionView; }
@@ -161,7 +174,11 @@ namespace Makrisoft.Makfi.ViewModels
         public ListCollectionView GroupeChambreCollectionView
         {
             get { return groupeChambreCollectionView; }
-            set { groupeChambreCollectionView = value; OnPropertyChanged("GroupeChambreCollectionView"); }
+            set
+            {
+                groupeChambreCollectionView = value;
+                OnPropertyChanged("GroupeChambreCollectionView");
+            }
         }
         private ListCollectionView groupeChambreCollectionView;
 
@@ -241,6 +258,5 @@ namespace Makrisoft.Makfi.ViewModels
         }
 
         #endregion
-
     }
 }

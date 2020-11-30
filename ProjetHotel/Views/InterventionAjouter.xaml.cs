@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Makrisoft.Makfi.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -21,6 +22,8 @@ namespace Makrisoft.Makfi.Views
         public InterventionAjouter()
         {
             InitializeComponent();
+            Reference_ViewModel.InterventionAjouter = new InterventionAjouterModel();
+            DataContext = Reference_ViewModel.InterventionAjouter ;
         }
     }
 }
