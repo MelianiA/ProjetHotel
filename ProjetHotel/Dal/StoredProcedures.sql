@@ -122,9 +122,8 @@ from InterventionDetail
 where Intervention=@Intervention
 GO
 
-exec InterventionDetail_Read '<interventionDetail><intervention>48632a88-c16b-4869-a3e5-6d1eae5d8e10</intervention></interventionDetail>'
+--exec InterventionDetail_Read '<interventionDetail><intervention>48632a88-c16b-4869-a3e5-6d1eae5d8e10</intervention></interventionDetail>'
   ---------------------------------------------------------------------------------------------------
-
 CREATE PROC [dbo].[Info_Read](@data xml=NULL)
 AS
 select Id,Cle, Valeur from Info

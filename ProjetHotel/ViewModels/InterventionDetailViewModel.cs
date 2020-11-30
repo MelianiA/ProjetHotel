@@ -18,19 +18,20 @@ namespace Makrisoft.Makfi.ViewModels
         public InterventionDetailViewModel()
         {
             // Icommand
-            InterventionDetailSelectedAddCommand= new RelayCommand(p => OnAddCommand(), p => true);
+            InterventionDetailSelectedAddCommand = new RelayCommand(p => OnAddCommand(), p => true);
             InterventionDetailSelectedDeleteCommand = new RelayCommand(p => OnSupprimeCommand(), p => true);
-            // ListeView
-            Load_Etat();
 
-            //Autres
-            EmployeIntervention = Reference_ViewModel.Employe.AllEmployes;
+            // ObservableCollection
+            InterventionDetails = new ObservableCollection<InterventionDetail_VM>();
+            InterventionDetailsCollectionView = new ListCollectionView(InterventionDetails);
+
+            EmployeIntervention = new ObservableCollection<Employe_VM>();
             EmployeInterventionCollectionView = new ListCollectionView(EmployeIntervention);
- 
-            ChambreIntervention = new ObservableCollection<Chambre_VM>(Reference_ViewModel.Chambre.ChambreGroupeChambre.Select(c => new Chambre_VM { Id = c.Id, Nom = c.Nom }).ToList());
+
+            ChambreIntervention = new ObservableCollection<Chambre_VM>();
             ChambreInterventionCollectionView = new ListCollectionView(ChambreIntervention);
         }
- 
+
 
 
 
@@ -67,7 +68,7 @@ namespace Makrisoft.Makfi.ViewModels
             }
         }
         private InterventionDetail_VM currentInterventionDetail;
-        public ListCollectionView InterventionDetailCollectionView
+        public ListCollectionView InterventionDetailsCollectionView
         {
             get { return interventionDetailCollectionView; }
             set { interventionDetailCollectionView = value; OnPropertyChanged("InterventionDetailCollectionView"); }
@@ -193,9 +194,10 @@ namespace Makrisoft.Makfi.ViewModels
         #region Load
         public void Load_InterventionDetail()
         {
+            // InterventionDetails
+            if (InterventionDetails != null) InterventionDetails.Clear();
             if (Reference_ViewModel.Header.CurrentHotel == null)
             {
-                if (InterventionDetails != null) InterventionDetails.Clear();
                 MessageBox.Show($"Aucun hôtel ne vous a été assigné  ", "Impossible d'enregistrer  !");
                 return;
             }
@@ -215,10 +217,18 @@ namespace Makrisoft.Makfi.ViewModels
                    Libelle = Reference_ViewModel.Intervention.CurrentIntervention.Libelle,
                    Commentaire = x.Commentaire
                }).OrderBy(x => x.Libelle).ToList());
-            InterventionDetailCollectionView = new ListCollectionView(InterventionDetails);
-            InterventionDetailCollectionView.Refresh();
+            InterventionDetailsCollectionView.Refresh();
             CurrentInterventionDetail = InterventionDetails.Count > 0 ? InterventionDetails[0] : null;
 
+            // ListeView
+            Load_Etat();
+
+            //Autres
+            EmployeIntervention = Reference_ViewModel.Employe.AllEmployes;
+            EmployeInterventionCollectionView = new ListCollectionView(EmployeIntervention);
+
+            ChambreIntervention = new ObservableCollection<Chambre_VM>(Reference_ViewModel.Chambre.ChambreGroupeChambre.Select(c => new Chambre_VM { Id = c.Id, Nom = c.Nom }).ToList());
+            ChambreInterventionCollectionView = new ListCollectionView(ChambreIntervention);
         }
         private void Load_Etat()
         {

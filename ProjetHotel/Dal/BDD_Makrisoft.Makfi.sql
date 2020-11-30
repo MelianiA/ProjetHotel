@@ -6,6 +6,8 @@
 /*************************************************************************************************/
 USE [master]
 GO
+ALTER DATABASE [MakfiBD] SET  SINGLE_USER WITH ROLLBACK IMMEDIATE
+GO
 DROP DATABASE [MakfiBD]
 GO
 

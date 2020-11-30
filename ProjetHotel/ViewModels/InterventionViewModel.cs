@@ -68,7 +68,7 @@ namespace Makrisoft.Makfi.ViewModels
             set
             {
                 currentIntervention = value;
-                 
+
                 OnPropertyChanged("CurrentIntervention");
             }
         }
@@ -334,7 +334,7 @@ namespace Makrisoft.Makfi.ViewModels
                }).OrderBy(x => x.Libelle).ToList());
             InterventionCollectionView = new ListCollectionView(Interventions);
             InterventionCollectionView.Refresh();
-            CurrentIntervention = Interventions[0];
+            if (Interventions.Count > 0) CurrentIntervention = Interventions[0];
             CurrentFilterEtat = null;
             CurrentFilterDateDebutSelected = null;
             CurrentFilterDateFinSelected = null;
