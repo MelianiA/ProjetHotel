@@ -184,7 +184,7 @@
 
                 <StackPanel Orientation="Horizontal" Margin="0,20,0,0">
                     <CheckBox  IsChecked="{Binding CurrentIntervention.Model}" />
-                    <TextBlock Text="Modèl" Margin="10,0,0,0" FontSize="16" />
+                    <TextBlock Text="Modèle" Margin="10,0,0,0" FontSize="16" />
                 </StackPanel>
 
        

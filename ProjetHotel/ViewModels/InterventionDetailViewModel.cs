@@ -23,13 +23,15 @@ namespace Makrisoft.Makfi.ViewModels
 
             // ObservableCollection
             InterventionDetails = new ObservableCollection<InterventionDetail_VM>();
-            InterventionDetailsCollectionView = new ListCollectionView(InterventionDetails);
-
+            //Employe
             EmployeIntervention = new ObservableCollection<Employe_VM>();
             EmployeInterventionCollectionView = new ListCollectionView(EmployeIntervention);
-
+            //Chambre
             ChambreIntervention = new ObservableCollection<Chambre_VM>();
             ChambreInterventionCollectionView = new ListCollectionView(ChambreIntervention);
+
+            //GroupeChambre
+
         }
 
 
@@ -71,7 +73,7 @@ namespace Makrisoft.Makfi.ViewModels
         public ListCollectionView InterventionDetailsCollectionView
         {
             get { return interventionDetailCollectionView; }
-            set { interventionDetailCollectionView = value; OnPropertyChanged("InterventionDetailCollectionView"); }
+            set { interventionDetailCollectionView = value; OnPropertyChanged("InterventionDetailsCollectionView"); }
         }
         private ListCollectionView interventionDetailCollectionView;
 
@@ -194,6 +196,14 @@ namespace Makrisoft.Makfi.ViewModels
         #region Load
         public void Load_InterventionDetail()
         {
+
+            //Chargement des etats 
+            Load_Etat();
+            EmployeIntervention = Reference_ViewModel.Employe.AllEmployes;
+            EmployeInterventionCollectionView = new ListCollectionView(EmployeIntervention);
+
+            ChambreIntervention = new ObservableCollection<Chambre_VM>(Reference_ViewModel.Chambre.ChambreGroupeChambre.Select(c => new Chambre_VM { Id = c.Id, Nom = c.Nom }).ToList());
+            ChambreInterventionCollectionView = new ListCollectionView(ChambreIntervention);
             // InterventionDetails
             if (InterventionDetails != null) InterventionDetails.Clear();
             if (Reference_ViewModel.Header.CurrentHotel == null)
@@ -217,18 +227,11 @@ namespace Makrisoft.Makfi.ViewModels
                    Libelle = Reference_ViewModel.Intervention.CurrentIntervention.Libelle,
                    Commentaire = x.Commentaire
                }).OrderBy(x => x.Libelle).ToList());
+            InterventionDetailsCollectionView = new ListCollectionView(InterventionDetails);
             InterventionDetailsCollectionView.Refresh();
             CurrentInterventionDetail = InterventionDetails.Count > 0 ? InterventionDetails[0] : null;
 
-            // ListeView
-            Load_Etat();
-
-            //Autres
-            EmployeIntervention = Reference_ViewModel.Employe.AllEmployes;
-            EmployeInterventionCollectionView = new ListCollectionView(EmployeIntervention);
-
-            ChambreIntervention = new ObservableCollection<Chambre_VM>(Reference_ViewModel.Chambre.ChambreGroupeChambre.Select(c => new Chambre_VM { Id = c.Id, Nom = c.Nom }).ToList());
-            ChambreInterventionCollectionView = new ListCollectionView(ChambreIntervention);
+      
         }
         private void Load_Etat()
         {
