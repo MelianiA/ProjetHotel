@@ -24,11 +24,16 @@ namespace Makrisoft.Makfi.ViewModels
             Load_Etat();
 
             ////Autres
-            EmployeIntervention = Reference_ViewModel.Employe.AllEmployes;
-            EmployeInterventionCollectionView = new ListCollectionView(EmployeIntervention);
-
-            ChambreIntervention = new ObservableCollection<Chambre_VM>(Reference_ViewModel.Chambre.ChambreGroupeChambre.Select(c => new Chambre_VM { Id = c.Id, Nom = c.Nom }).ToList());
-            ChambreInterventionCollectionView = new ListCollectionView(ChambreIntervention);
+            if (Reference_ViewModel.Employe.AllEmployes != null)
+            {
+                EmployeIntervention = Reference_ViewModel.Employe.AllEmployes;
+                EmployeInterventionCollectionView = new ListCollectionView(EmployeIntervention);
+            }
+            if (Reference_ViewModel.Chambre.ChambreGroupeChambre != null)
+            {
+                ChambreIntervention = new ObservableCollection<Chambre_VM>(Reference_ViewModel.Chambre.ChambreGroupeChambre.Select(c => new Chambre_VM { Id = c.Id, Nom = c.Nom }).ToList());
+                ChambreInterventionCollectionView = new ListCollectionView(ChambreIntervention);
+            }
         }
 
 

@@ -177,61 +177,67 @@ namespace Makrisoft.Makfi.ViewModels
                     break;
             }
         }
-            private void OnDeconnectCommand()
-            {
-                Reference_ViewModel.Main.ViewSelected = ViewEnum.Login;
-                CurrentUtilisateur = Utilisateurs.FirstOrDefault(g => g.Nom == Properties.Settings.Default.Login);
-                CanChangeUtilisateur = true;
-            }
-            #endregion
-
-            #region Constructeur
-            public HeaderViewModel()
-            {
-                // ICommand
-                DeconnectCommand = new RelayCommand(p => OnDeconnectCommand());
-                BackCommand = new RelayCommand(p => OnBackCommand(), p => OnCanExecuteBackCommand());
-
-                // Utilisateur
-                Utilisateurs = new ObservableCollection<Utilisateur_VM>(
-                    MakfiData.Utilisateur_Read()
-                    .Where(x => x.Statut == RoleEnum.Admin || x.Statut == RoleEnum.Gouvernante)
-                    .Select(x => new Utilisateur_VM
-                    {
-                        Id = x.Id,
-                        Nom = x.Nom,
-                        CodePin = x.CodePin,
-                        Image = $"/Makrisoft.Makfi;component/Assets/Photos/{x.Nom.ToLower()}.png",
-                        Statut = x.Statut
-                    }));
-                if (Utilisateurs.Count == 1) CurrentUtilisateur = Utilisateurs.First();
-                if (CurrentUtilisateur == null)
-                    CurrentUtilisateur = Utilisateurs.FirstOrDefault(g => g.Nom.ToUpper() == Properties.Settings.Default.Login.ToUpper());
-
-                if (string.IsNullOrEmpty(currentUtilisateur.CodePin))
-                    Message = "Tapez votre code pin";
-
-                // Horloge
-                HeaderTimer.Elapsed += (s, e) => HorlogeLoop();
-                HeaderTimer.Start();
-            }
-
-            private bool OnCanExecuteBackCommand()
-            {
-                if (Reference_ViewModel.Main.ViewSelected == ViewEnum.Home ||
-                    Reference_ViewModel.Main.ViewSelected == ViewEnum.Login)
-                    return false;
-                else return true;
-            }
-            #endregion
-
-            #region Divers
-
-            private void HorlogeLoop()
-            {
-                // Horloge
-                Horloge = DateTime.Now.ToString("dddd d MMM - HH:mm");
-            }
-            #endregion
+        private void OnDeconnectCommand()
+        {
+            Reference_ViewModel.Main.ViewSelected = ViewEnum.Login;
+            CurrentUtilisateur = Utilisateurs.FirstOrDefault(g => g.Nom == Properties.Settings.Default.Login);
+            CanChangeUtilisateur = true;
         }
+        #endregion
+
+        #region Constructeur
+        public HeaderViewModel()
+        {
+            // ICommand
+            DeconnectCommand = new RelayCommand(p => OnDeconnectCommand());
+            BackCommand = new RelayCommand(p => OnBackCommand(), p => OnCanExecuteBackCommand());
+
+            // Utilisateur
+            Utilisateur_Load();
+
+            // Horloge
+            HeaderTimer.Elapsed += (s, e) => HorlogeLoop();
+            HeaderTimer.Start();
+        }
+
+        private bool OnCanExecuteBackCommand()
+        {
+            if (Reference_ViewModel.Main.ViewSelected == ViewEnum.Home ||
+                Reference_ViewModel.Main.ViewSelected == ViewEnum.Login)
+                return false;
+            else return true;
+        }
+        #endregion
+
+        #region Divers
+
+        private void Utilisateur_Load()
+        {
+            Utilisateurs = new ObservableCollection<Utilisateur_VM>(
+               MakfiData.Utilisateur_Read()
+               .Where(x => x.Statut == RoleEnum.Admin || x.Statut == RoleEnum.Gouvernante)
+               .Select(x => new Utilisateur_VM
+               {
+                   Id = x.Id,
+                   Nom = x.Nom,
+                   CodePin = x.CodePin,
+                   Image = $"/Makrisoft.Makfi;component/Assets/Photos/{x.Nom.ToLower()}.png",
+                   Statut = x.Statut,
+                   SaveColor = "Navy"
+               }));
+            if (Utilisateurs.Count == 1) CurrentUtilisateur = Utilisateurs[0];
+            if (CurrentUtilisateur == null)
+                CurrentUtilisateur = Utilisateurs.FirstOrDefault(g => g.Nom.ToUpper() == Properties.Settings.Default.Login.ToUpper());
+
+            if (string.IsNullOrEmpty(currentUtilisateur.CodePin))
+                Message = "Tapez votre code pin";
+        }
+
+        private void HorlogeLoop()
+        {
+            // Horloge
+            Horloge = DateTime.Now.ToString("dddd d MMM - HH:mm");
+        }
+        #endregion
     }
+}

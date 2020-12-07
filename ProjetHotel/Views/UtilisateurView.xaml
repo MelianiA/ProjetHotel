@@ -103,42 +103,47 @@
             <StackPanel Margin="5">
                 <!--Roles-->
                 <StackPanel Orientation="Horizontal" Margin="0,30,0,0">
-                    <CheckBox  IsChecked="{Binding RoleAdminFilter, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Command="{Binding RoleCommand}" CommandParameter="{x:Static data:RoleEnum.Admin}"/>
+                    <CheckBox  IsChecked="{Binding RoleAdminFilter, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" 
+                               Command="{Binding RoleCommand}" CommandParameter="{x:Static data:RoleEnum.Admin}"/>
                     <TextBlock Text="Administrateur" Margin="10,0,0,0" FontSize="16"/>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
-                    <CheckBox  IsChecked="{Binding RoleGouvFilter, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"  Command="{Binding RoleCommand}" CommandParameter="{x:Static data:RoleEnum.Gouvernante}"/>
+                    <CheckBox  IsChecked="{Binding RoleGouvFilter, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"  
+                               Command="{Binding RoleCommand}" CommandParameter="{x:Static data:RoleEnum.Gouvernante}"/>
                     <TextBlock Text="Gouvernante" Margin="10,0,0,0" FontSize="16"/>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
-                    <CheckBox  IsChecked="{Binding RoleReceptionFilter, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"  Command="{Binding RoleCommand}" CommandParameter="{x:Static data:RoleEnum.Reception}"/>
+                    <CheckBox  IsChecked="{Binding RoleReceptionFilter, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" 
+                               Command="{Binding RoleCommand}" CommandParameter="{x:Static data:RoleEnum.Reception}"/>
                     <TextBlock Text="Réception" Margin="10,0,0,0" FontSize="16" />
                 </StackPanel>
             </StackPanel>
         </Border>
         <!--Milieu-->
         <Border Grid.Column="1" Grid.Row="1" BorderBrush="Transparent" BorderThickness="1" CornerRadius="10" Margin="0" >
-                <!-- IsEnabled="{Binding PageNotModified.Value} "-->
-            <DataGrid  AutoGenerateColumns="False" HeadersVisibility="None" 
-                       CanUserAddRows="False" VerticalScrollBarVisibility="Visible"   GridLinesVisibility="Horizontal"
-                    ItemsSource="{Binding UtilisateurCollectionView, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
-                    SelectedItem="{Binding CurrentUtilisateur, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" >
-
-                <DataGrid.Columns>
+                <DataGrid ItemsSource="{Binding UtilisateurCollectionView,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                          SelectedItem="{Binding CurrentUtilisateur}"
+                          AutoGenerateColumns="False" HeadersVisibility="None" CanUserAddRows="False"
+                          VerticalScrollBarVisibility="Visible" SelectionMode="Single">
+                    
+                    <DataGrid.Columns>
                     <DataGridTemplateColumn Width="100">
                         <DataGridTemplateColumn.CellTemplate  >
                             <DataTemplate >
-                                <Image HorizontalAlignment="Left" Source="{Binding Image, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Width="50" Height="50"/>
+                                <Image HorizontalAlignment="Left" Source="{Binding Image, Mode=TwoWay, 
+                                    UpdateSourceTrigger=PropertyChanged}"
+                                       Width="50" Height="50"/>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
                     <DataGridTemplateColumn  >
                         <DataGridTemplateColumn.CellTemplate >
-                                <DataTemplate >
-                                <TextBlock VerticalAlignment="Center" Foreground="{Binding SaveColor, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                            <DataTemplate >
+                                <TextBlock VerticalAlignment="Center" Foreground="{Binding SaveColor, Mode=TwoWay,
+                                    UpdateSourceTrigger=PropertyChanged}" 
                                                Text="{Binding Nom, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" FontWeight="Bold"/>
-                                </DataTemplate>
-                            </DataGridTemplateColumn.CellTemplate>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
                      </DataGridTemplateColumn>
                     <DataGridTemplateColumn  >
                             <!--à gauche-->
@@ -146,15 +151,12 @@
                                 <DataTemplate>
                                     <Border Style="{StaticResource BorderRole}">
                                         <materialDesign:PackIcon Height="20" Width="Auto" 
-                                                             Kind="{Binding  Statut, Converter={StaticResource RoleConverterKey}}" 
+                                                             Kind="{Binding Statut, Converter={StaticResource RoleConverterKey}}" 
                                                              Foreground="{Binding Statut, Converter={StaticResource RoleColorConverterKey}}"/>
                                     </Border>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn >
-                   
-                        
-                      
                     </DataGrid.Columns>
                 </DataGrid>
         </Border>

@@ -14,7 +14,7 @@
             <conv:EmployeEtatColorConverter x:Key="EmployeEtatColorConverterKey"/>
             <conv:EmployeSelectedEtatConverter x:Key="EmployeSelectedEtatConverterKey"/>
         </Grid.Resources>
-		
+
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="240"/>
             <ColumnDefinition Width="*"/>
@@ -35,7 +35,7 @@
                 <TextBlock Text="Filtrer" FontSize="22" Foreground="Navy" VerticalAlignment="Bottom"/>
                 <Button Grid.Column="1" Background="Transparent" BorderBrush="Transparent" BorderThickness="1" Command="{Binding FilterClearCommand}" VerticalAlignment="Bottom">
                     <Button.Content>
-                        <materialDesign:PackIcon Height="20" Width="Auto" Kind="Clear" Foreground="Navy" Margin="0,0,10,0"/>
+                        <materialDesign:PackIcon Height="22" Width="26.463" Kind="Clear" Foreground="Navy" Margin="0,0,10,-2" HorizontalAlignment="Stretch" VerticalAlignment="Center"/>
                     </Button.Content>
                 </Button>
             </Grid>
@@ -68,7 +68,7 @@
                     <RowDefinition></RowDefinition>
                 </Grid.RowDefinitions>
                 <TextBlock Text="Modifier" FontSize="22" Foreground="Navy" VerticalAlignment="Bottom"/>
-                
+
                 <Button Grid.Column="2" Background="Transparent" BorderBrush="Transparent" BorderThickness="1" Command="{Binding EmployeModifiedSaveCommand}" VerticalAlignment="Bottom">
                     <Button.Content>
                         <materialDesign:PackIcon Height="20" Width="Auto" Kind="Floppy" Foreground="{Binding CurrentEmploye.SaveColor}" Margin="0,0,10,0" />
@@ -87,7 +87,7 @@
                 <ComboBox ItemsSource="{Binding EtatEmployeCollectionView,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged }"
                           SelectedItem="{Binding CurrentFilter,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" SelectedValue=""
                           FontSize="16">
-                     <ComboBox.ItemTemplate>
+                    <ComboBox.ItemTemplate>
                         <DataTemplate>
                             <StackPanel Orientation="Horizontal">
                                 <materialDesign:PackIcon Height="20" Width="Auto" Kind="{Binding Icone}" Foreground="{Binding Couleur}" Margin="0,0,10,0"/>
@@ -96,7 +96,7 @@
                         </DataTemplate>
                     </ComboBox.ItemTemplate>
                 </ComboBox>
-             </StackPanel>
+            </StackPanel>
         </Border>
         <!--Milieu-->
         <Border Grid.Column="1" Grid.Row="1" BorderBrush="Transparent" BorderThickness="1" CornerRadius="10" Margin="0" >
@@ -128,7 +128,8 @@
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <!--Kind="{Binding Etat.Icone}-->
-                                    <materialDesign:PackIcon Height="20" Width="Auto" Kind="{Binding Etat.Icone}" Foreground="{Binding Etat.Couleur}"/> <!--a modifier-->
+                                    <materialDesign:PackIcon Height="20" Width="Auto" Kind="{Binding Etat.Icone}" Foreground="{Binding Etat.Couleur}"/>
+                                    <!--a modifier-->
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>

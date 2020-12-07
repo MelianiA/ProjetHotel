@@ -20,7 +20,7 @@ namespace Makrisoft.Makfi.Views
     {
         public InterventionSupprimer()
         {
-            InitializeComponent();
+            //InitializeComponent();
         }
     }
 }

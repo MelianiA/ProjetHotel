@@ -18,7 +18,8 @@ namespace Makrisoft.Makfi.Converters
 
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (value == null) return null;
+            if (value == null)
+                return null;
             var statut = (RoleEnum)value;
             switch (statut)
             {
@@ -38,7 +39,8 @@ namespace Makrisoft.Makfi.Converters
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (value == null) return null;
+            if (value == null)
+                return null;
             var statut = (RoleEnum)value;
             switch (statut)
             {

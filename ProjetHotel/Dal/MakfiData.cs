@@ -15,7 +15,7 @@ namespace Makrisoft.Makfi.Dal
         Header, Login, Home, Intervention, Chambre, InterventionNew, Employe, Synthese, Administration, ChambreGroupe, InterventionDetail,
         Utilisateur, None, Hotel,InterventionAjouter, InterventionSupprimer
     }
-    public enum RoleEnum { None = 0, Admin = 255, Gouvernante = 1, Reception = 2 }
+    public enum RoleEnum { None = 0, Gouvernante = 1, Reception = 2, Admin = 255 }
     public enum EntiteEnum { Employe = 1, Chambre = 2, Intervention = 3 }
 
     public static class MakfiData

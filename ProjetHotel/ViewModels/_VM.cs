@@ -103,6 +103,7 @@ namespace Makrisoft.Makfi.ViewModels
             }
         }
         private string nom;
+
         public string SaveColor
         {
             get
@@ -143,20 +144,21 @@ namespace Makrisoft.Makfi.ViewModels
         {
             get
             {
-                return this.Statut == RoleEnum.Admin;
+                return Statut == RoleEnum.Admin;
             }
             set
             {
-                isAdmin = this.Statut == RoleEnum.Admin;
-                OnPropertyChanged("IsAdmin");
+                 OnPropertyChanged("IsAdmin");
             }
         }
-        private bool isAdmin;
-
+ 
         public string CodePin
         {
             get { return codePin; }
-            set { codePin = value; }
+            set
+            {
+                codePin = value;
+            }
         }
         private string codePin;
 

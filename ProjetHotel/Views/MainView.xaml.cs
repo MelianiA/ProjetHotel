@@ -17,8 +17,8 @@ namespace Makrisoft.Makfi
         public MainWindow()
         {
             Reference_ViewModel.Main = new MainViewModel();
-            DataContext = Reference_ViewModel.Main;
             InitializeComponent();
+            DataContext = Reference_ViewModel.Main;
         }
  
         

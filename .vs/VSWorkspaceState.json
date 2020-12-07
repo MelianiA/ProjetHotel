@@ -1,16 +1,6 @@
 {
   "ExpandedNodes": [
-    "",
-    "\\ProjetHotel",
-    "\\ProjetHotel\\Dal",
-    "\\ProjetHotel\\Models",
-    "\\ProjetHotel\\obj",
-    "\\ProjetHotel\\obj\\Debug",
-    "\\ProjetHotel\\obj\\Debug\\Views",
-    "\\ProjetHotel\\Tools",
-    "\\ProjetHotel\\ViewModels",
-    "\\ProjetHotel\\Views"
+    ""
   ],
-  "SelectedNode": "\\ProjetHotel\\ViewModels\\UtilisateurViewModel.cs",
   "PreviewInSolutionExplorer": false
 }

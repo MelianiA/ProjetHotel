@@ -15,23 +15,38 @@ namespace Makrisoft.Makfi.ViewModels
         public UtilisateurViewModel()
         {
             RelayCommand();
+            Utilisateurs = new ObservableCollection<Utilisateur_VM>(MakfiData.Utilisateur_Read()
+                         .Select(x => new Utilisateur_VM
+                         {
+                             Id = x.Id,
+                             Nom = x.Nom,
+                             Image = $"/Makrisoft.Makfi;component/Assets/Photos/{x.Nom.ToLower()}.png",
+                             CodePin = x.CodePin,
+                             Statut = x.Statut,
+                             DateModified = default,
+                             SaveColor = "Navy"
+                         }));
+            CurrentUtilisateur = Utilisateurs.First();
+            UtilisateurCollectionView = new ListCollectionView(Utilisateurs);
 
-            // ListeView
-            Utilisateur_Load();
+        }
 
-            //Filter
-            UtilisateurCollectionView.Filter += u =>
+        public bool FilterUtilisateurs(object item)
+        {
+            if (item is Utilisateur_VM utilisateur)
             {
-                var utilisateur = (Utilisateur_VM)u;
                 return
-                    (RoleAdminFilter && utilisateur.Statut == RoleEnum.Admin) ||
-                    (RoleGouvFilter && utilisateur.Statut == RoleEnum.Gouvernante) ||
-                    (RoleReceptionFilter && utilisateur.Statut == RoleEnum.Reception);
-            };
+                (RoleAdminFilter && utilisateur.Statut == RoleEnum.Admin) ||
+                (RoleGouvFilter && utilisateur.Statut == RoleEnum.Gouvernante) ||
+                (RoleReceptionFilter && utilisateur.Statut == RoleEnum.Reception);
+            }
+            return true;
+
         }
         #endregion
 
         #region Bindings
+
         // RoleFilter
         public bool RoleAdminFilter
         {
@@ -41,6 +56,7 @@ namespace Makrisoft.Makfi.ViewModels
                 CurrentUtilisateur = null;
                 roleAdminFilter = value;
                 OnPropertyChanged("RoleAdminFilter");
+                UtilisateurCollectionView.Filter = FilterUtilisateurs;
                 UtilisateurCollectionView.Refresh();
             }
         }
@@ -54,6 +70,7 @@ namespace Makrisoft.Makfi.ViewModels
                 CurrentUtilisateur = null;
                 roleGouvFilter = value;
                 OnPropertyChanged("RoleGouvFilter");
+                UtilisateurCollectionView.Filter = FilterUtilisateurs;
                 UtilisateurCollectionView.Refresh();
             }
         }
@@ -67,6 +84,7 @@ namespace Makrisoft.Makfi.ViewModels
                 CurrentUtilisateur = null;
                 roleReceptionFilter = value;
                 OnPropertyChanged("RoleReceptionFilter");
+                UtilisateurCollectionView.Filter = FilterUtilisateurs;
                 UtilisateurCollectionView.Refresh();
 
             }
@@ -84,26 +102,33 @@ namespace Makrisoft.Makfi.ViewModels
             }
         }
         private ObservableCollection<Utilisateur_VM> utilisateurs;
+
         public Utilisateur_VM CurrentUtilisateur
         {
             get
             {
-                return
-                  currentUtilisateur;
+                return currentUtilisateur;
             }
             set
             {
                 currentUtilisateur = value;
-                if (value == null) IsEnabled = false;
+                if (currentUtilisateur == null) IsEnabled = false;
                 else IsEnabled = true;
                 OnPropertyChanged("CurrentUtilisateur");
+
             }
         }
         private Utilisateur_VM currentUtilisateur;
+
+
         public ListCollectionView UtilisateurCollectionView
         {
             get { return utilisateurCollectionView; }
-            set { utilisateurCollectionView = value; OnPropertyChanged("UtilisateurCollectionView"); }
+            set
+            {
+                utilisateurCollectionView = value;
+                OnPropertyChanged("UtilisateurCollectionView");
+            }
         }
         private ListCollectionView utilisateurCollectionView;
 
@@ -131,7 +156,7 @@ namespace Makrisoft.Makfi.ViewModels
 
         // RelayCommand
         private void RelayCommand()
-        {             // Icommand
+        {  // Icommand
             UtilisateurModifiedSaveCommand = new RelayCommand(p => OnSaveCommand(), p => OnCanExecuteSaveCommand());
             UtilisateurSelectedDeleteCommand = new RelayCommand(p => OnDeleteCommand(), p => OnCanExecuteDeleteCommand());
             UtilisateurSelectedAddCommand = new RelayCommand(p => OnAddCommand(), p => OnCanExecuteAddCommand());
@@ -143,8 +168,7 @@ namespace Makrisoft.Makfi.ViewModels
         private void OnRoleCommand(object p)
         {
             if (currentUtilisateur == null) return;
-            var role = (RoleEnum)p;
-            CurrentUtilisateur.Statut = role;
+            CurrentUtilisateur.Statut = (RoleEnum)p;
         }
         private void OnAddCommand()
         {
@@ -188,11 +212,12 @@ namespace Makrisoft.Makfi.ViewModels
             }
             ///
 
-
         }
         private void OnFilterClearCommand()
         {
             RoleGouvFilter = RoleReceptionFilter = RoleAdminFilter = true;
+            CurrentUtilisateur = Utilisateurs.Count > 0 ? Utilisateurs[0] : null;
+            UtilisateurCollectionView.Refresh();
         }
 
 
@@ -225,28 +250,6 @@ namespace Makrisoft.Makfi.ViewModels
                 return false;
             }
         }
-        #endregion
-
-        #region Load
-        private void Utilisateur_Load()
-        {
-            Utilisateurs = new ObservableCollection<Utilisateur_VM>(MakfiData.Utilisateur_Read()
-             .Select(x => new Utilisateur_VM
-             {
-                 Id = x.Id,
-                 Nom = x.Nom,
-                 Image = $"/Makrisoft.Makfi;component/Assets/Photos/{x.Nom.ToLower()}.png",
-                 CodePin = x.CodePin,
-                 Statut = x.Statut,
-                 SaveColor = "Navy",
-                 DateModified = default
-             }).ToList()) ;
-
-            // ListeView
-            UtilisateurCollectionView = new ListCollectionView(Utilisateurs);
-            UtilisateurCollectionView.Refresh();
-        }
-
         #endregion
     }
 }
