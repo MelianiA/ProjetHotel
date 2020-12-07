@@ -72,7 +72,6 @@ namespace Makrisoft.Makfi.ViewModels
             {
                 chambreGroupeChambre = value;
                 OnPropertyChanged("ChambreGroupeChambre");
-
             }
         }
         private ObservableCollection<ChambreGroupeChambre_VM> chambreGroupeChambre;

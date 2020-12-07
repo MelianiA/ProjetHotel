@@ -229,6 +229,8 @@ namespace Makrisoft.Makfi.ViewModels
                }).OrderBy(x => x.Libelle).ToList());
             InterventionDetailsCollectionView = new ListCollectionView(InterventionDetails);
             InterventionDetailsCollectionView.Refresh();
+
+
             CurrentInterventionDetail = InterventionDetails.Count > 0 ? InterventionDetails[0] : null;
 
       

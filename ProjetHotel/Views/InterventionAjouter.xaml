@@ -37,24 +37,22 @@
                 <Grid.RowDefinitions>
                     <RowDefinition></RowDefinition>
                 </Grid.RowDefinitions>
-                <TextBlock Text="Ajouter" FontSize="22" Foreground="Navy" VerticalAlignment="Bottom"/>
-                <Button Grid.Column="2" Background="Transparent" BorderBrush="AliceBlue" BorderThickness="1" Margin="0,10,20,0" 
-                        Command="{Binding InterventionDetailModifiedSaveCommand}" VerticalAlignment="Bottom">
-                    <Button.Content>
-                        <materialDesign:PackIcon Height="20" Width="Auto" Kind="AddBold" Foreground="Blue"   />
-                    </Button.Content>
-                </Button>
+                 
+                 
             </Grid>
         </Border>
         <!--Ligne 2-->
         <!--Gauche-->
         <Border Grid.Column="0" Grid.Row="1" BorderBrush="Transparent" BorderThickness="1" CornerRadius="10" HorizontalAlignment="Right" VerticalAlignment="Top" Width="220"></Border>
         <!--Milieu-->
+        <TextBlock Text="Ajouter" FontSize="22" Foreground="Navy" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="0,0,-150,10"/>
         <Border Grid.Column="1" Grid.Row="1" BorderBrush="Transparent" BorderThickness="1" CornerRadius="10" Margin="0" >
+            
             <StackPanel Orientation="Vertical" Margin="100,30,0,0" >
+                
                 <StackPanel Orientation="Horizontal" Margin="0,30,0,0">
                     <materialDesign:PackIcon Height="20" Width="Auto" Kind="Repeat" Foreground="Silver" Margin="0,0,10,0"/>
-                    <RadioButton  GroupName="Group1" IsChecked="True" />
+                    <RadioButton  GroupName="Group1" IsChecked="{Binding PrendreInterventionCommeModele}" />
                     <TextBlock Text="Prendre cette intervention comme modèle" Margin="10,0,0,0" FontSize="20"/>
                 </StackPanel>
                 <ComboBox  
@@ -70,14 +68,15 @@
                         </DataTemplate>
                     </ComboBox.ItemTemplate>
                 </ComboBox>
-                
+
                 <StackPanel Orientation="Horizontal" Margin="0,30,0,0">
                     <materialDesign:PackIcon Height="20" Width="Auto" Kind="Building" Foreground="Silver" Margin="0,0,10,0"/>
-                    <RadioButton  GroupName="Group1" IsChecked="True" />
+                    <RadioButton  GroupName="Group1" IsChecked="{Binding UneChambreUnEmploye}" />
                     <TextBlock Text="Une chambre, un employé" Margin="10,0,0,0" FontSize="20"/>
                 </StackPanel>
                 <ComboBox  
                           ItemsSource="{Binding ChambreInterventionCollectionView}" 
+                          SelectedItem="{Binding CurrentChambre}"
                           FontSize="16" Width="400" HorizontalAlignment="Left" Margin="40 10 0 0"  Background="AliceBlue">
                     <ComboBox.ItemTemplate>
                         <DataTemplate>
@@ -91,8 +90,9 @@
                 </ComboBox>
                 <ComboBox  
                           ItemsSource="{Binding EmployeInterventionCollectionView}" 
+                          SelectedItem="{Binding CurentEmploye}"
                           FontSize="16" Width="400" HorizontalAlignment="Left"
-                    Margin="40 10 0 0"  Background="AliceBlue">
+                    Margin="40 10 0 0"  Background="AliceBlue" >
                     <ComboBox.ItemTemplate>
                         <DataTemplate>
                             <StackPanel Orientation="Horizontal">
@@ -103,15 +103,16 @@
                         </DataTemplate>
                     </ComboBox.ItemTemplate>
                 </ComboBox>
-                
+
                 <StackPanel Orientation="Horizontal" Margin="0,30,0,0">
                     <materialDesign:PackIcon Height="20" Width="Auto" Kind="House" Foreground="Silver" Margin="0,0,10,0"/>
-                    <RadioButton  GroupName="Group1" IsChecked="True" />
+                    <RadioButton  GroupName="Group1" IsChecked="{Binding UnGroupeChambreUnEmplye}" />
                     <TextBlock Text="Un groupe de chambre, un employé" Margin="10,0,0,0" FontSize="20"/>
                 </StackPanel>
                 <ComboBox  
-                          SelectedItem=" " 
-                          FontSize="16" Width="400" HorizontalAlignment="Left" Margin="40 10 0 0"  Background="AliceBlue">
+                          ItemsSource="{Binding GroupeChambres}" 
+                          SelectedItem="{Binding CurrentGroupeChambre}"
+                           FontSize="16" Width="400" HorizontalAlignment="Left" Margin="40 10 0 0"  Background="AliceBlue">
                     <ComboBox.ItemTemplate>
                         <DataTemplate>
                             <StackPanel Orientation="Horizontal">
@@ -121,6 +122,7 @@
                             </StackPanel>
                         </DataTemplate>
                     </ComboBox.ItemTemplate>
+                    
                 </ComboBox>
                 <ComboBox  ItemsSource="{Binding EmployeInterventionCollectionView}"
                           SelectedItem=" " 
@@ -135,10 +137,21 @@
                         </DataTemplate>
                     </ComboBox.ItemTemplate>
                 </ComboBox>
+                <Button Background="AliceBlue" BorderBrush="AliceBlue" BorderThickness="1" Margin="0,50,-50,0" 
+                        Command="{Binding Add}" VerticalAlignment="Bottom" 
+                         HorizontalAlignment="Center" Width="150" Height="50">
+                    <Button.Content>
+                        <materialDesign:PackIcon Height="30" Width="Auto" Kind="AddBold" Foreground="Blue"   />
+                    </Button.Content>
+                </Button>
             </StackPanel>
-            
+
         </Border>
         <!--Droite-->
-        <Border Grid.Column="2" Grid.Row="1" BorderBrush="Transparent" BorderThickness="1" CornerRadius="10" HorizontalAlignment="Left" ></Border>
+        <Border Grid.Column="2" Grid.Row="1" BorderBrush="Transparent" BorderThickness="1" CornerRadius="10" HorizontalAlignment="Left" >
+
+            
+            
+        </Border>
     </Grid>
 </UserControl>

@@ -76,7 +76,7 @@
                 <TextBlock Text="Modifier" FontSize="22" Foreground="Navy" VerticalAlignment="Bottom"/>
                 <Button Grid.Column="2" Background="Transparent" BorderBrush="Transparent" BorderThickness="1" Command="{Binding InterventionDetailModifiedSaveCommand}" VerticalAlignment="Bottom">
                     <Button.Content>
-                        <materialDesign:PackIcon Height="20" Width="Auto" Kind="Floppy" Foreground="{Binding SaveColor}" Margin="0,0,10,0" />
+                        <materialDesign:PackIcon Height="20" Width="Auto" Kind="Floppy" Foreground="{Binding CurrentInterventionDetail.SaveColor}" Margin="0,0,10,0" />
                     </Button.Content>
                 </Button>
             </Grid>
@@ -116,17 +116,10 @@
         </Border>
         <!--Milieu-->
         <Border Grid.Column="1" Grid.Row="1" BorderBrush="Transparent" BorderThickness="1" CornerRadius="10" Margin="0" >
-            <DataGrid ItemsSource="{Binding InterventionDetailsCollectionView, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"  x:Name="dg"
+            <DataGrid ItemsSource="{Binding InterventionDetailsCollectionView, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" x:Name="dg"
                       SelectedItem="{Binding CurrentInterventionDetail, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"  
                           AutoGenerateColumns="False" HeadersVisibility="None" CanUserAddRows="False" VerticalScrollBarVisibility="Visible">
                     <DataGrid.Columns>
-                     <DataGridTemplateColumn Width="auto">
-                        <DataGridTemplateColumn.CellTemplate>
-                            <DataTemplate>
-                                <TextBlock Text="{Binding Libelle}" TextWrapping="Wrap" IsEnabled="False" FontWeight="Bold"/>
-                            </DataTemplate>
-                        </DataGridTemplateColumn.CellTemplate>
-                    </DataGridTemplateColumn>
                     <DataGridTemplateColumn Width="auto">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
@@ -170,19 +163,18 @@
         <Border Grid.Column="2" Grid.Row="1" BorderBrush="Transparent" BorderThickness="1" CornerRadius="10" HorizontalAlignment="Left" >
             <StackPanel Margin="5" Width="220">
                 <TextBlock Text="Commentaire" Margin="0,15,0,0" />
-                <TextBox FontSize="16"  Text="{Binding CurrentInterventionDetail.Commentaire, UpdateSourceTrigger=PropertyChanged}" TextWrapping="Wrap" TextAlignment="Left">
-                </TextBox>
+                <TextBox FontSize="16"  Text="{Binding CurrentInterventionDetail.Commentaire, UpdateSourceTrigger=PropertyChanged}"
+                         TextWrapping="Wrap" TextAlignment="Left"> </TextBox>
 
                 <!--Employé-->
                 <TextBlock Text="Employé" Margin="0,15,0,0"/>
-                <ComboBox ItemsSource="{Binding EmployeInterventionCollectionView, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
-                          SelectedItem="{Binding CurrentInterventionDetail.Employe, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                <ComboBox ItemsSource="{Binding EmployeIntervention, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                          SelectedItem="{Binding Source=CurrentInterventionDetail, Path=Employe, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                           FontSize="16">
                     <ComboBox.ItemTemplate>
                         <DataTemplate>
                             <StackPanel Orientation="Horizontal">
-                                <materialDesign:PackIcon Height="20" Width="Auto" Kind="Person" 
-                                                            Foreground="{Binding Couleur}" Margin="0,0,10,0"/>
+                                <materialDesign:PackIcon Height="20" Width="Auto" Kind="Person" Margin="0,0,10,0"/>
                                 <TextBlock Text="{Binding Nom}" TextWrapping="Wrap"/>
                             </StackPanel>
                         </DataTemplate>
@@ -190,14 +182,14 @@
                 </ComboBox>
                 <!--Chambre-->
                 <TextBlock Text="Chambre" Margin="0,15,0,0"/>
-                <ComboBox ItemsSource="{Binding ChambreInterventionCollectionView , Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
-                          SelectedItem="{Binding ElementName=dg,Path=SelectedItem.Chambre, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
-                          SelectedValue="0"
+                <ComboBox ItemsSource="{Binding ChambreIntervention, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                          SelectedItem="{Binding CurrentInterventionDetail.Chambre, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
                           FontSize="16">
                     <ComboBox.ItemTemplate>
                         <DataTemplate>
                             <StackPanel Orientation="Horizontal">
-                                <materialDesign:PackIcon Height="20" Width="Auto" Kind="House" Foreground="Blue" Margin="0,0,10,0"/>
+                                <materialDesign:PackIcon Height="20" Width="Auto" Kind="House" 
+                                                         Foreground="Blue" Margin="0,0,10,0"/>
                                 <TextBlock Text="{Binding Nom}" TextWrapping="Wrap"/>
                              </StackPanel>
                         </DataTemplate>
@@ -207,7 +199,7 @@
                 <!--Etat-->
                 <TextBlock Text="Etat" Margin="0,15,0,0"/>
                 <ComboBox ItemsSource="{Binding EtatIntervention}" 
-                          SelectedItem="{Binding ElementName=dg,Path=SelectedItem.Etat, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" FontSize="16">
+                          SelectedItem="{Binding CurrentInterventionDetail.Etat, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" FontSize="16">
                     <ComboBox.ItemTemplate>
                         <DataTemplate>
                             <StackPanel Orientation="Horizontal">

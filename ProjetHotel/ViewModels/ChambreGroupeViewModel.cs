@@ -45,7 +45,7 @@ namespace Makrisoft.Makfi.ViewModels
             set
             {
                 groupeChambres = value;
-                OnPropertyChanged("AllGroupeChambre");
+                OnPropertyChanged("GroupeChambres");
 
             }
         }
@@ -258,6 +258,7 @@ namespace Makrisoft.Makfi.ViewModels
                     );
                 CurrentGroupeChambre.ChambreCurrentGroupeListview = new ListCollectionView(CurrentGroupeChambre.ChambreCurrentGroupe);
                 CurrentGroupeChambre.ChambreCurrentGroupeListview.Refresh();
+
                 if (CurrentGroupeChambre.ChambreNotCurrentGroupe != null) CurrentGroupeChambre.ChambreNotCurrentGroupe.Clear();
                 CurrentGroupeChambre.ChambreNotCurrentGroupe = new ObservableCollection<ChambreByGroupe_VM>(
                   AllChambres.Where(c => c.GroupeChambre != CurrentGroupeChambre.Id && !CurrentGroupeChambre.ChambreCurrentGroupe.Any(a => a.IdDelaChambre == c.IdDelaChambre))

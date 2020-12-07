@@ -355,6 +355,7 @@ namespace Makrisoft.Makfi.ViewModels
             set { chambreNotCurrentGroupeListview = value; OnPropertyChanged("ChambreNotCurrentGroupeListview"); }
         }
         private ListCollectionView chambreNotCurrentGroupeListview;
+        //Les chambres associées à ce groupe de chambre 
         public ChambreByGroupe_VM CurrentChambreCG
         {
             get { return currentChambreCG; }

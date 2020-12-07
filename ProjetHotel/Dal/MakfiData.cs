@@ -278,7 +278,7 @@ namespace Makrisoft.Makfi.Dal
                              {
                                  e.Id = (Guid)Reader["Id"];
                                  e.Nom = Reader["Nom"] as string;
-                                 e.Etat = new Etat { Id = (Guid)Reader["Etat"] };
+                                // e.Etat = new Etat { Id = (Guid)Reader["Etat"] };
                                  e.Commentaire = Reader["Commentaire"] as string;
                              },
                              spParam

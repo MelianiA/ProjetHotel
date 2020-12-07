@@ -66,12 +66,7 @@ namespace Makrisoft.Makfi.Converters
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            //CurrentUtilisateur
-            if (value == null) return null;
-            if ((bool)value)
-                return (RoleEnum)parameter;
-
-            return RoleEnum.None ;
+            return null;
         }
     }
     public class BoolRoleConverter : IValueConverter
