@@ -68,7 +68,8 @@ namespace Makrisoft.Makfi.ViewModels
             set
             {
                 currentIntervention = value;
-
+                if (currentIntervention == null) IsEnabled = false;
+                else IsEnabled = true;
                 OnPropertyChanged("CurrentIntervention");
             }
         }
@@ -79,6 +80,18 @@ namespace Makrisoft.Makfi.ViewModels
             set { interventionCollectionView = value; OnPropertyChanged("InterventionCollectionView"); }
         }
         private ListCollectionView interventionCollectionView;
+
+        //IsEnabled
+        public bool IsEnabled
+        {
+            get { return isEnabled; }
+            set
+            {
+                isEnabled = value;
+                OnPropertyChanged("IsEnabled");
+            }
+        }
+        private bool isEnabled;
 
         //Etat
         public ObservableCollection<Etat_VM> EtatList

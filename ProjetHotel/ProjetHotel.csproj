@@ -129,6 +129,7 @@
     <Compile Include="ViewModels\HotelViewModel.cs" />
     <Compile Include="ViewModels\InterventionAjouterModel.cs" />
     <Compile Include="ViewModels\InterventionDetailViewModel.cs" />
+    <Compile Include="ViewModels\InterventionSupprimerModel.cs" />
     <Compile Include="ViewModels\InterventionViewModel.cs" />
     <Compile Include="ViewModels\_Reference_ViewModel.cs" />
     <Compile Include="ViewModels\HeaderViewModel.cs" />

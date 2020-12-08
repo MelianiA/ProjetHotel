@@ -21,7 +21,7 @@
             <Border BorderBrush="Navy" BorderThickness="1" CornerRadius="15" Width="210" HorizontalAlignment="Right">
                 <DockPanel Margin="5">
                     <ComboBox DockPanel.Dock="Bottom"  HorizontalAlignment="Center" FontSize="20" IsEnabled="{Binding CanChangeUtilisateur}"
-                              ItemsSource="{Binding Utilisateurs}" 
+                              ItemsSource="{Binding Utilisateurs, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
                               DisplayMemberPath="Nom" 
                               SelectedItem="{Binding CurrentUtilisateur}">
                     </ComboBox>

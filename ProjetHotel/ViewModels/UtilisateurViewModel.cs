@@ -112,7 +112,7 @@ namespace Makrisoft.Makfi.ViewModels
             set
             {
                 currentUtilisateur = value;
-                if (currentUtilisateur == null) IsEnabled = false;
+                if (currentUtilisateur == null || currentUtilisateur.IsAdmin) IsEnabled = false;
                 else IsEnabled = true;
                 OnPropertyChanged("CurrentUtilisateur");
 
@@ -241,14 +241,8 @@ namespace Makrisoft.Makfi.ViewModels
         }
         private bool OnCanExecuteDeleteCommand()
         {
-            if (CurrentUtilisateur != null)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+            return CurrentUtilisateur != null 
+                && (!CurrentUtilisateur.IsAdmin || (CurrentUtilisateur.IsAdmin && Utilisateurs.Count(u=>u.IsAdmin && u.SaveColor!="Red")>1));
         }
         #endregion
     }

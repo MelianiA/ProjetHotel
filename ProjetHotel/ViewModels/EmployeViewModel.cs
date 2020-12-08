@@ -52,6 +52,19 @@ namespace Makrisoft.Makfi.ViewModels
         }
         private ListCollectionView employeCollectionView;
 
+
+        //IsEnabled
+        public bool IsEnabled
+        {
+            get { return isEnabled; }
+            set
+            {
+                isEnabled = value;
+                OnPropertyChanged("IsEnabled");
+            }
+        }
+        private bool isEnabled;
+
         //Employe
         public ObservableCollection<HotelEmploye_VM> HotelEmployesCurrentHotel
         {
@@ -74,6 +87,8 @@ namespace Makrisoft.Makfi.ViewModels
             set
             {
                 currentEmploye = value;
+                if (currentEmploye == null) IsEnabled = false;
+                else IsEnabled = true;
                 OnPropertyChanged("CurrentEmploye");
             }
         }

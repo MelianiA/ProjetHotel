@@ -164,12 +164,12 @@
             <StackPanel Margin="5" Width="220">
                 <TextBlock Text="Commentaire" Margin="0,15,0,0" />
                 <TextBox FontSize="16"  Text="{Binding CurrentInterventionDetail.Commentaire, UpdateSourceTrigger=PropertyChanged}"
-                         TextWrapping="Wrap" TextAlignment="Left"> </TextBox>
+                         TextWrapping="Wrap" TextAlignment="Left" IsEnabled="{Binding IsEnabled}"> </TextBox>
 
                 <!--Employé-->
                 <TextBlock Text="Employé" Margin="0,15,0,0"/>
-                <ComboBox ItemsSource="{Binding EmployeIntervention, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
-                          SelectedItem="{Binding Source=CurrentInterventionDetail, Path=Employe, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                <ComboBox ItemsSource="{Binding EmployeIntervention}" IsEnabled="{Binding IsEnabled}"
+                          SelectedItem="{Binding CurrentInterventionDetail.Employe, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                           FontSize="16">
                     <ComboBox.ItemTemplate>
                         <DataTemplate>
@@ -180,9 +180,10 @@
                         </DataTemplate>
                     </ComboBox.ItemTemplate>
                 </ComboBox>
+                
                 <!--Chambre-->
                 <TextBlock Text="Chambre" Margin="0,15,0,0"/>
-                <ComboBox ItemsSource="{Binding ChambreIntervention, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                <ComboBox ItemsSource="{Binding ChambreIntervention}" IsEnabled="{Binding IsEnabled}"
                           SelectedItem="{Binding CurrentInterventionDetail.Chambre, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
                           FontSize="16">
                     <ComboBox.ItemTemplate>
@@ -198,7 +199,7 @@
 
                 <!--Etat-->
                 <TextBlock Text="Etat" Margin="0,15,0,0"/>
-                <ComboBox ItemsSource="{Binding EtatIntervention}" 
+                <ComboBox ItemsSource="{Binding EtatIntervention}" IsEnabled="{Binding IsEnabled}"
                           SelectedItem="{Binding CurrentInterventionDetail.Etat, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" FontSize="16">
                     <ComboBox.ItemTemplate>
                         <DataTemplate>

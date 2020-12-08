@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Makrisoft.Makfi.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -20,7 +21,9 @@ namespace Makrisoft.Makfi.Views
     {
         public InterventionSupprimer()
         {
-            //InitializeComponent();
+            Reference_ViewModel.InterventionSupprimer = new InterventionSupprimerModel();
+            DataContext = Reference_ViewModel.InterventionSupprimer;
+            InitializeComponent();
         }
     }
 }

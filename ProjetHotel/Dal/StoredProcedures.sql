@@ -527,6 +527,60 @@ BEGIN CATCH
        RETURN;
 END CATCH
  GO
+
+  ----------------------------------------------------------------------------------------------------------
+  Create PROC [dbo].[InterventionDetail_Save](@data xml=NULL)
+ AS
+	DECLARE @IDs TABLE(ID uniqueidentifier);
+	DECLARE @message nvarchar(MAX)
+	DECLARE @Id uniqueidentifier
+
+-- PARTIE recup XML :
+select 
+ 		T.N.value('(id/text())[1]', 'uniqueidentifier') Id, 
+		T.N.value('(employeAffecte/text())[1]', 'uniqueidentifier') EmployeAffecte, 
+ 		T.N.value('(chambreAffectee/text())[1]', 'uniqueidentifier') ChambreAffectee,
+ 		T.N.value('(commentaire/text())[1]', 'nvarchar(MAX)') Commentaire,
+		T.N.value('(intervention/text())[1]', 'uniqueidentifier') Intervention,
+  		T.N.value('(etat/text())[1]', 'uniqueidentifier') Etat
+		into #_InterventionDetail
+from @data.nodes('interventionDetail') as T(N)
+-- PARTIE2
+select @id=Id  from #_InterventionDetail
+-- Update  
+BEGIN TRY
+	 update InterventionDetail set
+			EmployeAffecte= t.EmployeAffecte, 
+			ChambreAffectee=t.ChambreAffectee, 
+			Commentaire=t.Commentaire,
+			Intervention=t.Intervention,
+			Etat=t.Etat
+					output inserted.Id into @IDs(ID)
+			from (select Id, EmployeAffecte, ChambreAffectee, Commentaire, Intervention,Etat from #_InterventionDetail where Id is not null) t
+			where InterventionDetail.Id=t.Id
+END TRY
+BEGIN CATCH
+       select @message = ERROR_MESSAGE() 
+    RAISERROR (@message, 16, 1);  
+       RETURN;
+END CATCH
+-- Insert
+insert InterventionDetail(EmployeAffecte, ChambreAffectee, Commentaire, Intervention,Etat )
+		output inserted.Id into @IDs(ID)
+	(select EmployeAffecte, ChambreAffectee, Commentaire, Intervention,Etat from #_InterventionDetail where Id is null )
+select @id=ID from @IDs
+select Id from @IDs
+GO
+
+exec InterventionDetail_Save '
+                    <interventionDetail>
+                        <id>62e4cb2b-8ffb-4193-bbd1-ed882b4921ec</id>
+                        <employeAffecte>a9531486-348e-4f08-a7c7-102a28026afd</employeAffecte>
+                        <commentaire>Je la modifie</commentaire>    
+						<chambreAffectee>f6dd41d2-527a-455d-b62e-0ffc09cc0d9a</chambreAffectee>
+                        <intervention>01eede37-1732-4f07-be1e-4f3b4a88b26b</intervention>    
+                        <etat>9f7702b6-1f5b-40b9-b663-baa56eeb17d0</etat> 
+                     </interventionDetail>'
  
  -- *************************************************************************************************
 -- Delete

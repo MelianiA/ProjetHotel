@@ -51,6 +51,8 @@ namespace Makrisoft.Makfi.ViewModels
             set
             {
                 currentHotel = value;
+                if (currentHotel == null) IsEnabled = false;
+                else IsEnabled = true;
                 OnPropertyChanged("CurrentHotel");
             }
         }
@@ -61,6 +63,18 @@ namespace Makrisoft.Makfi.ViewModels
             set { hotelCollectionView = value; OnPropertyChanged("HotelCollectionView"); }
         }
         private ListCollectionView hotelCollectionView;
+
+        //IsEnabled
+        public bool IsEnabled
+        {
+            get { return isEnabled; }
+            set
+            {
+                isEnabled = value;
+                OnPropertyChanged("IsEnabled");
+            }
+        }
+        private bool isEnabled;
 
         //Gouvernante
         public ObservableCollection<Utilisateur_VM> GouvernanteList

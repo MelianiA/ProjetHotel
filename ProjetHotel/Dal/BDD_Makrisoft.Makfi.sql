@@ -159,7 +159,7 @@ CREATE TABLE [dbo].[InterventionDetail](
 	[Id] [uniqueidentifier] NOT NULL,
 	[EmployeAffecte] [uniqueidentifier] NOT NULL,
 	[ChambreAffectee] [uniqueidentifier] NOT NULL,
-	[Commentaire] [nvarchar](10) NULL,
+	[Commentaire] [nvarchar](max) NULL,
 	[Intervention] [uniqueidentifier] NOT NULL,
 	[Etat] [uniqueidentifier] NOT NULL,
  CONSTRAINT [PK_InterventionDetail] PRIMARY KEY CLUSTERED 

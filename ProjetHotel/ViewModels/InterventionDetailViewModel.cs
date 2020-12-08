@@ -20,12 +20,13 @@ namespace Makrisoft.Makfi.ViewModels
             // Icommand
             InterventionDetailSelectedAddCommand = new RelayCommand(p => OnAddCommand(), p => true);
             InterventionDetailSelectedDeleteCommand = new RelayCommand(p => OnSupprimeCommand(), p => true);
+            InterventionDetailModifiedSaveCommand = new RelayCommand(p => OnSaveCommand(), p => OnCanExecuteSaveCommand());
 
             // ObservableCollection
             InterventionDetails = new ObservableCollection<InterventionDetail_VM>();
             //Employe
-            EmployeIntervention = new ObservableCollection<Employe_VM>();
-            EmployeInterventionCollectionView = new ListCollectionView(EmployeIntervention);
+            //EmployeIntervention = new ObservableCollection<Employe_VM>();
+            //EmployeInterventionCollectionView = new ListCollectionView(EmployeIntervention);
             //Chambre
             ChambreIntervention = new ObservableCollection<Chambre_VM>();
             ChambreInterventionCollectionView = new ListCollectionView(ChambreIntervention);
@@ -34,7 +35,30 @@ namespace Makrisoft.Makfi.ViewModels
 
         }
 
+        private bool OnCanExecuteSaveCommand()
+        {
+            return CurrentInterventionDetail != null;
+        }
 
+        private void OnSaveCommand()
+        {
+            Guid? monID = null;
+            if (currentInterventionDetail.Id != default) monID = currentInterventionDetail.Id;
+            var param = $@"
+                    <interventionDetail>
+                        <id>{monID}</id>
+                        <employeAffecte>{currentInterventionDetail.Employe.Id}</employeAffecte>
+                        <commentaire>{currentInterventionDetail.Commentaire}</commentaire>    
+						<chambreAffectee>{currentInterventionDetail.Chambre.Id}</chambreAffectee>
+                        <intervention>{CurrentIntervention.Id}</intervention>    
+                        <etat>{currentInterventionDetail.Etat.Id}</etat> 
+                     </interventionDetail>";
+            var ids = MakfiData.InterventionDetail_Save(param);
+            if (ids.Count == 0) throw new Exception("Rien n'a été sauvgardé ! ");
+            currentInterventionDetail.Id = ids[0].Id;
+            currentInterventionDetail.SaveColor = "Navy";
+
+        }
 
 
         #endregion
@@ -53,6 +77,19 @@ namespace Makrisoft.Makfi.ViewModels
         }
         private Intervention_VM currentIntervention;
 
+        //IsEnabled
+        public bool IsEnabled
+        {
+            get { return isEnabled; }
+            set
+            {
+                isEnabled = value;
+                OnPropertyChanged("IsEnabled");
+            }
+        }
+        private bool isEnabled;
+
+
         //InterventionDetails
         public ObservableCollection<InterventionDetail_VM> InterventionDetails
         {
@@ -66,6 +103,8 @@ namespace Makrisoft.Makfi.ViewModels
             set
             {
                 currentInterventionDetail = value;
+                if (currentInterventionDetail == null) IsEnabled = false;
+                else IsEnabled = true;
                 OnPropertyChanged("CurrentInterventionDetail");
             }
         }
@@ -175,17 +214,19 @@ namespace Makrisoft.Makfi.ViewModels
         //ICommand
         public ICommand InterventionDetailSelectedAddCommand { get; set; }
         public ICommand InterventionDetailSelectedDeleteCommand { get; set; }
-
+        public ICommand InterventionDetailModifiedSaveCommand { get; set; }
         // Méthodes OnCommand
         private void OnAddCommand()
         {
             Reference_ViewModel.Main.ViewSelected = ViewEnum.InterventionAjouter;
+            Reference_ViewModel.InterventionAjouter.Load_InterventionDetailsAjouter();
         }
 
         private void OnSupprimeCommand()
         {
             Reference_ViewModel.Main.ViewSelected = ViewEnum.InterventionSupprimer;
         }
+
         // Méthodes OnCanExecuteCommand
 
         //Filter 
@@ -202,7 +243,8 @@ namespace Makrisoft.Makfi.ViewModels
             EmployeIntervention = Reference_ViewModel.Employe.AllEmployes;
             EmployeInterventionCollectionView = new ListCollectionView(EmployeIntervention);
 
-            ChambreIntervention = new ObservableCollection<Chambre_VM>(Reference_ViewModel.Chambre.ChambreGroupeChambre.Select(c => new Chambre_VM { Id = c.Id, Nom = c.Nom }).ToList());
+            ChambreIntervention = new ObservableCollection<Chambre_VM>(
+                Reference_ViewModel.Chambre.ChambreGroupeChambre.Select(c => new Chambre_VM { Id = c.Id, Nom = c.Nom }).ToList());
             ChambreInterventionCollectionView = new ListCollectionView(ChambreIntervention);
             // InterventionDetails
             if (InterventionDetails != null) InterventionDetails.Clear();
@@ -220,12 +262,12 @@ namespace Makrisoft.Makfi.ViewModels
                .Select(x => new InterventionDetail_VM
                {
                    Id = x.Id,
-                   Employe = Reference_ViewModel.Employe.AllEmployes.Where(e => e.Id == x.Employe).SingleOrDefault(),
-                   Chambre = Reference_ViewModel.Chambre.ChambreGroupeChambre.Where(c => c.Id == x.Chambre)
-                   .Select(b => new Chambre_VM { Id = b.Id, Commentaire = b.Commentaire, Etat = b.Etat, Nom = b.Nom }).SingleOrDefault(),
+                   Employe = EmployeIntervention.Where(e => e.Id == x.Employe).SingleOrDefault(),
+                   Chambre = ChambreIntervention.Where(c => c.Id == x.Chambre).SingleOrDefault(),
                    Etat = EtatIntervention.Where(e => e.Id == x.Etat).SingleOrDefault(),
                    Libelle = Reference_ViewModel.Intervention.CurrentIntervention.Libelle,
-                   Commentaire = x.Commentaire
+                   Commentaire = x.Commentaire,
+                  SaveColor="Navy"
                }).OrderBy(x => x.Libelle).ToList());
             InterventionDetailsCollectionView = new ListCollectionView(InterventionDetails);
             InterventionDetailsCollectionView.Refresh();
@@ -233,7 +275,7 @@ namespace Makrisoft.Makfi.ViewModels
 
             CurrentInterventionDetail = InterventionDetails.Count > 0 ? InterventionDetails[0] : null;
 
-      
+
         }
         private void Load_Etat()
         {

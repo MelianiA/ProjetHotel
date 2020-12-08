@@ -156,16 +156,16 @@
         <Border Grid.Column="2" Grid.Row="1" BorderBrush="Transparent" BorderThickness="1" CornerRadius="10" HorizontalAlignment="Left" >
             <StackPanel Margin="5" Width="220">
                 <TextBlock Text="Nom" Margin="0,15,0,0"/>
-                <TextBox FontSize="16" Text="{Binding CurrentEmploye.Nom, UpdateSourceTrigger=PropertyChanged}"/>
+                <TextBox FontSize="16" Text="{Binding CurrentEmploye.Nom, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding IsEnabled}"/>
 
                 <TextBlock Text="Prénom" Margin="0,15,0,0"/>
-                <TextBox FontSize="16" Text="{Binding CurrentEmploye.Prenom, UpdateSourceTrigger=PropertyChanged}"/>
+                <TextBox FontSize="16" Text="{Binding CurrentEmploye.Prenom, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding IsEnabled}"/>
 
                 <TextBlock Text="Commentaire" Margin="0,15,0,0"/>
-                <TextBox FontSize="16"  Text="{Binding CurrentEmploye.Commentaire, UpdateSourceTrigger=PropertyChanged}" TextWrapping="Wrap" TextAlignment="Left"/>
+                <TextBox FontSize="16"  Text="{Binding CurrentEmploye.Commentaire, UpdateSourceTrigger=PropertyChanged}" TextWrapping="Wrap" TextAlignment="Left" IsEnabled="{Binding IsEnabled}"/>
 
                 <TextBlock Text="Etat" Margin="0,15,0,0"/>
-                <ComboBox ItemsSource="{Binding EtatEmploye}" SelectedItem="{Binding CurrentEmploye.Etat}" FontSize="16">
+                <ComboBox ItemsSource="{Binding EtatEmploye}" SelectedItem="{Binding CurrentEmploye.Etat}" FontSize="16" IsEnabled="{Binding IsEnabled}">
                     <ComboBox.ItemTemplate>
                         <DataTemplate>
                             <StackPanel Orientation="Horizontal">

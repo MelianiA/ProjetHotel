@@ -64,6 +64,18 @@ namespace Makrisoft.Makfi.ViewModels
         }
         private ListCollectionView groupeChambreCollectionView;
 
+        //IsEnabled
+        public bool IsEnabled
+        {
+            get { return isEnabled; }
+            set
+            {
+                isEnabled = value;
+                OnPropertyChanged("IsEnabled");
+            }
+        }
+        private bool isEnabled;
+
         //ChambreGroupeChambre
         public ObservableCollection<ChambreGroupeChambre_VM> ChambreGroupeChambre
         {
@@ -86,6 +98,8 @@ namespace Makrisoft.Makfi.ViewModels
             set
             {
                 currentChambreGChambre = value;
+                if (currentChambreGChambre == null) IsEnabled = false;
+                else IsEnabled = true;
                 OnPropertyChanged("CurrentChambreGChambre");
             }
         }

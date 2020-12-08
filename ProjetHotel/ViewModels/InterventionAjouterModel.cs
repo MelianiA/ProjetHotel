@@ -21,20 +21,7 @@ namespace Makrisoft.Makfi.ViewModels
             Add = new RelayCommand(p => OnAddCommand(), p => OnCanExcuteAddCommand());
 
             // Load
-            Load_Chambres();
-
-            ////Autres
-            if (Reference_ViewModel.Employe.AllEmployes != null)
-            {
-                EmployeIntervention = Reference_ViewModel.Employe.AllEmployes;
-                EmployeInterventionCollectionView = new ListCollectionView(EmployeIntervention);
-            }
-            if (Reference_ViewModel.Chambre.ChambreGroupeChambre != null)
-            {
-                ChambreIntervention = new ObservableCollection<Chambre_VM>(Reference_ViewModel.Chambre.ChambreGroupeChambre.Select(c => new Chambre_VM { Id = c.Id, Nom = c.Nom }).ToList());
-                ChambreInterventionCollectionView = new ListCollectionView(ChambreIntervention);
-            }
-            GroupeChambres = Reference_ViewModel.ChambreGroupe.GroupeChambres;
+            Load_InterventionDetailsAjouter();
         }
 
 
@@ -92,12 +79,26 @@ namespace Makrisoft.Makfi.ViewModels
             get { return currentGroupeChambre; }
             set
             {
-                currentGroupeChambre = value; OnPropertyChanged("CurrentGroupeChambre");
+                currentGroupeChambre = value;
+                if (currentGroupeChambre != null  )
+                    Load_ChambreCurrentGroupe();
+                OnPropertyChanged("CurrentGroupeChambre");
             }
         }
         private GroupeChambre_VM currentGroupeChambre;
 
+        //ChambreByGroupe 
+        public ObservableCollection<ChambreByGroupe_VM> AllChambres
+        {
+            get { return allChambres; }
+            set
+            {
+                allChambres = value;
+                OnPropertyChanged("AllChambres");
 
+            }
+        }
+        private ObservableCollection<ChambreByGroupe_VM> allChambres;
 
         //Employe 
         public ObservableCollection<Employe_VM> EmployeIntervention
@@ -210,8 +211,9 @@ namespace Makrisoft.Makfi.ViewModels
             }
 
             if (UnGroupeChambreUnEmplye)
+            
             {
-                if(CurrentGroupeChambre.ChambreCurrentGroupe == null)
+                if (CurrentGroupeChambre.ChambreCurrentGroupe == null)
                 {
                     MessageBox.Show("Le groupe: " + CurrentGroupeChambre.Nom + " ne contient aucune chambre ");
                     return;
@@ -220,7 +222,7 @@ namespace Makrisoft.Makfi.ViewModels
                 {
                     var inteventionChambreEmploye = new InterventionDetail_VM
                     {
-                        Chambre = new Chambre_VM { Id= item.IdDelaChambre, Nom=item.NomChambre},
+                        Chambre = new Chambre_VM { Id = item.IdDelaChambre, Nom = item.NomChambre },
                         Employe = CurentEmploye,
                         Etat = Reference_ViewModel.InterventionDetail.EtatIntervention.Where(e => e.Libelle == "None")
                         .SingleOrDefault(),
@@ -246,8 +248,9 @@ namespace Makrisoft.Makfi.ViewModels
 
         #region Load
 
-        private void Load_Chambres()
+        public void Load_InterventionDetailsAjouter()
         {
+
             Chambres = new ObservableCollection<Chambre_VM>(
                 MakfiData.Chambre_Read()
                 .Select(x => new Chambre_VM
@@ -255,8 +258,45 @@ namespace Makrisoft.Makfi.ViewModels
                     Id = x.Id,
                     Nom = x.Nom
                 }));
+
+            //Employe
+            if (Reference_ViewModel.Employe.AllEmployes != null)
+            {
+                EmployeIntervention = Reference_ViewModel.Employe.AllEmployes;
+                EmployeInterventionCollectionView = new ListCollectionView(EmployeIntervention);
+            }
+            //chambres
+            if (Reference_ViewModel.Chambre.ChambreGroupeChambre != null)
+            {
+                ChambreIntervention = new ObservableCollection<Chambre_VM>(Reference_ViewModel.Chambre.ChambreGroupeChambre.Select(c => new Chambre_VM { Id = c.Id, Nom = c.Nom }).ToList());
+                ChambreInterventionCollectionView = new ListCollectionView(ChambreIntervention);
+            }
+            //GroupeChambres
+            GroupeChambres = Reference_ViewModel.ChambreGroupe.GroupeChambres;
+
+            //
+            AllChambres = new ObservableCollection<ChambreByGroupe_VM>(
+              MakfiData.ChambreByGroupe_Read($"<chambreByGroupe><hotel>{Reference_ViewModel.Header.CurrentHotel.Id}</hotel></chambreByGroupe>")
+              .Select(x => new ChambreByGroupe_VM
+              {
+                  GroupeChambre = x.GroupeChambre,
+                  Nom = x.Nom,
+                  IdDelaChambre = x.IdDelaChambre,
+                  NomChambre = x.NomChambre
+              }).ToList());
         }
 
+        public void Load_ChambreCurrentGroupe()
+        {
+            if (CurrentGroupeChambre != null)
+            {
+                CurrentGroupeChambre.ChambreCurrentGroupe = new ObservableCollection<ChambreByGroupe_VM>(
+                    AllChambres.Where(c => c.GroupeChambre == CurrentGroupeChambre.Id)
+                    );
+                CurrentGroupeChambre.ChambreCurrentGroupeListview = new ListCollectionView(CurrentGroupeChambre.ChambreCurrentGroupe);
+
+            }
+        }
         #endregion
     }
 }

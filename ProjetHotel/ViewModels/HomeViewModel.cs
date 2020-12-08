@@ -28,8 +28,14 @@ namespace Makrisoft.Makfi.ViewModels
         
         public bool WithHotel
         {
-            get { return Reference_ViewModel.Header.CurrentHotel!=null; }
+            get { return withHotel; }
+            set
+            {
+                withHotel = value;
+                OnPropertyChanged("WithHotel");
+            }
         }
+        private bool withHotel;
 
         #endregion
 

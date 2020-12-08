@@ -81,7 +81,9 @@ namespace Makrisoft.Makfi.Dal
             ");
             return true;
         }
- 
+
+        
+
 
 
 
@@ -553,6 +555,19 @@ namespace Makrisoft.Makfi.Dal
              },
              spParam
              );
+        }
+
+        internal static List<InterventionDetail> InterventionDetail_Save(string spParam)
+        {
+            return ReadAll<InterventionDetail>
+            (
+            "InterventionDetail_Save",
+            e =>
+            {
+                e.Id = (Guid)Reader["Id"];
+            },
+            spParam
+            );
         }
 
 

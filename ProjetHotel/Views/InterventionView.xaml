@@ -156,21 +156,21 @@
         <Border Grid.Column="2" Grid.Row="1" BorderBrush="Transparent" BorderThickness="1" CornerRadius="10" HorizontalAlignment="Left" >
             <StackPanel Margin="5" Width="220">
                 <TextBlock Text="Libellé" Margin="0,15,0,0"/>
-                <TextBox FontSize="16" Text="{Binding CurrentIntervention.Libelle, UpdateSourceTrigger=PropertyChanged}">
+                <TextBox FontSize="16" Text="{Binding CurrentIntervention.Libelle, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding IsEnabled}">
                 </TextBox>
 
                 <TextBlock Text="Commentaire" Margin="0,15,0,0"/>
-                <TextBox FontSize="16"  Text="{Binding CurrentIntervention.Commentaire, UpdateSourceTrigger=PropertyChanged}" TextWrapping="Wrap" TextAlignment="Left">
+                <TextBox FontSize="16"  Text="{Binding CurrentIntervention.Commentaire, UpdateSourceTrigger=PropertyChanged}" TextWrapping="Wrap" TextAlignment="Left" IsEnabled="{Binding IsEnabled}">
                 </TextBox>
                 <TextBlock Text="Date " Margin="0,30,0,0"/>
                 <DatePicker IsManipulationEnabled="False" 
                             DisplayDateStart="{Binding CurrentIntervention.Commentaire}"
-                            SelectedDate="{Binding CurrentIntervention.Date1, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" FontSize="16">
+                            SelectedDate="{Binding CurrentIntervention.Date1, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" FontSize="16" IsEnabled="{Binding IsEnabled}">
                     
                 </DatePicker>
                 <TextBlock Text="Etat" Margin="0,30,0,0"/>
                 <ComboBox ItemsSource="{Binding EtatIntervention, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                          SelectedItem="{Binding CurrentIntervention.Etat, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" FontSize="16">
+                          SelectedItem="{Binding CurrentIntervention.Etat, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" FontSize="16" IsEnabled="{Binding IsEnabled}">
                     <ComboBox.ItemTemplate>
                         <DataTemplate>
                             <StackPanel Orientation="Horizontal">
@@ -182,7 +182,7 @@
                     </ComboBox.ItemTemplate>
                 </ComboBox>
 
-                <StackPanel Orientation="Horizontal" Margin="0,20,0,0">
+                <StackPanel Orientation="Horizontal" Margin="0,20,0,0" IsEnabled="{Binding IsEnabled}">
                     <CheckBox  IsChecked="{Binding CurrentIntervention.Model}" />
                     <TextBlock Text="Modèle" Margin="10,0,0,0" FontSize="16" />
                 </StackPanel>

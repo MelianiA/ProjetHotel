@@ -27,6 +27,10 @@ namespace Makrisoft.Makfi.ViewModels
                 Reference_ViewModel.Header.Message = "Redémarrage nécessaire";
                 return;
             }
+            if (Reference_ViewModel.Home != null)
+                Reference_ViewModel.Home.WithHotel = Reference_ViewModel.Header.CurrentHotel == null ? false : true;
+
+
             Password += key.ToString();
             if (Password.Length == 4)
             {

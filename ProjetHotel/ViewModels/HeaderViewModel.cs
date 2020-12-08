@@ -17,7 +17,17 @@ namespace Makrisoft.Makfi.ViewModels
 
         #region Bindings
         // Utilisateur
-        public ObservableCollection<Utilisateur_VM> Utilisateurs { get; set; }
+        public ObservableCollection<Utilisateur_VM> Utilisateurs
+        {
+            get { return utilisateurs; }
+            set
+            {
+                utilisateurs = value;
+                OnPropertyChanged("Utilisateurs");
+
+            }
+        }
+        private ObservableCollection<Utilisateur_VM> utilisateurs;
         public Utilisateur_VM CurrentUtilisateur
         {
             get
@@ -59,6 +69,7 @@ namespace Makrisoft.Makfi.ViewModels
                        }));
                 }
                 CurrentHotel = Hotels.FirstOrDefault();
+                 
                 OnPropertyChanged("CurrentUtilisateur");
             }
         }
@@ -182,6 +193,7 @@ namespace Makrisoft.Makfi.ViewModels
             Reference_ViewModel.Main.ViewSelected = ViewEnum.Login;
             CurrentUtilisateur = Utilisateurs.FirstOrDefault(g => g.Nom == Properties.Settings.Default.Login);
             CanChangeUtilisateur = true;
+            Utilisateur_Load();
         }
         #endregion
 
@@ -228,6 +240,8 @@ namespace Makrisoft.Makfi.ViewModels
             if (Utilisateurs.Count == 1) CurrentUtilisateur = Utilisateurs[0];
             if (CurrentUtilisateur == null)
                 CurrentUtilisateur = Utilisateurs.FirstOrDefault(g => g.Nom.ToUpper() == Properties.Settings.Default.Login.ToUpper());
+            if (CurrentUtilisateur == null) CurrentUtilisateur = Utilisateurs.FirstOrDefault(u => u.Statut == RoleEnum.Gouvernante);
+            if (CurrentUtilisateur == null) CurrentUtilisateur = Utilisateurs.FirstOrDefault();
 
             if (string.IsNullOrEmpty(currentUtilisateur.CodePin))
                 Message = "Tapez votre code pin";
