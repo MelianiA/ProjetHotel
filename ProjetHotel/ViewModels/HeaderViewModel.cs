@@ -179,8 +179,6 @@ namespace Makrisoft.Makfi.ViewModels
                 case ViewEnum.InterventionDetail:
                     if (Reference_ViewModel.Intervention.RevienIci == true)
                     {
-                        Reference_ViewModel.Intervention.CurrentIntervention.Etat = Reference_ViewModel.InterventionDetail.GetSommeEtats();
-                        Reference_ViewModel.Intervention.CurrentIntervention.SaveColor = "Navy";
                         /********mettre à jour l'etat de l'intervention dans la base de données********/
                         Guid? monID = null;
                         if (Reference_ViewModel.Intervention.CurrentIntervention.Id != default) monID = Reference_ViewModel.Intervention.CurrentIntervention.Id;

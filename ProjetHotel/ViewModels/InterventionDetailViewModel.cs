@@ -19,23 +19,13 @@ namespace Makrisoft.Makfi.ViewModels
         {
             // Icommand
             InterventionDetailSelectedAddCommand = new RelayCommand(p => OnAddCommand(), p => true);
-            InterventionDetailSelectedDeleteCommand = new RelayCommand(p => OnSupprimeCommand(), p => true);
+            InterventionDetailSelectedDeleteCommand = new RelayCommand(p => OnSupprimeCommand(), p => OnCanExecuteSupprimeCommand());
             InterventionDetailModifiedSaveCommand = new RelayCommand(p => OnSaveCommand(), p => OnCanExecuteSaveCommand());
             AddCommand = new RelayCommand(p => OnAddCommandSimple(), p => true);
             DeleteCommand = new RelayCommand(p => OnDeleteCommandSimple(), p => OnCanExecuteDeleteCommandSimple());
-
-            // ObservableCollection
-            InterventionDetails = new ObservableCollection<InterventionDetail_VM>();
-            //Employe
-            //EmployeIntervention = new ObservableCollection<Employe_VM>();
-            //EmployeInterventionCollectionView = new ListCollectionView(EmployeIntervention);
-            //Chambre
-            ChambreIntervention = new ObservableCollection<Chambre_VM>();
-            ChambreInterventionCollectionView = new ListCollectionView(ChambreIntervention);
-
-            //GroupeChambre
+            EnregistrerTout = new RelayCommand(p => OnEnregistrerTout(), p => OnCanExecuteEnregistrerTout());
         }
- 
+
         #endregion
 
         #region Binding
@@ -190,6 +180,7 @@ namespace Makrisoft.Makfi.ViewModels
         public ICommand InterventionDetailModifiedSaveCommand { get; set; }
         public ICommand AddCommand { get; set; }
         public ICommand  DeleteCommand { get; set; }
+        public ICommand EnregistrerTout { get; set; }
 
         // Méthodes OnCommand
         private void OnAddCommand()
@@ -202,6 +193,7 @@ namespace Makrisoft.Makfi.ViewModels
         private void OnSupprimeCommand()
         {
             Reference_ViewModel.InterventionSupprimer.Load_InterventionDetailsAjouter();
+            Reference_ViewModel.InterventionSupprimer.Annuler = true;
             Reference_ViewModel.Main.ViewSelected = ViewEnum.InterventionSupprimer;
         }
         private void OnSaveCommand()
@@ -221,6 +213,9 @@ namespace Makrisoft.Makfi.ViewModels
             if (ids.Count == 0) throw new Exception("Rien n'a été sauvgardé ! ");
             currentInterventionDetail.Id = ids[0].Id;
             currentInterventionDetail.SaveColor = "Navy";
+            Reference_ViewModel.Intervention.CurrentIntervention.Etat = GetSommeEtats();
+            Reference_ViewModel.Intervention.CurrentIntervention.SaveColor = "Navy";
+
         }
         private void OnAddCommandSimple()
         {
@@ -234,6 +229,32 @@ namespace Makrisoft.Makfi.ViewModels
             var param = MakfiData.InterventionDetails_Delete($"<interventionDetails><id>{CurrentInterventionDetail.Id}</id></interventionDetails>");
             if (param) InterventionDetails.Remove(CurrentInterventionDetail);
         }
+        private void OnEnregistrerTout()
+        {
+            var IntDetails = InterventionDetails.Where(i => i.SaveColor == "Red");
+            foreach (var item in IntDetails)
+            {
+                Guid? monID = null;
+                if (item.Id != default) monID = item.Id;
+                var param = $@"
+                    <interventionDetail>
+                        <id>{monID}</id>
+                        <employeAffecte>{item.Employe.Id}</employeAffecte>
+                        <commentaire>{item.Commentaire}</commentaire>    
+						<chambreAffectee>{item.Chambre.Id}</chambreAffectee>
+                        <intervention>{CurrentIntervention.Id}</intervention>    
+                        <etat>{item.Etat.Id}</etat> 
+                     </interventionDetail>";
+                var ids = MakfiData.InterventionDetail_Save(param);
+                if (ids.Count == 0) throw new Exception("Rien n'a été sauvgardé ! ");
+                item.Id = ids[0].Id;
+                item.SaveColor = "Navy";
+                Reference_ViewModel.Intervention.CurrentIntervention.Etat =GetSommeEtats();
+                Reference_ViewModel.Intervention.CurrentIntervention.SaveColor = "Navy";
+
+            }
+        }
+
 
         // Méthodes OnCanExecuteCommand
         private bool OnCanExecuteSaveCommand()
@@ -244,6 +265,15 @@ namespace Makrisoft.Makfi.ViewModels
         {
             return CurrentInterventionDetail != null;
         }
+        private bool OnCanExecuteEnregistrerTout()
+        {
+            return InterventionDetails.Any(i => i.SaveColor == "Red");
+        }
+        private bool OnCanExecuteSupprimeCommand()
+        {
+            return InterventionDetails.Count > 0;
+        }
+
         //Filter 
 
         //Autres
@@ -251,12 +281,17 @@ namespace Makrisoft.Makfi.ViewModels
         {
             if (InterventionDetails.Count == 0)
                 return EtatIntervention.Where(e => e.Libelle == "None").SingleOrDefault();
+
             if (InterventionDetails.All(i => i.Etat.Libelle == "Fait"))
                 return EtatIntervention.Where(e => e.Libelle == "Fait").SingleOrDefault();
+
             if (InterventionDetails.Any(i => i.Etat.Libelle == "Incident"))
                 return EtatIntervention.Where(e => e.Libelle == "Incident").SingleOrDefault();
-            if (InterventionDetails.Any(i => i.Etat.Libelle == "En cours"))
+
+            if (InterventionDetails.Any(i => i.Etat.Libelle == "En cours") 
+                || InterventionDetails.Any(i => i.Etat.Libelle == "Fait"))
                 return EtatIntervention.Where(e => e.Libelle == "En cours").SingleOrDefault();
+
             else
                 return EtatIntervention.Where(e => e.Libelle == "None").SingleOrDefault();
         }
