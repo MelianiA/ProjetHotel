@@ -57,7 +57,6 @@ namespace Makrisoft.Makfi.ViewModels
             if (ids.Count == 0) throw new Exception("Rien n'a été sauvgardé ! ");
             currentInterventionDetail.Id = ids[0].Id;
             currentInterventionDetail.SaveColor = "Navy";
-
         }
 
 
@@ -271,12 +270,9 @@ namespace Makrisoft.Makfi.ViewModels
                }).OrderBy(x => x.Libelle).ToList());
             InterventionDetailsCollectionView = new ListCollectionView(InterventionDetails);
             InterventionDetailsCollectionView.Refresh();
-
-
             CurrentInterventionDetail = InterventionDetails.Count > 0 ? InterventionDetails[0] : null;
-
-
         }
+
         private void Load_Etat()
         {
             EtatList = new ObservableCollection<Etat_VM>(

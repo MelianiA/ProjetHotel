@@ -80,12 +80,28 @@ namespace Makrisoft.Makfi.ViewModels
             set
             {
                 currentGroupeChambre = value;
-                if (currentGroupeChambre != null  )
+                if (currentGroupeChambre != null)
                     Load_ChambreCurrentGroupe();
                 OnPropertyChanged("CurrentGroupeChambre");
             }
         }
         private GroupeChambre_VM currentGroupeChambre;
+        //Interventions
+        public ObservableCollection<Intervention_VM> Interventions
+        {
+            get { return interventions; }
+            set { interventions = value; OnPropertyChanged("Interventions"); }
+        }
+        private ObservableCollection<Intervention_VM> interventions;
+
+        public Intervention_VM CurrentIntervention
+        {
+            get { return currentIntervention; }
+            set { currentIntervention = value; OnPropertyChanged("Interventions"); }
+        }
+        private Intervention_VM currentIntervention;
+
+
 
         //ChambreByGroupe 
         public ObservableCollection<ChambreByGroupe_VM> AllChambres
@@ -197,6 +213,27 @@ namespace Makrisoft.Makfi.ViewModels
         // Méthodes OnCommand
         private void OnAddCommand()
         {
+            if (PrendreInterventionCommeModele)
+            {
+                Guid monId = default;
+                if (CurrentIntervention != null)
+                    monId = CurrentIntervention.Id;
+                    Reference_ViewModel.InterventionDetail.InterventionDetails = new ObservableCollection<InterventionDetail_VM>(
+                    MakfiData.InterventionDetail_Read($"<interventionDetail><intervention>{monId}</intervention></interventionDetail>")
+                   .Select(x => new InterventionDetail_VM
+                   {
+                       Id = x.Id,
+                       Employe = Reference_ViewModel.InterventionDetail.EmployeIntervention.Where(e => e.Id == x.Employe).SingleOrDefault(),
+                       Chambre = Reference_ViewModel.InterventionDetail.ChambreIntervention.Where(c => c.Id == x.Chambre).SingleOrDefault(),
+                       Etat = Reference_ViewModel.InterventionDetail.EtatIntervention.Where(e => e.Id == x.Etat).SingleOrDefault(),
+                       Libelle = Reference_ViewModel.Intervention.CurrentIntervention.Libelle,
+                       Commentaire = x.Commentaire,
+                       SaveColor = "Red"
+                   }).OrderBy(x => x.Libelle).ToList());
+                  Reference_ViewModel.InterventionDetail.InterventionDetailsCollectionView =
+                    new ListCollectionView(Reference_ViewModel.InterventionDetail.InterventionDetails);
+
+            }
             if (UneChambreUnEmploye)
             {
                 var inteventionChambreEmploye = new InterventionDetail_VM
@@ -211,7 +248,7 @@ namespace Makrisoft.Makfi.ViewModels
             }
 
             if (UnGroupeChambreUnEmplye)
-            
+
             {
                 if (CurrentGroupeChambre.ChambreCurrentGroupe == null)
                 {
@@ -234,6 +271,7 @@ namespace Makrisoft.Makfi.ViewModels
             Reference_ViewModel.Main.ViewSelected = ViewEnum.InterventionDetail;
 
         }
+
         // Méthodes OnCanExecuteCommand
         private bool OnCanExcuteAddCommand()
         {
@@ -242,8 +280,6 @@ namespace Makrisoft.Makfi.ViewModels
         }
 
         //Filter 
-
-
         #endregion
 
         #region Load
@@ -284,6 +320,10 @@ namespace Makrisoft.Makfi.ViewModels
                   IdDelaChambre = x.IdDelaChambre,
                   NomChambre = x.NomChambre
               }).ToList());
+
+            //Intervention 
+            Interventions = new ObservableCollection<Intervention_VM>(
+                Reference_ViewModel.Intervention.Interventions.Where(i => i.Model == true));
         }
 
         public void Load_ChambreCurrentGroupe()
