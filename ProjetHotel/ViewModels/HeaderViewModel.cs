@@ -4,6 +4,8 @@ using System;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Timers;
+using System.Windows;
+using System.Windows.Data;
 using System.Windows.Input;
 
 namespace Makrisoft.Makfi.ViewModels
@@ -69,7 +71,7 @@ namespace Makrisoft.Makfi.ViewModels
                        }));
                 }
                 CurrentHotel = Hotels.FirstOrDefault();
-                 
+
                 OnPropertyChanged("CurrentUtilisateur");
             }
         }
@@ -126,7 +128,7 @@ namespace Makrisoft.Makfi.ViewModels
 
 
         // Horloge
-        public string Horloge
+        public DateTime Horloge
         {
             get { return horloge; }
             set
@@ -135,7 +137,7 @@ namespace Makrisoft.Makfi.ViewModels
                 OnPropertyChanged("Horloge");
             }
         }
-        private string horloge = DateTime.Now.ToString("dddd d MMM - HH:mm");
+        private DateTime horloge = DateTime.Now;
 
         #endregion
 
@@ -176,14 +178,38 @@ namespace Makrisoft.Makfi.ViewModels
                     break;
                 case ViewEnum.InterventionDetail:
                     if (Reference_ViewModel.Intervention.RevienIci == true)
+                    {
+                        Reference_ViewModel.Intervention.CurrentIntervention.Etat = Reference_ViewModel.InterventionDetail.GetSommeEtats();
+                        Reference_ViewModel.Intervention.CurrentIntervention.SaveColor = "Navy";
+                        /********mettre à jour l'etat de l'intervention dans la base de données********/
+                        Guid? monID = null;
+                        if (Reference_ViewModel.Intervention.CurrentIntervention.Id != default) monID = Reference_ViewModel.Intervention.CurrentIntervention.Id;
+                        string libelle = null;
+                        if (!Reference_ViewModel.Intervention.CurrentIntervention.Libelle.Contains("Intervention du")) libelle = Reference_ViewModel.Intervention.CurrentIntervention.Libelle;
+                        var param = $@"
+                            <intervention>
+                                <id>{monID}</id>
+                                <libelle>{libelle}</libelle>
+                                <commentaire>{Reference_ViewModel.Intervention.CurrentIntervention.Commentaire}</commentaire>    
+						        <hotel>{Reference_ViewModel.Header.CurrentHotel.Id}</hotel>
+                                <date1>{Reference_ViewModel.Intervention.CurrentIntervention.Date1}</date1>    
+                                <model>{Reference_ViewModel.Intervention.CurrentIntervention.Model}</model>   
+                                <etat>{Reference_ViewModel.InterventionDetail.GetSommeEtats().Id}</etat> 
+                             </intervention>";
+                        var ids = MakfiData.Intervention_Save(param);
+                        if (ids.Count == 0) throw new Exception("Rien n'a été sauvgardé ! ");
+                        /************************************************************************/
                         Reference_ViewModel.Main.ViewSelected = Dal.ViewEnum.Intervention;
+                    }
                     else
                         Reference_ViewModel.Main.ViewSelected = Dal.ViewEnum.Home;
                     break;
                 case ViewEnum.InterventionAjouter:
+                    Reference_ViewModel.InterventionAjouter.OnAddInterventionDetails();
                     Reference_ViewModel.Main.ViewSelected = Dal.ViewEnum.InterventionDetail;
                     break;
                 case ViewEnum.InterventionSupprimer:
+                    Reference_ViewModel.InterventionSupprimer.OnSupprimerParBloc();
                     Reference_ViewModel.Main.ViewSelected = Dal.ViewEnum.InterventionDetail;
                     break;
             }
@@ -195,6 +221,7 @@ namespace Makrisoft.Makfi.ViewModels
             CanChangeUtilisateur = true;
             Utilisateur_Load();
         }
+
         #endregion
 
         #region Constructeur
@@ -250,7 +277,7 @@ namespace Makrisoft.Makfi.ViewModels
         private void HorlogeLoop()
         {
             // Horloge
-            Horloge = DateTime.Now.ToString("dddd d MMM - HH:mm");
+            Horloge = DateTime.Now;
         }
         #endregion
     }

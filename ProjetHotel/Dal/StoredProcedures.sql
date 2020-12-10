@@ -680,6 +680,16 @@ select
 delete from Intervention
 where Id = @id
 go
+-----------------------------------------------------------------------
+create PROC [dbo].InterventionDetails_Delete(@data xml=NULL)
+as
+DECLARE @id uniqueidentifier;
+select
+	@id= T.N.value('id[1]', 'uniqueidentifier') 
+ from @data.nodes('interventionDetails') as T(N) 
+delete from InterventionDetail
+where Id = @id
+go
 
 -- *************************************************************************************************
 -- CanDelete

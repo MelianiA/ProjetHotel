@@ -33,7 +33,7 @@
                 <TextBlock Text="Filtrer" FontSize="22" Foreground="Navy" VerticalAlignment="Bottom" Margin="0,0,0,0"/>
                 <Button Grid.Column="1" Background="Transparent" BorderBrush="Transparent" BorderThickness="1" Command="{Binding FilterClearCommand}" VerticalAlignment="Bottom">
                     <Button.Content>
-                        <materialDesign:PackIcon Height="20" Width="Auto" Kind="TimelineHelp"  Foreground="Navy" Margin="0,0,10,0"/>
+                        <materialDesign:PackIcon Height="20" Width="Auto" Kind="Clear"  Foreground="Navy" Margin="0,0,10,0"/>
                     </Button.Content>
                 </Button>
             </Grid>
@@ -46,19 +46,27 @@
                     <ColumnDefinition Width="Auto"></ColumnDefinition>
                 </Grid.ColumnDefinitions>
                 <TextBlock FontSize="20" FontWeight="Normal" Foreground="Navy" VerticalAlignment="Bottom">
-                    <Run Text="["/>
-                    <Run Text="{Binding CurrentIntervention.Libelle}"/>
-                    <Run Text="]"/>
-                 </TextBlock>
+                     <Run Text="{Binding CurrentIntervention.Libelle}"/>
+                  </TextBlock>
                 <Menu Grid.Column="1" Cursor="Hand" Margin="0">
                     <MenuItem Header="..." Foreground="Navy" FontSize="16">
                         <MenuItem Header="Ajouter" Foreground="Navy" 
-                                  Command="{Binding InterventionDetailSelectedAddCommand}"/>
-                        
+                                  Command="{Binding AddCommand}"/>
+
                         <MenuItem Header="Supprimer" Foreground="Navy" 
+                                  Command="{Binding DeleteCommand}"/>
+                        <Separator/>
+
+
+                        <MenuItem Header="Ajouter en bloc" Foreground="Navy" 
+                                  Command="{Binding InterventionDetailSelectedAddCommand}"/>
+
+                        <MenuItem Header="Supprimer en bloc" Foreground="Navy" 
                                   Command="{Binding InterventionDetailSelectedDeleteCommand}"/>
-                        
-                     </MenuItem>
+                        <Separator/>
+                        <MenuItem Header="Enregistrer tout" Foreground="Navy" 
+                                  Command="{Binding EnregistrerTout}"/>
+                    </MenuItem>
                 </Menu>
             </Grid>
         </Border>
@@ -112,6 +120,18 @@
                         </DataTemplate>
                     </ComboBox.ItemTemplate>
                 </ComboBox>
+
+                <TextBlock Text="Employé" Margin="0,30,0,0"/>
+                <ComboBox ItemsSource="{Binding InterventionDetailEtatFilterList}" SelectedItem="{Binding InterventionDetailEtatFilterSelected}" FontSize="16">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal">
+                                <materialDesign:PackIcon Height="20" Width="Auto" Kind="{Binding Icone}" Foreground="{Binding Couleur}" Margin="0,0,10,0"/>
+                                <TextBlock Text="{Binding Libelle}" TextWrapping="Wrap"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
             </StackPanel>
         </Border>
         <!--Milieu-->
@@ -123,7 +143,7 @@
                     <DataGridTemplateColumn Width="auto">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
-                                    <TextBlock Text="{Binding Chambre.Nom}" Foreground="Blue" TextWrapping="Wrap" IsEnabled="False"/>
+                                    <TextBlock Text="{Binding Chambre.Nom}" Foreground="{Binding SaveColor}" TextWrapping="Wrap" FontSize="12" FontWeight="Bold" IsEnabled="False"/>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
@@ -155,7 +175,8 @@
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
-                    </DataGrid.Columns>
+                </DataGrid.Columns>
+                
                 </DataGrid>
         </Border>
         
@@ -174,7 +195,7 @@
                     <ComboBox.ItemTemplate>
                         <DataTemplate>
                             <StackPanel Orientation="Horizontal">
-                                <materialDesign:PackIcon Height="20" Width="Auto" Kind="Person" Margin="0,0,10,0"/>
+                                <materialDesign:PackIcon Height="20" Width="Auto" Foreground="Navy" Kind="Person" Margin="0,0,10,0"/>
                                 <TextBlock Text="{Binding Nom}" TextWrapping="Wrap"/>
                             </StackPanel>
                         </DataTemplate>
@@ -190,7 +211,7 @@
                         <DataTemplate>
                             <StackPanel Orientation="Horizontal">
                                 <materialDesign:PackIcon Height="20" Width="Auto" Kind="House" 
-                                                         Foreground="Blue" Margin="0,0,10,0"/>
+                                                         Foreground="Navy" Margin="0,0,10,0"/>
                                 <TextBlock Text="{Binding Nom}" TextWrapping="Wrap"/>
                              </StackPanel>
                         </DataTemplate>

@@ -148,10 +148,10 @@ namespace Makrisoft.Makfi.ViewModels
             }
             set
             {
-                 OnPropertyChanged("IsAdmin");
+                OnPropertyChanged("IsAdmin");
             }
         }
- 
+
         public string CodePin
         {
             get { return codePin; }
@@ -328,10 +328,10 @@ namespace Makrisoft.Makfi.ViewModels
             {
                 chambreCurrentGroupe = value;
                 OnPropertyChanged("ChambreCurrentGroupe");
-
             }
         }
         private ObservableCollection<ChambreByGroupe_VM> chambreCurrentGroupe;
+
         public ObservableCollection<ChambreByGroupe_VM> ChambreNotCurrentGroupe
         {
             get { return chambreNotCurrentGroupe; }
@@ -500,7 +500,9 @@ namespace Makrisoft.Makfi.ViewModels
             set
             {
                 date1 = value;
-                Libelle = "Intervention du " + date1.ToShortDateString();
+                if (libelle!=null && libelle.EndsWith(Properties.Settings.Default.Autocar))
+                    Libelle = $"Intervention du {date1.ToShortDateString()}{Properties.Settings.Default.Autocar}";
+                
                 SaveColor = "Red";
                 OnPropertyChanged("Date1");
             }

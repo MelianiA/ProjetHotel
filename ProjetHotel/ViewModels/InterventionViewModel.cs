@@ -181,12 +181,13 @@ namespace Makrisoft.Makfi.ViewModels
             if (CurrentIntervention.Libelle == "")
             {
                 MessageBox.Show($"Impossible de sauvgarder cette intervention !", "Remarque !");
+                CurrentIntervention.Libelle = $"Intervention du {CurrentIntervention.Date1.ToShortDateString()}{Properties.Settings.Default.Autocar}";
                 return;
             }
             Guid? monID = null;
             if (CurrentIntervention.Id != default) monID = CurrentIntervention.Id;
             string libelle = null;
-            if (!CurrentIntervention.Libelle.Contains("Intervention du")) libelle = CurrentIntervention.Libelle;
+            if (CurrentIntervention.Libelle!=null && !CurrentIntervention.Libelle.Contains("Intervention du")) libelle = CurrentIntervention.Libelle;
             var param = $@"
                     <intervention>
                         <id>{monID}</id>
@@ -213,7 +214,8 @@ namespace Makrisoft.Makfi.ViewModels
             {
                 Date1 = DateTime.Now,
                 Etat = EtatIntervention.Where(e => e.Libelle == "None").SingleOrDefault(),
-                Model = true
+                Libelle = $"Intervention du {DateTime.Now.ToShortDateString()}{Properties.Settings.Default.Autocar}",
+                 Model = true
             };
             Interventions.Add(CurrentIntervention);
         }
@@ -336,7 +338,7 @@ namespace Makrisoft.Makfi.ViewModels
                .Select(x => new Intervention_VM
                {
                    Id = x.Id,
-                   Libelle = "Intervention du " + x.Date1,
+                   Libelle = $"Intervention du {x.Date1}{Properties.Settings.Default.Autocar}",
                    Etat = EtatIntervention.Where(e => e.Id == x.Etat).SingleOrDefault(),
                    Date1 = x.Date1,
                    Commentaire = x.Commentaire,

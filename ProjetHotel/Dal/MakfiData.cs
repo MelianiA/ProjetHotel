@@ -58,9 +58,7 @@ namespace Makrisoft.Makfi.Dal
             }
             return "";
         }
-
-
-
+ 
         private static bool PremierAcces()
         {
             // Ajoût admin
@@ -69,7 +67,7 @@ namespace Makrisoft.Makfi.Dal
             Etat_Save(@"
                 <etats>
                          <etat><libelle>Fait</libelle>                  <icone>TimelineHelp</icone>             <couleur>green</couleur>            <entite>3</entite> </etat>
-                         <etat> <libelle>En cours</libelle>             <icone>TableLock</icone>                <couleur>orange</couleur>          <entite>3</entite> </etat>
+                         <etat> <libelle>En cours</libelle>             <icone>TimelineHelp</icone>             <couleur>orange</couleur>          <entite>3</entite> </etat>
                          <etat><libelle>None</libelle>                  <icone>TimelineHelp</icone>             <couleur>gray</couleur>           <entite>3</entite> </etat>
                          <etat> <libelle>Incident</libelle>             <icone>TimelineHelp</icone>             <couleur>red</couleur>             <entite>3</entite> </etat>
                          <etat><libelle>Disponible</libelle>            <icone>FaceWomanShimmer</icone>         <couleur>green</couleur>           <entite>1</entite> </etat>
@@ -650,6 +648,12 @@ namespace Makrisoft.Makfi.Dal
         {
             return ExecuteNonQuery("Intervention_Delete", spParam);
         }
+
+        internal static bool InterventionDetails_Delete(string spParam)
+        {
+            return ExecuteNonQuery("InterventionDetails_Delete", spParam);
+        }
+
 
         #endregion
 

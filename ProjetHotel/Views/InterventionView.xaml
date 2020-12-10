@@ -133,7 +133,7 @@
                         <DataGridTemplateColumn Width="auto">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
-                                    <TextBlock Text="Model" TextWrapping="Wrap" Foreground="BlueViolet" FontWeight="DemiBold" 
+                                    <TextBlock Text="M" TextWrapping="Wrap" Foreground="Navy" FontWeight="Bold" 
                                                Visibility="{Binding Model, Converter={StaticResource VisibleIfTrueConverter}}"/>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
@@ -145,7 +145,9 @@
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
-                    
+                        
+
+
 
 
                     </DataGrid.Columns>
@@ -168,7 +170,7 @@
                             SelectedDate="{Binding CurrentIntervention.Date1, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" FontSize="16" IsEnabled="{Binding IsEnabled}">
                     
                 </DatePicker>
-                <TextBlock Text="Etat" Margin="0,30,0,0"/>
+                <!--<TextBlock Text="Etat" Margin="0,30,0,0"/>
                 <ComboBox ItemsSource="{Binding EtatIntervention, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                           SelectedItem="{Binding CurrentIntervention.Etat, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" FontSize="16" IsEnabled="{Binding IsEnabled}">
                     <ComboBox.ItemTemplate>
@@ -180,12 +182,13 @@
                             </StackPanel>
                         </DataTemplate>
                     </ComboBox.ItemTemplate>
-                </ComboBox>
+                </ComboBox>-->
 
                 <StackPanel Orientation="Horizontal" Margin="0,20,0,0" IsEnabled="{Binding IsEnabled}">
                     <CheckBox  IsChecked="{Binding CurrentIntervention.Model}" />
                     <TextBlock Text="Modèle" Margin="10,0,0,0" FontSize="16" />
                 </StackPanel>
+                
 
        
                  

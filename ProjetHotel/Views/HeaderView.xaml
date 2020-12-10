@@ -51,7 +51,8 @@
                                     <materialDesign:PackIcon Kind="ArrowBack" FontSize="22" Width="40" Height="Auto" Foreground="AliceBlue"/>
                                 </Button.Content>
                             </Button>
-                            <TextBlock  Grid.Column="1" Text="{Binding Horloge}" Background="Navy" HorizontalAlignment="Center" FontWeight="Bold" Foreground="White" FontSize="20" Margin="5"/>
+                            <TextBlock  Grid.Column="1" Text="{Binding Horloge ,StringFormat=dddd d MMMM - HH:mm}" Background="Navy" HorizontalAlignment="Center" FontWeight="Bold" 
+                                        Foreground="White" FontSize="20" Margin="5" />
                             <Menu Grid.Column="2" Background="Navy" Cursor="Hand">
                                 <MenuItem Header="..." Foreground="White" FontSize="22">
                                     <MenuItem Header="Se déconnecter" Foreground="White" Command="{Binding DeconnectCommand}"/>

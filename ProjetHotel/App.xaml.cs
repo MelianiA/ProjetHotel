@@ -1,7 +1,9 @@
 ﻿using Makrisoft.Makfi.Dal;
 using Makrisoft.Makfi.Tools;
 using System;
+using System.Globalization;
 using System.Windows;
+using System.Windows.Markup;
 
 namespace Makrisoft.Makfi
 {
@@ -18,8 +20,13 @@ namespace Makrisoft.Makfi
                  Makfi.Properties.Settings.Default.MakfiConnectionString,
                  BoiteACoucou) != "")
             {
-                MessageBox.Show("Erreur système"); Shutdown();            
+                MessageBox.Show("Erreur système"); Shutdown();
             }
+
+            FrameworkElement.LanguageProperty.OverrideMetadata(
+            typeof(FrameworkElement),
+            new FrameworkPropertyMetadata(XmlLanguage.GetLanguage(CultureInfo.CurrentCulture.IetfLanguageTag)));
+
         }
 
         private void BoiteACoucou(string exceptionMsg, string spName, string spParams)
