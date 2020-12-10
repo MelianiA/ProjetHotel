@@ -68,9 +68,9 @@ namespace Makrisoft.Makfi.Dal
             // Table Etat
             Etat_Save(@"
                 <etats>
-                         <etat><libelle>Fait</libelle>                  <icone>TimelineHelp</icone>             <couleur>gray</couleur>            <entite>3</entite> </etat>
+                         <etat><libelle>Fait</libelle>                  <icone>TimelineHelp</icone>             <couleur>green</couleur>            <entite>3</entite> </etat>
                          <etat> <libelle>En cours</libelle>             <icone>TableLock</icone>                <couleur>orange</couleur>          <entite>3</entite> </etat>
-                         <etat><libelle>None</libelle>                  <icone>TimelineHelp</icone>             <couleur>green</couleur>           <entite>3</entite> </etat>
+                         <etat><libelle>None</libelle>                  <icone>TimelineHelp</icone>             <couleur>gray</couleur>           <entite>3</entite> </etat>
                          <etat> <libelle>Incident</libelle>             <icone>TimelineHelp</icone>             <couleur>red</couleur>             <entite>3</entite> </etat>
                          <etat><libelle>Disponible</libelle>            <icone>FaceWomanShimmer</icone>         <couleur>green</couleur>           <entite>1</entite> </etat>
                          <etat><libelle>Arrêt maladie</libelle>         <icone>FaceWomanShimmer</icone>         <couleur>red</couleur>             <entite>1</entite> </etat>
