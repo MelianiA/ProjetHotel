@@ -8,6 +8,6 @@ namespace Makrisoft.Makfi.ViewModels
 {
     public class InterventionSupprimerModel: ViewModelBase
     {
-
+        // A faire ......!
     }
 }

@@ -35,31 +35,6 @@ namespace Makrisoft.Makfi.ViewModels
 
         }
 
-        private bool OnCanExecuteSaveCommand()
-        {
-            return CurrentInterventionDetail != null;
-        }
-
-        private void OnSaveCommand()
-        {
-            Guid? monID = null;
-            if (currentInterventionDetail.Id != default) monID = currentInterventionDetail.Id;
-            var param = $@"
-                    <interventionDetail>
-                        <id>{monID}</id>
-                        <employeAffecte>{currentInterventionDetail.Employe.Id}</employeAffecte>
-                        <commentaire>{currentInterventionDetail.Commentaire}</commentaire>    
-						<chambreAffectee>{currentInterventionDetail.Chambre.Id}</chambreAffectee>
-                        <intervention>{CurrentIntervention.Id}</intervention>    
-                        <etat>{currentInterventionDetail.Etat.Id}</etat> 
-                     </interventionDetail>";
-            var ids = MakfiData.InterventionDetail_Save(param);
-            if (ids.Count == 0) throw new Exception("Rien n'a été sauvgardé ! ");
-            currentInterventionDetail.Id = ids[0].Id;
-            currentInterventionDetail.SaveColor = "Navy";
-        }
-
-
         #endregion
 
         #region Binding
@@ -87,7 +62,6 @@ namespace Makrisoft.Makfi.ViewModels
             }
         }
         private bool isEnabled;
-
 
         //InterventionDetails
         public ObservableCollection<InterventionDetail_VM> InterventionDetails
@@ -184,7 +158,6 @@ namespace Makrisoft.Makfi.ViewModels
             }
         }
         private ObservableCollection<Chambre_VM> chambreIntervention;
-
         public ListCollectionView ChambreInterventionCollectionView
         {
             get { return chambreInterventionCollectionView; }
@@ -220,13 +193,34 @@ namespace Makrisoft.Makfi.ViewModels
             Reference_ViewModel.Main.ViewSelected = ViewEnum.InterventionAjouter;
             Reference_ViewModel.InterventionAjouter.Load_InterventionDetailsAjouter();
         }
-
         private void OnSupprimeCommand()
         {
             Reference_ViewModel.Main.ViewSelected = ViewEnum.InterventionSupprimer;
         }
+        private void OnSaveCommand()
+        {
+            Guid? monID = null;
+            if (currentInterventionDetail.Id != default) monID = currentInterventionDetail.Id;
+            var param = $@"
+                    <interventionDetail>
+                        <id>{monID}</id>
+                        <employeAffecte>{currentInterventionDetail.Employe.Id}</employeAffecte>
+                        <commentaire>{currentInterventionDetail.Commentaire}</commentaire>    
+						<chambreAffectee>{currentInterventionDetail.Chambre.Id}</chambreAffectee>
+                        <intervention>{CurrentIntervention.Id}</intervention>    
+                        <etat>{currentInterventionDetail.Etat.Id}</etat> 
+                     </interventionDetail>";
+            var ids = MakfiData.InterventionDetail_Save(param);
+            if (ids.Count == 0) throw new Exception("Rien n'a été sauvgardé ! ");
+            currentInterventionDetail.Id = ids[0].Id;
+            currentInterventionDetail.SaveColor = "Navy";
+        }
 
         // Méthodes OnCanExecuteCommand
+        private bool OnCanExecuteSaveCommand()
+        {
+            return CurrentInterventionDetail != null;
+        }
 
         //Filter 
 
@@ -272,7 +266,6 @@ namespace Makrisoft.Makfi.ViewModels
             InterventionDetailsCollectionView.Refresh();
             CurrentInterventionDetail = InterventionDetails.Count > 0 ? InterventionDetails[0] : null;
         }
-
         private void Load_Etat()
         {
             EtatList = new ObservableCollection<Etat_VM>(

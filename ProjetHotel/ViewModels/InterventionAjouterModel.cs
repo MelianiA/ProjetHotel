@@ -23,9 +23,6 @@ namespace Makrisoft.Makfi.ViewModels
             // Load
             Load_InterventionDetailsAjouter();
         }
-
-
-
         #endregion
 
         #region Binding
@@ -101,8 +98,6 @@ namespace Makrisoft.Makfi.ViewModels
         }
         private Intervention_VM currentIntervention;
 
-
-
         //ChambreByGroupe 
         public ObservableCollection<ChambreByGroupe_VM> AllChambres
         {
@@ -149,7 +144,6 @@ namespace Makrisoft.Makfi.ViewModels
         }
         private Employe_VM curentEmploye;
 
-
         //Chambres
         public ObservableCollection<Chambre_VM> Chambres
         {
@@ -160,7 +154,6 @@ namespace Makrisoft.Makfi.ViewModels
             }
         }
         private ObservableCollection<Chambre_VM> chambres;
-
 
         public ObservableCollection<Chambre_VM> ChambreIntervention
         {
@@ -324,18 +317,6 @@ namespace Makrisoft.Makfi.ViewModels
             //Intervention 
             Interventions = new ObservableCollection<Intervention_VM>(
                 Reference_ViewModel.Intervention.Interventions.Where(i => i.Model == true));
-        }
-
-        public void Load_ChambreCurrentGroupe()
-        {
-            if (CurrentGroupeChambre != null)
-            {
-                CurrentGroupeChambre.ChambreCurrentGroupe = new ObservableCollection<ChambreByGroupe_VM>(
-                    AllChambres.Where(c => c.GroupeChambre == CurrentGroupeChambre.Id)
-                    );
-                CurrentGroupeChambre.ChambreCurrentGroupeListview = new ListCollectionView(CurrentGroupeChambre.ChambreCurrentGroupe);
-
-            }
         }
         #endregion
     }

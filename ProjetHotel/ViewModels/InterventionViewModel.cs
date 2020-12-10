@@ -33,24 +33,6 @@ namespace Makrisoft.Makfi.ViewModels
             //
             GroupeChambreCollectionView = Reference_ViewModel.ChambreGroupe.GroupeChambreCollectionView;
         }
-
-        private bool OnCanExecuteInterventionDetailChange()
-        {
-            if (CurrentIntervention != null) return true;
-            else return false;
-        }
-
-        private void OnInterventionDetailChange()
-        {
-            if (Reference_ViewModel.InterventionDetail != null)
-            {
-                Reference_ViewModel.InterventionDetail.Load_InterventionDetail();
-                Reference_ViewModel.InterventionDetail.CurrentIntervention = CurrentIntervention;
-            }
-            Reference_ViewModel.Main.ViewSelected = ViewEnum.InterventionDetail;
-            RevienIci = true;
-        }
-
         #endregion
 
         #region Binding
@@ -253,6 +235,16 @@ namespace Makrisoft.Makfi.ViewModels
             CurrentFilterDateDebutSelected = null;
             CurrentFilterDateFinSelected = null;
         }
+        private void OnInterventionDetailChange()
+        {
+            if (Reference_ViewModel.InterventionDetail != null)
+            {
+                Reference_ViewModel.InterventionDetail.Load_InterventionDetail();
+                Reference_ViewModel.InterventionDetail.CurrentIntervention = CurrentIntervention;
+            }
+            Reference_ViewModel.Main.ViewSelected = ViewEnum.InterventionDetail;
+            RevienIci = true;
+        }
 
         // Méthodes OnCanExecuteCommand
         private bool OnCanExecuteSaveCommand()
@@ -270,6 +262,12 @@ namespace Makrisoft.Makfi.ViewModels
             if (CurrentFilterEtat != null || CurrentFilterDateDebutSelected != null || CurrentFilterDateFinSelected != null) return true;
             else return false;
         }
+        private bool OnCanExecuteInterventionDetailChange()
+        {
+            if (CurrentIntervention != null) return true;
+            else return false;
+        }
+
         //Filter 
         public bool FilterChambres(object item)
         {
