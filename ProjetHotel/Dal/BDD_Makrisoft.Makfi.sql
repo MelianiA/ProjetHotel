@@ -79,6 +79,7 @@ CREATE TABLE [dbo].[Etat](
 	[Icone] [nvarchar](max) NULL,
 	[Couleur] [nvarchar](max) NOT NULL,
 	[Entite] [tinyint] NOT NULL,
+    Etat bit NOT NULL,
  CONSTRAINT [PK_Etat] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
@@ -141,7 +142,7 @@ GO
 CREATE TABLE [dbo].[Intervention](
 	[Id] [uniqueidentifier] NOT NULL,
 	[Commentaire] [nvarchar](max) NULL,
-	[Date1] [date] NOT NULL,
+	[Date1] [datetime] NOT NULL,
 	[Libelle] [nvarchar](max) NULL,
 	[Etat] [uniqueidentifier] NOT NULL,
 	[Model] bit NOT NULL,

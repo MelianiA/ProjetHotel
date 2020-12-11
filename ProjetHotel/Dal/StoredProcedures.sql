@@ -472,23 +472,24 @@ select @id=ID from @IDs
 select Id from @IDs
 GO
  ----------------------------------------------------------------------------------------------------------
-create PROC [dbo].[Etat_Save](@data xml=NULL)
- AS
-	DECLARE @IDs TABLE(ID uniqueidentifier);
--- PARTIE recup XML :
-select 
- 		T.N.value('(libelle/text())[1]', 'nvarchar(MAX)') Libelle, 
- 		T.N.value('(icone/text())[1]', 'nvarchar(MAX)') Icone,
-  		T.N.value('(couleur/text())[1]', 'nvarchar(MAX)') Couleur,
-  		T.N.value('(entite/text())[1]', 'tinyint') Entite
-		into #_etat
-from @data.nodes('etats/etat') as T(N)
--- Insert
-insert Etat(Libelle, Icone, Couleur, Entite )
-		output inserted.Id into @IDs(ID)
-	(select Libelle, Icone, Couleur, Entite from #_etat )
-select Id from @IDs
-GO
+--create PROC [dbo].[Etat_Save](@data xml=NULL)
+-- AS
+--	DECLARE @IDs TABLE(ID uniqueidentifier);
+---- PARTIE recup XML :
+--select 
+-- 		T.N.value('(libelle/text())[1]', 'nvarchar(MAX)') Libelle, 
+-- 		T.N.value('(icone/text())[1]', 'nvarchar(MAX)') Icone,
+--  		T.N.value('(couleur/text())[1]', 'nvarchar(MAX)') Couleur,
+--  		T.N.value('(entite/text())[1]', 'tinyint') Entite,
+--		T.N.value('(entite/text())[1]', 'tinyint') Entite
+--		into #_etat
+--from @data.nodes('etats/etat') as T(N)
+---- Insert
+--insert Etat(Libelle, Icone, Couleur, Entite )
+--		output inserted.Id into @IDs(ID)
+--	(select Libelle, Icone, Couleur, Entite from #_etat )
+--select Id from @IDs
+--GO
 
 --exec Etat_Save '  <etats>
 --                         <etat><libelle>Fait</libelle>                  <icone>TimelineHelp</icone>             <couleur>gray</couleur>            <entite>3</entite> </etat>
@@ -572,15 +573,15 @@ select @id=ID from @IDs
 select Id from @IDs
 GO
 
-exec InterventionDetail_Save '
-                    <interventionDetail>
-                        <id>62e4cb2b-8ffb-4193-bbd1-ed882b4921ec</id>
-                        <employeAffecte>a9531486-348e-4f08-a7c7-102a28026afd</employeAffecte>
-                        <commentaire>Je la modifie</commentaire>    
-						<chambreAffectee>f6dd41d2-527a-455d-b62e-0ffc09cc0d9a</chambreAffectee>
-                        <intervention>01eede37-1732-4f07-be1e-4f3b4a88b26b</intervention>    
-                        <etat>9f7702b6-1f5b-40b9-b663-baa56eeb17d0</etat> 
-                     </interventionDetail>'
+--exec InterventionDetail_Save '
+--                    <interventionDetail>
+--                        <id>62e4cb2b-8ffb-4193-bbd1-ed882b4921ec</id>
+--                        <employeAffecte>a9531486-348e-4f08-a7c7-102a28026afd</employeAffecte>
+--                        <commentaire>Je la modifie</commentaire>    
+--						<chambreAffectee>f6dd41d2-527a-455d-b62e-0ffc09cc0d9a</chambreAffectee>
+--                        <intervention>01eede37-1732-4f07-be1e-4f3b4a88b26b</intervention>    
+--                        <etat>9f7702b6-1f5b-40b9-b663-baa56eeb17d0</etat> 
+--                     </interventionDetail>'
  
  -- *************************************************************************************************
 -- Delete

@@ -229,10 +229,10 @@ namespace Makrisoft.Makfi.ViewModels
 
             }
 
-            if (UnGroupeChambreUnEmplye && CurrentGroupeChambre!=null)
+            if (UnGroupeChambreUnEmplye && CurrentGroupeChambre != null)
             {
 
-                if (CurrentGroupeChambre.ChambreCurrentGroupe.Count==0)
+                if (CurrentGroupeChambre.ChambreCurrentGroupe.Count == 0)
                 {
                     MessageBox.Show("Le groupe: " + CurrentGroupeChambre.Nom + " ne contient aucune chambre ");
                     return;
@@ -293,19 +293,21 @@ namespace Makrisoft.Makfi.ViewModels
             GroupeChambres = Reference_ViewModel.ChambreGroupe.GroupeChambres;
 
             //
-            AllChambres = new ObservableCollection<ChambreByGroupe_VM>(
-              MakfiData.ChambreByGroupe_Read($"<chambreByGroupe><hotel>{Reference_ViewModel.Header.CurrentHotel.Id}</hotel></chambreByGroupe>")
-              .Select(x => new ChambreByGroupe_VM
-              {
-                  GroupeChambre = x.GroupeChambre,
-                  Nom = x.Nom,
-                  IdDelaChambre = x.IdDelaChambre,
-                  NomChambre = x.NomChambre
-              }).ToList());
+            if (Reference_ViewModel.Header.CurrentHotel != null)
+                AllChambres = new ObservableCollection<ChambreByGroupe_VM>(
+                  MakfiData.ChambreByGroupe_Read($"<chambreByGroupe><hotel>{Reference_ViewModel.Header.CurrentHotel.Id}</hotel></chambreByGroupe>")
+                  .Select(x => new ChambreByGroupe_VM
+                  {
+                      GroupeChambre = x.GroupeChambre,
+                      Nom = x.Nom,
+                      IdDelaChambre = x.IdDelaChambre,
+                      NomChambre = x.NomChambre
+                  }).ToList());
 
             //Intervention 
-            Interventions = new ObservableCollection<Intervention_VM>(
-                Reference_ViewModel.Intervention.Interventions.Where(i => i.Model == true));
+            if (Reference_ViewModel.Intervention.Interventions != null)
+                Interventions = new ObservableCollection<Intervention_VM>(
+                    Reference_ViewModel.Intervention.Interventions.Where(i => i.Model == true));
         }
 
         public void Load_ChambreCurrentGroupe()
