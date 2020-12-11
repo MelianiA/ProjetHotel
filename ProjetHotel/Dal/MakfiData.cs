@@ -28,8 +28,6 @@ namespace Makrisoft.Makfi.Dal
         {
             ConnectionString = connectionString;
             OnError = onError;
-
-            //Premier accès
             var infoList = new ObservableCollection<Info_VM>(
              MakfiData.Info_Read()
              .Select(x => new Info_VM
@@ -38,53 +36,12 @@ namespace Makrisoft.Makfi.Dal
                  Cle = x.Cle,
                  Valeur = x.Valeur
              }).ToList());
-            var etat = infoList.Where(i => i.Cle == "Etat").Select(i => i.Valeur).FirstOrDefault();
             PasswordAdmin = infoList.Where(i => i.Cle == "PasswordAdmin").Select(i => i.Valeur).FirstOrDefault();
             PasswordChange = infoList.Where(i => i.Cle == "PasswordChange").Select(i => i.Valeur).FirstOrDefault();
-            if (etat == "0")
-            {
-                if (PremierAcces())
-                {
-                    try
-                    {
-                        Info_Save("<info><cle>Etat</cle><valeur>1</valeur></info>");
-
-                    }
-                    catch (Exception ex)
-                    {
-                        return ex.Message;
-                    }
-                }
-            }
+            if (infoList.Count == 0) return "probleme";
             return "";
         }
  
-        private static bool PremierAcces()
-        {
-            // Ajoût admin
-            Utilisateur_Save("<utilisateur><nom>Admin</nom><codePin>#69!</codePin><statut>255</statut></utilisateur>");
-            // Table Etat
-            Etat_Save(@"
-                <etats>
-                         <etat><libelle>Fait</libelle>                  <icone>TimelineHelp</icone>             <couleur>green</couleur>            <entite>3</entite> </etat>
-                         <etat> <libelle>En cours</libelle>             <icone>TimelineHelp</icone>             <couleur>orange</couleur>          <entite>3</entite> </etat>
-                         <etat><libelle>None</libelle>                  <icone>TimelineHelp</icone>             <couleur>gray</couleur>           <entite>3</entite> </etat>
-                         <etat> <libelle>Incident</libelle>             <icone>TimelineHelp</icone>             <couleur>red</couleur>             <entite>3</entite> </etat>
-                         <etat><libelle>Disponible</libelle>            <icone>FaceWomanShimmer</icone>         <couleur>green</couleur>           <entite>1</entite> </etat>
-                         <etat><libelle>Arrêt maladie</libelle>         <icone>FaceWomanShimmer</icone>         <couleur>red</couleur>             <entite>1</entite> </etat>
-                         <etat><libelle>Non disponible</libelle>        <icone>FaceWomanShimmer</icone>         <couleur>black</couleur>           <entite>1</entite> </etat>
-                         <etat><libelle>Fait</libelle>                  <icone>TableLock</icone>                <couleur>green</couleur>           <entite>2</entite> </etat>
-                         <etat><libelle>Pas encore fait</libelle>       <icone>TableLock</icone>                <couleur>Red</couleur>             <entite>2</entite> </etat>
-                </etats>
-            ");
-            return true;
-        }
-
-        
-
-
-
-
         #endregion
 
         #region SqlServer objects
@@ -234,7 +191,6 @@ namespace Makrisoft.Makfi.Dal
                             spParam
                             );
         }
-
 
 
         public static IEnumerable<Utilisateur> Utilisateur_Read(string spParam = null)

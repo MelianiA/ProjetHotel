@@ -372,19 +372,30 @@ GO
 /************************************************************************************************************/
 									/* Insertions importantes */
 /************************************************************************************************************/
- 
+ /*****Insertion dans le table Info ******/
  insert into Info(Cle,Valeur)
  values('PasswordAdmin','#69!')
   insert into Info(Cle,Valeur)
- values('Version','0')
-  insert into Info(Cle,Valeur)
- values('Etat','0')
+ values('Version','1')
   insert into Info(Cle,Valeur)
  values('PasswordChange','#11#')
 
-----------------------------------------------------
+ /*****Insertion de l'admin ******/
+ insert into Utilisateur(Nom,CodePin,Statut)
+ values('Admin','#69!','255')
+
+ /*****Insertion de le table Etat ******/
+ insert into Etat(Libelle,Icone,Etat,Couleur,Entite)
+ values
+ ('Fait','TimelineHelp',1,'green',3 ),
+  ('En cours','TimelineHelp',0,'orange',3 ),
+ ('None','TimelineHelp',0,'gray',3 ),
+ ('Incident','TimelineHelp',1,'red',3 ),
+ ('Disponible','FaceWomanShimmer',1,'green',1 ),
+ ('Arrêt maladie','FaceWomanShimmer',0,'red',1 ),
+ ('Congé','FaceWomanShimmer',0,'black',1 ),
+ ('Ok','TableLock',1,'green',2 ),
+  ('PasOk','TableLock',0,'red',2 )
 
 
-
-
-
+ 

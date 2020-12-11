@@ -15,18 +15,20 @@ namespace Makrisoft.Makfi
 
         protected override void OnStartup(StartupEventArgs e)
         {
-            base.OnStartup(e);
-            if (MakfiData.Init(
-                 Makfi.Properties.Settings.Default.MakfiConnectionString,
-                 BoiteACoucou) != "")
+            base.OnStartup(e); 
+            if (MakfiData.Init(Makfi.Properties.Settings.Default.MakfiConnectionString, BoiteACoucou) != "")
             {
                 MessageBox.Show("Erreur système"); Shutdown();
+                return;
             }
 
             FrameworkElement.LanguageProperty.OverrideMetadata(
             typeof(FrameworkElement),
             new FrameworkPropertyMetadata(XmlLanguage.GetLanguage(CultureInfo.CurrentCulture.IetfLanguageTag)));
 
+            StartupUri = new Uri("Views/MainView.xaml", UriKind.Relative);
+
+            //StartupUri="Views/MainView.xaml"
         }
 
         private void BoiteACoucou(string exceptionMsg, string spName, string spParams)

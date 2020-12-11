@@ -5,7 +5,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d"
              xmlns:local="clr-namespace:Makrisoft.Makfi"
-             StartupUri="Views/MainView.xaml">
+             >
   
     <Application.Resources>
         <ResourceDictionary>
