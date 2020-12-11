@@ -95,22 +95,22 @@
         <Border Grid.Column="0" Grid.Row="1" BorderBrush="Transparent" BorderThickness="1" CornerRadius="10" HorizontalAlignment="Right" VerticalAlignment="Top" Width="220">
             <StackPanel Margin="5">
 
-                <!--ChambreGroupeFilterSelected-->
+                <!--ChambreGroupeFilter -->
                 <TextBlock Text="Groupe de chambre" Margin="0,30,0,0"/>
-                <ComboBox ItemsSource="{Binding ChambreGroupeFilterList}" SelectedItem="{Binding ChambreGroupeFilterSelected}" FontSize="16">
+                <ComboBox ItemsSource="{Binding GroupeChambres}" SelectedItem="{Binding CurrentGroupeChambres}" FontSize="16">
                     <ComboBox.ItemTemplate>
                         <DataTemplate>
                             <StackPanel Orientation="Horizontal">
-                                <materialDesign:PackIcon Height="20" Width="Auto" Kind="Building" Foreground="{Binding Couleur}" Margin="0,0,10,0"/>
-                                <TextBlock Text="{Binding Libelle}" TextWrapping="Wrap"/>
+                                <materialDesign:PackIcon Height="20" Width="Auto" Kind="Building" Foreground="Navy" Margin="0,0,10,0"/>
+                                <TextBlock Text="{Binding Nom}" TextWrapping="Wrap"/>
                             </StackPanel>
                         </DataTemplate>
                     </ComboBox.ItemTemplate>
                 </ComboBox>
 
-                <!--InterventionEtatFilterSelected-->
+                <!-- EtatFilter -->
                 <TextBlock Text="Etat" Margin="0,30,0,0"/>
-                <ComboBox ItemsSource="{Binding InterventionDetailEtatFilterList}" SelectedItem="{Binding InterventionDetailEtatFilterSelected}" FontSize="16">
+                <ComboBox ItemsSource="{Binding EtatIntervention}" SelectedItem="{Binding CurrentEtatIntervention}" FontSize="16">
                     <ComboBox.ItemTemplate>
                         <DataTemplate>
                             <StackPanel Orientation="Horizontal">
@@ -120,14 +120,16 @@
                         </DataTemplate>
                     </ComboBox.ItemTemplate>
                 </ComboBox>
-
+                <!--Employé Filtre-->
                 <TextBlock Text="Employé" Margin="0,30,0,0"/>
-                <ComboBox ItemsSource="{Binding InterventionDetailEtatFilterList}" SelectedItem="{Binding InterventionDetailEtatFilterSelected}" FontSize="16">
+                <ComboBox ItemsSource="{Binding EmployeIntervention}" SelectedItem="{Binding CurentEmployeIntervention}" FontSize="16">
                     <ComboBox.ItemTemplate>
                         <DataTemplate>
                             <StackPanel Orientation="Horizontal">
-                                <materialDesign:PackIcon Height="20" Width="Auto" Kind="{Binding Icone}" Foreground="{Binding Couleur}" Margin="0,0,10,0"/>
-                                <TextBlock Text="{Binding Libelle}" TextWrapping="Wrap"/>
+                                <materialDesign:PackIcon Height="20" Width="Auto" Kind="Person" Foreground="Navy" Margin="0,0,10,0"/>
+                                <TextBlock Text="{Binding Nom}" TextWrapping="Wrap"/>
+                                <TextBlock Text=" " TextWrapping="Wrap"/>
+                                <TextBlock Text="{Binding Prenom}" TextWrapping="Wrap"/>
                             </StackPanel>
                         </DataTemplate>
                     </ComboBox.ItemTemplate>

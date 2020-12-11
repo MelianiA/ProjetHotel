@@ -229,9 +229,10 @@ namespace Makrisoft.Makfi.ViewModels
 
             }
 
-            if (UnGroupeChambreUnEmplye)
+            if (UnGroupeChambreUnEmplye && CurrentGroupeChambre!=null)
             {
-                if (CurrentGroupeChambre.ChambreCurrentGroupe == null)
+
+                if (CurrentGroupeChambre.ChambreCurrentGroupe.Count==0)
                 {
                     MessageBox.Show("Le groupe: " + CurrentGroupeChambre.Nom + " ne contient aucune chambre ");
                     return;
@@ -254,11 +255,11 @@ namespace Makrisoft.Makfi.ViewModels
         }
 
         // Méthodes OnCanExecuteCommand
-        private bool OnCanExcuteAddCommand()
-        {
-            return PrendreInterventionCommeModele ==
-                annuler == unGroupeChambreUnEmplye == true;
-        }
+        //private bool OnCanExcuteAddCommand()
+        //{
+        //    return PrendreInterventionCommeModele ==
+        //        annuler == unGroupeChambreUnEmplye == true;
+        //}
 
         //Filter 
         #endregion

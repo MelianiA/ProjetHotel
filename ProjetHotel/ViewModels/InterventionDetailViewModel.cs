@@ -24,6 +24,8 @@ namespace Makrisoft.Makfi.ViewModels
             AddCommand = new RelayCommand(p => OnAddCommandSimple(), p => true);
             DeleteCommand = new RelayCommand(p => OnDeleteCommandSimple(), p => OnCanExecuteDeleteCommandSimple());
             EnregistrerTout = new RelayCommand(p => OnEnregistrerTout(), p => OnCanExecuteEnregistrerTout());
+            FilterClearCommand = new RelayCommand(p => OnFilterClearCommand(), p => OnCanExecuteFilterClearCommand());
+
         }
 
         #endregion
@@ -161,14 +163,57 @@ namespace Makrisoft.Makfi.ViewModels
         private ListCollectionView chambreInterventionCollectionView;
 
         //Filter
-
-        //GroupeChambres
-        public ListCollectionView GroupeChambreCollectionView
+        public GroupeChambre_VM CurrentGroupeChambres
         {
-            get { return groupeChambreCollectionView; }
-            set { groupeChambreCollectionView = value; OnPropertyChanged("GroupeChambreCollectionView"); }
+            get { return currentGroupeChambres; }
+            set
+            {
+                currentGroupeChambres = value;
+                if (InterventionDetailsCollectionView != null)
+                    InterventionDetailsCollectionView.Filter = FilterInterventionDetails;
+                OnPropertyChanged("CurrentGroupeChambres");
+            }
         }
-        private ListCollectionView groupeChambreCollectionView;
+        private GroupeChambre_VM currentGroupeChambres;
+
+        public Etat_VM CurrentEtatIntervention
+        {
+            get { return currentEtatIntervention; }
+            set
+            {
+                currentEtatIntervention = value;
+                if (InterventionDetailsCollectionView != null)
+                    InterventionDetailsCollectionView.Filter = FilterInterventionDetails;
+                OnPropertyChanged("CurrentEtatIntervention");
+            }
+        }
+        private Etat_VM currentEtatIntervention;
+
+        public Employe_VM CurentEmployeIntervention
+        {
+            get { return curentEmployeIntervention; }
+            set
+            {
+                curentEmployeIntervention = value;
+                if (InterventionDetailsCollectionView != null)
+                    InterventionDetailsCollectionView.Filter = FilterInterventionDetails;
+                OnPropertyChanged("CurentEmployeIntervention");
+            }
+        }
+        private Employe_VM curentEmployeIntervention;
+
+
+        //GroupeChambre
+        public ObservableCollection<GroupeChambre_VM> GroupeChambres
+        {
+            get { return groupeChambres; }
+            set
+            {
+                groupeChambres = value;
+                OnPropertyChanged("GroupeChambres");
+            }
+        }
+        private ObservableCollection<GroupeChambre_VM> groupeChambres;
 
 
         #endregion
@@ -179,8 +224,9 @@ namespace Makrisoft.Makfi.ViewModels
         public ICommand InterventionDetailSelectedDeleteCommand { get; set; }
         public ICommand InterventionDetailModifiedSaveCommand { get; set; }
         public ICommand AddCommand { get; set; }
-        public ICommand  DeleteCommand { get; set; }
+        public ICommand DeleteCommand { get; set; }
         public ICommand EnregistrerTout { get; set; }
+        public ICommand FilterClearCommand { get; set; }
 
         // Méthodes OnCommand
         private void OnAddCommand()
@@ -219,8 +265,9 @@ namespace Makrisoft.Makfi.ViewModels
         }
         private void OnAddCommandSimple()
         {
-            CurrentInterventionDetail = new InterventionDetail_VM {
-               Etat= EtatIntervention.Where(e => e.Libelle == "None").SingleOrDefault()
+            CurrentInterventionDetail = new InterventionDetail_VM
+            {
+                Etat = EtatIntervention.Where(e => e.Libelle == "None").SingleOrDefault()
             };
             InterventionDetails.Add(CurrentInterventionDetail);
         }
@@ -249,10 +296,16 @@ namespace Makrisoft.Makfi.ViewModels
                 if (ids.Count == 0) throw new Exception("Rien n'a été sauvgardé ! ");
                 item.Id = ids[0].Id;
                 item.SaveColor = "Navy";
-                Reference_ViewModel.Intervention.CurrentIntervention.Etat =GetSommeEtats();
+                Reference_ViewModel.Intervention.CurrentIntervention.Etat = GetSommeEtats();
                 Reference_ViewModel.Intervention.CurrentIntervention.SaveColor = "Navy";
 
             }
+        }
+        private void OnFilterClearCommand()
+        {
+            CurrentGroupeChambres = null;
+            CurrentEtatIntervention = null;
+            CurentEmployeIntervention = null;
         }
 
 
@@ -273,8 +326,69 @@ namespace Makrisoft.Makfi.ViewModels
         {
             return InterventionDetails.Count > 0;
         }
+        private bool OnCanExecuteFilterClearCommand()
+        {
+            return (CurrentGroupeChambres != null || CurrentEtatIntervention != null || CurentEmployeIntervention != null);
+        }
 
         //Filter 
+        public bool FilterInterventionDetails(object item)
+        {
+            if (CurrentGroupeChambres != null && CurrentEtatIntervention != null)
+            {
+                GetChambresGroupChambre();
+                if (item is InterventionDetail_VM interventionDetail)
+                    return EtatIntervention.Any(e => interventionDetail.Etat.Id == CurrentEtatIntervention.Id)
+                        && CurrentGroupeChambres.ChambreCurrentGroupe.Any(e => interventionDetail.Chambre.Id == e.IdDelaChambre);
+                return false;
+            }
+            if (CurrentGroupeChambres != null && CurentEmployeIntervention != null)
+            {
+                GetChambresGroupChambre();
+                if (item is InterventionDetail_VM interventionDetail)
+                    return EmployeIntervention.Any(e => interventionDetail.Employe.Id == CurentEmployeIntervention.Id)
+                        && CurrentGroupeChambres.ChambreCurrentGroupe.Any(e => interventionDetail.Chambre.Id == e.IdDelaChambre);
+                return false;
+            }
+
+            if (CurrentEtatIntervention != null && CurentEmployeIntervention != null)
+            {
+                if (item is InterventionDetail_VM interventionDetail)
+                    return EmployeIntervention.Any(e => interventionDetail.Employe.Id == CurentEmployeIntervention.Id)
+                        && EtatIntervention.Any(e => interventionDetail.Etat.Id == CurrentEtatIntervention.Id);
+                return false;
+            }
+
+            if (CurrentEtatIntervention != null && CurentEmployeIntervention != null && CurrentGroupeChambres != null)
+            {
+                GetChambresGroupChambre();
+                if (item is InterventionDetail_VM interventionDetail)
+                    return EmployeIntervention.Any(e => interventionDetail.Employe.Id == CurentEmployeIntervention.Id)
+                        && EtatIntervention.Any(e => interventionDetail.Etat.Id == CurrentEtatIntervention.Id) 
+                        && CurrentGroupeChambres.ChambreCurrentGroupe.Any(e => interventionDetail.Chambre.Id == e.IdDelaChambre);
+                return false;
+            }
+            if (CurrentEtatIntervention != null)
+            {
+                if (item is InterventionDetail_VM interventionDetail)
+                    return EtatIntervention.Any(e => interventionDetail.Etat.Id == CurrentEtatIntervention.Id);
+                return false;
+            }
+            if (CurentEmployeIntervention != null)
+            {
+                if (item is InterventionDetail_VM interventionDetail)
+                    return EmployeIntervention.Any(e => interventionDetail.Employe.Id == CurentEmployeIntervention.Id);
+                return false;
+            }
+            if (CurrentGroupeChambres != null)
+            {
+                GetChambresGroupChambre();
+                if (item is InterventionDetail_VM interventionDetail)
+                    return CurrentGroupeChambres.ChambreCurrentGroupe.Any(e => interventionDetail.Chambre.Id == e.IdDelaChambre);
+                return false;
+            }
+            return true;
+        }
 
         //Autres
         public Etat_VM GetSommeEtats()
@@ -288,14 +402,22 @@ namespace Makrisoft.Makfi.ViewModels
             if (InterventionDetails.Any(i => i.Etat.Libelle == "Incident"))
                 return EtatIntervention.Where(e => e.Libelle == "Incident").SingleOrDefault();
 
-            if (InterventionDetails.Any(i => i.Etat.Libelle == "En cours") 
+            if (InterventionDetails.Any(i => i.Etat.Libelle == "En cours")
                 || InterventionDetails.Any(i => i.Etat.Libelle == "Fait"))
                 return EtatIntervention.Where(e => e.Libelle == "En cours").SingleOrDefault();
 
             else
                 return EtatIntervention.Where(e => e.Libelle == "None").SingleOrDefault();
         }
-
+        public void GetChambresGroupChambre()
+        {
+            if (CurrentGroupeChambres != null)
+            {
+                CurrentGroupeChambres.ChambreCurrentGroupe = new ObservableCollection<ChambreByGroupe_VM>(
+                    Reference_ViewModel.InterventionAjouter.AllChambres.Where(c => c.GroupeChambre == CurrentGroupeChambres.Id)
+                    );
+            }
+        }
         #endregion
 
         #region Load
@@ -303,12 +425,15 @@ namespace Makrisoft.Makfi.ViewModels
         {
             //Chargement des etats 
             Load_Etat();
+            //Employe
             EmployeIntervention = Reference_ViewModel.Employe.AllEmployes;
             EmployeInterventionCollectionView = new ListCollectionView(EmployeIntervention);
-
+            //chambre
             ChambreIntervention = new ObservableCollection<Chambre_VM>(
                 Reference_ViewModel.Chambre.ChambreGroupeChambre.Select(c => new Chambre_VM { Id = c.Id, Nom = c.Nom }).ToList());
             ChambreInterventionCollectionView = new ListCollectionView(ChambreIntervention);
+            //GroupeChambre
+            GroupeChambres = Reference_ViewModel.ChambreGroupe.GroupeChambres;
             // InterventionDetails
             if (InterventionDetails != null) InterventionDetails.Clear();
             if (Reference_ViewModel.Header.CurrentHotel == null)
@@ -358,5 +483,5 @@ namespace Makrisoft.Makfi.ViewModels
 
         #endregion
 
-}
+    }
 }
