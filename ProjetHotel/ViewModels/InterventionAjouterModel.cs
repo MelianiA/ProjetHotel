@@ -282,15 +282,18 @@ namespace Makrisoft.Makfi.ViewModels
             {
                 EmployeIntervention = Reference_ViewModel.Employe.AllEmployes;
                 EmployeInterventionCollectionView = new ListCollectionView(EmployeIntervention);
+                CurentEmploye = EmployeIntervention.FirstOrDefault();
             }
             //chambres
             if (Reference_ViewModel.Chambre.ChambreGroupeChambre != null)
             {
                 ChambreIntervention = new ObservableCollection<Chambre_VM>(Reference_ViewModel.Chambre.ChambreGroupeChambre.Select(c => new Chambre_VM { Id = c.Id, Nom = c.Nom }).ToList());
                 ChambreInterventionCollectionView = new ListCollectionView(ChambreIntervention);
+                CurrentChambre = ChambreIntervention.FirstOrDefault();
             }
             //GroupeChambres
             GroupeChambres = Reference_ViewModel.ChambreGroupe.GroupeChambres;
+            CurrentGroupeChambre = GroupeChambres.FirstOrDefault();
 
             //
             if (Reference_ViewModel.Header.CurrentHotel != null)
@@ -308,11 +311,12 @@ namespace Makrisoft.Makfi.ViewModels
             if (Reference_ViewModel.Intervention.Interventions != null)
                 Interventions = new ObservableCollection<Intervention_VM>(
                     Reference_ViewModel.Intervention.Interventions.Where(i => i.Model == true));
+            //CurrentIntervention = Interventions.FirstOrDefault();
         }
 
         public void Load_ChambreCurrentGroupe()
         {
-            if (CurrentGroupeChambre != null)
+            if (CurrentGroupeChambre != null && AllChambres != null)
             {
                 CurrentGroupeChambre.ChambreCurrentGroupe = new ObservableCollection<ChambreByGroupe_VM>(
                     AllChambres.Where(c => c.GroupeChambre == CurrentGroupeChambre.Id)

@@ -266,8 +266,7 @@ namespace Makrisoft.Makfi.ViewModels
         }
         private bool OnCanExecuteInterventionDetailChange()
         {
-            if (CurrentIntervention != null) return true;
-            else return false;
+            return  CurrentIntervention != null && CurrentIntervention.SaveColor != "Red" ; 
         }
 
         //Filter 

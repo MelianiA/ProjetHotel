@@ -233,6 +233,7 @@ namespace Makrisoft.Makfi.ViewModels
         {
             Reference_ViewModel.Main.ViewSelected = ViewEnum.InterventionAjouter;
             Reference_ViewModel.InterventionAjouter.Load_InterventionDetailsAjouter();
+            Reference_ViewModel.InterventionAjouter.Annuler = true;
             Reference_ViewModel.InterventionAjouter.Interventions.Remove(CurrentIntervention);
 
         }

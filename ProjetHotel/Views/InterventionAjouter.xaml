@@ -61,7 +61,8 @@
                     </StackPanel>
                     <ComboBox  
                           ItemsSource="{Binding Interventions}" IsEnabled="{Binding PrendreInterventionCommeModele}"
-                         SelectedItem="{Binding CurrentIntervention , Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                          SelectedItem="{Binding CurrentIntervention , Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                          SelectedValue="0"
                           FontSize="16" Width="400" HorizontalAlignment="Left" Margin="40 10 0 0"  Background="AliceBlue">
                         <ComboBox.ItemTemplate>
                             <DataTemplate>
