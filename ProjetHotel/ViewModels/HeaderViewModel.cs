@@ -239,6 +239,21 @@ namespace Makrisoft.Makfi.ViewModels
 
         private bool OnCanExecuteBackCommand()
         {
+            if (Reference_ViewModel.Main.ViewSelected == ViewEnum.InterventionDetail)
+                return !Reference_ViewModel.InterventionDetail.OnCanExecuteEnregistrerTout();
+            
+            if (Reference_ViewModel.Main.ViewSelected == ViewEnum.Intervention)
+                return !Reference_ViewModel.Intervention.Interventions.Any(x => x.SaveColor == "Red");
+            
+            if (Reference_ViewModel.Main.ViewSelected == ViewEnum.Employe)
+                return !Reference_ViewModel.Employe.AllEmployes.Any(x => x.SaveColor == "Red");
+
+            if (Reference_ViewModel.Main.ViewSelected == ViewEnum.Chambre)
+                return !Reference_ViewModel.Chambre.ChambreGroupeChambre.Any(x => x.SaveColor == "Red");
+
+            if (Reference_ViewModel.Main.ViewSelected == ViewEnum.ChambreGroupe)
+                return !Reference_ViewModel.ChambreGroupe.GroupeChambres.Any(x => x.SaveColor == "Red");
+
             if (Reference_ViewModel.Main.ViewSelected == ViewEnum.Home ||
                 Reference_ViewModel.Main.ViewSelected == ViewEnum.Login)
                 return false;

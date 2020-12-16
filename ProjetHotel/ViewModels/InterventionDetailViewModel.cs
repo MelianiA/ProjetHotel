@@ -326,7 +326,7 @@ namespace Makrisoft.Makfi.ViewModels
         {
             return CurrentInterventionDetail != null;
         }
-        private bool OnCanExecuteEnregistrerTout()
+        public bool OnCanExecuteEnregistrerTout()
         {
             return InterventionDetails.Any(i => i.SaveColor == "Red");
         }
