@@ -129,7 +129,7 @@
                                 <materialDesign:PackIcon Height="20" Width="Auto" Kind="Person" Foreground="Navy" Margin="0,0,10,0"/>
                                 <TextBlock Text="{Binding Nom}" TextWrapping="Wrap"/>
                                 <TextBlock Text=" " TextWrapping="Wrap"/>
-                                <TextBlock Text="{Binding Prenom}" TextWrapping="Wrap"/>
+                            
                             </StackPanel>
                         </DataTemplate>
                     </ComboBox.ItemTemplate>

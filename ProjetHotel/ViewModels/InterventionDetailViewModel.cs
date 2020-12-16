@@ -279,12 +279,15 @@ namespace Makrisoft.Makfi.ViewModels
         }
         private void OnEnregistrerTout()
         {
+            List<InterventionDetail_VM> elementAsupp = new List<InterventionDetail_VM>();
             var IntDetails = InterventionDetails.Where(i => i.SaveColor == "Red");
             foreach (var item in IntDetails)
             {
-                Guid? monID = null;
+                Guid? monID = null; var param = "";
                 if (item.Id != default) monID = item.Id;
-                var param = $@"
+                if (item.Employe != null && item.Chambre != null)
+                {
+                    param = $@"
                     <interventionDetail>
                         <id>{monID}</id>
                         <employeAffecte>{item.Employe.Id}</employeAffecte>
@@ -293,14 +296,18 @@ namespace Makrisoft.Makfi.ViewModels
                         <intervention>{CurrentIntervention.Id}</intervention>    
                         <etat>{item.Etat.Id}</etat> 
                      </interventionDetail>";
-                var ids = MakfiData.InterventionDetail_Save(param);
-                if (ids.Count == 0) throw new Exception("Rien n'a été sauvgardé ! ");
-                item.Id = ids[0].Id;
-                item.SaveColor = "Navy";
-                Reference_ViewModel.Intervention.CurrentIntervention.Etat = GetSommeEtats();
-                Reference_ViewModel.Intervention.CurrentIntervention.SaveColor = "Navy";
-
+                    var ids = MakfiData.InterventionDetail_Save(param);
+                    if (ids.Count == 0) throw new Exception("Rien n'a été sauvgardé ! ");
+                    item.Id = ids[0].Id;
+                    item.SaveColor = "Navy";
+                    Reference_ViewModel.Intervention.CurrentIntervention.Etat = GetSommeEtats();
+                    Reference_ViewModel.Intervention.CurrentIntervention.SaveColor = "Navy";
+                }
+                else
+                    elementAsupp.Add(item);
             }
+            foreach (var item in elementAsupp)
+                InterventionDetails.Remove(item);
         }
         private void OnFilterClearCommand()
         {
@@ -335,6 +342,15 @@ namespace Makrisoft.Makfi.ViewModels
         //Filter 
         public bool FilterInterventionDetails(object item)
         {
+            if (CurrentEtatIntervention != null && CurentEmployeIntervention != null && CurrentGroupeChambres != null)
+            {
+                GetChambresGroupChambre();
+                if (item is InterventionDetail_VM interventionDetail)
+                    return EmployeIntervention.Any(e => interventionDetail.Employe.Id == CurentEmployeIntervention.Id)
+                        && EtatIntervention.Any(e => interventionDetail.Etat.Id == CurrentEtatIntervention.Id)
+                        && CurrentGroupeChambres.ChambreCurrentGroupe.Any(e => interventionDetail.Chambre.Id == e.IdDelaChambre);
+                return false;
+            }
             if (CurrentGroupeChambres != null && CurrentEtatIntervention != null)
             {
                 GetChambresGroupChambre();
@@ -360,15 +376,7 @@ namespace Makrisoft.Makfi.ViewModels
                 return false;
             }
 
-            if (CurrentEtatIntervention != null && CurentEmployeIntervention != null && CurrentGroupeChambres != null)
-            {
-                GetChambresGroupChambre();
-                if (item is InterventionDetail_VM interventionDetail)
-                    return EmployeIntervention.Any(e => interventionDetail.Employe.Id == CurentEmployeIntervention.Id)
-                        && EtatIntervention.Any(e => interventionDetail.Etat.Id == CurrentEtatIntervention.Id) 
-                        && CurrentGroupeChambres.ChambreCurrentGroupe.Any(e => interventionDetail.Chambre.Id == e.IdDelaChambre);
-                return false;
-            }
+          
             if (CurrentEtatIntervention != null)
             {
                 if (item is InterventionDetail_VM interventionDetail)
