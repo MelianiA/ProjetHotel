@@ -174,17 +174,17 @@ namespace Makrisoft.Makfi.ViewModels
                     Reference_ViewModel.Main.ViewSelected = Dal.ViewEnum.Chambre;
                     break;
                 case ViewEnum.Intervention:
+                    Reference_ViewModel.Home.CalculeControle();
                     Reference_ViewModel.Main.ViewSelected = Dal.ViewEnum.Home;
                     break;
                 case ViewEnum.InterventionDetail:
-                    if (Reference_ViewModel.Intervention.RevienIci == true)
-                    {
-                        /********mettre à jour l'etat de l'intervention dans la base de données********/
-                        Guid? monID = null;
-                        if (Reference_ViewModel.Intervention.CurrentIntervention.Id != default) monID = Reference_ViewModel.Intervention.CurrentIntervention.Id;
-                        string libelle = null;
-                        if (!Reference_ViewModel.Intervention.CurrentIntervention.Libelle.Contains("Intervention du")) libelle = Reference_ViewModel.Intervention.CurrentIntervention.Libelle;
-                        var param = $@"
+                    
+                    /********mettre à jour l'etat de l'intervention dans la base de données********/
+                    Guid? monID = null;
+                    if (Reference_ViewModel.Intervention.CurrentIntervention.Id != default) monID = Reference_ViewModel.Intervention.CurrentIntervention.Id;
+                    string libelle = null;
+                    if (!Reference_ViewModel.Intervention.CurrentIntervention.Libelle.Contains("Intervention du")) libelle = Reference_ViewModel.Intervention.CurrentIntervention.Libelle;
+                    var param = $@"
                             <intervention>
                                 <id>{monID}</id>
                                 <libelle>{libelle}</libelle>
@@ -194,13 +194,19 @@ namespace Makrisoft.Makfi.ViewModels
                                 <model>{Reference_ViewModel.Intervention.CurrentIntervention.Model}</model>   
                                 <etat>{Reference_ViewModel.InterventionDetail.GetSommeEtats().Id}</etat> 
                              </intervention>";
-                        var ids = MakfiData.Intervention_Save(param);
-                        if (ids.Count == 0) throw new Exception("Rien n'a été sauvgardé ! ");
-                        /************************************************************************/
+                    var ids = MakfiData.Intervention_Save(param);
+                    if (ids.Count == 0) throw new Exception("Rien n'a été sauvgardé ! ");
+                    /************************************************************************/
+                    if (Reference_ViewModel.Intervention.RevienIci == true)
+                    {
                         Reference_ViewModel.Main.ViewSelected = Dal.ViewEnum.Intervention;
+                        Reference_ViewModel.Intervention.RevienIci = false;
                     }
                     else
+                    {
+                        Reference_ViewModel.Home.CalculeControle();
                         Reference_ViewModel.Main.ViewSelected = Dal.ViewEnum.Home;
+                    }
                     break;
                 case ViewEnum.InterventionAjouter:
                     Reference_ViewModel.InterventionAjouter.OnAddInterventionDetails();

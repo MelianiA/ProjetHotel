@@ -44,7 +44,7 @@ create PROC [dbo].[Etat_Read](@data xml=NULL)
 AS
 DECLARE @Id uniqueidentifier=NULL
 select @Id = T.N.value('id[1]', 'uniqueidentifier') from @data.nodes('etat') as T(N)
-Select Id,Libelle,Icone,Couleur,Entite from Etat where @Id is null Or Id=@Id
+Select Id,Libelle,Icone,Couleur,Entite, EtatEtat from Etat where @Id is null Or Id=@Id
 GO
 ---------------------------------------------------------------------------------------------------
 create PROC [dbo].[Chambre_Read](@data xml=NULL)

@@ -32,6 +32,7 @@ namespace Makrisoft.Makfi.ViewModels
             }
             //
             GroupeChambreCollectionView = Reference_ViewModel.ChambreGroupe.GroupeChambreCollectionView;
+            InterventionCollectionView.SortDescriptions.Add(new System.ComponentModel.SortDescription("Date1", System.ComponentModel.ListSortDirection.Descending));
         }
         #endregion
 
@@ -158,7 +159,14 @@ namespace Makrisoft.Makfi.ViewModels
         private ListCollectionView groupeChambreCollectionView;
 
         //Retour à cette page; 
-        public bool RevienIci = false;
+         
+        public bool RevienIci
+        {
+            get { return revienIci; }
+            set { revienIci = value; }
+        }
+        public bool revienIci = false;
+
         #endregion
 
         #region Commands
@@ -170,7 +178,7 @@ namespace Makrisoft.Makfi.ViewModels
         public ICommand InterventionDetailChange { get; set; }
 
         // Méthodes OnCommand
-        private void OnSaveCommand()
+        public void OnSaveCommand()
         {
             if (Reference_ViewModel.Header.CurrentHotel == null)
             {
@@ -208,7 +216,7 @@ namespace Makrisoft.Makfi.ViewModels
             InterventionCollectionView.Refresh();
             //CurrentIntervention = Interventions.Where(i => i.Id == ids[0].Id).SingleOrDefault();
         }
-        private void OnAddCommand()
+        public void OnAddCommand()
         {
             CurrentIntervention = new Intervention_VM
             {
@@ -345,8 +353,8 @@ namespace Makrisoft.Makfi.ViewModels
                    SaveColor = "Navy"
                }).OrderBy(x => x.Libelle).ToList());
             InterventionCollectionView = new ListCollectionView(Interventions);
-            InterventionCollectionView.Refresh();
-            if (Interventions.Count > 0) CurrentIntervention = Interventions[0];
+            if (InterventionCollectionView.Count > 0) CurrentIntervention = (Intervention_VM)InterventionCollectionView.GetItemAt(InterventionCollectionView.Count-1);
+             
             CurrentFilterEtat = null;
             CurrentFilterDateDebutSelected = null;
             CurrentFilterDateFinSelected = null;

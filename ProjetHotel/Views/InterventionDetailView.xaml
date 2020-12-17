@@ -153,10 +153,17 @@
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <materialDesign:PackIcon Height="20" Width="Auto" Kind="{Binding Etat.Icone}" Foreground="{Binding Etat.Couleur}"/>
-                                </DataTemplate>
+                             </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
-                        <DataGridTemplateColumn Width="auto">
+                    <DataGridTemplateColumn >
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock  Width="Auto" Text="{Binding Etat.Libelle}" Foreground="{Binding Etat.Couleur}"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTemplateColumn Width="auto">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                 <TextBlock Text="{Binding Employe.Nom}" TextWrapping="Wrap" IsEnabled="False"/>
@@ -191,7 +198,7 @@
 
                 <!--Employé-->
                 <TextBlock Text="Employé" Margin="0,15,0,0"/>
-                <ComboBox ItemsSource="{Binding EmployeIntervention}" IsEnabled="{Binding IsEnabled}"
+                <ComboBox ItemsSource="{Binding EmployeInterventionCollectionView}" IsEnabled="{Binding IsEnabled}"
                           SelectedItem="{Binding CurrentInterventionDetail.Employe, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                           FontSize="16">
                     <ComboBox.ItemTemplate>
@@ -206,7 +213,7 @@
                 
                 <!--Chambre-->
                 <TextBlock Text="Chambre" Margin="0,15,0,0"/>
-                <ComboBox ItemsSource="{Binding ChambreIntervention}" IsEnabled="{Binding IsEnabled}"
+                <ComboBox ItemsSource="{Binding ChambreInterventionCollectionView}" IsEnabled="{Binding IsEnabled}"
                           SelectedItem="{Binding CurrentInterventionDetail.Chambre, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
                           FontSize="16">
                     <ComboBox.ItemTemplate>
@@ -222,7 +229,7 @@
 
                 <!--Etat-->
                 <TextBlock Text="Etat" Margin="0,15,0,0"/>
-                <ComboBox ItemsSource="{Binding EtatIntervention}" IsEnabled="{Binding IsEnabled}"
+                <ComboBox ItemsSource="{Binding EtatInterventionCollectionView}" IsEnabled="{Binding IsEnabled}"
                           SelectedItem="{Binding CurrentInterventionDetail.Etat, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" FontSize="16">
                     <ComboBox.ItemTemplate>
                         <DataTemplate>

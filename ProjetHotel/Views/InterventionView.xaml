@@ -113,14 +113,6 @@
                 <!-- IsEnabled="{Binding PageNotModified.Value} "-->
                 <DataGrid ItemsSource="{Binding InterventionCollectionView}" SelectedItem="{Binding CurrentIntervention}"  
                           AutoGenerateColumns="False" HeadersVisibility="None" CanUserAddRows="False" VerticalScrollBarVisibility="Visible">
-                    <DataGrid.Resources>
-                        <CollectionViewSource x:Key="Items" Source="{Binding ElementName=UI, Path=Items}" >
-                            <CollectionViewSource.SortDescriptions>
-                                <scm:SortDescription PropertyName="Date1" />
-                            </CollectionViewSource.SortDescriptions>
-                        </CollectionViewSource>
-
-                    </DataGrid.Resources>
                     <DataGrid.Columns>
                          <DataGridTemplateColumn  >
                             <DataGridTemplateColumn.CellTemplate >

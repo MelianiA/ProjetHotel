@@ -172,6 +172,8 @@ namespace Makrisoft.Makfi.ViewModels
         public string Libelle { get; set; }
         public string Couleur { get; set; }
         public EntiteEnum Entite { get; set; }
+        public Boolean EtatEtat { get; set; }
+
     }
     public class Employe_VM : ViewModelBase
     {
@@ -545,7 +547,6 @@ namespace Makrisoft.Makfi.ViewModels
         private string saveColor = "Navy";
 
     }
-
     public class InterventionDetail_VM : ViewModelBase
     {
         public Guid Id;

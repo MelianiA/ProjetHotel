@@ -2,6 +2,7 @@
 using Makrisoft.Makfi.Tools;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,10 +12,17 @@ namespace Makrisoft.Makfi.ViewModels
 {
     public class HomeViewModel : ViewModelBase
     {
+        #region Constructeur
+        public HomeViewModel()
+        {
+            ChangeViewCommand = new RelayCommand(p => OnChangeViewCommand(p));
+
+        }
+
+
+        #endregion
 
         #region Binding
-
- 
         public bool IsAdmin
         {
             get { return isAdmin; }
@@ -24,8 +32,8 @@ namespace Makrisoft.Makfi.ViewModels
                 OnPropertyChanged("IsAdmin");
             }
         }
-        private bool isAdmin = true;    
-        
+        private bool isAdmin = true;
+
         public bool WithHotel
         {
             get { return withHotel; }
@@ -37,33 +45,78 @@ namespace Makrisoft.Makfi.ViewModels
         }
         private bool withHotel;
 
-        #endregion
+        //Nbr de controle 
+        public string NbrControle
+        {
+            get { return nbrcontrole; }
+            set { nbrcontrole = value; OnPropertyChanged("NbrControle"); }
+        }
+        private string nbrcontrole;
 
+        public string EtatControle
+        {
+            get { return etatControle; }
+            set { etatControle = value; OnPropertyChanged("EtatControle"); }
+        }
+        private string etatControle;
+
+
+        //Dernière intervention
+        public String DerniereIntervention
+        {
+            get { return derniereIntervention; }
+            set { derniereIntervention = value; OnPropertyChanged("DerniereIntervention"); }
+        }
+        private String derniereIntervention;
+
+        #endregion
 
         #region ICommand
+
+        //ICommand
         public ICommand ChangeViewCommand { get; set; }
-
-
-        #endregion
-
-
-        #region Constructeur
-        public HomeViewModel()
-        {
-            ChangeViewCommand = new RelayCommand(p => OnChangeViewCommand(p));
-           
-        }
-
+        // Méthodes OnCommand
         private void OnChangeViewCommand(object view)
         {
-            //if ((ViewEnum)view == ViewEnum.Intervention)
-            //    Reference_ViewModel.Intervention.Load_Intervention();
+            if ((ViewEnum)view == ViewEnum.InterventionDetail && EtatControle == "Intervention du jour")
+            {
+                Reference_ViewModel.Intervention.OnAddCommand();
+                Reference_ViewModel.Intervention.OnSaveCommand();
+                Reference_ViewModel.InterventionDetail.CurrentIntervention = Reference_ViewModel.Intervention.CurrentIntervention;
+            }
+
             Reference_ViewModel.Main.ViewSelected = (ViewEnum)view;
-            
+
         }
-       
+
+        // Méthodes OnCanExecuteCommand
+
         #endregion
 
+        #region Load
+
+        public void CalculeControle()
+        {
+            Intervention_VM i = null;
+            NbrControle = Reference_ViewModel.Intervention.Interventions.Where(x => x.Etat.Libelle != "Terminée").Count().ToString();
+            var itervDispo = Reference_ViewModel.Intervention.Interventions.Where(x => x.Etat.Libelle != "Terminée").ToList();
+            if (itervDispo.Count() > 0)
+            {
+                i = itervDispo[0];
+                DerniereIntervention = "Intervention du " + i.Date1.ToString("dddd dd MMMM", CultureInfo.CurrentCulture);
+                EtatControle = "Contôle";
+            }
+            else
+            {
+                DerniereIntervention = "";
+                EtatControle = "Intervention du jour";
+            }
+
+            Reference_ViewModel.Intervention.CurrentIntervention = Reference_ViewModel.InterventionDetail.CurrentIntervention = i;
+            Reference_ViewModel.InterventionDetail.Load_InterventionDetail();
+        }
+
+        #endregion
 
     }
 }

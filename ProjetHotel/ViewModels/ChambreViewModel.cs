@@ -349,7 +349,8 @@ namespace Makrisoft.Makfi.ViewModels
                   Libelle = x.Libelle,
                   Icone = x.Icone,
                   Couleur = x.Couleur,
-                  Entite = x.Entite
+                  Entite = x.Entite,
+                  EtatEtat=x.EtatEtat
               }).ToList()); ;
             EtatListCollectionView = new ListCollectionView(EtatList);
             EtatListCollectionView.Refresh();

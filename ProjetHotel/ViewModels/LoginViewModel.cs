@@ -69,6 +69,7 @@ namespace Makrisoft.Makfi.ViewModels
                     {
                         Reference_ViewModel.Employe.Load_Employes();
                         Reference_ViewModel.Chambre.Load_Chambres();
+                        Reference_ViewModel.Home.CalculeControle();
                     }
                 }
             }

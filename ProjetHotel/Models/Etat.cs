@@ -14,5 +14,6 @@ namespace Makrisoft.Makfi.Models
         public string Icone;
         public string Couleur;
         public EntiteEnum Entite;
+        public Boolean EtatEtat;
     }
 }
