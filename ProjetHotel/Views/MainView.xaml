@@ -73,6 +73,12 @@
             <Border  Grid.Row="1" Visibility="{Binding ViewSelected, Converter={StaticResource ViewSelectedConverterKey}, ConverterParameter={x:Static data:ViewEnum.InterventionSupprimer}}">
                 <local:InterventionSupprimer/>
             </Border>
+            <!--Message-->
+            <Border  Grid.Row="1" Visibility="{Binding ViewSelected, Converter={StaticResource ViewSelectedConverterKey}, ConverterParameter={x:Static data:ViewEnum.Message}}">
+                <local:MessageView/>
+            </Border>
+            
+            
 
             <!--
             <Border  Grid.Row="1" Visibility="{Binding ViewSelected, Converter={StaticResource ViewSelectedConverterKey}, ConverterParameter={x:Static data:ViewEnum.InterventionNew}}">

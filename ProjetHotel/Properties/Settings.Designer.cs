@@ -50,5 +50,14 @@ namespace Makrisoft.Makfi.Properties {
                 return ((string)(this["Autocar"]));
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("C:\\Users\\alyf\\OneDrive - Alyf Pro\\ProjetHotel\\Messages")]
+        public string MessagePath {
+            get {
+                return ((string)(this["MessagePath"]));
+            }
+        }
     }
 }

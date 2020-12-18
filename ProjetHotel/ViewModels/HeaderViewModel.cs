@@ -12,8 +12,26 @@ namespace Makrisoft.Makfi.ViewModels
 {
     public class HeaderViewModel : ViewModelBase
     {
-        #region Propriété
-        private readonly Timer HeaderTimer = new Timer(10000);
+        #region Constructeur
+        public HeaderViewModel()
+        {
+            // ICommand
+            DeconnectCommand = new RelayCommand(p => OnDeconnectCommand());
+            BackCommand = new RelayCommand(p => OnBackCommand(), p => OnCanExecuteBackCommand());
+            MessageDisplayAllCommand = new RelayCommand(p => OnMessageDisplayAllCommand(), p => OnCanExcuteMessageDisplayAllCommand());
+
+            // Utilisateur
+            Utilisateur_Load();
+
+            // Horloge
+            HeaderTimer.Elapsed += (s, e) => HorlogeLoop();
+            HeaderTimer.Start();
+
+            //Menuvisibility
+            MenuVisibility= Visibility.Hidden;
+        }
+
+
 
         #endregion
 
@@ -126,7 +144,17 @@ namespace Makrisoft.Makfi.ViewModels
         }
         private string premiereConnexion;
 
+        //View 
+        public ViewEnum LastView { get; set; }
 
+        public Visibility MenuVisibility { 
+            get { return menuVisibility; }
+            set {
+                menuVisibility = value;
+                OnPropertyChanged("MenuVisibility");
+            }
+        }
+        private Visibility menuVisibility;
         // Horloge
         public DateTime Horloge
         {
@@ -146,6 +174,7 @@ namespace Makrisoft.Makfi.ViewModels
         public ICommand PersistMessageCommand { get; set; }
         public ICommand DeconnectCommand { get; set; }
         public ICommand BackCommand { get; set; }
+        public ICommand MessageDisplayAllCommand { get; set; }
 
         // Méthode
         private void OnBackCommand()
@@ -214,6 +243,9 @@ namespace Makrisoft.Makfi.ViewModels
                     Reference_ViewModel.InterventionSupprimer.OnSupprimerParBloc();
                     Reference_ViewModel.Main.ViewSelected = Dal.ViewEnum.InterventionDetail;
                     break;
+                case ViewEnum.Message:
+                    Reference_ViewModel.Main.ViewSelected = LastView;
+                    break;
             }
         }
         private void OnDeconnectCommand()
@@ -222,33 +254,28 @@ namespace Makrisoft.Makfi.ViewModels
             CurrentUtilisateur = Utilisateurs.FirstOrDefault(g => g.Nom == Properties.Settings.Default.Login);
             CanChangeUtilisateur = true;
             Utilisateur_Load();
+            MenuVisibility = Visibility.Hidden;
         }
-
-        #endregion
-
-        #region Constructeur
-        public HeaderViewModel()
+        private void OnMessageDisplayAllCommand()
         {
-            // ICommand
-            DeconnectCommand = new RelayCommand(p => OnDeconnectCommand());
-            BackCommand = new RelayCommand(p => OnBackCommand(), p => OnCanExecuteBackCommand());
-
-            // Utilisateur
-            Utilisateur_Load();
-
-            // Horloge
-            HeaderTimer.Elapsed += (s, e) => HorlogeLoop();
-            HeaderTimer.Start();
+            LastView = Reference_ViewModel.Main.ViewSelected;
+            Reference_ViewModel.Main.ViewSelected = ViewEnum.Message;
         }
 
+        //Méthode on canExcute
+
+        private bool OnCanExcuteMessageDisplayAllCommand()
+        {
+            return Reference_ViewModel.Main.ViewSelected != ViewEnum.Login;
+        }
         private bool OnCanExecuteBackCommand()
         {
             if (Reference_ViewModel.Main.ViewSelected == ViewEnum.InterventionDetail)
                 return !Reference_ViewModel.InterventionDetail.OnCanExecuteEnregistrerTout();
-            
+
             if (Reference_ViewModel.Main.ViewSelected == ViewEnum.Intervention)
                 return !Reference_ViewModel.Intervention.Interventions.Any(x => x.SaveColor == "Red");
-            
+
             if (Reference_ViewModel.Main.ViewSelected == ViewEnum.Employe)
                 return !Reference_ViewModel.Employe.AllEmployes.Any(x => x.SaveColor == "Red");
 
@@ -263,6 +290,11 @@ namespace Makrisoft.Makfi.ViewModels
                 return false;
             else return true;
         }
+        #endregion
+
+        #region Propriété
+        private readonly Timer HeaderTimer = new Timer(10000);
+
         #endregion
 
         #region Divers

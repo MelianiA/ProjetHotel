@@ -471,7 +471,7 @@ namespace Makrisoft.Makfi.ViewModels
     }
     public class Intervention_VM : ViewModelBase
     {
-        public Guid Id;
+        public Guid Id { get; set; }
         public string Libelle
         {
             get { return libelle; }
@@ -625,6 +625,97 @@ namespace Makrisoft.Makfi.ViewModels
         private string saveColor = "Navy";
 
     }
+    public class Message_VM  : ViewModelBase
+    {
+        public Guid Id;
+        public Guid MessageInitial;
+        public string Libelle
+        {
+            get { return libelle; }
+            set
+            {
+                libelle = value;
+                SaveColor = "Red";
+                OnPropertyChanged("Libelle");
+            }
+        }
+        private string libelle;
+
+        public DateTime DateCreation
+        {
+            get { return date; }
+            set
+            {
+                date = value;
+                SaveColor = "Red";
+                OnPropertyChanged("DateCreation");
+            }
+        }
+        private DateTime date;
+
+        public Utilisateur_VM De
+        {
+            get { return de; }
+            set
+            {
+                de = value;
+                SaveColor = "Red";
+                OnPropertyChanged("De");
+            }
+        }
+        private Utilisateur_VM de;
+
+        public Utilisateur_VM A
+        {
+            get { return a; }
+            set
+            {
+                a = value;
+                SaveColor = "Red";
+                OnPropertyChanged("A");
+            }
+        }
+        private Utilisateur_VM a;
+
+        public Etat_VM Etat
+        {
+            get { return etat; }
+            set
+            {
+                etat = value;
+                SaveColor = "Red";
+                OnPropertyChanged("Etat");
+            }
+        }
+        private Etat_VM etat;
+
+        public string Objet
+        {
+            get { return objet; }
+            set
+            {
+                objet = value;
+                SaveColor = "Red";
+                OnPropertyChanged("Objet");
+            }
+        }
+        private string objet;
+
+        public string SaveColor
+        {
+            get
+            { return saveColor; }
+            set
+            {
+                saveColor = value;
+                OnPropertyChanged("SaveColor");
+            }
+        }
+        private string saveColor = "Navy";
+
+    }
+
+    
     public class Info_VM
     {
         public Guid Id;

@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="Makrisoft.Makfi.Views.ChambreView"
+﻿<UserControl x:Class="Makrisoft.Makfi.Views.MessageView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -8,10 +8,6 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
-        <!--<Grid.Resources>
-            <conv:ChambreEtatIconeConverter x:Key="ChambreEtatIconeConverterKey"/>
-            <conv:ChambreEtatColorConverter x:Key="ChambreEtatColorConverterKey"/>
-        </Grid.Resources>-->
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="240"/>
             <ColumnDefinition Width="*"/>
@@ -44,13 +40,16 @@
                     <ColumnDefinition Width="*"></ColumnDefinition>
                     <ColumnDefinition Width="Auto"></ColumnDefinition>
                 </Grid.ColumnDefinitions>
-                <TextBlock FontSize="20" FontWeight="Normal" Foreground="Navy" Text="Les chambres" VerticalAlignment="Bottom"/>
+                <TextBlock FontSize="20" FontWeight="Normal" Foreground="Navy" Text="Messages" VerticalAlignment="Bottom"/>
                 <Menu Grid.Column="1" Cursor="Hand" Margin="0">
                     <MenuItem Header="..." Foreground="Navy" FontSize="16">
-                        <MenuItem Header="Ajouter" Foreground="Navy" Command="{Binding ChambreSelectedAddCommand}"/>
-                        <MenuItem Header="Supprimer" Foreground="Navy" Command="{Binding ChambreSelectedDeleteCommand}"/>
+                        <MenuItem Header="Ajouter" Foreground="Navy" Command="{Binding AjouterMessage}"/>
+                        <MenuItem Header="Répondre" Foreground="Navy" Command="{Binding RepondreMessage}"/>
+                        <MenuItem Header="Supprimer" Foreground="Navy" Command="{Binding SupprimerMessage}"/>
                         <Separator/>
-                         <MenuItem Header="Gérer les groupes de chambre" Foreground="Navy" Command="{Binding ChambreGroupeViewCommand}"/>
+                        <MenuItem Header="Actualiser" Foreground="Navy" Command="{Binding ActualiserMessage}"/>
+
+
                     </MenuItem>
                 </Menu>
             </Grid>
@@ -66,13 +65,12 @@
                 <Grid.RowDefinitions>
                     <RowDefinition></RowDefinition>
                 </Grid.RowDefinitions>
-                <TextBlock Text="Modifier" FontSize="22" Foreground="Navy" VerticalAlignment="Bottom"/>
-                 
-                <Button Grid.Column="2" Background="Transparent" BorderBrush="Transparent" BorderThickness="1" ToolTip="Enregistrer les modifications"
-                        Command="{Binding ChambreModifiedSaveCommand}" VerticalAlignment="Bottom">
+                <TextBlock Text="Envoyer" FontSize="22" Foreground="Navy" VerticalAlignment="Bottom"/>
+                <Button Grid.Column="2" Background="Transparent" BorderBrush="Transparent" BorderThickness="1" ToolTip="Envoyer"
+                        Command="{Binding MessageSaveCommand}" VerticalAlignment="Bottom">
                     <Button.Content>
                         <!--PaperAirplane-->
-                        <materialDesign:PackIcon Height="20" Width="Auto" Kind="Floppy" Foreground="{Binding CurrentChambreGChambre.SaveColor}" Margin="0,0,10,0" />
+                        <materialDesign:PackIcon Height="20" Width="Auto" Kind="PaperAirplane" Foreground="{Binding CurrentMessage.SaveColor}" Margin="0,0,10,0" />
                     </Button.Content>
                 </Button>
             </Grid>
@@ -84,20 +82,19 @@
             <StackPanel Margin="5">
 
                 <!--ChambreGroupeFilterSelected-->
-                <TextBlock Text="Grouope de chambres" Margin="0,15,0,0"/>
-                <ComboBox ItemsSource="{Binding GroupeChambreCollectionView, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" SelectedItem="{Binding CurrentFilterGroupe}" FontSize="16">
+                <TextBlock Text="À" Margin="0,15,0,0"/>
+                <ComboBox ItemsSource ="{Binding Utilisateurs}" SelectedItem="{Binding CurrentFilterUtilisateur}" FontSize="16">
                     <ComboBox.ItemTemplate>
                         <DataTemplate>
                             <StackPanel Orientation="Horizontal">
-                                <materialDesign:PackIcon Height="20" Width="Auto" Kind="Building" Foreground="DarkBlue" Margin="0,0,10,0"/>
                                 <TextBlock Text="{Binding Nom}" TextWrapping="Wrap"/>
                             </StackPanel>
                         </DataTemplate>
                     </ComboBox.ItemTemplate>
                 </ComboBox>
-                 <!--ChambreEtatFilterSelected-->
+                <!--ChambreEtatFilterSelected-->
                 <TextBlock Text="Etat" Margin="0,30,0,0"/>
-                <ComboBox ItemsSource="{Binding EtatChambreCollectionView}" SelectedItem="{Binding CurrentFilterEtat}" FontSize="16">
+                <ComboBox ItemsSource="{Binding EtatMessage }" SelectedItem="{Binding CurrentFilterEtat}" FontSize="16">
                     <ComboBox.ItemTemplate>
                         <DataTemplate>
                             <StackPanel Orientation="Horizontal">
@@ -107,68 +104,59 @@
                         </DataTemplate>
                     </ComboBox.ItemTemplate>
                 </ComboBox>
+                <StackPanel Orientation="Horizontal" Margin="0,30,0,0">
+                    <CheckBox  IsChecked="{Binding RoleReceptionFilter, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" 
+                               Command="{Binding RoleCommand}" CommandParameter=" "  />
+                    <TextBlock Text="Historique" Margin="10,0,0,0" FontSize="16" />
+                </StackPanel>
             </StackPanel>
+            
         </Border>
         <!--Milieu-->
         <Border Grid.Column="1" Grid.Row="1" BorderBrush="Transparent" BorderThickness="1" CornerRadius="10" Margin="0" >
-            <DataGrid ItemsSource="{Binding ChambreCollectionView}" SelectedItem="{Binding CurrentChambreGChambre}" 
+            <DataGrid ItemsSource="{Binding MessagesCollectionView}" SelectedItem="{Binding CurrentMessage}" 
                           AutoGenerateColumns="False" HeadersVisibility="None" CanUserAddRows="False" VerticalScrollBarVisibility="Visible">
                 <DataGrid.Columns>
-                    <DataGridTemplateColumn  >
-                        <DataGridTemplateColumn.CellTemplate >
-                            <DataTemplate >
-                                <TextBlock VerticalAlignment="Center" Foreground="{Binding SaveColor, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
-                                               Text="{Binding Nom, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" FontWeight="Bold"/>
-                            </DataTemplate>
-                        </DataGridTemplateColumn.CellTemplate>
-                    </DataGridTemplateColumn>
-                    <DataGridTextColumn Binding="{Binding Etat.Libelle}" FontWeight="Normal" Width="Auto" IsReadOnly="True"/>
+                    <DataGridTextColumn Binding="{Binding Id}"  FontWeight="Normal" Width="Auto" IsReadOnly="True"/>
+                    <DataGridTextColumn Binding="{Binding De.Nom}"  FontWeight="Normal" Width="Auto" IsReadOnly="True"/>
+                    <DataGridTextColumn Binding="{Binding A.Nom}"  FontWeight="Normal" Width="Auto" IsReadOnly="True"/>
+                    <DataGridTextColumn Binding="{Binding DateCreation, StringFormat=dd/MM/yyy HH:mm , UpdateSourceTrigger=PropertyChanged}" FontWeight="Normal" Width="Auto" IsReadOnly="True"/>
+
                     <DataGridTemplateColumn >
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <!--{Binding Etat.Icone}-->
-                                <materialDesign:PackIcon Height="20" Width="Auto" Kind="{Binding  Etat.Icone}" Foreground="{Binding  Etat.Couleur}"/>
-                            </DataTemplate>
+                                <materialDesign:PackIcon Height="20" Width="Auto" Kind="{Binding Etat.Icone}" Foreground="{Binding Etat.Couleur}"/>
+                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
-                    <DataGridTemplateColumn Width="auto">
-                        <DataGridTemplateColumn.CellTemplate>
-                            <DataTemplate>
-                                <TextBlock Text="{Binding GroupeChambre }" TextWrapping="Wrap"  FontWeight="SemiBold"/>
-                            </DataTemplate>
-                        </DataGridTemplateColumn.CellTemplate>
-                    </DataGridTemplateColumn>
-                    <DataGridTemplateColumn Width="*">
-                        <DataGridTemplateColumn.CellTemplate>
-                            <DataTemplate>
-                                <TextBlock Text="{Binding Commentaire}" TextWrapping="Wrap" />
-                            </DataTemplate>
-                        </DataGridTemplateColumn.CellTemplate>
-                    </DataGridTemplateColumn>
+                    <DataGridTextColumn Binding="{Binding Objet}" FontWeight="Normal" Width="Auto" IsReadOnly="True"/>
+ 
+
                 </DataGrid.Columns>
             </DataGrid>
         </Border>
         <!--Droite-->
         <Border Grid.Column="2" Grid.Row="1" BorderBrush="Transparent" BorderThickness="1" CornerRadius="10" HorizontalAlignment="Left" >
             <StackPanel Margin="5" Width="220">
-                <TextBlock Text="Libellé" Margin="0,15,0,0"/>
-                <TextBox FontSize="16" Text="{Binding CurrentChambreGChambre.Nom, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" IsEnabled="{Binding IsEnabled}"/>
-                <TextBlock Text="Etat" Margin="0,15,0,0"/>
-                <ComboBox FontSize="16" Margin="0 20 0 0"
-                    ItemsSource="{Binding EtatChambre}" SelectedItem="{Binding CurrentChambreGChambre.Etat}" IsEnabled="{Binding IsEnabled}">
+                <TextBlock Text="À" Margin="0,15,0,0"/>
+                <ComboBox FontSize="16"  ItemsSource="{Binding Utilisateurs}" SelectedItem="{Binding CurrentMessage.A}" >
                     <ComboBox.ItemTemplate>
                         <DataTemplate>
                             <StackPanel Orientation="Horizontal">
-                                <materialDesign:PackIcon Height="20" Width="Auto" Kind="{Binding Icone}" Foreground="{Binding Couleur}" />
-                                <TextBlock Text="{Binding Libelle}" Margin="5,0,0,0"/>
+                                <TextBlock Text="{Binding Nom}" Margin="5,0,0,0"/>
                             </StackPanel>
                         </DataTemplate>
                     </ComboBox.ItemTemplate>
                 </ComboBox>
-                <TextBlock Text="Commentaire" Margin="0,19,0,5"/>
-                <TextBox FontSize="16"  Text="{Binding CurrentChambreGChambre.Commentaire, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" TextWrapping="Wrap" TextAlignment="Left" IsEnabled="{Binding IsEnabled}"/>
+                <TextBlock Text="Objet" Margin="0,15,0,0"/>
+                <TextBox FontSize="16" Text="{Binding CurrentMessage.Objet, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" 
+                         IsEnabled="{Binding IsEnabled}" ScrollViewer.HorizontalScrollBarVisibility="Auto"/>
+                <TextBlock Text="Texte" Margin="0,19,0,5"/>
+
+                <TextBox FontSize="16" Text="{Binding CurrentMessage.Libelle, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" 
+                           TextWrapping="Wrap" TextAlignment="Left" IsEnabled="{Binding IsEnabled}" Height="300" ScrollViewer.VerticalScrollBarVisibility="Auto"/>
 
             </StackPanel>
         </Border>
     </Grid>
-</UserControl>
+    </UserControl>

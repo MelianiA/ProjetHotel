@@ -131,6 +131,7 @@
     <Compile Include="ViewModels\InterventionDetailViewModel.cs" />
     <Compile Include="ViewModels\InterventionSupprimerModel.cs" />
     <Compile Include="ViewModels\InterventionViewModel.cs" />
+    <Compile Include="ViewModels\MessageViewModel.cs" />
     <Compile Include="ViewModels\_Reference_ViewModel.cs" />
     <Compile Include="ViewModels\HeaderViewModel.cs" />
     <Compile Include="ViewModels\LoginViewModel.cs" />
@@ -177,6 +178,9 @@
     </Compile>
     <Compile Include="Views\MainView.xaml.cs">
       <DependentUpon>MainView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\MessageView.xaml.cs">
+      <DependentUpon>MessageView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\UtilisateurView.xaml.cs">
       <DependentUpon>UtilisateurView.xaml</DependentUpon>
@@ -262,6 +266,10 @@
     <Page Include="Views\MainView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\MessageView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\UtilisateurView.xaml">
       <Generator>MSBuild:Compile</Generator>

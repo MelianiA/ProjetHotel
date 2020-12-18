@@ -13,10 +13,10 @@ namespace Makrisoft.Makfi.Dal
     public enum ViewEnum
     {
         Header, Login, Home, Intervention, Chambre, InterventionNew, Employe, Synthese, Administration, ChambreGroupe, InterventionDetail,
-        Utilisateur, None, Hotel,InterventionAjouter, InterventionSupprimer
+        Utilisateur, None, Hotel,InterventionAjouter, InterventionSupprimer, Message
     }
     public enum RoleEnum { None = 0, Gouvernante = 1, Reception = 2, Admin = 255 }
-    public enum EntiteEnum { Employe = 1, Chambre = 2, Intervention = 3, InterventionDetail=4 }
+    public enum EntiteEnum { Employe = 1, Chambre = 2, Intervention = 3, InterventionDetail=4, Message=5 }
 
     public static class MakfiData
     {

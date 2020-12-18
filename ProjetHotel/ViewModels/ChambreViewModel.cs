@@ -216,7 +216,7 @@ namespace Makrisoft.Makfi.ViewModels
         }
         private void OnAddCommand()
         {
-            CurrentChambreGChambre = new ChambreGroupeChambre_VM { Nom = "( A définir !)", Etat = EtatChambre.Where(e => e.Libelle == "Pas encore fait").SingleOrDefault() };
+            CurrentChambreGChambre = new ChambreGroupeChambre_VM { Nom = "( A définir !)", Etat = EtatChambre.Where(e => e.Libelle == "Disponible").SingleOrDefault() };
             ChambreGroupeChambre.Add(CurrentChambreGChambre);
             ChambreCollectionView.Refresh();
         }

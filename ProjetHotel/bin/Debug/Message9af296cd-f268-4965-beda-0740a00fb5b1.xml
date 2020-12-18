@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Message_VM xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Id>9af296cd-f268-4965-beda-0740a00fb5b1</Id>
+  <MessageInitial>00000000-0000-0000-0000-000000000000</MessageInitial>
+  <Libelle>Alykoum</Libelle>
+  <DateCreation>2020-12-18T16:21:59.7854369+01:00</DateCreation>
+  <De>
+    <Id>3f7a3d5e-7e6d-4d4d-b311-1b70df7b3c8a</Id>
+    <Nom>Lopez</Nom>
+    <SaveColor>Navy</SaveColor>
+    <Image>/Makrisoft.Makfi;component/Assets/Photos/lopez.png</Image>
+    <Statut>Gouvernante</Statut>
+    <DateModified>0001-01-01T00:00:00</DateModified>
+    <IsAdmin>false</IsAdmin>
+    <CodePin>1111</CodePin>
+  </De>
+  <A>
+    <Id>fbdea3f5-4121-4e94-a05c-038d79d84497</Id>
+    <Nom>Admin</Nom>
+    <SaveColor>Navy</SaveColor>
+    <Image>/Makrisoft.Makfi;component/Assets/Photos/admin.png</Image>
+    <Statut>Admin</Statut>
+    <DateModified>0001-01-01T00:00:00</DateModified>
+    <IsAdmin>true</IsAdmin>
+    <CodePin>#69!</CodePin>
+  </A>
+  <Etat>
+    <Id>b1010ba8-0989-4fa6-832e-69304e1ce147</Id>
+    <Icone>Mail</Icone>
+    <Libelle>Non lu</Libelle>
+    <Couleur>orange</Couleur>
+    <Entite>Message</Entite>
+    <EtatEtat>false</EtatEtat>
+  </Etat>
+  <Objet>Salam</Objet>
+  <SaveColor>Red</SaveColor>
+</Message_VM>

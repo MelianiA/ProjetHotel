@@ -1,6 +1,7 @@
 ﻿using Makrisoft.Makfi.Dal;
 using Makrisoft.Makfi.Tools;
 using System;
+using System.Windows;
 using System.Windows.Input;
 
 namespace Makrisoft.Makfi.ViewModels
@@ -63,6 +64,7 @@ namespace Makrisoft.Makfi.ViewModels
                         Reference_ViewModel.Main.ViewSelected = ViewEnum.Home;
                         Reference_ViewModel.Header.CanChangeUtilisateur = false;
                         Reference_ViewModel.Home.IsAdmin = Reference_ViewModel.Header.CurrentUtilisateur.IsAdmin;
+                        Reference_ViewModel.Header.MenuVisibility = Visibility.Visible;
                     }
                     Password = "";
                     if (Reference_ViewModel.Header.CurrentHotel != null)
