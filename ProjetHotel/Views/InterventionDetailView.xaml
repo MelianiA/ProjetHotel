@@ -110,7 +110,8 @@
 
                 <!-- EtatFilter -->
                 <TextBlock Text="Etat" Margin="0,30,0,0"/>
-                <ComboBox ItemsSource="{Binding EtatIntervention}" SelectedItem="{Binding CurrentEtatIntervention}" FontSize="16">
+                <ComboBox ItemsSource="{Binding EtatInterventionFilterCollectionView}"  
+                          SelectedItem="{Binding CurrentEtatIntervention}" FontSize="16">
                     <ComboBox.ItemTemplate>
                         <DataTemplate>
                             <StackPanel Orientation="Horizontal">

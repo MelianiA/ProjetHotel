@@ -194,12 +194,10 @@ namespace Makrisoft.Makfi.ViewModels
             }
             Guid? monID = null;
             if (CurrentIntervention.Id != default) monID = CurrentIntervention.Id;
-            string libelle = null;
-            if (CurrentIntervention.Libelle!=null && !CurrentIntervention.Libelle.Contains("Intervention du")) libelle = CurrentIntervention.Libelle;
-            var param = $@"
+              var param = $@"
                     <intervention>
                         <id>{monID}</id>
-                        <libelle>{libelle}</libelle>
+                        <libelle>{CurrentIntervention.Libelle}</libelle>
                         <commentaire>{CurrentIntervention.Commentaire}</commentaire>    
 						<hotel>{Reference_ViewModel.Header.CurrentHotel.Id}</hotel>
                         <date1>{CurrentIntervention.Date1}</date1>    
@@ -345,7 +343,7 @@ namespace Makrisoft.Makfi.ViewModels
                .Select(x => new Intervention_VM
                {
                    Id = x.Id,
-                   Libelle = $"Intervention du {x.Date1}{Properties.Settings.Default.Autocar}",
+                   Libelle =  x.Libelle,
                    Etat = EtatIntervention.Where(e => e.Id == x.Etat).SingleOrDefault(),
                    Date1 = x.Date1,
                    Commentaire = x.Commentaire,

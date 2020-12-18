@@ -182,12 +182,10 @@ namespace Makrisoft.Makfi.ViewModels
                     /********mettre à jour l'etat de l'intervention dans la base de données********/
                     Guid? monID = null;
                     if (Reference_ViewModel.Intervention.CurrentIntervention.Id != default) monID = Reference_ViewModel.Intervention.CurrentIntervention.Id;
-                    string libelle = null;
-                    if (!Reference_ViewModel.Intervention.CurrentIntervention.Libelle.Contains("Intervention du")) libelle = Reference_ViewModel.Intervention.CurrentIntervention.Libelle;
                     var param = $@"
                             <intervention>
                                 <id>{monID}</id>
-                                <libelle>{libelle}</libelle>
+                                <libelle>{Reference_ViewModel.Intervention.CurrentIntervention.Libelle}</libelle>
                                 <commentaire>{Reference_ViewModel.Intervention.CurrentIntervention.Commentaire}</commentaire>    
 						        <hotel>{Reference_ViewModel.Header.CurrentHotel.Id}</hotel>
                                 <date1>{Reference_ViewModel.Intervention.CurrentIntervention.Date1}</date1>    

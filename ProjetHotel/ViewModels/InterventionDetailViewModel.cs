@@ -124,6 +124,12 @@ namespace Makrisoft.Makfi.ViewModels
         }
         private ListCollectionView etatInterventionCollectionView;
 
+        public ListCollectionView EtatInterventionFilterCollectionView
+        {
+            get { return etatInterventionFilterCollectionView; }
+            set { etatInterventionFilterCollectionView = value; OnPropertyChanged("EtatInterventionFilterCollectionView"); }
+        }
+        private ListCollectionView etatInterventionFilterCollectionView;
         //Employe 
         public ObservableCollection<Employe_VM> EmployeIntervention
         {
@@ -430,8 +436,6 @@ namespace Makrisoft.Makfi.ViewModels
         #region Load
         public void Load_InterventionDetail()
         {
-
- 
             //Chargement des etats 
             Load_Etat();
             //Employe
@@ -469,8 +473,8 @@ namespace Makrisoft.Makfi.ViewModels
 
             foreach (var item in tmp)
                 InterventionDetails.Add(item);
-            CurrentInterventionDetail = InterventionDetails.Count > 0 ? (InterventionDetail_VM)InterventionDetailsCollectionView.GetItemAt(0) : null;
-
+            CurrentInterventionDetail = InterventionDetailsCollectionView.Count > 0 ? (InterventionDetail_VM)InterventionDetailsCollectionView.GetItemAt(0) : null;
+            OnFilterClearCommand();
         }
         private void Load_Etat()
         {
@@ -490,6 +494,7 @@ namespace Makrisoft.Makfi.ViewModels
             EtatIntervention = new ObservableCollection<Etat_VM>(
                EtatList.Where(x => x.Entite == EntiteEnum.InterventionDetail || x.Entite == EntiteEnum.Intervention).ToList());
             EtatInterventionCollectionView = new ListCollectionView(EtatIntervention.Where(w=>w.Entite==EntiteEnum.InterventionDetail).ToList());
+            EtatInterventionFilterCollectionView = new ListCollectionView(EtatIntervention.Where(w => w.Entite == EntiteEnum.InterventionDetail).ToList());
             EtatInterventionCollectionView.Refresh();
         }
 

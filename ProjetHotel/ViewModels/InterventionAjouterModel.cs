@@ -243,7 +243,7 @@ namespace Makrisoft.Makfi.ViewModels
                     {
                         Chambre = new Chambre_VM { Id = item.IdDelaChambre, Nom = item.NomChambre },
                         Employe = CurentEmploye,
-                        Etat = Reference_ViewModel.InterventionDetail.EtatIntervention.Where(e => e.Libelle == "None")
+                        Etat = Reference_ViewModel.InterventionDetail.EtatIntervention.Where(e => e.Libelle == "None" && e.Entite==EntiteEnum.InterventionDetail)
                         .SingleOrDefault(),
                         SaveColor = "Red"
                     };

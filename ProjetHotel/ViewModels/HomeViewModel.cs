@@ -104,7 +104,7 @@ namespace Makrisoft.Makfi.ViewModels
             {
                 i = itervDispo[0];
                 DerniereIntervention = "Intervention du " + i.Date1.ToString("dddd dd MMMM", CultureInfo.CurrentCulture);
-                EtatControle = "Contôle";
+                EtatControle = "Contrôle";
             }
             else
             {
