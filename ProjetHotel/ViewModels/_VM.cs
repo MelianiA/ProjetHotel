@@ -713,6 +713,18 @@ namespace Makrisoft.Makfi.ViewModels
         }
         private string saveColor = "Navy";
 
+        public string ColorEtat
+        {
+            get
+            { return colorEtat; }
+            set
+            {
+                colorEtat = value;
+                OnPropertyChanged("ColorEtat");
+            }
+        }
+        private string colorEtat;
+
     }
 
     

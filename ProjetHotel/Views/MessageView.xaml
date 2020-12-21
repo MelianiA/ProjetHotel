@@ -43,7 +43,7 @@
                 <TextBlock FontSize="20" FontWeight="Normal" Foreground="Navy" Text="Messages" VerticalAlignment="Bottom"/>
                 <Menu Grid.Column="1" Cursor="Hand" Margin="0">
                     <MenuItem Header="..." Foreground="Navy" FontSize="16">
-                        <MenuItem Header="Ajouter" Foreground="Navy" Command="{Binding AjouterMessage}"/>
+                        <MenuItem Header="Nouveau message" Foreground="Navy" Command="{Binding AjouterMessage}"/>
                         <MenuItem Header="Répondre" Foreground="Navy" Command="{Binding RepondreMessage}"/>
                         <MenuItem Header="Supprimer" Foreground="Navy" Command="{Binding SupprimerMessage}"/>
                         <Separator/>
@@ -94,7 +94,7 @@
                 </ComboBox>
                 <!--ChambreEtatFilterSelected-->
                 <TextBlock Text="Etat" Margin="0,30,0,0"/>
-                <ComboBox ItemsSource="{Binding EtatMessage }" SelectedItem="{Binding CurrentFilterEtat}" FontSize="16">
+                <ComboBox ItemsSource="{Binding EtatMessageCollectionView }" SelectedItem="{Binding CurrentFilterEtat}" FontSize="16">
                     <ComboBox.ItemTemplate>
                         <DataTemplate>
                             <StackPanel Orientation="Horizontal">
@@ -104,11 +104,13 @@
                         </DataTemplate>
                     </ComboBox.ItemTemplate>
                 </ComboBox>
-                <StackPanel Orientation="Horizontal" Margin="0,30,0,0">
-                    <CheckBox  IsChecked="{Binding RoleReceptionFilter, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" 
-                               Command="{Binding RoleCommand}" CommandParameter=" "  />
+                <Separator Margin="0 70 0 0"/>
+                <StackPanel Orientation="Horizontal"  >
+                    <CheckBox  IsChecked="{Binding HistoriqueFilter}" IsEnabled="{Binding HistEnable, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"  />
                     <TextBlock Text="Historique" Margin="10,0,0,0" FontSize="16" />
                 </StackPanel>
+                <Separator  />
+
             </StackPanel>
             
         </Border>
@@ -117,10 +119,11 @@
             <DataGrid ItemsSource="{Binding MessagesCollectionView}" SelectedItem="{Binding CurrentMessage}" 
                           AutoGenerateColumns="False" HeadersVisibility="None" CanUserAddRows="False" VerticalScrollBarVisibility="Visible">
                 <DataGrid.Columns>
-                    <DataGridTextColumn Binding="{Binding Id}"  FontWeight="Normal" Width="Auto" IsReadOnly="True"/>
-                    <DataGridTextColumn Binding="{Binding De.Nom}"  FontWeight="Normal" Width="Auto" IsReadOnly="True"/>
-                    <DataGridTextColumn Binding="{Binding A.Nom}"  FontWeight="Normal" Width="Auto" IsReadOnly="True"/>
-                    <DataGridTextColumn Binding="{Binding DateCreation, StringFormat=dd/MM/yyy HH:mm , UpdateSourceTrigger=PropertyChanged}" FontWeight="Normal" Width="Auto" IsReadOnly="True"/>
+               
+                    <DataGridTextColumn Binding="{Binding De.Nom}"  FontWeight="Normal" Width="Auto" IsReadOnly="True" Foreground="{Binding ColorEtat}"/>
+                   
+                    <DataGridTextColumn Binding="{Binding A.Nom}"  FontWeight="Normal" Width="Auto" IsReadOnly="True" Foreground="{Binding ColorEtat}" />
+                    <DataGridTextColumn Binding="{Binding DateCreation, StringFormat=dd/MM/yyy HH:mm , UpdateSourceTrigger=PropertyChanged}" FontWeight="Normal" Width="Auto" IsReadOnly="True" Foreground="{Binding ColorEtat}"/>
 
                     <DataGridTemplateColumn >
                         <DataGridTemplateColumn.CellTemplate>
@@ -129,8 +132,13 @@
                              </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
-                    <DataGridTextColumn Binding="{Binding Objet}" FontWeight="Normal" Width="Auto" IsReadOnly="True"/>
- 
+                    <DataGridTemplateColumn Width="*" >
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Objet}" Foreground="{Binding ColorEtat}" FontWeight="SemiBold"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
 
                 </DataGrid.Columns>
             </DataGrid>
@@ -139,7 +147,8 @@
         <Border Grid.Column="2" Grid.Row="1" BorderBrush="Transparent" BorderThickness="1" CornerRadius="10" HorizontalAlignment="Left" >
             <StackPanel Margin="5" Width="220">
                 <TextBlock Text="À" Margin="0,15,0,0"/>
-                <ComboBox FontSize="16"  ItemsSource="{Binding Utilisateurs}" SelectedItem="{Binding CurrentMessage.A}" >
+                <ComboBox FontSize="16"  ItemsSource="{Binding Utilisateurs,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" 
+                          SelectedItem="{Binding CurrentMessage.A,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding IsEnabled}"  >
                     <ComboBox.ItemTemplate>
                         <DataTemplate>
                             <StackPanel Orientation="Horizontal">
@@ -149,12 +158,12 @@
                     </ComboBox.ItemTemplate>
                 </ComboBox>
                 <TextBlock Text="Objet" Margin="0,15,0,0"/>
-                <TextBox FontSize="16" Text="{Binding CurrentMessage.Objet, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" 
-                         IsEnabled="{Binding IsEnabled}" ScrollViewer.HorizontalScrollBarVisibility="Auto"/>
+                <TextBox FontSize="16" Text="{Binding CurrentMessage.Objet, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"  IsReadOnly="{Binding IsReadOnly}"  
+                         ScrollViewer.HorizontalScrollBarVisibility="Auto" Foreground="{Binding CurrentMessage.ColorEtat}"/>
                 <TextBlock Text="Texte" Margin="0,19,0,5"/>
 
                 <TextBox FontSize="16" Text="{Binding CurrentMessage.Libelle, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" 
-                           TextWrapping="Wrap" TextAlignment="Left" IsEnabled="{Binding IsEnabled}" Height="300" ScrollViewer.VerticalScrollBarVisibility="Auto"/>
+                           TextWrapping="Wrap" TextAlignment="Left" IsReadOnly="{Binding IsReadOnly}"   Height="300" ScrollViewer.VerticalScrollBarVisibility="Auto"/>
 
             </StackPanel>
         </Border>

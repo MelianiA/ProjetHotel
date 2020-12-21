@@ -65,6 +65,7 @@ namespace Makrisoft.Makfi.ViewModels
                         Reference_ViewModel.Header.CanChangeUtilisateur = false;
                         Reference_ViewModel.Home.IsAdmin = Reference_ViewModel.Header.CurrentUtilisateur.IsAdmin;
                         Reference_ViewModel.Header.MenuVisibility = Visibility.Visible;
+                        Reference_ViewModel.Message.Load_Message();
                     }
                     Password = "";
                     if (Reference_ViewModel.Header.CurrentHotel != null)
