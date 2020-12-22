@@ -72,23 +72,33 @@
                                 <Menu Grid.Column="1" Background="White" Cursor="Hand" Visibility="{Binding MenuVisibility}">
                                     <MenuItem Header="..." Foreground="Navy" FontSize="22">
                                         <MenuItem Header="Voir tous les messages" Foreground="Navy" FontSize="18" Command="{Binding MessageDisplayAllCommand}"/>
-                                        <MenuItem Header="Supprimer" Foreground="Navy" FontSize="18" Command="{Binding MessageDeleteCommand}"/>
-                                    </MenuItem>
+                                     </MenuItem>
                                 </Menu>
                             </Grid>
                         </Border>
-                        <DataGrid ItemsSource="{Binding MessageList}" GridLinesVisibility="None"  HeadersVisibility="None" AutoGenerateColumns="False"  IsReadOnly="True" VerticalScrollBarVisibility="Visible"
-                                  AlternatingRowBackground="AliceBlue" BorderBrush="White">
+                        <DataGrid ItemsSource="{Binding MessagesCollectionView }" GridLinesVisibility="None"  HeadersVisibility="None" AutoGenerateColumns="False"  IsReadOnly="True" VerticalScrollBarVisibility="Visible"
+                                  AlternatingRowBackground="White" BorderBrush="White" Height="50" Visibility="{Binding MessagesVisibility}" >
                             <DataGrid.Columns>
-                                <DataGridTemplateColumn  Width="Auto">
+
+                                <DataGridTextColumn Binding="{Binding De.Nom}"  FontWeight="Normal" Width="Auto" IsReadOnly="True" Foreground="{Binding ColorEtat}"/>
+
+                                <DataGridTextColumn Binding="{Binding A.Nom}"  FontWeight="Normal" Width="Auto" IsReadOnly="True" Foreground="{Binding ColorEtat}" />
+                                <DataGridTextColumn Binding="{Binding DateCreation, StringFormat=dd/MM/yyy HH:mm , UpdateSourceTrigger=PropertyChanged}" FontWeight="Normal" Width="Auto" IsReadOnly="True" Foreground="{Binding ColorEtat}"/>
+
+                                <DataGridTemplateColumn >
                                     <DataGridTemplateColumn.CellTemplate>
                                         <DataTemplate>
-                                            <TextBlock Text="{Binding Expediteur}" FontSize="16"  FontWeight="Medium" Margin="1"/>
+                                            <materialDesign:PackIcon Height="20" Width="Auto" Kind="{Binding Etat.Icone}" Foreground="{Binding Etat.Couleur}"/>
                                         </DataTemplate>
                                     </DataGridTemplateColumn.CellTemplate>
                                 </DataGridTemplateColumn>
-                                <DataGridTextColumn Binding="{Binding Objet}" FontSize="16" Width="*"/>
-                                <DataGridTextColumn Binding="{Binding DateRecu, StringFormat=ddd d MMM h:mm, ConverterCulture='fr-FR'}" FontSize="16" Width="Auto" FontStyle="Italic"/>
+                                <DataGridTemplateColumn Width="*" >
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding Objet}" Foreground="{Binding ColorEtat}" FontWeight="SemiBold"/>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
                             </DataGrid.Columns>
                             <DataGrid.CellStyle>
                                 <Style TargetType="DataGridCell">

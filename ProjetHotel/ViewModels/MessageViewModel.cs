@@ -32,13 +32,14 @@ namespace Makrisoft.Makfi.ViewModels
 
 
             //Load 
-            Utilisateurs = Reference_ViewModel.Header.Utilisateurs;
+            
             Messages = new ObservableCollection<Message_VM>();
             MessagesCollectionView = new ListCollectionView(Messages);
             MessagesCollectionView.SortDescriptions.Add(new System.ComponentModel.SortDescription("DateCreation", System.ComponentModel.ListSortDirection.Descending));
 
             Load_Etat();
             Load_Message();
+            Reference_ViewModel.Header.MessagesCollectionView = MessagesCollectionView;
 
         }
 
@@ -428,6 +429,7 @@ namespace Makrisoft.Makfi.ViewModels
 
         public void Load_Message()
         {
+            Utilisateurs = Reference_ViewModel.Header.Utilisateurs;
             Messages.Clear();
             foreach (var file in Directory.GetFiles(Properties.Settings.Default.MessagePath))
             {

@@ -16,7 +16,7 @@ namespace Makrisoft.Makfi.ViewModels
         public HeaderViewModel()
         {
             // ICommand
-            DeconnectCommand = new RelayCommand(p => OnDeconnectCommand());
+            DeconnectCommand = new RelayCommand(p => OnDeconnectCommand(), p => OnCanExcuteDeconnectCommand());
             BackCommand = new RelayCommand(p => OnBackCommand(), p => OnCanExecuteBackCommand());
             MessageDisplayAllCommand = new RelayCommand(p => OnMessageDisplayAllCommand(), p => OnCanExcuteMessageDisplayAllCommand());
 
@@ -28,9 +28,16 @@ namespace Makrisoft.Makfi.ViewModels
             HeaderTimer.Start();
 
             //Menuvisibility
-            MenuVisibility= Visibility.Hidden;
+            MenuVisibility = Visibility.Hidden;
+
+            //Messages
+ 
         }
 
+        private bool OnCanExcuteDeconnectCommand()
+        {
+            return Reference_ViewModel.Main.ViewSelected != ViewEnum.Login;
+        }
 
 
         #endregion
@@ -89,7 +96,13 @@ namespace Makrisoft.Makfi.ViewModels
                        }));
                 }
                 CurrentHotel = Hotels.FirstOrDefault();
-
+                if (Reference_ViewModel.Message != null)
+                {
+                    if (string.IsNullOrEmpty(currentUtilisateur.CodePin))
+                        Message = "Tapez votre code pin";
+                    Reference_ViewModel.Message.Load_Message();
+                    MessagesCollectionView = Reference_ViewModel.Message.MessagesCollectionView;
+                }
                 OnPropertyChanged("CurrentUtilisateur");
             }
         }
@@ -131,7 +144,6 @@ namespace Makrisoft.Makfi.ViewModels
         }
         private Hotel_VM currentHotel;
 
-
         //PremiereConnexion
         public string Message
         {
@@ -146,15 +158,17 @@ namespace Makrisoft.Makfi.ViewModels
 
         //View 
         public ViewEnum LastView { get; set; }
-
-        public Visibility MenuVisibility { 
+        public Visibility MenuVisibility
+        {
             get { return menuVisibility; }
-            set {
+            set
+            {
                 menuVisibility = value;
                 OnPropertyChanged("MenuVisibility");
             }
         }
         private Visibility menuVisibility;
+
         // Horloge
         public DateTime Horloge
         {
@@ -166,6 +180,29 @@ namespace Makrisoft.Makfi.ViewModels
             }
         }
         private DateTime horloge = DateTime.Now;
+
+        //Messages 
+        
+        public ListCollectionView MessagesCollectionView
+        {
+            get { return messagesCollectionView; }
+            set
+            {
+                messagesCollectionView = value;
+                OnPropertyChanged("MessagesCollectionView");
+            }
+        }
+        private ListCollectionView messagesCollectionView;
+        public Visibility MessagesVisibility
+        {
+            get { return messagesVisibility; }
+            set
+            {
+                messagesVisibility = value;
+                OnPropertyChanged("MessagesVisibility");
+            }
+        }
+        private Visibility messagesVisibility = Visibility.Visible;
 
         #endregion
 
@@ -207,7 +244,7 @@ namespace Makrisoft.Makfi.ViewModels
                     Reference_ViewModel.Main.ViewSelected = Dal.ViewEnum.Home;
                     break;
                 case ViewEnum.InterventionDetail:
-                    
+
                     /********mettre à jour l'etat de l'intervention dans la base de données********/
                     Guid? monID = null;
                     if (Reference_ViewModel.Intervention.CurrentIntervention.Id != default) monID = Reference_ViewModel.Intervention.CurrentIntervention.Id;
@@ -244,6 +281,8 @@ namespace Makrisoft.Makfi.ViewModels
                     Reference_ViewModel.Main.ViewSelected = Dal.ViewEnum.InterventionDetail;
                     break;
                 case ViewEnum.Message:
+                    MessagesVisibility = Visibility.Visible;
+
                     Reference_ViewModel.Main.ViewSelected = LastView;
                     break;
             }
@@ -255,9 +294,12 @@ namespace Makrisoft.Makfi.ViewModels
             CanChangeUtilisateur = true;
             Utilisateur_Load();
             MenuVisibility = Visibility.Hidden;
+            MessagesVisibility = Visibility.Visible;
+
         }
         private void OnMessageDisplayAllCommand()
         {
+            MessagesVisibility = Visibility.Collapsed;
             LastView = Reference_ViewModel.Main.ViewSelected;
             Reference_ViewModel.Main.ViewSelected = ViewEnum.Message;
         }
@@ -319,8 +361,7 @@ namespace Makrisoft.Makfi.ViewModels
             if (CurrentUtilisateur == null) CurrentUtilisateur = Utilisateurs.FirstOrDefault(u => u.Statut == RoleEnum.Gouvernante);
             if (CurrentUtilisateur == null) CurrentUtilisateur = Utilisateurs.FirstOrDefault();
 
-            if (string.IsNullOrEmpty(currentUtilisateur.CodePin))
-                Message = "Tapez votre code pin";
+   
         }
 
         private void HorlogeLoop()
