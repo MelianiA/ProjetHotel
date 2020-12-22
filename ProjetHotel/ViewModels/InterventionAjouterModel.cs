@@ -243,7 +243,7 @@ namespace Makrisoft.Makfi.ViewModels
                     {
                         Chambre = new Chambre_VM { Id = item.IdDelaChambre, Nom = item.NomChambre },
                         Employe = CurentEmploye,
-                        Etat = Reference_ViewModel.InterventionDetail.EtatIntervention.Where(e => e.Libelle == "None" && e.Entite==EntiteEnum.InterventionDetail)
+                        Etat = Reference_ViewModel.InterventionDetail.EtatIntervention.Where(e => e.Libelle == "None" && e.Entite == EntiteEnum.InterventionDetail)
                         .SingleOrDefault(),
                         SaveColor = "Red"
                     };
@@ -293,7 +293,8 @@ namespace Makrisoft.Makfi.ViewModels
             }
             //GroupeChambres
             GroupeChambres = Reference_ViewModel.ChambreGroupe.GroupeChambres;
-            CurrentGroupeChambre = GroupeChambres.FirstOrDefault();
+            if (GroupeChambres != null)
+                CurrentGroupeChambre = GroupeChambres.FirstOrDefault();
 
             //
             if (Reference_ViewModel.Header.CurrentHotel != null)

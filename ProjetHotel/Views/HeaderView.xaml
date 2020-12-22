@@ -76,7 +76,8 @@
                                 </Menu>
                             </Grid>
                         </Border>
-                        <DataGrid ItemsSource="{Binding MessagesCollectionView }" GridLinesVisibility="None"  HeadersVisibility="None" AutoGenerateColumns="False"  IsReadOnly="True" VerticalScrollBarVisibility="Visible"
+                        <DataGrid ItemsSource="{Binding MessagesCollectionView }"  SelectedItem="{Binding CurrentMessage}" GridLinesVisibility="None"  HeadersVisibility="None" 
+                                  AutoGenerateColumns="False"  IsReadOnly="True" VerticalScrollBarVisibility="Visible"
                                   AlternatingRowBackground="White" BorderBrush="White" Height="50" Visibility="{Binding MessagesVisibility}" >
                             <DataGrid.Columns>
 
@@ -111,12 +112,12 @@
                         </DataGrid>
                     </StackPanel>
                     <!--Erreur-->
-                    <ScrollViewer Grid.Row="2" Margin="20,0,20,0" VerticalScrollBarVisibility="Auto">
+                    <!--<ScrollViewer Grid.Row="2" Margin="20,0,20,0" VerticalScrollBarVisibility="Auto">
                         <TextBlock Text="{Binding Message}" Foreground="Red" FontSize="18"  
                                TextAlignment="Center" TextWrapping="Wrap" FontWeight="ExtraBold" VerticalAlignment="Bottom">
                          
                         </TextBlock>
-                    </ScrollViewer>
+                    </ScrollViewer>-->
                 </Grid>
             </Border>
             <!--Droite-->

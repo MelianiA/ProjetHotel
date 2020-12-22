@@ -98,7 +98,8 @@ namespace Makrisoft.Makfi.ViewModels
         public void CalculeControle()
         {
             Intervention_VM i = null;
-            NbrControle = Reference_ViewModel.Intervention.Interventions.Where(x => x.Etat.Libelle != "Terminée").Count().ToString();
+            if (Reference_ViewModel.Intervention.Interventions != null)
+                NbrControle = Reference_ViewModel.Intervention.Interventions.Where(x => x.Etat.Libelle != "Terminée").Count().ToString();
             var itervDispo = Reference_ViewModel.Intervention.Interventions.Where(x => x.Etat.Libelle != "Terminée").ToList();
             if (itervDispo.Count() > 0)
             {

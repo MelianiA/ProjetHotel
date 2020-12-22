@@ -98,11 +98,13 @@ namespace Makrisoft.Makfi.ViewModels
                 CurrentHotel = Hotels.FirstOrDefault();
                 if (Reference_ViewModel.Message != null)
                 {
-                    if (string.IsNullOrEmpty(currentUtilisateur.CodePin))
-                        Message = "Tapez votre code pin";
                     Reference_ViewModel.Message.Load_Message();
-                    MessagesCollectionView = Reference_ViewModel.Message.MessagesCollectionView;
+                    MessagesCollectionView = new ListCollectionView(Reference_ViewModel.Message.Messages);
+                    MessagesCollectionView.SortDescriptions.Add(new System.ComponentModel.SortDescription("DateCreation", System.ComponentModel.ListSortDirection.Descending));
+
                 }
+                if (string.IsNullOrEmpty(currentUtilisateur.CodePin))
+                    Message = "Tapez votre code pin";
                 OnPropertyChanged("CurrentUtilisateur");
             }
         }
@@ -204,6 +206,17 @@ namespace Makrisoft.Makfi.ViewModels
         }
         private Visibility messagesVisibility = Visibility.Visible;
 
+        public Message_VM CurrentMessage
+        {
+            get { return currentMessage; }
+            set
+            {
+                currentMessage = value;
+                OnPropertyChanged("CurrentMessage");
+            }
+        }
+        private Message_VM currentMessage;
+
         #endregion
 
         #region Command
@@ -231,9 +244,11 @@ namespace Makrisoft.Makfi.ViewModels
                     break;
 
                 case ViewEnum.Employe:
+                    Reference_ViewModel.InterventionDetail.Load_InterventionDetail();
                     Reference_ViewModel.Main.ViewSelected = Dal.ViewEnum.Home;
                     break;
                 case ViewEnum.Chambre:
+                    Reference_ViewModel.InterventionDetail.Load_InterventionDetail();
                     Reference_ViewModel.Main.ViewSelected = Dal.ViewEnum.Home;
                     break;
                 case ViewEnum.ChambreGroupe:

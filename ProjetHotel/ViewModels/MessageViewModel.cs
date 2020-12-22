@@ -35,7 +35,6 @@ namespace Makrisoft.Makfi.ViewModels
             
             Messages = new ObservableCollection<Message_VM>();
             MessagesCollectionView = new ListCollectionView(Messages);
-            MessagesCollectionView.SortDescriptions.Add(new System.ComponentModel.SortDescription("DateCreation", System.ComponentModel.ListSortDirection.Descending));
 
             Load_Etat();
             Load_Message();
@@ -451,7 +450,9 @@ namespace Makrisoft.Makfi.ViewModels
 
                 reader.Close();
             }
+            MessagesCollectionView.SortDescriptions.Add(new System.ComponentModel.SortDescription("DateCreation", System.ComponentModel.ListSortDirection.Descending));
             CurrentFilterEtat = null;
+
         }
 
         #endregion

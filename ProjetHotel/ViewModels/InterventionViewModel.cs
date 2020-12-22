@@ -32,7 +32,8 @@ namespace Makrisoft.Makfi.ViewModels
             }
             //
             GroupeChambreCollectionView = Reference_ViewModel.ChambreGroupe.GroupeChambreCollectionView;
-            InterventionCollectionView.SortDescriptions.Add(new System.ComponentModel.SortDescription("Date1", System.ComponentModel.ListSortDirection.Descending));
+            if (InterventionCollectionView != null)
+                InterventionCollectionView.SortDescriptions.Add(new System.ComponentModel.SortDescription("Date1", System.ComponentModel.ListSortDirection.Descending));
         }
         #endregion
 
@@ -159,7 +160,7 @@ namespace Makrisoft.Makfi.ViewModels
         private ListCollectionView groupeChambreCollectionView;
 
         //Retour à cette page; 
-         
+
         public bool RevienIci
         {
             get { return revienIci; }
@@ -194,7 +195,7 @@ namespace Makrisoft.Makfi.ViewModels
             }
             Guid? monID = null;
             if (CurrentIntervention.Id != default) monID = CurrentIntervention.Id;
-              var param = $@"
+            var param = $@"
                     <intervention>
                         <id>{monID}</id>
                         <libelle>{CurrentIntervention.Libelle}</libelle>
@@ -221,7 +222,7 @@ namespace Makrisoft.Makfi.ViewModels
                 Date1 = DateTime.Now,
                 Etat = EtatIntervention.Where(e => e.Libelle == "None").SingleOrDefault(),
                 Libelle = $"Intervention du {DateTime.Now.ToShortDateString()}{Properties.Settings.Default.Autocar}",
-                 Model = true
+                Model = true
             };
             Interventions.Add(CurrentIntervention);
         }
@@ -272,7 +273,7 @@ namespace Makrisoft.Makfi.ViewModels
         }
         private bool OnCanExecuteInterventionDetailChange()
         {
-            return  CurrentIntervention != null && CurrentIntervention.SaveColor != "Red" ; 
+            return CurrentIntervention != null && CurrentIntervention.SaveColor != "Red";
         }
 
         //Filter 
@@ -343,7 +344,7 @@ namespace Makrisoft.Makfi.ViewModels
                .Select(x => new Intervention_VM
                {
                    Id = x.Id,
-                   Libelle =  x.Libelle,
+                   Libelle = x.Libelle,
                    Etat = EtatIntervention.Where(e => e.Id == x.Etat).SingleOrDefault(),
                    Date1 = x.Date1,
                    Commentaire = x.Commentaire,
@@ -351,8 +352,8 @@ namespace Makrisoft.Makfi.ViewModels
                    SaveColor = "Navy"
                }).OrderBy(x => x.Libelle).ToList());
             InterventionCollectionView = new ListCollectionView(Interventions);
-            if (InterventionCollectionView.Count > 0) CurrentIntervention = (Intervention_VM)InterventionCollectionView.GetItemAt(InterventionCollectionView.Count-1);
-             
+            if (InterventionCollectionView.Count > 0) CurrentIntervention = (Intervention_VM)InterventionCollectionView.GetItemAt(InterventionCollectionView.Count - 1);
+
             CurrentFilterEtat = null;
             CurrentFilterDateDebutSelected = null;
             CurrentFilterDateFinSelected = null;

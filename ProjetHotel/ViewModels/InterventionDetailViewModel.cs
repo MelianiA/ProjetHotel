@@ -439,7 +439,7 @@ namespace Makrisoft.Makfi.ViewModels
             //Chargement des etats 
             Load_Etat();
             //Employe
-            EmployeIntervention = Reference_ViewModel.Employe.AllEmployes ;
+            EmployeIntervention = Reference_ViewModel.Employe.EmployesCurrentHotel;
             EmployeInterventionCollectionView = new ListCollectionView(EmployeIntervention.Where(e => e.Etat.Libelle == "Disponible").ToList());
             //chambre
             ChambreIntervention = new ObservableCollection<Chambre_VM>(

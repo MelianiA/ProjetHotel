@@ -79,7 +79,7 @@ CREATE TABLE [dbo].[Etat](
 	[Icone] [nvarchar](max) NULL,
 	[Couleur] [nvarchar](max) NOT NULL,
 	[Entite] [tinyint] NOT NULL,
-    Etat bit NOT NULL,
+    EtatEtat bit NOT NULL,
  CONSTRAINT [PK_Etat] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
@@ -386,17 +386,41 @@ GO
  values('Admin','#69!','255')
 
  /*****Insertion de le table Etat ******/
- insert into Etat(Libelle,Icone,Etat,Couleur,Entite)
- values
- ('Fait','TimelineHelp',1,'green',3 ),
-  ('En cours','TimelineHelp',0,'orange',3 ),
- ('None','TimelineHelp',0,'gray',3 ),
- ('Incident','TimelineHelp',1,'red',3 ),
- ('Disponible','FaceWomanShimmer',1,'green',1 ),
- ('Arrêt maladie','FaceWomanShimmer',0,'red',1 ),
- ('Congé','FaceWomanShimmer',0,'black',1 ),
- ('Ok','TableLock',1,'green',2 ),
-  ('PasOk','TableLock',0,'red',2 )
+USE [MakfiBD]
+INSERT [dbo].[Etat] ( [Libelle], [Icone], [Couleur], [Entite], [EtatEtat]) VALUES ( N'Disponible', N'TableLock', N'green', 2, 1)
+GO
+INSERT [dbo].[Etat] ( [Libelle], [Icone], [Couleur], [Entite], [EtatEtat]) VALUES ( N'None', N'TimelineHelp', N'gray', 4, 0)
+GO
+INSERT [dbo].[Etat] ( [Libelle], [Icone], [Couleur], [Entite], [EtatEtat]) VALUES ( N'Lu', N'Mail', N'green', 5, 1)
+GO
+INSERT [dbo].[Etat] ( [Libelle], [Icone], [Couleur], [Entite], [EtatEtat]) VALUES ( N'Non lu', N'Mail', N'orange', 5, 0)
+GO
+INSERT [dbo].[Etat] ( [Libelle], [Icone], [Couleur], [Entite], [EtatEtat]) VALUES ( N'Incident-NT', N'TimelineHelp', N'red', 4, 0)
+GO
+INSERT [dbo].[Etat] ( [Libelle], [Icone], [Couleur], [Entite], [EtatEtat]) VALUES ( N'Disponible', N'FaceWomanShimmer', N'green', 1, 1)
+GO
+INSERT [dbo].[Etat] ( [Libelle], [Icone], [Couleur], [Entite], [EtatEtat]) VALUES ( N'Arrêt maladie', N'FaceWomanShimmer', N'red', 1, 0)
+GO
+INSERT [dbo].[Etat] ( [Libelle], [Icone], [Couleur], [Entite], [EtatEtat]) VALUES ( N'Terminée', N'TimelineHelp', N'green', 3, 1)
+GO
+INSERT [dbo].[Etat] ( [Libelle], [Icone], [Couleur], [Entite], [EtatEtat]) VALUES ( N'Incident-T', N'TimelineHelp', N'red', 4, 1)
+GO
+INSERT [dbo].[Etat] ( [Libelle], [Icone], [Couleur], [Entite], [EtatEtat]) VALUES ( N'Non disponible', N'TableLock', N'Red', 2, 0)
+GO
+INSERT [dbo].[Etat] ( [Libelle], [Icone], [Couleur], [Entite], [EtatEtat]) VALUES ( N'None', N'TimelineHelp', N'gray', 3, 0)
+GO
+INSERT [dbo].[Etat] ( [Libelle], [Icone], [Couleur], [Entite], [EtatEtat]) VALUES ( N'Non disponible', N'FaceWomanShimmer', N'black', 1, 0)
+GO
+INSERT [dbo].[Etat] ( [Libelle], [Icone], [Couleur], [Entite], [EtatEtat]) VALUES ( N'Non terminée', N'TimelineHelp', N'orange', 3, 0)
+GO
+INSERT [dbo].[Etat] ( [Libelle], [Icone], [Couleur], [Entite], [EtatEtat]) VALUES ( N'Supprimé', N'Mail', N'red', 5, 0)
+GO
+INSERT [dbo].[Etat] ( [Libelle], [Icone], [Couleur], [Entite], [EtatEtat]) VALUES ( N'En cours', N'TimelineHelp', N'orange', 4, 0)
+GO
+INSERT [dbo].[Etat] ( [Libelle], [Icone], [Couleur], [Entite], [EtatEtat]) VALUES ( N'Fait', N'TimelineHelp', N'green', 4, 1)
+GO
+ 
+
 
 
  
