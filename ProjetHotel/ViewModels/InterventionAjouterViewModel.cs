@@ -1,87 +1,82 @@
 ﻿using Makrisoft.Makfi.Dal;
-using Makrisoft.Makfi.Tools;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Data;
-using System.Windows.Input;
 
 namespace Makrisoft.Makfi.ViewModels
 {
-    public class InterventionAjouterModel : ViewModelBase
+    public class InterventionAjouterViewModel : ViewModelBase
     {
         #region Constructeur
-        public InterventionAjouterModel()
+        public InterventionAjouterViewModel()
         {
             // Icommand
 
             // Load
-            Load_InterventionDetailsAjouter();
+            Load_InterventionDetails();
         }
         #endregion
 
         #region Binding
 
-        public bool PrendreInterventionCommeModele
+        public bool CheckInterventionModel
         {
-            get { return prendreInterventionCommeModele; }
+            get { return checkInterventionModel; }
             set
             {
-                prendreInterventionCommeModele = value;
-                OnPropertyChanged("PrendreInterventionCommeModele");
+                checkInterventionModel = value;
+                OnPropertyChanged("CheckInterventionModel");
             }
         }
-        private bool prendreInterventionCommeModele = false;
+        private bool checkInterventionModel = false;
 
-        public bool Annuler
+        public bool CheckAnnuler
         {
-            get { return annuler; }
+            get { return checkAnnuler; }
             set
             {
-                annuler = value; OnPropertyChanged("Annuler");
+                checkAnnuler = value; OnPropertyChanged("CheckAnnuler");
             }
         }
-        private bool annuler = true;
+        private bool checkAnnuler = true;
 
-        public bool UnGroupeChambreUnEmplye
+        public bool CheckUnEtageUnEmploye
         {
-            get { return unGroupeChambreUnEmplye; }
+            get { return checkUnEtageUnEmploye; }
             set
             {
-                unGroupeChambreUnEmplye = value; OnPropertyChanged("UnGroupeChambreUnEmplye");
+                checkUnEtageUnEmploye = value; OnPropertyChanged("CheckUnEtageUnEmploye");
             }
         }
-        private bool unGroupeChambreUnEmplye = false;
+        private bool checkUnEtageUnEmploye = false;
 
         //GroupeChambre
-        public ObservableCollection<GroupeChambre_VM> GroupeChambres
+        public ObservableCollection<Etage_VM> Etages
         {
-            get { return groupeChambres; }
+            get { return etages; }
             set
             {
-                groupeChambres = value;
+                etages = value;
                 OnPropertyChanged("GroupeChambres");
 
             }
         }
-        private ObservableCollection<GroupeChambre_VM> groupeChambres;
+        private ObservableCollection<Etage_VM> etages;
 
-        public GroupeChambre_VM CurrentGroupeChambre
+        public Etage_VM CurrentEtage
         {
-            get { return currentGroupeChambre; }
+            get { return currentEtage; }
             set
             {
-                currentGroupeChambre = value;
-                if (currentGroupeChambre != null)
+                currentEtage = value;
+                if (currentEtage != null)
                     Load_ChambreCurrentGroupe();
-                OnPropertyChanged("CurrentGroupeChambre");
+                OnPropertyChanged("CurrentEtage");
             }
         }
-        private GroupeChambre_VM currentGroupeChambre;
+        private Etage_VM currentEtage;
         //Interventions
         public ObservableCollection<Intervention_VM> Interventions
         {
@@ -98,7 +93,7 @@ namespace Makrisoft.Makfi.ViewModels
         private Intervention_VM currentIntervention;
 
         //ChambreByGroupe 
-        public ObservableCollection<ChambreByGroupe_VM> AllChambres
+        public ObservableCollection<ChambreByEtage_VM> AllChambres
         {
             get { return allChambres; }
             set
@@ -108,7 +103,7 @@ namespace Makrisoft.Makfi.ViewModels
 
             }
         }
-        private ObservableCollection<ChambreByGroupe_VM> allChambres;
+        private ObservableCollection<ChambreByEtage_VM> allChambres;
 
         //Employe 
         public ObservableCollection<Employe_VM> EmployeIntervention
@@ -204,7 +199,7 @@ namespace Makrisoft.Makfi.ViewModels
         // Méthodes OnCommand
         public void OnAddInterventionDetails()
         {
-            if (PrendreInterventionCommeModele)
+            if (CheckInterventionModel)
             {
                 Guid monId = default;
                 if (CurrentIntervention != null)
@@ -229,15 +224,15 @@ namespace Makrisoft.Makfi.ViewModels
 
             }
 
-            if (UnGroupeChambreUnEmplye && CurrentGroupeChambre != null)
+            if (CheckUnEtageUnEmploye && CurrentEtage != null)
             {
 
-                if (CurrentGroupeChambre.ChambreCurrentGroupe.Count == 0)
+                if (CurrentEtage.Chambres.Count == 0)
                 {
-                    MessageBox.Show("Le groupe: " + CurrentGroupeChambre.Nom + " ne contient aucune chambre ");
+                    MessageBox.Show("Le groupe: " + CurrentEtage.Nom + " ne contient aucune chambre ");
                     return;
                 }
-                foreach (var item in CurrentGroupeChambre.ChambreCurrentGroupe)
+                foreach (var item in CurrentEtage.Chambres)
                 {
                     var inteventionChambreEmploye = new InterventionDetail_VM
                     {
@@ -257,8 +252,8 @@ namespace Makrisoft.Makfi.ViewModels
         // Méthodes OnCanExecuteCommand
         //private bool OnCanExcuteAddCommand()
         //{
-        //    return PrendreInterventionCommeModele ==
-        //        annuler == unGroupeChambreUnEmplye == true;
+        //    return CheckInterventionModel ==
+        //        annuler == checkUnEtageUnEmploye == true;
         //}
 
         //Filter 
@@ -266,7 +261,7 @@ namespace Makrisoft.Makfi.ViewModels
 
         #region Load
 
-        public void Load_InterventionDetailsAjouter()
+        public void Load_InterventionDetails()
         {
 
             Chambres = new ObservableCollection<Chambre_VM>(
@@ -278,9 +273,9 @@ namespace Makrisoft.Makfi.ViewModels
                 }));
 
             //Employe
-            if (Reference_ViewModel.Employe.AllEmployes != null)
+            if (Reference_ViewModel.Employe.Employes != null)
             {
-                EmployeIntervention = Reference_ViewModel.Employe.AllEmployes;
+                EmployeIntervention = Reference_ViewModel.Employe.Employes;
                 EmployeInterventionCollectionView = new ListCollectionView(EmployeIntervention);
                 CurentEmploye = EmployeIntervention.FirstOrDefault();
             }
@@ -292,15 +287,15 @@ namespace Makrisoft.Makfi.ViewModels
                 CurrentChambre = ChambreIntervention.FirstOrDefault();
             }
             //GroupeChambres
-            GroupeChambres = Reference_ViewModel.ChambreGroupe.GroupeChambres;
-            if (GroupeChambres != null)
-                CurrentGroupeChambre = GroupeChambres.FirstOrDefault();
+            Etages = Reference_ViewModel.ChambreGroupe.Etages;
+            if (Etages != null)
+                CurrentEtage = Etages.FirstOrDefault();
 
             //
             if (Reference_ViewModel.Header.CurrentHotel != null)
-                AllChambres = new ObservableCollection<ChambreByGroupe_VM>(
+                AllChambres = new ObservableCollection<ChambreByEtage_VM>(
                   MakfiData.ChambreByGroupe_Read($"<chambreByGroupe><hotel>{Reference_ViewModel.Header.CurrentHotel.Id}</hotel></chambreByGroupe>")
-                  .Select(x => new ChambreByGroupe_VM
+                  .Select(x => new ChambreByEtage_VM
                   {
                       GroupeChambre = x.GroupeChambre,
                       Nom = x.Nom,
@@ -317,10 +312,10 @@ namespace Makrisoft.Makfi.ViewModels
 
         public void Load_ChambreCurrentGroupe()
         {
-            if (CurrentGroupeChambre != null && AllChambres != null)
+            if (CurrentEtage != null && AllChambres != null)
             {
-                CurrentGroupeChambre.ChambreCurrentGroupe = new ObservableCollection<ChambreByGroupe_VM>(
-                    AllChambres.Where(c => c.GroupeChambre == CurrentGroupeChambre.Id)
+                CurrentEtage.Chambres = new ObservableCollection<ChambreByEtage_VM>(
+                    AllChambres.Where(c => c.GroupeChambre == CurrentEtage.Id)
                     );
             }
         }

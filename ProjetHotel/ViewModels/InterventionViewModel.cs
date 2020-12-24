@@ -31,7 +31,7 @@ namespace Makrisoft.Makfi.ViewModels
                 Load_Intervention();
             }
             //
-            GroupeChambreCollectionView = Reference_ViewModel.ChambreGroupe.GroupeChambreCollectionView;
+            EtageCollectionView = Reference_ViewModel.ChambreGroupe.EtageCollectionView;
             if (InterventionCollectionView != null)
                 InterventionCollectionView.SortDescriptions.Add(new System.ComponentModel.SortDescription("Date1", System.ComponentModel.ListSortDirection.Descending));
         }
@@ -52,8 +52,8 @@ namespace Makrisoft.Makfi.ViewModels
             set
             {
                 currentIntervention = value;
-                if (currentIntervention == null) IsEnabled = false;
-                else IsEnabled = true;
+                if (currentIntervention == null) IsModifierEnabled = false;
+                else IsModifierEnabled = true;
                 OnPropertyChanged("CurrentIntervention");
             }
         }
@@ -65,14 +65,14 @@ namespace Makrisoft.Makfi.ViewModels
         }
         private ListCollectionView interventionCollectionView;
 
-        //IsEnabled
-        public bool IsEnabled
+        //IsModifierEnabled
+        public bool IsModifierEnabled
         {
             get { return isEnabled; }
             set
             {
                 isEnabled = value;
-                OnPropertyChanged("IsEnabled");
+                OnPropertyChanged("IsModifierEnabled");
             }
         }
         private bool isEnabled;
@@ -152,12 +152,12 @@ namespace Makrisoft.Makfi.ViewModels
         private DateTime? currentFilterDateFinSelected;
 
         //GroupeChambres
-        public ListCollectionView GroupeChambreCollectionView
+        public ListCollectionView EtageCollectionView
         {
-            get { return groupeChambreCollectionView; }
-            set { groupeChambreCollectionView = value; OnPropertyChanged("GroupeChambreCollectionView"); }
+            get { return etageCollectionView; }
+            set { etageCollectionView = value; OnPropertyChanged("EtageCollectionView"); }
         }
-        private ListCollectionView groupeChambreCollectionView;
+        private ListCollectionView etageCollectionView;
 
         //Retour à cette page; 
 

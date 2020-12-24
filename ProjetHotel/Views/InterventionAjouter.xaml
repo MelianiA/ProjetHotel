@@ -8,10 +8,6 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
-        <Grid.Resources>
-            <conv:InterventionEtatIconeConverter x:Key="InterventionEtatIconeConverterKey"/>
-            <conv:InterventionEtatColorConverter x:Key="InterventionEtatColorConverterKey"/>
-        </Grid.Resources>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="240"/>
             <ColumnDefinition Width="*"/>
@@ -56,11 +52,11 @@
             <ScrollViewer>
                 <StackPanel Orientation="Vertical" Margin="100,30,0,0" >
                     <StackPanel Orientation="Horizontal" Margin="0,30,0,0">
-                             <RadioButton GroupName="Group1" IsChecked="{Binding PrendreInterventionCommeModele}"/>
+                             <RadioButton GroupName="Group1" IsChecked="{Binding CheckInterventionModel}"/>
                          <TextBlock Text="Prendre cette intervention comme modèle" Margin="20,0,0,0" FontSize="20"/>
                     </StackPanel>
                     <ComboBox  
-                          ItemsSource="{Binding Interventions}" IsEnabled="{Binding PrendreInterventionCommeModele}"
+                          ItemsSource="{Binding Interventions}" IsEnabled="{Binding CheckInterventionModel}"
                           SelectedItem="{Binding CurrentIntervention , Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                           SelectedValue="0"
                           FontSize="16" Width="400" HorizontalAlignment="Left" Margin="40 10 0 0"  Background="AliceBlue">
@@ -76,12 +72,12 @@
                     </ComboBox>
                     
                     <StackPanel Orientation="Horizontal" Margin="0,60,0,0">
-                             <RadioButton  GroupName="Group1" IsChecked="{Binding UnGroupeChambreUnEmplye}" />
+                             <RadioButton  GroupName="Group1" IsChecked="{Binding CheckUnEtageUnEmploye}" />
                           <TextBlock Text="Un groupe de chambre, un employé" Margin="20,0,0,0" FontSize="20"/>
                     </StackPanel>
                     <ComboBox  
-                          ItemsSource="{Binding GroupeChambres}" IsEnabled="{Binding UnGroupeChambreUnEmplye}"
-                          SelectedItem="{Binding CurrentGroupeChambre, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                          ItemsSource="{Binding Etages}" IsEnabled="{Binding CheckUnEtageUnEmploye}"
+                          SelectedItem="{Binding CurrentEtage, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
                            FontSize="16" Width="400" HorizontalAlignment="Left" Margin="40 10 0 0"  Background="AliceBlue">
                         <ComboBox.ItemTemplate>
                             <DataTemplate>
@@ -93,7 +89,7 @@
                             </DataTemplate>
                         </ComboBox.ItemTemplate>
                     </ComboBox>
-                    <ComboBox  ItemsSource="{Binding EmployeIntervention}" IsEnabled="{Binding UnGroupeChambreUnEmplye}"
+                    <ComboBox  ItemsSource="{Binding EmployeIntervention}" IsEnabled="{Binding CheckUnEtageUnEmploye}"
                           SelectedItem="{Binding CurentEmploye, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" 
                           FontSize="16" Width="400" HorizontalAlignment="Left" Margin="40 10 0 0"  Background="AliceBlue">
                         <ComboBox.ItemTemplate>
@@ -107,7 +103,7 @@
                         </ComboBox.ItemTemplate>
                     </ComboBox>
                     <StackPanel Orientation="Horizontal" Margin="0,60,0,0">
-                             <RadioButton  GroupName="Group1" IsChecked="{Binding Annuler}" />
+                        <RadioButton  GroupName="Group1" IsChecked="{Binding CheckAnnuler}" />
                          <TextBlock Text="Annuler" Margin="20,0,0,0" FontSize="20"/>
                     </StackPanel>
                     <!--<Button Background="AliceBlue" BorderBrush="AliceBlue" BorderThickness="1" Margin="0,50,-50,0" 

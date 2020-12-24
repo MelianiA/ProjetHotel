@@ -42,8 +42,8 @@
                 <Menu Grid.Column="1" Cursor="Hand" Margin="0" Background="White">
                    
                     <MenuItem Header="..." Foreground="Navy" FontSize="16">
-                        <MenuItem Header="Ajouter" Foreground="Navy" Command="{Binding HotelSelectedAddCommand}"/>
-                        <MenuItem Header="Supprimer" Foreground="Navy" Command="{Binding HotelSelectedDeleteCommand}"/>
+                        <MenuItem Header="Ajouter" Foreground="Navy" Command="{Binding HotelAddCommand}"/>
+                        <MenuItem Header="Supprimer" Foreground="Navy" Command="{Binding HotelDeleteCommand}"/>
                     </MenuItem>
                     
                 </Menu>
@@ -62,7 +62,7 @@
                 </Grid.RowDefinitions>
                 <TextBlock Text="Modifier" FontSize="22" Foreground="Navy" VerticalAlignment="Bottom"/>
                 
-                <Button Grid.Column="2" Background="Transparent" BorderBrush="Transparent" BorderThickness="1" Command="{Binding HotelModifiedSaveCommand}" VerticalAlignment="Bottom">
+                <Button Grid.Column="2" Background="Transparent" BorderBrush="Transparent" BorderThickness="1" Command="{Binding HotelSaveCommand}" VerticalAlignment="Bottom">
                     <Button.Content>
                         <materialDesign:PackIcon Height="25" Width="Auto" Kind="Floppy" Foreground="{Binding CurrentHotel.SaveColor, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,10,0" ToolTip="Enregistrer"/>
                     </Button.Content>
@@ -139,14 +139,14 @@
         <Border Grid.Column="2" Grid.Row="1" BorderBrush="Transparent" BorderThickness="1" CornerRadius="10" HorizontalAlignment="Left" >
             <StackPanel Margin="5" Width="220">
                 <TextBlock Text="Libellé" Margin="0,15,0,0"/>
-                <TextBox FontSize="16" Text="{Binding CurrentHotel.Nom, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding IsEnabled}"/>
+                <TextBox FontSize="16" Text="{Binding CurrentHotel.Nom, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding IsModifierEnabled}"/>
 
                 <TextBlock Text="Commentaire" Margin="0,15,0,0"/>
 
-                <TextBox FontSize="16"  Text="{Binding CurrentHotel.Commentaire, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" TextWrapping="Wrap" TextAlignment="Left" IsEnabled="{Binding IsEnabled}"/>
+                <TextBox FontSize="16"  Text="{Binding CurrentHotel.Commentaire, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" TextWrapping="Wrap" TextAlignment="Left" IsEnabled="{Binding IsModifierEnabled}"/>
                 
                  <TextBlock Text="Gouvernante" Margin="0,15,0,0"/>
-                <ComboBox ItemsSource="{Binding GouvernanteList, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding IsEnabled}"
+                <ComboBox ItemsSource="{Binding Gouvernantes, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding IsModifierEnabled}"
                           SelectedItem="{Binding ElementName=dg,Path=SelectedItem.Gouvernante, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" FontSize="16">
                     <ComboBox.ItemTemplate>
                         <DataTemplate>
@@ -159,7 +159,7 @@
                 </ComboBox>
 
                 <TextBlock Text="Reception" Margin="0,15,0,0"/>
-                <ComboBox ItemsSource="{Binding ReceptionList, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding IsEnabled}"
+                <ComboBox ItemsSource="{Binding Receptions, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding IsModifierEnabled}"
                           SelectedItem="{Binding ElementName=dg,Path=SelectedItem.Reception, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" FontSize="16">
                     <ComboBox.ItemTemplate>
                         <DataTemplate>

@@ -17,7 +17,7 @@
       <Value Profile="(Default)">∙</Value>
     </Setting>
     <Setting Name="MessagePath" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">C:\Users\alyf\OneDrive - Alyf Pro\ProjetHotel\Messages</Value>
+      <Value Profile="(Default)">D:\Messages</Value>
     </Setting>
   </Settings>
 </SettingsFile>

@@ -23,7 +23,7 @@ namespace Makrisoft.Makfi.Views
     {
         public ChambreGroupeView()
         {
-            Reference_ViewModel.ChambreGroupe = new ChambreGroupeViewModel();
+            Reference_ViewModel.ChambreGroupe = new EtageViewModel();
             DataContext = Reference_ViewModel.ChambreGroupe;
             InitializeComponent();
         }

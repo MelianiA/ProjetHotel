@@ -21,7 +21,7 @@ namespace Makrisoft.Makfi.Views
     {
         public InterventionSupprimer()
         {
-            Reference_ViewModel.InterventionSupprimer = new InterventionSupprimerModel();
+            Reference_ViewModel.InterventionSupprimer = new InterventionSupprimerViewModel();
             DataContext = Reference_ViewModel.InterventionSupprimer;
             InitializeComponent();
         }

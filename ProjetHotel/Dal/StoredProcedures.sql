@@ -35,9 +35,19 @@ GO
 ---------------------------------------------------------------------------------------------------
 CREATE PROC [dbo].[Employe_Read](@data xml=NULL)
 AS
-DECLARE @Id uniqueidentifier=NULL
-select @Id = T.N.value('id[1]', 'uniqueidentifier') from @data.nodes('employe') as T(N)
-Select Id, Nom,Prenom,Etat,Commentaire from Employe where @Id is null Or Id=@Id
+DECLARE @id uniqueidentifier=NULL
+DECLARE @hotel uniqueidentifier=NULL
+
+select 
+	@id = T.N.value('id[1]', 'uniqueidentifier'),
+	@hotel = T.N.value('hotel[1]', 'uniqueidentifier') 
+from @data.nodes('employes') as T(N)
+
+select 
+	e.Id, Nom,Prenom,Etat,Commentaire 
+from 
+	HotelEmploye he inner join Employe e on e.Id=he.Employe 
+where (@hotel is null Or he.Hotel=@hotel) and (@id is null or he.Employe=@id)
 GO
 ---------------------------------------------------------------------------------------------------
 create PROC [dbo].[Etat_Read](@data xml=NULL)

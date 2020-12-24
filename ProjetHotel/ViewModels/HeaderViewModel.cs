@@ -16,9 +16,9 @@ namespace Makrisoft.Makfi.ViewModels
         public HeaderViewModel()
         {
             // ICommand
-            DeconnectCommand = new RelayCommand(p => OnDeconnectCommand(), p => OnCanExcuteDeconnectCommand());
+            DeconnectCommand = new RelayCommand(p => OnDeconnectCommand(), p => OnCanExecuteDeconnectCommand());
             BackCommand = new RelayCommand(p => OnBackCommand(), p => OnCanExecuteBackCommand());
-            MessageDisplayAllCommand = new RelayCommand(p => OnMessageDisplayAllCommand(), p => OnCanExcuteMessageDisplayAllCommand());
+            MessageDisplayAllCommand = new RelayCommand(p => OnMessageDisplayAllCommand(), p => OnCanExecuteMessageDisplayAllCommand());
 
             // Utilisateur
             Utilisateur_Load();
@@ -33,13 +33,6 @@ namespace Makrisoft.Makfi.ViewModels
             //Messages
  
         }
-
-        private bool OnCanExcuteDeconnectCommand()
-        {
-            return Reference_ViewModel.Main.ViewSelected != ViewEnum.Login;
-        }
-
-
         #endregion
 
         #region Bindings
@@ -221,7 +214,6 @@ namespace Makrisoft.Makfi.ViewModels
 
         #region Command
         // ICommand
-        public ICommand PersistMessageCommand { get; set; }
         public ICommand DeconnectCommand { get; set; }
         public ICommand BackCommand { get; set; }
         public ICommand MessageDisplayAllCommand { get; set; }
@@ -255,7 +247,7 @@ namespace Makrisoft.Makfi.ViewModels
                     Reference_ViewModel.Main.ViewSelected = Dal.ViewEnum.Chambre;
                     break;
                 case ViewEnum.Intervention:
-                    Reference_ViewModel.Home.CalculeControle();
+                    Reference_ViewModel.Home.ButtonInterventionDuJour();
                     Reference_ViewModel.Main.ViewSelected = Dal.ViewEnum.Home;
                     break;
                 case ViewEnum.InterventionDetail:
@@ -283,7 +275,7 @@ namespace Makrisoft.Makfi.ViewModels
                     }
                     else
                     {
-                        Reference_ViewModel.Home.CalculeControle();
+                        Reference_ViewModel.Home.ButtonInterventionDuJour();
                         Reference_ViewModel.Main.ViewSelected = Dal.ViewEnum.Home;
                     }
                     break;
@@ -324,31 +316,35 @@ namespace Makrisoft.Makfi.ViewModels
 
         //Méthode on canExcute
 
-        private bool OnCanExcuteMessageDisplayAllCommand()
+        private bool OnCanExecuteMessageDisplayAllCommand()
         {
             return Reference_ViewModel.Main.ViewSelected != ViewEnum.Login;
         }
         private bool OnCanExecuteBackCommand()
         {
             if (Reference_ViewModel.Main.ViewSelected == ViewEnum.InterventionDetail)
-                return !Reference_ViewModel.InterventionDetail.OnCanExecuteEnregistrerTout();
+                return !Reference_ViewModel.InterventionDetail.OnCanExecuteMenuSaveAllCommand();
 
             if (Reference_ViewModel.Main.ViewSelected == ViewEnum.Intervention)
                 return !Reference_ViewModel.Intervention.Interventions.Any(x => x.SaveColor == "Red");
 
             if (Reference_ViewModel.Main.ViewSelected == ViewEnum.Employe)
-                return !Reference_ViewModel.Employe.AllEmployes.Any(x => x.SaveColor == "Red");
+                return !Reference_ViewModel.Employe.Employes.Any(x => x.SaveColor == "Red");
 
             if (Reference_ViewModel.Main.ViewSelected == ViewEnum.Chambre)
                 return !Reference_ViewModel.Chambre.ChambreGroupeChambre.Any(x => x.SaveColor == "Red");
 
             if (Reference_ViewModel.Main.ViewSelected == ViewEnum.ChambreGroupe)
-                return !Reference_ViewModel.ChambreGroupe.GroupeChambres.Any(x => x.SaveColor == "Red");
+                return !Reference_ViewModel.ChambreGroupe.Etages.Any(x => x.SaveColor == "Red");
 
             if (Reference_ViewModel.Main.ViewSelected == ViewEnum.Home ||
                 Reference_ViewModel.Main.ViewSelected == ViewEnum.Login)
                 return false;
             else return true;
+        }
+        private bool OnCanExecuteDeconnectCommand()
+        {
+            return Reference_ViewModel.Main.ViewSelected != ViewEnum.Login;
         }
         #endregion
 
@@ -357,8 +353,7 @@ namespace Makrisoft.Makfi.ViewModels
 
         #endregion
 
-        #region Divers
-
+        #region Load
         private void Utilisateur_Load()
         {
             Utilisateurs = new ObservableCollection<Utilisateur_VM>(
@@ -379,8 +374,12 @@ namespace Makrisoft.Makfi.ViewModels
             if (CurrentUtilisateur == null) CurrentUtilisateur = Utilisateurs.FirstOrDefault(u => u.Statut == RoleEnum.Gouvernante);
             if (CurrentUtilisateur == null) CurrentUtilisateur = Utilisateurs.FirstOrDefault();
 
-   
+
         }
+        #endregion
+
+        #region Divers
+
 
         private void HorlogeLoop()
         {

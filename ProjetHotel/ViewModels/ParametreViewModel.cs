@@ -69,7 +69,7 @@ namespace Makrisoft.Makfi.ViewModels
                  Cle = x.Cle,
                  Valeur = x.Valeur
              }).ToList());
-            VoirMsgArchives = bool.Parse(infoList.Where(i => i.Cle == "VoirMsgArchives").Select(i => i.Valeur).Single());
+            //VoirMsgArchives = bool.Parse(infoList.Where(i => i.Cle == "VoirMsgArchives").Select(i => i.Valeur).Single());
         }
         #endregion
     }

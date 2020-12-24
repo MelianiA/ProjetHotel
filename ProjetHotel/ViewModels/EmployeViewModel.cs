@@ -16,9 +16,9 @@ namespace Makrisoft.Makfi.ViewModels
         public EmployeViewModel()
         {
             // Icommand
-            EmployeModifiedSaveCommand = new RelayCommand(p => OnSaveCommand(), p => OnCanExecuteSaveCommand());
-            EmployeSelectedAddCommand = new RelayCommand(p => OnAddCommand(), p => true);
-            EmployeSelectedDeleteCommand = new RelayCommand(p => OnDeleteCommand(), p => OnCanExecuteDeleteCommand());
+            EmployeSaveCommand = new RelayCommand(p => OnSaveCommand(), p => OnCanExecuteSaveCommand());
+            EmployeAddCommand = new RelayCommand(p => OnEmployeAddCommand(), p => true);
+            EmployeDeleteCommand = new RelayCommand(p => OnEmployeDeleteCommand(), p => OnCanExecuteEmployeDeleteCommand());
             FilterClearCommand = new RelayCommand(p => OnFilterClearCommand(), p => OnCanExecuteFilterClearCommand());
 
             // ListeView
@@ -33,49 +33,28 @@ namespace Makrisoft.Makfi.ViewModels
         #endregion
 
         #region Binding
-        //Employe
-        public ObservableCollection<Employe_VM> AllEmployes
+        public ListCollectionView EmployesCollectionView
         {
-            get { return employes; }
+            get { return employesCollectionView; }
+            set { employesCollectionView = value; OnPropertyChanged("EmployesCollectionView"); }
+        }
+        private ListCollectionView employesCollectionView;
+
+
+        //IsModifierEnabled
+        public bool IsModifierEnabled
+        {
+            get { return isModifierEnabled; }
             set
             {
-                employes = value;
-                OnPropertyChanged("Employes");
-
+                isModifierEnabled = value;
+                OnPropertyChanged("IsModifierEnabled");
             }
         }
-        private ObservableCollection<Employe_VM> employes;
-        public ListCollectionView EmployeCollectionView
-        {
-            get { return employeCollectionView; }
-            set { employeCollectionView = value; OnPropertyChanged("EmployeCollectionView"); }
-        }
-        private ListCollectionView employeCollectionView;
-
-
-        //IsEnabled
-        public bool IsEnabled
-        {
-            get { return isEnabled; }
-            set
-            {
-                isEnabled = value;
-                OnPropertyChanged("IsEnabled");
-            }
-        }
-        private bool isEnabled;
+        private bool isModifierEnabled;
 
         //Employe
-        public ObservableCollection<HotelEmploye_VM> HotelEmployesCurrentHotel
-        {
-            get { return hotelEmployesCurrentHotel; }
-            set
-            {
-                hotelEmployesCurrentHotel = value;
-                OnPropertyChanged("HotelEmployesCurrentHotel");
-            }
-        }
-        private ObservableCollection<HotelEmploye_VM> hotelEmployesCurrentHotel;
+        public ObservableCollection<HotelEmploye_VM> HotelEmployesCurrentHotel;
         public Employe_VM CurrentEmploye
         {
             get
@@ -87,23 +66,23 @@ namespace Makrisoft.Makfi.ViewModels
             set
             {
                 currentEmploye = value;
-                if (currentEmploye == null) IsEnabled = false;
-                else IsEnabled = true;
+                if (currentEmploye == null) IsModifierEnabled = false;
+                else IsModifierEnabled = true;
                 OnPropertyChanged("CurrentEmploye");
             }
         }
         private Employe_VM currentEmploye;
 
-        public ObservableCollection<Employe_VM> EmployesCurrentHotel
+        public ObservableCollection<Employe_VM> Employes
         {
-            get { return employesCurrentHotel; }
+            get { return employes; }
             set
             {
-                employesCurrentHotel = value;
-                OnPropertyChanged("EmployesCurrentHotel");
+                employes = value;
+                OnPropertyChanged("Employes");
             }
         }
-        private ObservableCollection<Employe_VM> employesCurrentHotel;
+        private ObservableCollection<Employe_VM> employes;
 
         //Etat
         public ObservableCollection<Etat_VM> EtatList
@@ -151,7 +130,7 @@ namespace Makrisoft.Makfi.ViewModels
             set
             {
                 currentFilter = value;
-                EmployeCollectionView.Filter = FilterEmployes;
+                EmployesCollectionView.Filter = FilterEmployes;
                 OnPropertyChanged("CurrentFilter");
             }
         }
@@ -163,9 +142,9 @@ namespace Makrisoft.Makfi.ViewModels
 
         #region Commands
         //ICommand
-        public ICommand EmployeModifiedSaveCommand { get; set; }
-        public ICommand EmployeSelectedAddCommand { get; set; }
-        public ICommand EmployeSelectedDeleteCommand { get; set; }
+        public ICommand EmployeSaveCommand { get; set; }
+        public ICommand EmployeAddCommand { get; set; }
+        public ICommand EmployeDeleteCommand { get; set; }
         public ICommand FilterClearCommand { get; set; }
 
         // Méthodes OnCommand
@@ -173,7 +152,7 @@ namespace Makrisoft.Makfi.ViewModels
         {
             if (Reference_ViewModel.Header.CurrentHotel == null) {  
                 MessageBox.Show($"Aucun hôtel ne vous a été assigné  ", "Impossible d'enregistrer  !");
-                EmployesCurrentHotel.Remove(CurrentEmploye);
+                Employes.Remove(CurrentEmploye);
                 return;
             }
             if (CurrentEmploye.Nom == null || CurrentEmploye.Prenom == null || CurrentEmploye.Etat == null)
@@ -207,20 +186,20 @@ namespace Makrisoft.Makfi.ViewModels
 
             }
             CurrentEmploye.SaveColor = "Navy";
-            EmployeCollectionView.Refresh();
+            EmployesCollectionView.Refresh();
           
         }
-        private void OnAddCommand()
+        private void OnEmployeAddCommand()
         {
             CurrentEmploye = new Employe_VM { Nom = "(A définir)" , Etat= EtatEmploye.Where(e=>e.Libelle== "Non disponible").SingleOrDefault() };
-            EmployesCurrentHotel.Add(CurrentEmploye);
-            EmployeCollectionView.Refresh();
+            Employes.Add(CurrentEmploye);
+            EmployesCollectionView.Refresh();
         }
-        private void OnDeleteCommand()
+        private void OnEmployeDeleteCommand()
         {
             var param = MakfiData.HotelEmploye_Delete($"<hotelEmploye><employe>{CurrentEmploye.Id}</employe><hotel>{Reference_ViewModel.Header.CurrentHotel.Id}</hotel></hotelEmploye>");
-            if (param)  
-                EmployesCurrentHotel.Remove(CurrentEmploye);
+            if (param)
+                Employes.Remove(CurrentEmploye);
             else
                 MessageBox.Show($" Suppression impossible de l'employé : {CurrentEmploye.Nom}", "Remarque !");
         }
@@ -235,7 +214,7 @@ namespace Makrisoft.Makfi.ViewModels
             if (CurrentEmploye != null) return true;
             else return false;
         }
-        private bool OnCanExecuteDeleteCommand()
+        private bool OnCanExecuteEmployeDeleteCommand()
         {
             if (CurrentEmploye != null) return true;
             else return false;
@@ -267,39 +246,26 @@ namespace Makrisoft.Makfi.ViewModels
         #region Load
         public void Load_Employes() 
         {
-            //Chargement de tous les employes
-            AllEmployes = new ObservableCollection<Employe_VM>(
-              MakfiData.Employe_Read()
-              .Select(x => new Employe_VM
-              {
-                  Id = x.Id,
-                  Nom = x.Nom,
-                  Prenom = x.Prenom,
-                  Etat = EtatList.Where(e => e.Id == x.Etat.Id).SingleOrDefault(),
-                  Commentaire = x.Commentaire,
-                  SaveColor = "Navy"
-              }).OrderBy(x => x.Nom).ToList());
-            //Chargement des les employes qui correspont à l'hotel actuel
-            Guid monId = default;
+            Guid idHotel = default;
             if (Reference_ViewModel.Header.CurrentHotel != null)
-                 monId = Reference_ViewModel.Header.CurrentHotel.Id;
+                 idHotel = Reference_ViewModel.Header.CurrentHotel.Id;
             else
                 MessageBox.Show($"Aucun hôtel ne vous a été assigné  ", "Impossible de se connecter  !");
-            //contient la liste des Ids des employes 
-            HotelEmployesCurrentHotel = new ObservableCollection<HotelEmploye_VM>(
-                  MakfiData.HotelEmploye_Read($"<hotel><hotel>{monId}</hotel></hotel>")
-                  .Select(x => new HotelEmploye_VM
+
+            Employes = new ObservableCollection<Employe_VM>(
+                  MakfiData.Employe_Read($"<employes><hotel>{idHotel}</hotel></employes>")
+                  .Select(x => new Employe_VM
                   {
-                      Employe = x.Employe
+                      Id = x.Id,
+                      Nom=x.Nom,
+                      Prenom = x.Prenom,
+                      Etat = EtatList.Where(e=>e.Id==x.Etat.Id).Single(),
+                      Commentaire = x.Commentaire,
+                      SaveColor =  "Navy"
                   }).ToList());
-            //---------------------------------------------------
-            //ListCollectionView des employes qui correspont à l'hotel actuel
-            EmployesCurrentHotel = new ObservableCollection<Employe_VM>();
-            foreach (var item in HotelEmployesCurrentHotel)
-                EmployesCurrentHotel.Add(AllEmployes.Where(x => x.Id == item.Employe).SingleOrDefault());
-            EmployesCurrentHotel.OrderBy(x => x.Nom);
-            EmployeCollectionView = new ListCollectionView(EmployesCurrentHotel);
-            EmployeCollectionView.Refresh();
+
+            EmployesCollectionView = new ListCollectionView(Employes);
+            EmployesCollectionView.Refresh();
         }
         private void Load_Etat()
         {

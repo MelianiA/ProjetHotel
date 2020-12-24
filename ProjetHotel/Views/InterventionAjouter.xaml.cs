@@ -21,7 +21,7 @@ namespace Makrisoft.Makfi.Views
     {
         public InterventionAjouter()
         {
-            Reference_ViewModel.InterventionAjouter = new InterventionAjouterModel();
+            Reference_ViewModel.InterventionAjouter = new InterventionAjouterViewModel();
             DataContext = Reference_ViewModel.InterventionAjouter ;
             InitializeComponent();
 

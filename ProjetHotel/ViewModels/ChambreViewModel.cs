@@ -1,11 +1,8 @@
 ﻿using Makrisoft.Makfi.Dal;
 using Makrisoft.Makfi.Tools;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Data;
 using System.Windows.Input;
@@ -18,20 +15,17 @@ namespace Makrisoft.Makfi.ViewModels
         public ChambreViewModel()
         {
             // Icommand
-            ChambreModifiedSaveCommand = new RelayCommand(p => OnSaveCommand(), p => OnCanExecuteSaveCommand());
-            ChambreSelectedAddCommand = new RelayCommand(p => OnAddCommand(), p => true);
-            ChambreSelectedDeleteCommand = new RelayCommand(p => OnDeleteCommand(), p => OnCanExecuteDeleteCommand());
-            FilterClearCommand = new RelayCommand(p => OnFilterEtatClearCommand(), p => OnCanExecuteFilterEtatClearCommand());
-            ChambreGroupeViewCommand = new RelayCommand(p => OnChambreGroupeViewCommand());
+            ChambreSaveCommand = new RelayCommand(p => OnChambreSaveCommand(), p => OnCanExecuteChambreSaveCommand());
+            ChambreAddCommand = new RelayCommand(p => OnChambreAddCommand(), p => true);
+            ChambreDeleteCommand = new RelayCommand(p => OnChambreDeleteCommand(), p => OnCanExecuteChambreDeleteCommand());
+            FilterClearCommand = new RelayCommand(p => OnFilterClearCommand(), p => OnCanExecuteFilterClearCommand());
+            EtageViewChangeCommand = new RelayCommand(p => OnEtageViewChangeCommand());
             // ListeView
             if (Reference_ViewModel.Header.CurrentHotel != null)
             {
-                Load_Etat();
                 Load_EtatChambre();
                 Load_Chambres();
             }
-
-
         }
 
         #endregion
@@ -46,7 +40,7 @@ namespace Makrisoft.Makfi.ViewModels
         private ListCollectionView chambreCollectionView;
 
         //GroupeChambre
-        public ObservableCollection<GroupeChambre_VM> GroupeChambre
+        public ObservableCollection<Etage_VM> GroupeChambre
         {
             get { return groupeChambre; }
             set
@@ -56,22 +50,22 @@ namespace Makrisoft.Makfi.ViewModels
 
             }
         }
-        private ObservableCollection<GroupeChambre_VM> groupeChambre;
-        public ListCollectionView GroupeChambreCollectionView
+        private ObservableCollection<Etage_VM> groupeChambre;
+        public ListCollectionView EtageCollectionView
         {
-            get { return groupeChambreCollectionView; }
-            set { groupeChambreCollectionView = value; OnPropertyChanged("GroupeChambreCollectionView"); }
+            get { return etageCollectionView; }
+            set { etageCollectionView = value; OnPropertyChanged("EtageCollectionView"); }
         }
-        private ListCollectionView groupeChambreCollectionView;
+        private ListCollectionView etageCollectionView;
 
-        //IsEnabled
-        public bool IsEnabled
+        //IsModifierEnabled
+        public bool IsModifierEnabled
         {
             get { return isEnabled; }
             set
             {
                 isEnabled = value;
-                OnPropertyChanged("IsEnabled");
+                OnPropertyChanged("IsModifierEnabled");
             }
         }
         private bool isEnabled;
@@ -98,8 +92,8 @@ namespace Makrisoft.Makfi.ViewModels
             set
             {
                 currentChambreGChambre = value;
-                if (currentChambreGChambre == null) IsEnabled = false;
-                else IsEnabled = true;
+                if (currentChambreGChambre == null) IsModifierEnabled = false;
+                else IsModifierEnabled = true;
                 OnPropertyChanged("CurrentChambreGChambre");
             }
         }
@@ -115,12 +109,12 @@ namespace Makrisoft.Makfi.ViewModels
             }
         }
         private ObservableCollection<Etat_VM> etatList;
-        public ListCollectionView EtatListCollectionView
-        {
-            get { return etatListCollectionView; }
-            set { etatListCollectionView = value; OnPropertyChanged("EtatListCollectionView"); }
-        }
-        private ListCollectionView etatListCollectionView;
+        //public ListCollectionView EtatListCollectionView
+        //{
+        //    get { return etatListCollectionView; }
+        //    set { etatListCollectionView = value; OnPropertyChanged("EtatListCollectionView"); }
+        //}
+        //private ListCollectionView etatListCollectionView;
 
         //EtatChambre
         public ObservableCollection<Etat_VM> EtatChambre
@@ -157,7 +151,7 @@ namespace Makrisoft.Makfi.ViewModels
         }
         private Etat_VM currentFilterEtat;
 
-        public GroupeChambre_VM CurrentFilterGroupe
+        public Etage_VM CurrentFilterGroupe
         {
             get
             {
@@ -171,21 +165,21 @@ namespace Makrisoft.Makfi.ViewModels
                 OnPropertyChanged("CurrentFilterGroupe");
             }
         }
-        private GroupeChambre_VM currentFilterGroupe;
+        private Etage_VM currentFilterGroupe;
 
 
         #endregion
 
         #region Commands
         //ICommand
-        public ICommand ChambreModifiedSaveCommand { get; set; }
-        public ICommand ChambreSelectedAddCommand { get; set; }
-        public ICommand ChambreSelectedDeleteCommand { get; set; }
+        public ICommand ChambreSaveCommand { get; set; }
+        public ICommand ChambreAddCommand { get; set; }
+        public ICommand ChambreDeleteCommand { get; set; }
         public ICommand FilterClearCommand { get; set; }
-        public ICommand ChambreGroupeViewCommand { get; set; }
+        public ICommand EtageViewChangeCommand { get; set; }
 
         // Méthodes OnCommand
-        private void OnSaveCommand()
+        private void OnChambreSaveCommand()
         {
             if (Reference_ViewModel.Header.CurrentHotel == null)
             {
@@ -214,13 +208,13 @@ namespace Makrisoft.Makfi.ViewModels
             CurrentChambreGChambre.SaveColor = "Navy";
             ChambreCollectionView.Refresh();
         }
-        private void OnAddCommand()
+        private void OnChambreAddCommand()
         {
             CurrentChambreGChambre = new ChambreGroupeChambre_VM { Nom = "( A définir !)", Etat = EtatChambre.Where(e => e.Libelle == "Disponible").SingleOrDefault() };
             ChambreGroupeChambre.Add(CurrentChambreGChambre);
             ChambreCollectionView.Refresh();
         }
-        private void OnDeleteCommand()
+        private void OnChambreDeleteCommand()
         {
             var canDeletes = MakfiData.Chambre_CanDelete($"<chambre><id>{CurrentChambreGChambre.Id}</id></chambre>");
             if (canDeletes.Count() == 0)
@@ -234,13 +228,13 @@ namespace Makrisoft.Makfi.ViewModels
             }
         }
 
-        private void OnChambreGroupeViewCommand()
+        private void OnEtageViewChangeCommand()
         {
             Reference_ViewModel.ChambreGroupe.Load_AllChambres();
-            Reference_ViewModel.ChambreGroupe.Load_GroupeChambres();
+            Reference_ViewModel.ChambreGroupe.Load_Etages();
             Reference_ViewModel.Main.ViewSelected = ViewEnum.ChambreGroupe;
         }
-        private void OnFilterEtatClearCommand()
+        private void OnFilterClearCommand()
         {
             CurrentFilterEtat = null;
             CurrentFilterGroupe = null;
@@ -248,17 +242,17 @@ namespace Makrisoft.Makfi.ViewModels
 
 
         // Méthodes OnCanExecuteCommand
-        private bool OnCanExecuteSaveCommand()
+        private bool OnCanExecuteChambreSaveCommand()
         {
             if (CurrentChambreGChambre != null) return true;
             else return false;
         }
-        private bool OnCanExecuteDeleteCommand()
+        private bool OnCanExecuteChambreDeleteCommand()
         {
             if (CurrentChambreGChambre != null) return true;
             else return false;
         }
-        private bool OnCanExecuteFilterEtatClearCommand()
+        private bool OnCanExecuteFilterClearCommand()
         {
             if (CurrentFilterEtat != null || CurrentFilterGroupe != null) return true;
             else return false;
@@ -325,44 +319,38 @@ namespace Makrisoft.Makfi.ViewModels
             //Load_GroupeChambre
             Guid idHotel = default;
             if (Reference_ViewModel.Header.CurrentHotel != null) idHotel = Reference_ViewModel.Header.CurrentHotel.Id;
-            GroupeChambre = new ObservableCollection<GroupeChambre_VM>(
+            GroupeChambre = new ObservableCollection<Etage_VM>(
              MakfiData.GroupeChambre_Read($"<groupeChambre><hotel>{idHotel}</hotel></groupeChambre>")
-             .Select(x => new GroupeChambre_VM
+             .Select(x => new Etage_VM
              {
                  Id = x.Id,
                  Nom = x.Nom,
                  Commentaire = x.Commentaire
              }).ToList());
-            GroupeChambreCollectionView = new ListCollectionView(GroupeChambre);
-            GroupeChambreCollectionView.Refresh();
+            EtageCollectionView = new ListCollectionView(GroupeChambre);
+            EtageCollectionView.Refresh();
             CurrentFilterEtat = null;
             CurrentFilterGroupe = null;
         }
-
-        private void Load_Etat()
-        {
-            EtatList = new ObservableCollection<Etat_VM>(
-              MakfiData.Etat_Read()
-              .Select(x => new Etat_VM
-              {
-                  Id = x.Id,
-                  Libelle = x.Libelle,
-                  Icone = x.Icone,
-                  Couleur = x.Couleur,
-                  Entite = x.Entite,
-                  EtatEtat=x.EtatEtat
-              }).ToList()); ;
-            EtatListCollectionView = new ListCollectionView(EtatList);
-            EtatListCollectionView.Refresh();
-        }
         private void Load_EtatChambre()
         {
+            EtatList = new ObservableCollection<Etat_VM>(
+                  MakfiData.Etat_Read()
+                  .Select(x => new Etat_VM
+                  {
+                      Id = x.Id,
+                      Libelle = x.Libelle,
+                      Icone = x.Icone,
+                      Couleur = x.Couleur,
+                      Entite = x.Entite,
+                      EtatEtat = x.EtatEtat
+                  })); 
+            
             EtatChambre = new ObservableCollection<Etat_VM>(
-               EtatList.Where(x => x.Entite == EntiteEnum.Chambre).ToList());
+               EtatList.Where(x => x.Entite == EntiteEnum.Chambre));
             EtatChambreCollectionView = new ListCollectionView(EtatChambre);
             EtatChambreCollectionView.Refresh();
         }
-
         #endregion
 
     }

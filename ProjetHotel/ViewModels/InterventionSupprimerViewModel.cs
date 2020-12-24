@@ -9,7 +9,7 @@ using System.Windows.Data;
 
 namespace Makrisoft.Makfi.ViewModels
 {
-    public class InterventionSupprimerModel : ViewModelBase
+    public class InterventionSupprimerViewModel : ViewModelBase
     {
         #region Constructeur
 
@@ -17,7 +17,7 @@ namespace Makrisoft.Makfi.ViewModels
 
         #region Binding
         //GroupeChambre
-        public ObservableCollection<GroupeChambre_VM> GroupeChambres
+        public ObservableCollection<Etage_VM> GroupeChambres
         {
             get { return groupeChambres; }
             set
@@ -27,22 +27,22 @@ namespace Makrisoft.Makfi.ViewModels
 
             }
         }
-        private ObservableCollection<GroupeChambre_VM> groupeChambres;
+        private ObservableCollection<Etage_VM> groupeChambres;
 
-        public GroupeChambre_VM CurrentGroupeChambre
+        public Etage_VM CurrentEtage
         {
-            get { return currentGroupeChambre; }
+            get { return currentEtage; }
             set
             {
-                currentGroupeChambre = value;
-                if (currentGroupeChambre != null)
+                currentEtage = value;
+                if (currentEtage != null)
                     Load_ChambreCurrentGroupe();
-                OnPropertyChanged("CurrentGroupeChambre");
+                OnPropertyChanged("CurrentEtage");
             }
         }
-        private GroupeChambre_VM currentGroupeChambre;
+        private Etage_VM currentEtage;
         //ChambreByGroupe 
-        public ObservableCollection<ChambreByGroupe_VM> AllChambres
+        public ObservableCollection<ChambreByEtage_VM> AllChambres
         {
             get { return allChambres; }
             set
@@ -52,7 +52,7 @@ namespace Makrisoft.Makfi.ViewModels
 
             }
         }
-        private ObservableCollection<ChambreByGroupe_VM> allChambres;
+        private ObservableCollection<ChambreByEtage_VM> allChambres;
 
         //Employe 
         public ObservableCollection<Employe_VM> EmployeIntervention
@@ -195,7 +195,7 @@ namespace Makrisoft.Makfi.ViewModels
             {
                 foreach (var item in Reference_ViewModel.InterventionDetail.InterventionDetails)
                 {
-                    if (CurrentGroupeChambre.ChambreCurrentGroupe.Any(c => c.IdDelaChambre == item.Chambre.Id))
+                    if (CurrentEtage.Chambres.Any(c => c.IdDelaChambre == item.Chambre.Id))
                     {
                         if (!MakfiData.InterventionDetails_Delete($"<interventionDetails><id>{item.Id}</id></interventionDetails>"))
                             throw new Exception();
@@ -233,9 +233,9 @@ namespace Makrisoft.Makfi.ViewModels
                 }));
 
             //Employe
-            if (Reference_ViewModel.Employe.AllEmployes != null)
+            if (Reference_ViewModel.Employe.Employes != null) // Employes interdit !!!!!
             {
-                EmployeIntervention = Reference_ViewModel.Employe.AllEmployes;
+                EmployeIntervention = Reference_ViewModel.Employe.Employes;// Employes interdit !!!!!
                 EmployeInterventionCollectionView = new ListCollectionView(EmployeIntervention);
                 CurentEmploye = EmployeIntervention.FirstOrDefault();
             }
@@ -247,12 +247,12 @@ namespace Makrisoft.Makfi.ViewModels
                 CurrentChambre = ChambreIntervention.FirstOrDefault();
             }
             //GroupeChambres
-            GroupeChambres = Reference_ViewModel.ChambreGroupe.GroupeChambres;
-            CurrentGroupeChambre = GroupeChambres.FirstOrDefault();
+            GroupeChambres = Reference_ViewModel.ChambreGroupe.Etages;
+            CurrentEtage = GroupeChambres.FirstOrDefault();
             //
-            AllChambres = new ObservableCollection<ChambreByGroupe_VM>(
+            AllChambres = new ObservableCollection<ChambreByEtage_VM>(
               MakfiData.ChambreByGroupe_Read($"<chambreByGroupe><hotel>{Reference_ViewModel.Header.CurrentHotel.Id}</hotel></chambreByGroupe>")
-              .Select(x => new ChambreByGroupe_VM
+              .Select(x => new ChambreByEtage_VM
               {
                   GroupeChambre = x.GroupeChambre,
                   Nom = x.Nom,
@@ -264,10 +264,10 @@ namespace Makrisoft.Makfi.ViewModels
         }
         public void Load_ChambreCurrentGroupe()
         {
-            if (CurrentGroupeChambre != null && AllChambres!=null)
+            if (CurrentEtage != null && AllChambres!=null)
             {
-                CurrentGroupeChambre.ChambreCurrentGroupe = new ObservableCollection<ChambreByGroupe_VM>(
-                    AllChambres.Where(c => c.GroupeChambre == CurrentGroupeChambre.Id)
+                CurrentEtage.Chambres = new ObservableCollection<ChambreByEtage_VM>(
+                    AllChambres.Where(c => c.GroupeChambre == CurrentEtage.Id)
                     );
             }
         }

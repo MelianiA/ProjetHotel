@@ -69,7 +69,7 @@
                 <TextBlock Text="Modifier" FontSize="22" Foreground="Navy" VerticalAlignment="Bottom"/>
                  
                 <Button Grid.Column="2" Background="Transparent" BorderBrush="Transparent" BorderThickness="1" ToolTip="Enregistrer les modifications"
-                        Command="{Binding ChambreModifiedSaveCommand}" VerticalAlignment="Bottom">
+                        Command="{Binding ChambreSaveCommand}" VerticalAlignment="Bottom">
                     <Button.Content>
                         <!--PaperAirplane-->
                         <materialDesign:PackIcon Height="20" Width="Auto" Kind="Floppy" Foreground="{Binding CurrentChambreGChambre.SaveColor}" Margin="0,0,10,0" />
@@ -85,7 +85,7 @@
 
                 <!--ChambreGroupeFilterSelected-->
                 <TextBlock Text="Grouope de chambres" Margin="0,15,0,0"/>
-                <ComboBox ItemsSource="{Binding GroupeChambreCollectionView, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" SelectedItem="{Binding CurrentFilterGroupe}" FontSize="16">
+                <ComboBox ItemsSource="{Binding EtageCollectionView, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" SelectedItem="{Binding CurrentFilterGroupe}" FontSize="16">
                     <ComboBox.ItemTemplate>
                         <DataTemplate>
                             <StackPanel Orientation="Horizontal">
@@ -152,10 +152,10 @@
         <Border Grid.Column="2" Grid.Row="1" BorderBrush="Transparent" BorderThickness="1" CornerRadius="10" HorizontalAlignment="Left" >
             <StackPanel Margin="5" Width="220">
                 <TextBlock Text="Libellé" Margin="0,15,0,0"/>
-                <TextBox FontSize="16" Text="{Binding CurrentChambreGChambre.Nom, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" IsEnabled="{Binding IsEnabled}"/>
+                <TextBox FontSize="16" Text="{Binding CurrentChambreGChambre.Nom, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" IsEnabled="{Binding IsModifierEnabled}"/>
                 <TextBlock Text="Etat" Margin="0,15,0,0"/>
                 <ComboBox FontSize="16" Margin="0 20 0 0"
-                    ItemsSource="{Binding EtatChambre}" SelectedItem="{Binding CurrentChambreGChambre.Etat}" IsEnabled="{Binding IsEnabled}">
+                    ItemsSource="{Binding EtatChambre}" SelectedItem="{Binding CurrentChambreGChambre.Etat}" IsEnabled="{Binding IsModifierEnabled}">
                     <ComboBox.ItemTemplate>
                         <DataTemplate>
                             <StackPanel Orientation="Horizontal">
@@ -166,7 +166,7 @@
                     </ComboBox.ItemTemplate>
                 </ComboBox>
                 <TextBlock Text="Commentaire" Margin="0,19,0,5"/>
-                <TextBox FontSize="16"  Text="{Binding CurrentChambreGChambre.Commentaire, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" TextWrapping="Wrap" TextAlignment="Left" IsEnabled="{Binding IsEnabled}"/>
+                <TextBox FontSize="16"  Text="{Binding CurrentChambreGChambre.Commentaire, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" TextWrapping="Wrap" TextAlignment="Left" IsEnabled="{Binding IsModifierEnabled}"/>
 
             </StackPanel>
         </Border>

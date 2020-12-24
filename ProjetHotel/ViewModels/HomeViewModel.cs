@@ -1,11 +1,8 @@
 ﻿using Makrisoft.Makfi.Dal;
 using Makrisoft.Makfi.Tools;
 using System;
-using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace Makrisoft.Makfi.ViewModels
@@ -16,10 +13,7 @@ namespace Makrisoft.Makfi.ViewModels
         public HomeViewModel()
         {
             ChangeViewCommand = new RelayCommand(p => OnChangeViewCommand(p));
-
         }
-
-
         #endregion
 
         #region Binding
@@ -95,7 +89,7 @@ namespace Makrisoft.Makfi.ViewModels
 
         #region Load
 
-        public void CalculeControle()
+        public void ButtonInterventionDuJour()
         {
             Intervention_VM i = null;
             if (Reference_ViewModel.Intervention.Interventions != null)

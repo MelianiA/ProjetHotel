@@ -148,7 +148,7 @@
             <StackPanel Margin="5" Width="220">
                 <TextBlock Text="À" Margin="0,15,0,0"/>
                 <ComboBox FontSize="16"  ItemsSource="{Binding Utilisateurs,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" 
-                          SelectedItem="{Binding CurrentMessage.A,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding IsEnabled}"  >
+                          SelectedItem="{Binding CurrentMessage.A,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding IsModifierEnabled}"  >
                     <ComboBox.ItemTemplate>
                         <DataTemplate>
                             <StackPanel Orientation="Horizontal">

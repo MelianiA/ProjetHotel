@@ -3,9 +3,8 @@ using Makrisoft.Makfi.Tools;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Data;
 using System.Windows.Input;
@@ -18,20 +17,18 @@ namespace Makrisoft.Makfi.ViewModels
         public InterventionDetailViewModel()
         {
             // Icommand
-            InterventionDetailSelectedAddCommand = new RelayCommand(p => OnAddCommand(), p => true);
-            InterventionDetailSelectedDeleteCommand = new RelayCommand(p => OnSupprimeCommand(), p => OnCanExecuteSupprimeCommand());
-            InterventionDetailModifiedSaveCommand = new RelayCommand(p => OnSaveCommand(), p => OnCanExecuteSaveCommand());
-            AddCommand = new RelayCommand(p => OnAddCommandSimple(), p => true);
-            DeleteCommand = new RelayCommand(p => OnDeleteCommandSimple(), p => OnCanExecuteDeleteCommandSimple());
-            EnregistrerTout = new RelayCommand(p => OnEnregistrerTout(), p => OnCanExecuteEnregistrerTout());
+            MenuAddAllCommand = new RelayCommand(p => OnMenuAddAllCommand(), p => true);
+            MenuDeleteAllCommand = new RelayCommand(p => OnMenuDeleteAllCommand(), p => OnCanExecuteMenuDeleteAllCommand());
+            MenuAddCommand = new RelayCommand(p => OnMenuAddCommand(), p => true);
+            MenuDeleteCommand = new RelayCommand(p => OnMenuDeleteCommand(), p => OnCanExecuteMenuDeleteCommand());
+            MenuSaveAllCommand = new RelayCommand(p => OnMenuSaveAllCommand(), p => OnCanExecuteMenuSaveAllCommand());
+
+            InterventionDetailSaveCommand = new RelayCommand(p => OnInterventionDetailSaveCommand(), p => OnCanExecuteInterventionDetailSaveCommand());
             FilterClearCommand = new RelayCommand(p => OnFilterClearCommand(), p => OnCanExecuteFilterClearCommand());
 
-
-            //
             InterventionDetails = new ObservableCollection<InterventionDetail_VM>();
             InterventionDetailsCollectionView = new ListCollectionView(InterventionDetails);
-            InterventionDetailsCollectionView.SortDescriptions.Add(new System.ComponentModel.SortDescription("Chambre.Nom", System.ComponentModel.ListSortDirection.Ascending));
-
+            InterventionDetailsCollectionView.SortDescriptions.Add(new SortDescription("Chambre.Nom", System.ComponentModel.ListSortDirection.Ascending));
         }
 
         #endregion
@@ -50,17 +47,17 @@ namespace Makrisoft.Makfi.ViewModels
         }
         private Intervention_VM currentIntervention;
 
-        //IsEnabled
-        public bool IsEnabled
+        //IsModifierEnabled
+        public bool IsModifierEnabled
         {
-            get { return isEnabled; }
+            get { return isModifierEnabled; }
             set
             {
-                isEnabled = value;
-                OnPropertyChanged("IsEnabled");
+                isModifierEnabled = value;
+                OnPropertyChanged("IsModifierEnabled");
             }
         }
-        private bool isEnabled;
+        private bool isModifierEnabled;
 
         //InterventionDetails
         public ObservableCollection<InterventionDetail_VM> InterventionDetails
@@ -75,8 +72,8 @@ namespace Makrisoft.Makfi.ViewModels
             set
             {
                 currentInterventionDetail = value;
-                if (currentInterventionDetail == null) IsEnabled = false;
-                else IsEnabled = true;
+                if (currentInterventionDetail == null) IsModifierEnabled = false;
+                else IsModifierEnabled = true;
                 OnPropertyChanged("CurrentInterventionDetail");
             }
         }
@@ -175,7 +172,7 @@ namespace Makrisoft.Makfi.ViewModels
         private ListCollectionView chambreInterventionCollectionView;
 
         //Filter
-        public GroupeChambre_VM CurrentGroupeChambres
+        public Etage_VM CurrentGroupeChambres
         {
             get { return currentGroupeChambres; }
             set
@@ -186,7 +183,7 @@ namespace Makrisoft.Makfi.ViewModels
                 OnPropertyChanged("CurrentGroupeChambres");
             }
         }
-        private GroupeChambre_VM currentGroupeChambres;
+        private Etage_VM currentGroupeChambres;
 
         public Etat_VM CurrentEtatIntervention
         {
@@ -216,7 +213,7 @@ namespace Makrisoft.Makfi.ViewModels
 
 
         //GroupeChambre
-        public ObservableCollection<GroupeChambre_VM> GroupeChambres
+        public ObservableCollection<Etage_VM> GroupeChambres
         {
             get { return groupeChambres; }
             set
@@ -225,37 +222,37 @@ namespace Makrisoft.Makfi.ViewModels
                 OnPropertyChanged("GroupeChambres");
             }
         }
-        private ObservableCollection<GroupeChambre_VM> groupeChambres;
+        private ObservableCollection<Etage_VM> groupeChambres;
 
 
         #endregion
 
         #region Commands
         //ICommand
-        public ICommand InterventionDetailSelectedAddCommand { get; set; }
-        public ICommand InterventionDetailSelectedDeleteCommand { get; set; }
-        public ICommand InterventionDetailModifiedSaveCommand { get; set; }
-        public ICommand AddCommand { get; set; }
-        public ICommand DeleteCommand { get; set; }
-        public ICommand EnregistrerTout { get; set; }
+        public ICommand MenuAddAllCommand { get; set; }
+        public ICommand MenuDeleteAllCommand { get; set; }
+        public ICommand InterventionDetailSaveCommand { get; set; }
+        public ICommand MenuAddCommand { get; set; }
+        public ICommand MenuDeleteCommand { get; set; }
+        public ICommand MenuSaveAllCommand { get; set; }
         public ICommand FilterClearCommand { get; set; }
 
         // Méthodes OnCommand
-        private void OnAddCommand()
+        private void OnMenuAddAllCommand()
         {
             Reference_ViewModel.Main.ViewSelected = ViewEnum.InterventionAjouter;
-            Reference_ViewModel.InterventionAjouter.Load_InterventionDetailsAjouter();
-            Reference_ViewModel.InterventionAjouter.Annuler = true;
+            Reference_ViewModel.InterventionAjouter.Load_InterventionDetails();
+            Reference_ViewModel.InterventionAjouter.CheckAnnuler = true;
             Reference_ViewModel.InterventionAjouter.Interventions.Remove(CurrentIntervention);
 
         }
-        private void OnSupprimeCommand()
+        private void OnMenuDeleteAllCommand()
         {
             Reference_ViewModel.InterventionSupprimer.Load_InterventionDetailsAjouter();
             Reference_ViewModel.InterventionSupprimer.Annuler = true;
             Reference_ViewModel.Main.ViewSelected = ViewEnum.InterventionSupprimer;
         }
-        private void OnSaveCommand()
+        private void OnInterventionDetailSaveCommand()
         {
             
             Guid? monID = null;
@@ -277,7 +274,7 @@ namespace Makrisoft.Makfi.ViewModels
             Reference_ViewModel.Intervention.CurrentIntervention.SaveColor = "Navy";
 
         }
-        private void OnAddCommandSimple()
+        private void OnMenuAddCommand()
         {
             CurrentInterventionDetail = new InterventionDetail_VM
             {
@@ -285,12 +282,12 @@ namespace Makrisoft.Makfi.ViewModels
             };
             InterventionDetails.Add(CurrentInterventionDetail);
         }
-        private void OnDeleteCommandSimple()
+        private void OnMenuDeleteCommand()
         {
             var param = MakfiData.InterventionDetails_Delete($"<interventionDetails><id>{CurrentInterventionDetail.Id}</id></interventionDetails>");
             if (param) InterventionDetails.Remove(CurrentInterventionDetail);
         }
-        private void OnEnregistrerTout()
+        private void OnMenuSaveAllCommand()
         {
             List<InterventionDetail_VM> elementAsupp = new List<InterventionDetail_VM>();
             var IntDetails = InterventionDetails.Where(i => i.SaveColor == "Red");
@@ -331,19 +328,19 @@ namespace Makrisoft.Makfi.ViewModels
 
 
         // Méthodes OnCanExecuteCommand
-        private bool OnCanExecuteSaveCommand()
+        private bool OnCanExecuteInterventionDetailSaveCommand()
         {
             return CurrentInterventionDetail != null&& currentInterventionDetail.Employe != null&& currentInterventionDetail.Chambre != null ;
         }
-        private bool OnCanExecuteDeleteCommandSimple()
+        private bool OnCanExecuteMenuDeleteCommand()
         {
             return CurrentInterventionDetail != null;
         }
-        public bool OnCanExecuteEnregistrerTout()
+        public bool OnCanExecuteMenuSaveAllCommand()
         {
             return InterventionDetails.Any(i => i.SaveColor == "Red");
         }
-        private bool OnCanExecuteSupprimeCommand()
+        private bool OnCanExecuteMenuDeleteAllCommand()
         {
             return InterventionDetails.Count > 0;
         }
@@ -361,7 +358,7 @@ namespace Makrisoft.Makfi.ViewModels
                 if (item is InterventionDetail_VM interventionDetail)
                     return EmployeIntervention.Any(e => interventionDetail.Employe.Id == CurentEmployeIntervention.Id)
                         && EtatIntervention.Any(e => interventionDetail.Etat.Id == CurrentEtatIntervention.Id)
-                        && CurrentGroupeChambres.ChambreCurrentGroupe.Any(e => interventionDetail.Chambre.Id == e.IdDelaChambre);
+                        && CurrentGroupeChambres.Chambres.Any(e => interventionDetail.Chambre.Id == e.IdDelaChambre);
                 return false;
             }
             if (CurrentGroupeChambres != null && CurrentEtatIntervention != null)
@@ -369,7 +366,7 @@ namespace Makrisoft.Makfi.ViewModels
                 GetChambresGroupChambre();
                 if (item is InterventionDetail_VM interventionDetail)
                     return EtatIntervention.Any(e => interventionDetail.Etat.Id == CurrentEtatIntervention.Id)
-                        && CurrentGroupeChambres.ChambreCurrentGroupe.Any(e => interventionDetail.Chambre.Id == e.IdDelaChambre);
+                        && CurrentGroupeChambres.Chambres.Any(e => interventionDetail.Chambre.Id == e.IdDelaChambre);
                 return false;
             }
             if (CurrentGroupeChambres != null && CurentEmployeIntervention != null)
@@ -377,7 +374,7 @@ namespace Makrisoft.Makfi.ViewModels
                 GetChambresGroupChambre();
                 if (item is InterventionDetail_VM interventionDetail)
                     return EmployeIntervention.Any(e => interventionDetail.Employe.Id == CurentEmployeIntervention.Id)
-                        && CurrentGroupeChambres.ChambreCurrentGroupe.Any(e => interventionDetail.Chambre.Id == e.IdDelaChambre);
+                        && CurrentGroupeChambres.Chambres.Any(e => interventionDetail.Chambre.Id == e.IdDelaChambre);
                 return false;
             }
 
@@ -406,7 +403,7 @@ namespace Makrisoft.Makfi.ViewModels
             {
                 GetChambresGroupChambre();
                 if (item is InterventionDetail_VM interventionDetail)
-                    return CurrentGroupeChambres.ChambreCurrentGroupe.Any(e => interventionDetail.Chambre.Id == e.IdDelaChambre);
+                    return CurrentGroupeChambres.Chambres.Any(e => interventionDetail.Chambre.Id == e.IdDelaChambre);
                 return false;
             }
             return true;
@@ -426,7 +423,7 @@ namespace Makrisoft.Makfi.ViewModels
         {
             if (CurrentGroupeChambres != null)
             {
-                CurrentGroupeChambres.ChambreCurrentGroupe = new ObservableCollection<ChambreByGroupe_VM>(
+                CurrentGroupeChambres.Chambres = new ObservableCollection<ChambreByEtage_VM>(
                     Reference_ViewModel.InterventionAjouter.AllChambres.Where(c => c.GroupeChambre == CurrentGroupeChambres.Id)
                     );
             }
@@ -439,14 +436,14 @@ namespace Makrisoft.Makfi.ViewModels
             //Chargement des etats 
             Load_Etat();
             //Employe
-            EmployeIntervention = Reference_ViewModel.Employe.EmployesCurrentHotel;
+            EmployeIntervention = Reference_ViewModel.Employe.Employes;
             EmployeInterventionCollectionView = new ListCollectionView(EmployeIntervention.Where(e => e.Etat.Libelle == "Disponible").ToList());
             //chambre
             ChambreIntervention = new ObservableCollection<Chambre_VM>(
                 Reference_ViewModel.Chambre.ChambreGroupeChambre.Select(c => new Chambre_VM { Id = c.Id, Nom = c.Nom, Etat=c.Etat }).ToList());
             ChambreInterventionCollectionView = new ListCollectionView(ChambreIntervention.Where(c=>c.Etat.Libelle== "Disponible").ToList());
             //GroupeChambre
-            GroupeChambres = Reference_ViewModel.ChambreGroupe.GroupeChambres;
+            GroupeChambres = Reference_ViewModel.ChambreGroupe.Etages;
             // InterventionDetails
             if (InterventionDetails != null) InterventionDetails.Clear();
             if (Reference_ViewModel.Header.CurrentHotel == null)

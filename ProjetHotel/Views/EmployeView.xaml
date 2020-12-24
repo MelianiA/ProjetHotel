@@ -12,7 +12,6 @@
         <Grid.Resources>
             <conv:EmployeEtatIconeConverter x:Key="EmployeEtatIconeConverterKey"/>
             <conv:EmployeEtatColorConverter x:Key="EmployeEtatColorConverterKey"/>
-            <conv:EmployeSelectedEtatConverter x:Key="EmployeSelectedEtatConverterKey"/>
         </Grid.Resources>
 
         <Grid.ColumnDefinitions>
@@ -101,8 +100,8 @@
         <!--Milieu-->
         <Border Grid.Column="1" Grid.Row="1" BorderBrush="Transparent" BorderThickness="1" CornerRadius="10" Margin="0" >
             <StackPanel>
-                <!-- IsEnabled="{Binding PageNotModified.Value} "-->
-                <DataGrid ItemsSource="{Binding EmployeCollectionView,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" 
+                <!-- IsModifierEnabled="{Binding PageNotModified.Value} "-->
+                <DataGrid ItemsSource="{Binding EmployesCollectionView,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" 
                           SelectedItem="{Binding CurrentEmploye , Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  
                           AutoGenerateColumns="False" HeadersVisibility="None" CanUserAddRows="False" VerticalScrollBarVisibility="Visible">
                     <DataGrid.Columns>
@@ -156,16 +155,16 @@
         <Border Grid.Column="2" Grid.Row="1" BorderBrush="Transparent" BorderThickness="1" CornerRadius="10" HorizontalAlignment="Left" >
             <StackPanel Margin="5" Width="220">
                 <TextBlock Text="Nom" Margin="0,15,0,0"/>
-                <TextBox FontSize="16" Text="{Binding CurrentEmploye.Nom, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding IsEnabled}"/>
+                <TextBox FontSize="16" Text="{Binding CurrentEmploye.Nom, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding IsModifierEnabled}"/>
 
                 <TextBlock Text="Prénom" Margin="0,15,0,0"/>
-                <TextBox FontSize="16" Text="{Binding CurrentEmploye.Prenom, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding IsEnabled}"/>
+                <TextBox FontSize="16" Text="{Binding CurrentEmploye.Prenom, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding IsModifierEnabled}"/>
 
                 <TextBlock Text="Commentaire" Margin="0,15,0,0"/>
-                <TextBox FontSize="16"  Text="{Binding CurrentEmploye.Commentaire, UpdateSourceTrigger=PropertyChanged}" TextWrapping="Wrap" TextAlignment="Left" IsEnabled="{Binding IsEnabled}"/>
+                <TextBox FontSize="16"  Text="{Binding CurrentEmploye.Commentaire, UpdateSourceTrigger=PropertyChanged}" TextWrapping="Wrap" TextAlignment="Left" IsEnabled="{Binding IsModifierEnabled}"/>
 
                 <TextBlock Text="Etat" Margin="0,15,0,0"/>
-                <ComboBox ItemsSource="{Binding EtatEmploye}" SelectedItem="{Binding CurrentEmploye.Etat}" FontSize="16" IsEnabled="{Binding IsEnabled}">
+                <ComboBox ItemsSource="{Binding EtatEmploye}" SelectedItem="{Binding CurrentEmploye.Etat}" FontSize="16" IsEnabled="{Binding IsModifierEnabled}">
                     <ComboBox.ItemTemplate>
                         <DataTemplate>
                             <StackPanel Orientation="Horizontal">

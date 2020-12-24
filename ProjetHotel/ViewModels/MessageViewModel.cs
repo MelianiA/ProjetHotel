@@ -150,12 +150,12 @@ namespace Makrisoft.Makfi.ViewModels
                     }
                     if (CurrentMessage.Etat != null)
                     {
-                        IsEnabled = false;
+                        IsModifierEnabled = false;
                         IsReadOnly = true;
                     }
                     else
                     {
-                        IsEnabled = true;
+                        IsModifierEnabled = true;
                         IsReadOnly = false;
                         CurrentMessage.Etat = EtatMessage.Where(x => x.Libelle == "Non lu").Single();
 
@@ -232,13 +232,13 @@ namespace Makrisoft.Makfi.ViewModels
         private bool histEnable;
 
         //IsEnable
-        public bool IsEnabled
+        public bool IsModifierEnabled
         {
             get { return isEnabled; }
             set
             {
                 isEnabled = value;
-                OnPropertyChanged("IsEnabled");
+                OnPropertyChanged("IsModifierEnabled");
             }
         }
         private bool isEnabled;
@@ -269,7 +269,7 @@ namespace Makrisoft.Makfi.ViewModels
         // Méthode OnCommand
         private void OnAjouterMessage()
         {
-            IsEnabled = true;
+            IsModifierEnabled = true;
             CurrentMessage = new Message_VM
             {
                 Id = Guid.NewGuid(),
@@ -337,7 +337,7 @@ namespace Makrisoft.Makfi.ViewModels
                 ColorEtat = "black",
                 Objet = objet
             };
-            IsEnabled = false;
+            IsModifierEnabled = false;
             Messages.Add(CurrentMessage);
 
         }

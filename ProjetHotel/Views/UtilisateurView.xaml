@@ -15,7 +15,6 @@
             <conv:RoleColorConverter x:Key="RoleColorConverterKey"/>
             <conv:RoleBoolConverter x:Key="RoleBoolConverterKey"/>
             <conv:BoolRoleConverter x:Key="BoolRoleConverterKey"/>
-            <conv:JoinConverter x:Key="JoinConverterKey"/>
             
             <Style x:Key="BorderRole" TargetType="Border">
                 <Setter Property="BorderBrush" Value="Silver"/>
@@ -164,11 +163,11 @@
         <Border Grid.Column="2" Grid.Row="1" BorderBrush="Transparent" BorderThickness="1" CornerRadius="10" HorizontalAlignment="Left" >
             <StackPanel Margin="5" Width="220">
                 <TextBlock Text="Nom" Margin="0,15,0,0"/>
-                <TextBox FontSize="16" Text="{Binding CurrentUtilisateur.Nom, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding IsEnabled}"/>
+                <TextBox FontSize="16" Text="{Binding CurrentUtilisateur.Nom, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding IsModifierEnabled}"/>
 
                 <StackPanel Orientation="Horizontal" Margin="0,30,0,0">
                     <materialDesign:PackIcon Height="20" Width="Auto" Kind="Person" Foreground="Silver" Margin="0,0,10,0"/>
-                    <RadioButton GroupName="Group1" IsEnabled="{Binding IsEnabled}"
+                    <RadioButton GroupName="Group1" IsEnabled="{Binding IsModifierEnabled}"
                                  IsChecked="{Binding CurrentUtilisateur.Statut, Converter={StaticResource RoleBoolConverterKey}, ConverterParameter={x:Static data:RoleEnum.Admin},
                         UpdateSourceTrigger=PropertyChanged}" 
                                   />
@@ -176,7 +175,7 @@
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" Margin="0,30,0,0">
                     <materialDesign:PackIcon Height="20" Width="Auto" Kind="FaceWoman" Foreground="Silver" Margin="0,0,10,0"/>
-                    <RadioButton GroupName="Group1" IsEnabled="{Binding IsEnabled}"
+                    <RadioButton GroupName="Group1" IsEnabled="{Binding IsModifierEnabled}"
                                  IsChecked="{Binding CurrentUtilisateur.Statut, Converter={StaticResource RoleBoolConverterKey}, ConverterParameter={x:Static data:RoleEnum.Gouvernante},
                         UpdateSourceTrigger=PropertyChanged}"
                                   />
@@ -184,7 +183,7 @@
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" Margin="0,30,0,0">
                     <materialDesign:PackIcon Height="20" Width="Auto" Kind="Building" Foreground="Silver" Margin="0,0,10,0"/>
-                    <RadioButton GroupName="Group1" IsEnabled="{Binding IsEnabled}"
+                    <RadioButton GroupName="Group1" IsEnabled="{Binding IsModifierEnabled}"
                                  IsChecked="{Binding CurrentUtilisateur.Statut, Converter={StaticResource RoleBoolConverterKey}, ConverterParameter={x:Static data:RoleEnum.Reception},
                         UpdateSourceTrigger=PropertyChanged}"
                                   />

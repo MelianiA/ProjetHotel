@@ -38,8 +38,8 @@
                 </TextBlock>
                 <Menu Grid.Column="1" Cursor="Hand" Margin="0">
                     <MenuItem Header="..." Foreground="Navy" FontSize="16">
-                        <MenuItem Header="Ajouter" Foreground="Navy" Command="{Binding ChambreGroupeSelectedAddCommand}"/>
-                        <MenuItem Header="Supprimer" Foreground="Navy" Command="{Binding ChambreGroupeSelectedDeleteCommand}"/>
+                        <MenuItem Header="Ajouter" Foreground="Navy" Command="{Binding EtageAddCommand}"/>
+                        <MenuItem Header="Supprimer" Foreground="Navy" Command="{Binding EtageDeleteCommand}"/>
                     </MenuItem>
                 </Menu>
             </Grid>
@@ -56,9 +56,9 @@
                     <RowDefinition></RowDefinition>
                 </Grid.RowDefinitions>
                 <TextBlock Text="Modifier" FontSize="22" Foreground="Navy" VerticalAlignment="Bottom"/>
-                <Button Grid.Column="2" Background="Transparent" BorderBrush="Transparent" BorderThickness="1" Command="{Binding ChambreGroupeModifiedSaveCommand}" VerticalAlignment="Bottom">
+                <Button Grid.Column="2" Background="Transparent" BorderBrush="Transparent" BorderThickness="1" Command="{Binding EtageSaveCommand}" VerticalAlignment="Bottom">
                     <Button.Content>
-                        <materialDesign:PackIcon Height="20" Width="Auto" Kind="Floppy" Foreground="{Binding CurrentGroupeChambre.SaveColor}" Margin="0,0,10,0" />
+                        <materialDesign:PackIcon Height="20" Width="Auto" Kind="Floppy" Foreground="{Binding CurrentEtage.SaveColor}" Margin="0,0,10,0" />
                     </Button.Content>
                 </Button>
             </Grid>
@@ -70,8 +70,8 @@
         </Border>
         <!--Milieu-->
         <Border Grid.Column="1" Grid.Row="1" BorderBrush="Transparent" BorderThickness="1" CornerRadius="10" Margin="0" >
-            <DataGrid ItemsSource="{Binding GroupeChambreCollectionView, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" 
-                      SelectedItem="{Binding CurrentGroupeChambre, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"  
+            <DataGrid ItemsSource="{Binding EtageCollectionView, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" 
+                      SelectedItem="{Binding CurrentEtage, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"  
                       AutoGenerateColumns="False" HeadersVisibility="None" CanUserAddRows="False" VerticalScrollBarVisibility="Visible">
                 <DataGrid.Columns>
                     <DataGridTemplateColumn  >
@@ -96,17 +96,17 @@
         <Border Grid.Column="2" Grid.Row="1" BorderBrush="Transparent" BorderThickness="1" CornerRadius="10" HorizontalAlignment="Left" >
             <StackPanel Margin="5" Width="220">
                 <TextBlock Text="Libellé" Margin="0,15,0,0"/>
-                <TextBox FontSize="16" Text="{Binding CurrentGroupeChambre.Nom, UpdateSourceTrigger=PropertyChanged}"/>
+                <TextBox FontSize="16" Text="{Binding CurrentEtage.Nom, UpdateSourceTrigger=PropertyChanged}"/>
 
                 <TextBlock Text="Commentaire" Margin="0,15,0,0"/>
                 <ScrollViewer Height="50" >
-                    <TextBox  FontSize="16"  Text="{Binding CurrentGroupeChambre.Commentaire, UpdateSourceTrigger=PropertyChanged}" TextWrapping="Wrap" TextAlignment="Left"/>
+                    <TextBox  FontSize="16"  Text="{Binding CurrentEtage.Commentaire, UpdateSourceTrigger=PropertyChanged}" TextWrapping="Wrap" TextAlignment="Left"/>
                  </ScrollViewer>
                  <TextBlock Text="Chambres du groupe" Margin="0,15,0,0"/>
                 <ScrollViewer Height="150" >
 
-                    <ListBox ItemsSource="{Binding CurrentGroupeChambre.ChambreCurrentGroupeListview, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
-                             SelectedItem="{Binding CurrentGroupeChambre.CurrentChambreCG, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                    <ListBox ItemsSource="{Binding CurrentEtage.ChambresListview, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                             SelectedItem="{Binding CurrentEtage.CurrentChambreCG, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
                            Background="AliceBlue" Margin="0 10 0 0" >
                     <ListBox.ItemTemplate>
                         <DataTemplate>
@@ -118,21 +118,21 @@
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0 20 0 0">
                     <Button  HorizontalAlignment="Right" Background="AliceBlue" BorderBrush="Transparent" BorderThickness="1" 
                              Margin="0 0 5 0"
-                         Command="{Binding RemoveChambreAuGroupe}" >
+                         Command="{Binding EtageSupprimerChambreCommand}" >
                         <Button.Content>
                             <materialDesign:PackIcon Height="20" Width="Auto" Kind="ArrowBottom" Foreground="Navy" />
                         </Button.Content>
                     </Button>
                     <Button  HorizontalAlignment="Right" Background="AliceBlue" BorderBrush="Transparent" BorderThickness="1" 
-                         Command="{Binding AddChambreAuGroupe}"  >
+                         Command="{Binding EtageAjouterChambreCommand}"  >
                         <Button.Content>
                             <materialDesign:PackIcon Height="20" Width="Auto" Kind="ArrowUp" Foreground="Navy" />
                         </Button.Content>
                     </Button>
                 </StackPanel>
                 <TextBlock Text="Autres chambres" Margin="0,15,0,0"/>
-                <ComboBox ItemsSource="{Binding CurrentGroupeChambre.ChambreNotCurrentGroupeListview, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" 
-                          SelectedItem="{Binding CurrentGroupeChambre.CurrentNotChambreCG, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                <ComboBox ItemsSource="{Binding CurrentEtage.AutresChambresListview, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" 
+                          SelectedItem="{Binding CurrentEtage.CurrentNotChambreCG, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
                           Margin="0 10 0 0">
                     <ComboBox.ItemTemplate>
                         <DataTemplate>

@@ -112,8 +112,8 @@ namespace Makrisoft.Makfi.ViewModels
             set
             {
                 currentUtilisateur = value;
-                if (currentUtilisateur == null || currentUtilisateur.IsAdmin) IsEnabled = false;
-                else IsEnabled = true;
+                if (currentUtilisateur == null || currentUtilisateur.IsAdmin) IsModifierEnabled = false;
+                else IsModifierEnabled = true;
                 OnPropertyChanged("CurrentUtilisateur");
 
             }
@@ -132,14 +132,14 @@ namespace Makrisoft.Makfi.ViewModels
         }
         private ListCollectionView utilisateurCollectionView;
 
-        //IsEnabled
-        public bool IsEnabled
+        //IsModifierEnabled
+        public bool IsModifierEnabled
         {
             get { return isEnabled; }
             set
             {
                 isEnabled = value;
-                OnPropertyChanged("IsEnabled");
+                OnPropertyChanged("IsModifierEnabled");
             }
         }
         private bool isEnabled;
@@ -190,8 +190,8 @@ namespace Makrisoft.Makfi.ViewModels
             if (ids.Count == 0) throw new Exception("Rien n'a été sauvgardé ! ");
             if (monID == null) CurrentUtilisateur.Id = ids[0].Id;
             CurrentUtilisateur.SaveColor = "Navy";
-            Reference_ViewModel.Hotel.GouvernanteListLoad();
-            Reference_ViewModel.Hotel.ReceptionListLoad();
+            Reference_ViewModel.Hotel.Gouvernante_Load();
+            Reference_ViewModel.Hotel.Reception_Load();
         }
         private void OnDeleteCommand()
         {
@@ -202,8 +202,8 @@ namespace Makrisoft.Makfi.ViewModels
                 if (param)
                 {
                     Utilisateurs.Remove(CurrentUtilisateur);
-                    Reference_ViewModel.Hotel.GouvernanteListLoad();
-                    Reference_ViewModel.Hotel.ReceptionListLoad();
+                    Reference_ViewModel.Hotel.Gouvernante_Load();
+                    Reference_ViewModel.Hotel.Reception_Load();
                 }
             }
             else

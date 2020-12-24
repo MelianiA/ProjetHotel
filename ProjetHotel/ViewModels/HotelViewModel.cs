@@ -15,15 +15,14 @@ namespace Makrisoft.Makfi.ViewModels
         public HotelViewModel()
         {
             // Icommand
-            HotelModifiedSaveCommand = new RelayCommand(p => OnSaveCommand(), p => OnCanExecuteSaveCommand());
-            HotelSelectedAddCommand = new RelayCommand(p => OnAddCommand(), p => OnCanExecuteAddCommand());
-            HotelSelectedDeleteCommand = new RelayCommand(p => OnDeleteCommand(), p => OnCanExecuteDeleteCommand());
+            HotelSaveCommand = new RelayCommand(p => OnHotelSaveCommand(), p => OnCanExecuteHotelSaveCommand());
+            HotelAddCommand = new RelayCommand(p => OnHotelAddCommand(), p => OnCanExecuteHotelAddCommand());
+            HotelDeleteCommand = new RelayCommand(p => OnHotelDeleteCommand(), p => OnCanExecuteHotelDeleteCommand());
 
             // ListeView
             Hotel_Load();
-            GouvernanteListLoad();
-            ReceptionListLoad();
-
+            Gouvernante_Load();
+            Reception_Load();
         }
         #endregion
 
@@ -51,8 +50,8 @@ namespace Makrisoft.Makfi.ViewModels
             set
             {
                 currentHotel = value;
-                if (currentHotel == null) IsEnabled = false;
-                else IsEnabled = true;
+                if (currentHotel == null) IsModifierEnabled = false;
+                else IsModifierEnabled = true;
                 OnPropertyChanged("CurrentHotel");
             }
         }
@@ -64,55 +63,55 @@ namespace Makrisoft.Makfi.ViewModels
         }
         private ListCollectionView hotelCollectionView;
 
-        //IsEnabled
-        public bool IsEnabled
+        //IsModifierEnabled
+        public bool IsModifierEnabled
         {
-            get { return isEnabled; }
+            get { return isModifierEnabled; }
             set
             {
-                isEnabled = value;
-                OnPropertyChanged("IsEnabled");
+                isModifierEnabled = value;
+                OnPropertyChanged("IsModifierEnabled");
             }
         }
-        private bool isEnabled;
+        private bool isModifierEnabled;
 
         //Gouvernante
-        public ObservableCollection<Utilisateur_VM> GouvernanteList
+        public ObservableCollection<Utilisateur_VM> Gouvernantes
         {
-            get { return gouvernanteList; }
+            get { return gouvernantes; }
             set
             {
-                gouvernanteList = value;
-                OnPropertyChanged("GouvernanteList");
+                gouvernantes = value;
+                OnPropertyChanged("Gouvernantes");
 
             }
         }
-        private ObservableCollection<Utilisateur_VM> gouvernanteList;
+        private ObservableCollection<Utilisateur_VM> gouvernantes;
 
 
         //Reception
-        public ObservableCollection<Utilisateur_VM> ReceptionList
+        public ObservableCollection<Utilisateur_VM> Receptions
         {
-            get { return receptionList; }
+            get { return receptions; }
             set
             {
-                receptionList = value;
-                OnPropertyChanged("ReceptionList");
+                receptions = value;
+                OnPropertyChanged("Receptions");
 
             }
         }
-        private ObservableCollection<Utilisateur_VM> receptionList;
+        private ObservableCollection<Utilisateur_VM> receptions;
 
         #endregion
 
         #region Commands
         //ICommand
-        public ICommand HotelModifiedSaveCommand { get; set; }
-        public ICommand HotelSelectedAddCommand { get; set; }
-        public ICommand HotelSelectedDeleteCommand { get; set; }
+        public ICommand HotelSaveCommand { get; set; }
+        public ICommand HotelAddCommand { get; set; }
+        public ICommand HotelDeleteCommand { get; set; }
 
         // Méthodes OnCommand
-        private void OnSaveCommand()
+        private void OnHotelSaveCommand()
         {
             if (CurrentHotel.Nom == null )
             {
@@ -138,13 +137,13 @@ namespace Makrisoft.Makfi.ViewModels
             Hotel_Load();
             CurrentHotel = Hotels.Where(u => u.Id == ids[0].Id).SingleOrDefault();
         }
-        private void OnAddCommand()
+        private void OnHotelAddCommand()
         {
             CurrentHotel = new Hotel_VM { Nom = "(A définir)" };
             Hotels.Add(CurrentHotel);
             HotelCollectionView.Refresh();
         }
-        private void OnDeleteCommand()
+        private void OnHotelDeleteCommand()
         {
             var canDeletes = MakfiData.Hotel_CanDelete($"<hotel><id>{CurrentHotel.Id}</id></hotel>");
             if (canDeletes.Count() == 0)
@@ -165,7 +164,7 @@ namespace Makrisoft.Makfi.ViewModels
         }
 
         // Méthodes OnCanExecuteCommand
-        private bool OnCanExecuteSaveCommand()
+        private bool OnCanExecuteHotelSaveCommand()
         {
             if (CurrentHotel != null)
             {
@@ -177,11 +176,11 @@ namespace Makrisoft.Makfi.ViewModels
             }
 
         }
-        private bool OnCanExecuteAddCommand()
+        private bool OnCanExecuteHotelAddCommand()
         {
             return true;
         }
-        private bool OnCanExecuteDeleteCommand()
+        private bool OnCanExecuteHotelDeleteCommand()
         {
             if (CurrentHotel != null)
             {
@@ -215,15 +214,15 @@ namespace Makrisoft.Makfi.ViewModels
             HotelCollectionView.Refresh();
 
         }
-        public void GouvernanteListLoad()
+        public void Gouvernante_Load()
         {
-            GouvernanteList = new ObservableCollection<Utilisateur_VM>(
+            Gouvernantes = new ObservableCollection<Utilisateur_VM>(
                 Reference_ViewModel.Utilisateur.Utilisateurs
                 .Where(u => u.Statut == RoleEnum.Gouvernante));
         }
-        public void ReceptionListLoad()
+        public void Reception_Load()
         {
-            ReceptionList = new ObservableCollection<Utilisateur_VM>(
+            Receptions = new ObservableCollection<Utilisateur_VM>(
                 Reference_ViewModel.Utilisateur.Utilisateurs
                 .Where(u => u.Statut == RoleEnum.Reception));
         }

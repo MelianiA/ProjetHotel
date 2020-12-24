@@ -76,7 +76,7 @@ namespace Makrisoft.Makfi
                 simpleMsg = "Une unité doit être spécifiée";
 
             Dispatcher.BeginInvoke(new Action(() => System.Windows.MessageBox.Show(simpleMsg, spName)));
-            Log.WriteLog($"{spName}{Environment.NewLine}{exceptionMsg}{Environment.NewLine}{spParams}");
+            Console.WriteLine($"{spName}{Environment.NewLine}{exceptionMsg}{Environment.NewLine}{spParams}");
         }
     }
 }

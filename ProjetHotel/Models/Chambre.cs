@@ -13,6 +13,5 @@ namespace Makrisoft.Makfi.Models
         public Etat Etat;
         public string Commentaire;
         public Hotel Hotel;
-
     }
 }

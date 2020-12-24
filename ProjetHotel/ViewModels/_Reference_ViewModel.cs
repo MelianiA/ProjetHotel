@@ -18,15 +18,12 @@ namespace Makrisoft.Makfi.ViewModels
         public static HotelViewModel Hotel;
         public static EmployeViewModel Employe;
         public static ChambreViewModel Chambre;
-        public static ChambreGroupeViewModel ChambreGroupe;
+        public static EtageViewModel ChambreGroupe;
         public static InterventionViewModel Intervention;
         public static InterventionDetailViewModel InterventionDetail;
-        public static InterventionAjouterModel InterventionAjouter;
-        public static InterventionSupprimerModel InterventionSupprimer ;
+        public static InterventionAjouterViewModel InterventionAjouter;
+        public static InterventionSupprimerViewModel InterventionSupprimer ;
         public static MessageViewModel Message;
         public static ParametreViewModel Parametre;
-
-
-
     }
 }
