@@ -183,3 +183,5 @@ C:\Users\alyf\Source\Repos\meliania\ProjetHotel\ProjetHotel\obj\Debug\Makrisoft.
 C:\Users\alyf\Source\Repos\meliania\ProjetHotel\ProjetHotel\obj\Debug\Makrisoft.Makfi.pdb
 C:\Users\alyf\Source\Repos\meliania\ProjetHotel\ProjetHotel\obj\Debug\Views\MessageView.g.cs
 C:\Users\alyf\Source\Repos\meliania\ProjetHotel\ProjetHotel\obj\Debug\Views\MessageView.baml
+C:\Users\alyf\Source\Repos\meliania\ProjetHotel\ProjetHotel\obj\Debug\Views\ParametreView.g.cs
+C:\Users\alyf\Source\Repos\meliania\ProjetHotel\ProjetHotel\obj\Debug\Views\ParametreView.baml

@@ -58,10 +58,10 @@
                         <Separator/>
 
 
-                        <MenuItem Header="Ajouter en bloc" Foreground="Navy" 
+                        <MenuItem Header="Tout ajoûter" Foreground="Navy" 
                                   Command="{Binding InterventionDetailSelectedAddCommand}"/>
 
-                        <MenuItem Header="Supprimer en bloc" Foreground="Navy" 
+                        <MenuItem Header="Tout supprimer" Foreground="Navy" 
                                   Command="{Binding InterventionDetailSelectedDeleteCommand}"/>
                         <Separator/>
                         <MenuItem Header="Enregistrer tout" Foreground="Navy" 

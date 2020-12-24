@@ -27,7 +27,7 @@
         <Border Grid.Row="0" Grid.Column="0" BorderBrush="Navy" BorderThickness="0,0,0,1" Margin="20,0,0,5"></Border>
         <!--Intervention du-->
         <Border Grid.Row="0" Grid.Column="1" BorderBrush="Navy" BorderThickness="0,0,0,1" Margin="5">
-            <TextBlock Text="Supprimer en bloc" FontSize="22" Foreground="Navy"/>
+            <TextBlock Text="Tout supprimer" FontSize="22" Foreground="Navy"/>
 
         </Border>
         <!--Modifier-->

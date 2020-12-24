@@ -44,8 +44,8 @@
                 <Menu Grid.Column="1" Cursor="Hand" Margin="0">
                     <MenuItem Header="..." Foreground="Navy" FontSize="16">
                         <MenuItem Header="Nouveau message" Foreground="Navy" Command="{Binding AjouterMessage}"/>
-                        <MenuItem Header="Répondre" Foreground="Navy" Command="{Binding RepondreMessage}"/>
-                        <MenuItem Header="Supprimer" Foreground="Navy" Command="{Binding SupprimerMessage}"/>
+                        <MenuItem Header="Répondre ou transférer" Foreground="Navy" Command="{Binding RepondreMessage}"/>
+                        <MenuItem Header="Archiver" Foreground="Navy" Command="{Binding SupprimerMessage}"/>
                         <Separator/>
                         <MenuItem Header="Actualiser" Foreground="Navy" Command="{Binding ActualiserMessage}"/>
 

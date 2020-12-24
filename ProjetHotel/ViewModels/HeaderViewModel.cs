@@ -300,6 +300,9 @@ namespace Makrisoft.Makfi.ViewModels
 
                     Reference_ViewModel.Main.ViewSelected = LastView;
                     break;
+                case ViewEnum.Parametre:
+                    Reference_ViewModel.Main.ViewSelected = ViewEnum.Administration;
+                    break;
             }
         }
         private void OnDeconnectCommand()

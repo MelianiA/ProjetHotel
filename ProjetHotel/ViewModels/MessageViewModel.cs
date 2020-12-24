@@ -435,18 +435,28 @@ namespace Makrisoft.Makfi.ViewModels
                 var s = new XmlSerializer(typeof(Message_VM));
                 var reader = new StreamReader(file);
                 var message = (Message_VM)s.Deserialize(reader);
-                if (message.Etat.Libelle != "Supprimé")
+                if(Reference_ViewModel.Parametre!=null && Reference_ViewModel.Parametre.VoirMsgArchives)
                 {
-                    if (message.A.Id == Reference_ViewModel.Header.CurrentUtilisateur.Id && message.Etat.Libelle == "Non lu")
-                        message.ColorEtat = "orange";
-                    else
+                    if (message.Etat.Libelle != "Supprimé")
                     {
-                        message.ColorEtat = "black";
+                        if (message.A.Id == Reference_ViewModel.Header.CurrentUtilisateur.Id && message.Etat.Libelle == "Non lu")
+                            message.ColorEtat = "orange";
+                        else
+                        {
+                            message.ColorEtat = "black";
+                        }
+                        message.SaveColor = "Navy";
+                        if (message.De.Id == Reference_ViewModel.Header.CurrentUtilisateur.Id || message.A.Id == Reference_ViewModel.Header.CurrentUtilisateur.Id)
+                            Messages.Add(message);
                     }
+                }
+                else
+                {
                     message.SaveColor = "Navy";
                     if (message.De.Id == Reference_ViewModel.Header.CurrentUtilisateur.Id || message.A.Id == Reference_ViewModel.Header.CurrentUtilisateur.Id)
                         Messages.Add(message);
                 }
+                 
 
                 reader.Close();
             }

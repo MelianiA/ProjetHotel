@@ -47,6 +47,10 @@
                 <Button Grid.Row="0" Grid.Column="4" Content="Les hôtels" Style="{StaticResource Menu}" Command="{Binding ChangeViewCommand}" 
                         CommandParameter="{x:Static data:ViewEnum.Hotel}"/>
 
+                <materialDesign:PackIcon Grid.Row="1" Grid.Column="0"  Height="30" Width="Auto" Kind="Gear" VerticalAlignment="Center"/>
+                <Button Grid.Row="1" Grid.Column="1" Content="Les paramètres" Style="{StaticResource Menu}" Command="{Binding ChangeViewCommand}" 
+                        CommandParameter="{x:Static data:ViewEnum.Parametre}"/>
+
                 <!--
                 <materialDesign:PackIcon Grid.Row="1" Grid.Column="0" Height="30" Width="Auto" Kind="Gear" VerticalAlignment="Center"/>
                 <Button Grid.Row="1" Grid.Column="1" Content="Les options" Style="{StaticResource Menu}" Command="{Binding ChangeViewCommand}" CommandParameter="{x:Static data:ViewEnum.Option}"/>

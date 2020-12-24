@@ -13,7 +13,7 @@ namespace Makrisoft.Makfi.Dal
     public enum ViewEnum
     {
         Header, Login, Home, Intervention, Chambre, InterventionNew, Employe, Synthese, Administration, ChambreGroupe, InterventionDetail,
-        Utilisateur, None, Hotel,InterventionAjouter, InterventionSupprimer, Message
+        Utilisateur, None, Hotel,InterventionAjouter, InterventionSupprimer, Message, Parametre
     }
     public enum RoleEnum { None = 0, Gouvernante = 1, Reception = 2, Admin = 255 }
     public enum EntiteEnum { Employe = 1, Chambre = 2, Intervention = 3, InterventionDetail=4, Message=5 }
@@ -344,7 +344,7 @@ namespace Makrisoft.Makfi.Dal
         }
 
 
-        private static IEnumerable<Info> Info_Read(string spParam = null)
+        public static IEnumerable<Info> Info_Read(string spParam = null)
         {
             return ReadAll<Info>
                                     (

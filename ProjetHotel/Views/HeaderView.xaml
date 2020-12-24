@@ -17,6 +17,9 @@
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="220"/>
             </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="160"/>
+            </Grid.RowDefinitions>
             <!--Gauche-->
             <Border BorderBrush="Navy" BorderThickness="1" CornerRadius="15" Width="210" HorizontalAlignment="Right">
                 <DockPanel Margin="5">
@@ -35,7 +38,6 @@
                     <Grid.RowDefinitions>
                         <RowDefinition Height="40"/>
                         <RowDefinition Height="*"/>
-                        <RowDefinition Height="40"/>
                     </Grid.RowDefinitions>
                     <!--Heure-->
                     <Border Background="Navy" Margin="20,0,20,0">
@@ -61,13 +63,20 @@
                         </Grid>
                     </Border>
                     <!--Messagerie-->
-                    <StackPanel Grid.Row="1" Margin="20,0,20,0">
-                        <Border BorderBrush="Navy" BorderThickness="0,0,0,1" Grid.ColumnSpan="2">
+                    <Grid Grid.Row="1" Margin="20,0,20,0">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <Border BorderBrush="Navy" BorderThickness="0,0,0,1">
                             <Grid>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="*"/>
                                     <ColumnDefinition Width="Auto"/>
                                 </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="40"/>
+                                </Grid.RowDefinitions>
                                 <TextBlock Text="Messagerie" Foreground="Navy" FontSize="20" VerticalAlignment="Bottom"/>
                                 <Menu Grid.Column="1" Background="White" Cursor="Hand" Visibility="{Binding MenuVisibility}">
                                     <MenuItem Header="..." Foreground="Navy" FontSize="22">
@@ -76,9 +85,10 @@
                                 </Menu>
                             </Grid>
                         </Border>
-                        <DataGrid ItemsSource="{Binding MessagesCollectionView }"  SelectedItem="{Binding CurrentMessage}" GridLinesVisibility="None"  HeadersVisibility="None" 
+                        <DataGrid Grid.Row="1" ItemsSource="{Binding MessagesCollectionView }"  SelectedItem="{Binding CurrentMessage}" 
+                                  GridLinesVisibility="None"  HeadersVisibility="None" 
                                   AutoGenerateColumns="False"  IsReadOnly="True" VerticalScrollBarVisibility="Visible"
-                                  AlternatingRowBackground="White" BorderBrush="White" Height="50" Visibility="{Binding MessagesVisibility}" >
+                                  AlternatingRowBackground="White" BorderBrush="White" Visibility="{Binding MessagesVisibility}" >
                             <DataGrid.Columns>
 
                                 <DataGridTextColumn Binding="{Binding De.Nom}"  FontWeight="Normal" Width="Auto" IsReadOnly="True" Foreground="{Binding ColorEtat}"/>
@@ -110,7 +120,7 @@
                                 </Style>
                             </DataGrid.CellStyle>
                         </DataGrid>
-                    </StackPanel>
+                    </Grid>
                     <!--Erreur-->
                     <!--<ScrollViewer Grid.Row="2" Margin="20,0,20,0" VerticalScrollBarVisibility="Auto">
                         <TextBlock Text="{Binding Message}" Foreground="Red" FontSize="18"  

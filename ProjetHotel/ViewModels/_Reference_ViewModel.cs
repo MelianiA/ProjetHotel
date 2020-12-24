@@ -24,6 +24,7 @@ namespace Makrisoft.Makfi.ViewModels
         public static InterventionAjouterModel InterventionAjouter;
         public static InterventionSupprimerModel InterventionSupprimer ;
         public static MessageViewModel Message;
+        public static ParametreViewModel Parametre;
 
 
 
