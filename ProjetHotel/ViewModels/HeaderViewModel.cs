@@ -97,7 +97,11 @@ namespace Makrisoft.Makfi.ViewModels
 
                 }
                 if (string.IsNullOrEmpty(currentUtilisateur.CodePin))
+                {
+                    Reference_ViewModel.Header.messagerieVisibility = Visibility.Hidden;
                     Message = "Tapez votre code pin";
+                }
+                
                 OnPropertyChanged("CurrentUtilisateur");
             }
         }
@@ -209,6 +213,16 @@ namespace Makrisoft.Makfi.ViewModels
             }
         }
         private Message_VM currentMessage;
+        public Visibility MessagerieVisibility
+        {
+            get { return messagerieVisibility; }
+            set
+            {
+                messagerieVisibility = value;
+                OnPropertyChanged("MessagerieVisibility");
+            }
+        }
+        private Visibility messagerieVisibility = Visibility.Visible;
 
         #endregion
 

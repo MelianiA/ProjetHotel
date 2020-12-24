@@ -25,6 +25,7 @@ namespace Makrisoft.Makfi.ViewModels
         {
             if (Reference_ViewModel.Header.CurrentUtilisateur == null)
             {
+                Reference_ViewModel.Header.MessagerieVisibility = Visibility.Hidden;
                 Reference_ViewModel.Header.Message = "Redémarrage nécessaire";
                 return;
             }
@@ -54,6 +55,7 @@ namespace Makrisoft.Makfi.ViewModels
                  
                 if (password == MakfiData.PasswordChange && Reference_ViewModel.Header.CurrentUtilisateur.Statut == RoleEnum.Gouvernante)
                 {
+                    Reference_ViewModel.Header.MessagerieVisibility = Visibility.Hidden;
                     Reference_ViewModel.Header.Message = "Nouveau code pin";
                     password = "";
                 }
@@ -61,6 +63,7 @@ namespace Makrisoft.Makfi.ViewModels
                 {
                     if (Password == Reference_ViewModel.Header.CurrentUtilisateur.CodePin)
                     {
+                        Reference_ViewModel.Header.MessagerieVisibility = Visibility.Visible;
                         Reference_ViewModel.Main.ViewSelected = ViewEnum.Home;
                         Reference_ViewModel.Header.CanChangeUtilisateur = false;
                         Reference_ViewModel.Home.IsAdmin = Reference_ViewModel.Header.CurrentUtilisateur.IsAdmin;
