@@ -62,12 +62,15 @@
                             </Menu>
                         </Grid>
                     </Border>
+                    <!--Message -->
+                    <TextBlock Grid.Row="1" Text="{Binding Message}"   Background="White" Foreground="red" FontSize="16"  Margin="20,0,20,0" TextWrapping="wrap" 
+                               HorizontalAlignment="Center"  VerticalAlignment="Center"/>
                     <!--Messagerie-->
-                    <Grid Grid.Row="1" Margin="20,0,20,0">
+                    <Grid Grid.Row="1" Margin="20,0,20,0" Visibility="{Binding MessagerieVisibility}">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="*"/>
-                        </Grid.RowDefinitions>
+                         </Grid.RowDefinitions>
                         <Border BorderBrush="Navy" BorderThickness="0,0,0,1">
                             <Grid>
                                 <Grid.ColumnDefinitions>
@@ -120,14 +123,9 @@
                                 </Style>
                             </DataGrid.CellStyle>
                         </DataGrid>
-                    </Grid>
-                    <!--Erreur-->
-                    <!--<ScrollViewer Grid.Row="2" Margin="20,0,20,0" VerticalScrollBarVisibility="Auto">
-                        <TextBlock Text="{Binding Message}" Foreground="Red" FontSize="18"  
-                               TextAlignment="Center" TextWrapping="Wrap" FontWeight="ExtraBold" VerticalAlignment="Bottom">
                          
-                        </TextBlock>
-                    </ScrollViewer>-->
+                    </Grid>
+                   
                 </Grid>
             </Border>
             <!--Droite-->
