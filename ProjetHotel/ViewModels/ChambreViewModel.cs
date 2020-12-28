@@ -135,7 +135,7 @@ namespace Makrisoft.Makfi.ViewModels
         private ListCollectionView etatChambreCollectionView;
 
         //Filter
-        public Etat_VM CurrentFilterEtat
+        public Etat_VM FilterEtat
         {
             get
             {
@@ -146,7 +146,7 @@ namespace Makrisoft.Makfi.ViewModels
                 currentFilterEtat = value;
                 if (ChambreCollectionView != null)
                     ChambreCollectionView.Filter = FilterChambres;
-                OnPropertyChanged("CurrentFilterEtat");
+                OnPropertyChanged("FilterEtat");
             }
         }
         private Etat_VM currentFilterEtat;
@@ -236,7 +236,7 @@ namespace Makrisoft.Makfi.ViewModels
         }
         private void OnFilterClearCommand()
         {
-            CurrentFilterEtat = null;
+            FilterEtat = null;
             CurrentFilterGroupe = null;
         }
 
@@ -254,19 +254,19 @@ namespace Makrisoft.Makfi.ViewModels
         }
         private bool OnCanExecuteFilterClearCommand()
         {
-            if (CurrentFilterEtat != null || CurrentFilterGroupe != null) return true;
+            if (FilterEtat != null || CurrentFilterGroupe != null) return true;
             else return false;
         }
 
         // Divers
         public bool FilterChambres(object item)
         {
-            if (CurrentFilterGroupe != null && CurrentFilterEtat != null)
+            if (CurrentFilterGroupe != null && FilterEtat != null)
             {
                 if (item is ChambreGroupeChambre_VM chambre && chambre.GroupeChambre != null)
                 {
                     var tab = chambre.GroupeChambre.Split(new string[] { ", " }, StringSplitOptions.RemoveEmptyEntries);
-                    return (GroupeChambre.Any(gc => tab.Contains(CurrentFilterGroupe.Nom)) && EtatChambre.Any(e => chambre.Etat.Libelle == CurrentFilterEtat.Libelle));
+                    return (GroupeChambre.Any(gc => tab.Contains(CurrentFilterGroupe.Nom)) && EtatChambre.Any(e => chambre.Etat.Libelle == FilterEtat.Libelle));
                 }
             }
             if (CurrentFilterGroupe != null)
@@ -280,11 +280,11 @@ namespace Makrisoft.Makfi.ViewModels
                 }
                 return false;
             }
-            if (CurrentFilterEtat != null)
+            if (FilterEtat != null)
             {
                 if (item is ChambreGroupeChambre_VM chambre)
                 {
-                    return EtatChambre.Any(e => chambre.Etat.Libelle == CurrentFilterEtat.Libelle);
+                    return EtatChambre.Any(e => chambre.Etat.Libelle == FilterEtat.Libelle);
                 }
                 return false;
             }
@@ -329,7 +329,7 @@ namespace Makrisoft.Makfi.ViewModels
              }).ToList());
             EtageCollectionView = new ListCollectionView(GroupeChambre);
             EtageCollectionView.Refresh();
-            CurrentFilterEtat = null;
+            FilterEtat = null;
             CurrentFilterGroupe = null;
         }
         private void Load_EtatChambre()

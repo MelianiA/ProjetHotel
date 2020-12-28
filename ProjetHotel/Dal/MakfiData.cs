@@ -22,6 +22,8 @@ namespace Makrisoft.Makfi.Dal
     {
         public static string PasswordAdmin;
         public static string PasswordChange;
+        public static List<Etat_VM> Etats;
+
         #region Constructeur
         private static Action<string, string, string> OnError;
         public static string Init(string connectionString, Action<string, string, string> onError)
@@ -39,6 +41,17 @@ namespace Makrisoft.Makfi.Dal
             PasswordAdmin = infoList.Where(i => i.Cle == "PasswordAdmin").Select(i => i.Valeur).FirstOrDefault();
             PasswordChange = infoList.Where(i => i.Cle == "PasswordChange").Select(i => i.Valeur).FirstOrDefault();
             if (infoList.Count == 0) return "probleme";
+
+            Etats = MakfiData.Etat_Read()
+                  .Select(x => new Etat_VM
+                  {
+                      Id = x.Id,
+                      Libelle = x.Libelle,
+                      Icone = x.Icone,
+                      Couleur = x.Couleur,
+                      Entite = x.Entite
+                  }).ToList();
+
             return "";
         }
  
@@ -234,7 +247,7 @@ namespace Makrisoft.Makfi.Dal
                              {
                                  e.Id = (Guid)Reader["Id"];
                                  e.Nom = Reader["Nom"] as string;
-                                // e.Etat = new Etat { Id = (Guid)Reader["Etat"] };
+                                 e.Etat = new Etat { Id = (Guid)Reader["Etat"] };
                                  e.Commentaire = Reader["Commentaire"] as string;
                              },
                              spParam
@@ -368,8 +381,8 @@ namespace Makrisoft.Makfi.Dal
                                      e =>
                                      {
                                          e.Id = (Guid)Reader["Id"];
-                                         e.Employe = (Guid)Reader["EmployeAffecte"];
-                                         e.Chambre = (Guid)Reader["ChambreAffectee"];
+                                         e.Employe = new Employe { Id = (Guid)Reader["EmployeAffecte"], Nom = Reader["EmployeNom"] as string, Prenom = Reader["EmployePrenom"] as string };
+                                         e.Chambre = new Chambre { Id = (Guid)Reader["ChambreAffectee"], Nom = Reader["ChambreNom"] as string };
                                          e.Etat = (Guid)Reader["Etat"];
                                          e.Commentaire= Reader["Commentaire"] as string;
                                      },

@@ -10,7 +10,7 @@ namespace Makrisoft.Makfi.Models
     {
         public Guid Id;
 
-        public Guid Employe
+        public Employe Employe
         {
             get { return employe; }
             set
@@ -18,9 +18,9 @@ namespace Makrisoft.Makfi.Models
                 employe = value;
             }
         }
-        private Guid employe;
+        private Employe employe;
 
-        public Guid Chambre
+        public Chambre Chambre
         {
             get { return chambre; }
             set
@@ -28,7 +28,7 @@ namespace Makrisoft.Makfi.Models
                 chambre = value;
             }
         }
-        private Guid chambre;
+        private Chambre chambre;
 
         public string Commentaire
         {

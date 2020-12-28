@@ -76,7 +76,6 @@ namespace Makrisoft.Makfi.ViewModels
             {
                 Reference_ViewModel.Intervention.OnAddCommand();
                 Reference_ViewModel.Intervention.OnSaveCommand();
-                Reference_ViewModel.InterventionDetail.CurrentIntervention = Reference_ViewModel.Intervention.CurrentIntervention;
             }
 
             Reference_ViewModel.Main.ViewSelected = (ViewEnum)view;
@@ -91,14 +90,14 @@ namespace Makrisoft.Makfi.ViewModels
 
         public void ButtonInterventionDuJour()
         {
-            Intervention_VM i = null;
-            if (Reference_ViewModel.Intervention.Interventions != null)
-                NbrControle = Reference_ViewModel.Intervention.Interventions.Where(x => x.Etat.Libelle != "Terminée").Count().ToString();
-            var itervDispo = Reference_ViewModel.Intervention.Interventions.Where(x => x.Etat.Libelle != "Terminée").ToList();
+            Intervention_VM intervention = null;
+            if (Reference_ViewModel.Intervention.DgSource != null)
+                NbrControle = Reference_ViewModel.Intervention.DgSource.Where(x => x.Etat !=null &&  x.Etat.Libelle != "Terminée").Count().ToString();
+            var itervDispo = Reference_ViewModel.Intervention.DgSource.Where(x => x.Etat != null && x.Etat.Libelle != "Terminée").ToList();
             if (itervDispo.Count() > 0)
             {
-                i = itervDispo[0];
-                DerniereIntervention = "Intervention du " + i.Date1.ToString("dddd dd MMMM", CultureInfo.CurrentCulture);
+                intervention = itervDispo[0];
+                DerniereIntervention = "Intervention du " + intervention.Date1.ToString("dddd dd MMMM", CultureInfo.CurrentCulture);
                 EtatControle = "Contrôle";
             }
             else
@@ -107,8 +106,8 @@ namespace Makrisoft.Makfi.ViewModels
                 EtatControle = "Intervention du jour";
             }
 
-            Reference_ViewModel.Intervention.CurrentIntervention = Reference_ViewModel.InterventionDetail.CurrentIntervention = i;
-            Reference_ViewModel.InterventionDetail.Load_InterventionDetail();
+            Reference_ViewModel.Intervention.CurrentDgSource = intervention;
+            Reference_ViewModel.InterventionDetail.Load_DgSource();
         }
 
         #endregion

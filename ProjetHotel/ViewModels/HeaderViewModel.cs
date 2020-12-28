@@ -250,11 +250,11 @@ namespace Makrisoft.Makfi.ViewModels
                     break;
 
                 case ViewEnum.Employe:
-                    Reference_ViewModel.InterventionDetail.Load_InterventionDetail();
+                    Reference_ViewModel.InterventionDetail.Load_DgSource();
                     Reference_ViewModel.Main.ViewSelected = Dal.ViewEnum.Home;
                     break;
                 case ViewEnum.Chambre:
-                    Reference_ViewModel.InterventionDetail.Load_InterventionDetail();
+                    Reference_ViewModel.InterventionDetail.Load_DgSource();
                     Reference_ViewModel.Main.ViewSelected = Dal.ViewEnum.Home;
                     break;
                 case ViewEnum.ChambreGroupe:
@@ -267,25 +267,25 @@ namespace Makrisoft.Makfi.ViewModels
                 case ViewEnum.InterventionDetail:
 
                     /********mettre à jour l'etat de l'intervention dans la base de données********/
-                    Guid? monID = null;
-                    if (Reference_ViewModel.Intervention.CurrentIntervention.Id != default) monID = Reference_ViewModel.Intervention.CurrentIntervention.Id;
-                    var param = $@"
-                            <intervention>
-                                <id>{monID}</id>
-                                <libelle>{Reference_ViewModel.Intervention.CurrentIntervention.Libelle}</libelle>
-                                <commentaire>{Reference_ViewModel.Intervention.CurrentIntervention.Commentaire}</commentaire>    
-						        <hotel>{Reference_ViewModel.Header.CurrentHotel.Id}</hotel>
-                                <date1>{Reference_ViewModel.Intervention.CurrentIntervention.Date1}</date1>    
-                                <model>{Reference_ViewModel.Intervention.CurrentIntervention.Model}</model>   
-                                <etat>{Reference_ViewModel.InterventionDetail.GetSommeEtats().Id}</etat> 
-                             </intervention>";
-                    var ids = MakfiData.Intervention_Save(param);
-                    if (ids.Count == 0) throw new Exception("Rien n'a été sauvgardé ! ");
+              //      Guid? monID = null;
+              //      if (Reference_ViewModel.Intervention.CurrentDgSource.Id != default) monID = Reference_ViewModel.Intervention.CurrentDgSource.Id;
+              //      var param = $@"
+              //              <intervention>
+              //                  <id>{monID}</id>
+              //                  <libelle>{Reference_ViewModel.Intervention.CurrentDgSource.Libelle}</libelle>
+              //                  <commentaire>{Reference_ViewModel.Intervention.CurrentDgSource.Commentaire}</commentaire>    
+						        //<hotel>{Reference_ViewModel.Header.CurrentHotel.Id}</hotel>
+              //                  <date1>{Reference_ViewModel.Intervention.CurrentDgSource.Date1}</date1>    
+              //                  <model>{Reference_ViewModel.Intervention.CurrentDgSource.Model}</model>   
+              //                  <etat>{Reference_ViewModel.InterventionDetail.GetSommeEtats().Id}</etat> 
+              //               </intervention>";
+              //      var ids = MakfiData.Intervention_Save(param);
+              //      if (ids.Count == 0) throw new Exception("Rien n'a été sauvgardé ! ");
                     /************************************************************************/
-                    if (Reference_ViewModel.Intervention.RevienIci == true)
+                    if (Reference_ViewModel.Intervention.RevientIci == true)
                     {
                         Reference_ViewModel.Main.ViewSelected = Dal.ViewEnum.Intervention;
-                        Reference_ViewModel.Intervention.RevienIci = false;
+                        Reference_ViewModel.Intervention.RevientIci = false;
                     }
                     else
                     {
@@ -340,7 +340,7 @@ namespace Makrisoft.Makfi.ViewModels
                 return !Reference_ViewModel.InterventionDetail.OnCanExecuteMenuSaveAllCommand();
 
             if (Reference_ViewModel.Main.ViewSelected == ViewEnum.Intervention)
-                return !Reference_ViewModel.Intervention.Interventions.Any(x => x.SaveColor == "Red");
+                return !Reference_ViewModel.Intervention.DgSource.Any(x => x.SaveColor == "Red");
 
             if (Reference_ViewModel.Main.ViewSelected == ViewEnum.Employe)
                 return !Reference_ViewModel.Employe.Employes.Any(x => x.SaveColor == "Red");

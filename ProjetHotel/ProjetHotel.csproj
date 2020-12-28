@@ -130,6 +130,7 @@
     <Compile Include="ViewModels\InterventionViewModel.cs" />
     <Compile Include="ViewModels\MessageViewModel.cs" />
     <Compile Include="ViewModels\ParametreViewModel.cs" />
+    <Compile Include="ViewModels\ViewModel.cs" />
     <Compile Include="ViewModels\_Reference_ViewModel.cs" />
     <Compile Include="ViewModels\HeaderViewModel.cs" />
     <Compile Include="ViewModels\LoginViewModel.cs" />

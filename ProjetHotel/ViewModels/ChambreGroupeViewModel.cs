@@ -93,15 +93,15 @@ namespace Makrisoft.Makfi.ViewModels
         // Méthodes OnCommand
         private void OnEtageAjouterChambreCommand()
         {
-            CurrentEtage.Chambres.Add(CurrentEtage.CurrentNotChambreCG);
-            CurrentEtage.AutresChambres.Remove(CurrentEtage.CurrentNotChambreCG);
-            CurrentEtage.SaveColor = "Red";
+            //CurrentEtage.Chambres.Add(CurrentEtage.CurrentNotChambreCG);
+            //CurrentEtage.AutresChambres.Remove(CurrentEtage.CurrentNotChambreCG);
+            //CurrentEtage.SaveColor = "Red";
         }
         private void OnEtageSupprimerChambreCommand()
         {
-            CurrentEtage.AutresChambres.Add(CurrentEtage.CurrentChambreCG);
-            CurrentEtage.Chambres.Remove(CurrentEtage.CurrentChambreCG);
-            CurrentEtage.SaveColor = "Red";
+            //CurrentEtage.AutresChambres.Add(CurrentEtage.CurrentChambreCG);
+            //CurrentEtage.Chambres.Remove(CurrentEtage.CurrentChambreCG);
+            //CurrentEtage.SaveColor = "Red";
         }
         private void OnEtageSaveCommand()
         {
@@ -140,7 +140,7 @@ namespace Makrisoft.Makfi.ViewModels
             {
                 param = $@"
                     <chambreGroupeChambre>
-                        <chambre>{item.IdDelaChambre}</chambre>
+                        <chambre>{item.Id}</chambre>
                         <groupeChambre>{ids[0].Id}</groupeChambre>    
                       </chambreGroupeChambre>";
                 var ids2 = MakfiData.ChambreGroupeChambre_Save(param);
@@ -244,23 +244,23 @@ namespace Makrisoft.Makfi.ViewModels
         }
         public void Load_ChambresByEtage()
         {
-            if (CurrentEtage != null)
-            {
-                CurrentEtage.Chambres = new ObservableCollection<ChambreByEtage_VM>(
-                    AllChambres.Where(c => c.GroupeChambre == CurrentEtage.Id)
-                    );
-                CurrentEtage.ChambresListview = new ListCollectionView(CurrentEtage.Chambres);
-                CurrentEtage.ChambresListview.Refresh();
+            //if (CurrentEtage != null)
+            //{
+            //    CurrentEtage.Chambres = new ObservableCollection<ChambreByEtage_VM>(
+            //        AllChambres.Where(c => c.GroupeChambre == CurrentEtage.Id)
+            //        );
+            //    CurrentEtage.ChambresListview = new ListCollectionView(CurrentEtage.Chambres);
+            //    CurrentEtage.ChambresListview.Refresh();
 
-                if (CurrentEtage.AutresChambres != null) CurrentEtage.AutresChambres.Clear();
-                CurrentEtage.AutresChambres = new ObservableCollection<ChambreByEtage_VM>(
-                  AllChambres.Where(c => c.GroupeChambre != CurrentEtage.Id && !CurrentEtage.Chambres.Any(a => a.IdDelaChambre == c.IdDelaChambre))
-                            .Select(x => new ChambreByEtage_VM { IdDelaChambre = x.IdDelaChambre, NomChambre = x.NomChambre })
-                            .GroupBy(g => g.IdDelaChambre, g => g.NomChambre, (Key, g) => new ChambreByEtage_VM { IdDelaChambre = Key, NomChambre = g.ToList().ElementAt(0) })
-                  );
-                CurrentEtage.AutresChambresListview = new ListCollectionView(CurrentEtage.AutresChambres);
-                CurrentEtage.AutresChambresListview.Refresh();
-            }
+            //    if (CurrentEtage.AutresChambres != null) CurrentEtage.AutresChambres.Clear();
+            //    CurrentEtage.AutresChambres = new ObservableCollection<ChambreByEtage_VM>(
+            //      AllChambres.Where(c => c.GroupeChambre != CurrentEtage.Id && !CurrentEtage.Chambres.Any(a => a.Id == c.IdDelaChambre))
+            //                .Select(x => new ChambreByEtage_VM { IdDelaChambre = x.IdDelaChambre, NomChambre = x.NomChambre })
+            //                .GroupBy(g => g.IdDelaChambre, g => g.NomChambre, (Key, g) => new ChambreByEtage_VM { IdDelaChambre = Key, NomChambre = g.ToList().ElementAt(0) })
+            //      );
+            //    CurrentEtage.AutresChambresListview = new ListCollectionView(CurrentEtage.AutresChambres);
+            //    CurrentEtage.AutresChambresListview.Refresh();
+            //}
         }
 
         #endregion

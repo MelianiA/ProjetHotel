@@ -184,33 +184,33 @@ namespace Makrisoft.Makfi.ViewModels
         {
             if (ParEmploye)
             {
-                var employe = Reference_ViewModel.InterventionDetail.InterventionDetails.Where(i => i.Employe.Id == CurentEmploye.Id).ToList();
+                var employe = Reference_ViewModel.InterventionDetail.DgSource.Where(i => i.Employe.Id == CurentEmploye.Id).ToList();
                 foreach (var item in employe)
                 {
                     var param = MakfiData.InterventionDetails_Delete($"<interventionDetails><id>{item.Id}</id></interventionDetails>");
-                    if (param) Reference_ViewModel.InterventionDetail.InterventionDetails.Remove(item);
+                    if (param) Reference_ViewModel.InterventionDetail.DgSource.Remove(item);
                 }
             }
             if (ParGroupeChambre)
             {
-                foreach (var item in Reference_ViewModel.InterventionDetail.InterventionDetails)
+                foreach (var item in Reference_ViewModel.InterventionDetail.DgSource)
                 {
-                    if (CurrentEtage.Chambres.Any(c => c.IdDelaChambre == item.Chambre.Id))
+                    if (CurrentEtage.Chambres.Any(c => c.Id == item.Chambre.Id))
                     {
                         if (!MakfiData.InterventionDetails_Delete($"<interventionDetails><id>{item.Id}</id></interventionDetails>"))
                             throw new Exception();
                     }
                 }
-                Reference_ViewModel.InterventionDetail.Load_InterventionDetail();
+                Reference_ViewModel.InterventionDetail.Load_DgSource();
 
             }
             if (ParChambre)
             {
-                var employe = Reference_ViewModel.InterventionDetail.InterventionDetails.Where(i => i.Chambre.Id == currentChambre.Id).ToList();
+                var employe = Reference_ViewModel.InterventionDetail.DgSource.Where(i => i.Chambre.Id == currentChambre.Id).ToList();
                 foreach (var item in employe)
                 {
                     var param = MakfiData.InterventionDetails_Delete($"<interventionDetails><id>{item.Id}</id></interventionDetails>");
-                    if (param) Reference_ViewModel.InterventionDetail.InterventionDetails.Remove(item);
+                    if (param) Reference_ViewModel.InterventionDetail.DgSource.Remove(item);
                 }
             }
         }
@@ -264,12 +264,12 @@ namespace Makrisoft.Makfi.ViewModels
         }
         public void Load_ChambreCurrentGroupe()
         {
-            if (CurrentEtage != null && AllChambres!=null)
-            {
-                CurrentEtage.Chambres = new ObservableCollection<ChambreByEtage_VM>(
-                    AllChambres.Where(c => c.GroupeChambre == CurrentEtage.Id)
-                    );
-            }
+            //if (CurrentEtage != null && AllChambres!=null)
+            //{
+            //    CurrentEtage.Chambres = new ObservableCollection<ChambreByEtage_VM>(
+            //        AllChambres.Where(c => c.GroupeChambre == CurrentEtage.Id)
+            //        );
+            //}
         }
 
         #endregion

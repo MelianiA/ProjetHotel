@@ -201,27 +201,22 @@ namespace Makrisoft.Makfi.ViewModels
         {
             if (CheckInterventionModel)
             {
-                Guid monId = default;
-                if (CurrentIntervention != null)
-                    monId = CurrentIntervention.Id;
+                Guid? monId = default;
                 var iDetails = new ObservableCollection<InterventionDetail_VM>(
-                    MakfiData.InterventionDetail_Read($"<interventionDetail><intervention>{monId}</intervention></interventionDetail>")
+                    MakfiData.InterventionDetail_Read($"<interventionDetail><intervention>{CurrentIntervention.Id}</intervention></interventionDetail>")
                    .Select(x => new InterventionDetail_VM
                    {
                        Id = x.Id,
-                       Employe = Reference_ViewModel.InterventionDetail.EmployeIntervention.Where(e => e.Id == x.Employe).SingleOrDefault(),
-                       Chambre = Reference_ViewModel.InterventionDetail.ChambreIntervention.Where(c => c.Id == x.Chambre).SingleOrDefault(),
-                       Etat = Reference_ViewModel.InterventionDetail.EtatIntervention.Where(e => e.Id == x.Etat).SingleOrDefault(),
-                       Libelle = Reference_ViewModel.Intervention.CurrentIntervention.Libelle,
+                       Employe = new Employe_VM { Id = x.Employe.Id },
+                       Chambre = new Chambre_VM { Id = x.Chambre.Id },
+                       Etat = MakfiData.Etats.Where(e => e.Id == x.Etat).Single(),
+                       Libelle = Reference_ViewModel.Intervention.CurrentDgSource.Libelle,
                        Commentaire = x.Commentaire,
                        SaveColor = "Red"
                    }).OrderBy(x => x.Libelle).ToList());
+
                 foreach (var item in iDetails)
-                    Reference_ViewModel.InterventionDetail.InterventionDetails.Add(item);
-
-                Reference_ViewModel.InterventionDetail.InterventionDetailsCollectionView =
-                 new ListCollectionView(Reference_ViewModel.InterventionDetail.InterventionDetails);
-
+                    Reference_ViewModel.InterventionDetail.DgSource.Add(item);
             }
 
             if (CheckUnEtageUnEmploye && CurrentEtage != null)
@@ -236,13 +231,13 @@ namespace Makrisoft.Makfi.ViewModels
                 {
                     var inteventionChambreEmploye = new InterventionDetail_VM
                     {
-                        Chambre = new Chambre_VM { Id = item.IdDelaChambre, Nom = item.NomChambre },
+                        Chambre = new Chambre_VM { Id = item.Id, Nom = item.Nom },
                         Employe = CurentEmploye,
-                        Etat = Reference_ViewModel.InterventionDetail.EtatIntervention.Where(e => e.Libelle == "None" && e.Entite == EntiteEnum.InterventionDetail)
+                        Etat = MakfiData.Etats.Where(e => e.Libelle == "None" && e.Entite == EntiteEnum.InterventionDetail)
                         .SingleOrDefault(),
                         SaveColor = "Red"
                     };
-                    Reference_ViewModel.InterventionDetail.InterventionDetails.Add(inteventionChambreEmploye);
+                    Reference_ViewModel.InterventionDetail.DgSource.Add(inteventionChambreEmploye);
                 }
             }
             Reference_ViewModel.Main.ViewSelected = ViewEnum.InterventionDetail;
@@ -304,20 +299,20 @@ namespace Makrisoft.Makfi.ViewModels
                   }).ToList());
 
             //Intervention 
-            if (Reference_ViewModel.Intervention.Interventions != null)
+            if (Reference_ViewModel.Intervention.DgSource != null)
                 Interventions = new ObservableCollection<Intervention_VM>(
-                    Reference_ViewModel.Intervention.Interventions.Where(i => i.Model == true));
+                    Reference_ViewModel.Intervention.DgSource.Where(i => i.Model == true));
             //CurrentIntervention = Interventions.FirstOrDefault();
         }
 
         public void Load_ChambreCurrentGroupe()
         {
-            if (CurrentEtage != null && AllChambres != null)
-            {
-                CurrentEtage.Chambres = new ObservableCollection<ChambreByEtage_VM>(
-                    AllChambres.Where(c => c.GroupeChambre == CurrentEtage.Id)
-                    );
-            }
+            //if (CurrentEtage != null && AllChambres != null)
+            //{
+            //    CurrentEtage.Chambres = new ObservableCollection<Chambre_VM>(
+            //        AllChambres.Where(c => c.GroupeChambre == CurrentEtage.Id)
+            //        );
+            //}
         }
         #endregion
     }

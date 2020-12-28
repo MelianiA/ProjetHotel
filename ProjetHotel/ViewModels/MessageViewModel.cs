@@ -181,7 +181,7 @@ namespace Makrisoft.Makfi.ViewModels
         private ListCollectionView messagesCollectionView;
 
         //Filter
-        public Etat_VM CurrentFilterEtat
+        public Etat_VM FilterEtat
         {
             get { return currentFilterEtat; }
             set
@@ -189,7 +189,7 @@ namespace Makrisoft.Makfi.ViewModels
                 currentFilterEtat = value;
                 if (MessagesCollectionView != null)
                     MessagesCollectionView.Filter = FilterMessages;
-                OnPropertyChanged("CurrentFilterEtat");
+                OnPropertyChanged("FilterEtat");
             }
         }
         private Etat_VM currentFilterEtat;
@@ -318,7 +318,7 @@ namespace Makrisoft.Makfi.ViewModels
         }
         private void OnFilterClearCommand()
         {
-            CurrentFilterEtat = null;
+            FilterEtat = null;
             CurrentFilterUtilisateur = null;
             HistoriqueFilter = false;
         }
@@ -356,7 +356,7 @@ namespace Makrisoft.Makfi.ViewModels
         }
         private bool OnCanExecuteFilterClearCommand()
         {
-            return (CurrentFilterEtat != null || CurrentFilterUtilisateur != null || HistoriqueFilter == true);
+            return (FilterEtat != null || CurrentFilterUtilisateur != null || HistoriqueFilter == true);
         }
         private bool OnCanExecuteRepondreMessageCommand()
         {
@@ -371,22 +371,22 @@ namespace Makrisoft.Makfi.ViewModels
             if (item is Message_VM message)
             {
                 //3filter au meme temps 
-                if ((CurrentMessage != null && HistoriqueFilter == true) && CurrentFilterEtat != null && CurrentFilterUtilisateur != null)
+                if ((CurrentMessage != null && HistoriqueFilter == true) && FilterEtat != null && CurrentFilterUtilisateur != null)
                     return message.Etat.Id == currentFilterEtat.Id && message.A.Id == CurrentFilterUtilisateur.Id && message.MessageInitial == CurrentMessage.MessageInitial;
 
                 //etat et utilisateur 
-                if (CurrentFilterEtat != null && CurrentFilterUtilisateur != null)
+                if (FilterEtat != null && CurrentFilterUtilisateur != null)
                     return message.Etat.Id == currentFilterEtat.Id && message.A.Id == CurrentFilterUtilisateur.Id;
 
                 //etat et historique 
-                if (CurrentFilterEtat != null && (CurrentMessage != null && HistoriqueFilter == true))
+                if (FilterEtat != null && (CurrentMessage != null && HistoriqueFilter == true))
                     return message.Etat.Id == currentFilterEtat.Id && message.MessageInitial == CurrentMessage.MessageInitial;
 
                 //utilisateur et hitorique 
                 if ((CurrentMessage != null && HistoriqueFilter == true) && CurrentFilterUtilisateur != null)
                     return message.A.Id == CurrentFilterUtilisateur.Id && message.MessageInitial == CurrentMessage.MessageInitial;
 
-                if (CurrentFilterEtat != null)
+                if (FilterEtat != null)
                     return message.Etat.Id == currentFilterEtat.Id;
 
                 if (CurrentFilterUtilisateur != null)
@@ -461,7 +461,7 @@ namespace Makrisoft.Makfi.ViewModels
                 reader.Close();
             }
             MessagesCollectionView.SortDescriptions.Add(new System.ComponentModel.SortDescription("DateCreation", System.ComponentModel.ListSortDirection.Descending));
-            CurrentFilterEtat = null;
+            FilterEtat = null;
 
         }
 

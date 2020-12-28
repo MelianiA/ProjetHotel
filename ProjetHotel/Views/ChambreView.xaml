@@ -97,7 +97,7 @@
                 </ComboBox>
                  <!--ChambreEtatFilterSelected-->
                 <TextBlock Text="Etat" Margin="0,30,0,0"/>
-                <ComboBox ItemsSource="{Binding EtatChambreCollectionView}" SelectedItem="{Binding CurrentFilterEtat}" FontSize="16">
+                <ComboBox ItemsSource="{Binding EtatChambreCollectionView}" SelectedItem="{Binding FilterEtat}" FontSize="16">
                     <ComboBox.ItemTemplate>
                         <DataTemplate>
                             <StackPanel Orientation="Horizontal">

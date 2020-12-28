@@ -336,16 +336,16 @@ namespace Makrisoft.Makfi.ViewModels
         }
         private string commentaire;
 
-        public ObservableCollection<ChambreByEtage_VM> Chambres
+        public ObservableCollection<Chambre_VM> Chambres
         {
-            get { return chambreCurrentGroupe; }
+            get { return chambres; }
             set
             {
-                chambreCurrentGroupe = value;
+                chambres = value;
                 OnPropertyChanged("ChambreCurrentGroupe");
             }
         }
-        private ObservableCollection<ChambreByEtage_VM> chambreCurrentGroupe;
+        private ObservableCollection<Chambre_VM> chambres;
 
         public ObservableCollection<ChambreByEtage_VM> AutresChambres
         {
@@ -466,7 +466,7 @@ namespace Makrisoft.Makfi.ViewModels
     }
     public class Intervention_VM : ViewModelBase
     {
-        public Guid Id { get; set; }
+        public Guid? Id { get; set; }
         public string Libelle
         {
             get { return libelle; }
@@ -529,22 +529,11 @@ namespace Makrisoft.Makfi.ViewModels
         }
         private bool model;
 
-        public string SaveColor
-        {
-            get
-            { return saveColor; }
-            set
-            {
-                saveColor = value;
-                OnPropertyChanged("SaveColor");
-            }
-        }
-        private string saveColor = "Navy";
 
     }
     public class InterventionDetail_VM : ViewModelBase
     {
-        public Guid Id;
+        public Guid? Id { get; set; }
 
         public string Libelle
         {

@@ -18,6 +18,17 @@ namespace Makrisoft.Makfi.ViewModels
                 handler(this, e);
             }
         }
+        public string SaveColor
+        {
+            get
+            { return saveColor; }
+            set
+            {
+                saveColor = value;
+                OnPropertyChanged("SaveColor");
+            }
+        }
+        private string saveColor = "Navy";
 
     }
 }

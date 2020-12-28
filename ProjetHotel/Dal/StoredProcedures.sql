@@ -60,8 +60,15 @@ GO
 create PROC [dbo].[Chambre_Read](@data xml=NULL)
 AS
 DECLARE @Hotel uniqueidentifier=NULL
-select @Hotel = T.N.value('hotel[1]', 'uniqueidentifier') from @data.nodes('chambre') as T(N)
-Select Id,Nom,Etat,Commentaire  from Chambre where Hotel=@Hotel
+DECLARE @groupeChambre uniqueidentifier=NULL
+select 
+	@Hotel = T.N.value('hotel[1]', 'uniqueidentifier'),
+	@groupeChambre = T.N.value('groupeChambre[1]', 'uniqueidentifier') 
+from @data.nodes('chambres') as T(N)
+Select c.Id,Nom,Etat,Commentaire  
+from Chambre c
+inner join ChambreGroupeChambre cgc on cgc.Chambre = c.Id
+where (@hotel is null or Hotel=@Hotel) and (@groupeChambre is null or cgc.GroupeChambre = @groupeChambre)
 GO
  
 ---------------------------------------------------------------------------------------------------
@@ -89,7 +96,7 @@ select @hotel = T.N.value('(hotel/text())[1]', 'uniqueidentifier') from @data.no
 CREATE PROC [dbo].[GroupeChambre_Read](@data xml=NULL)
 AS
 DECLARE @hotel uniqueidentifier=NULL
-select @hotel= T.N.value('hotel[1]', 'uniqueidentifier') from @data.nodes('groupeChambre') as T(N)
+select @hotel= T.N.value('hotel[1]', 'uniqueidentifier') from @data.nodes('groupeChambres') as T(N)
 
 Select distinct gc.Id,gc.Nom,gc.Commentaire from GroupeChambre gc
 inner join ChambreGroupeChambre cgc on gc.Id = cgc.GroupeChambre
@@ -127,8 +134,10 @@ AS
 DECLARE @Intervention uniqueidentifier=NULL
 select @Intervention = T.N.value('intervention[1]', 'uniqueidentifier') from @data.nodes('interventionDetail') as T(N)
 
-select Id,EmployeAffecte, ChambreAffectee,Etat, Commentaire
-from InterventionDetail  
+select id.Id,EmployeAffecte, ChambreAffectee,id.Etat, id.Commentaire, c.Nom ChambreNom,e.Nom EmployeNom, e.Prenom EmployePrenom
+from InterventionDetail  id 
+inner join Employe e  on e.Id = id.EmployeAffecte
+inner join Chambre c  on c.Id = id.ChambreAffectee
 where Intervention=@Intervention
 GO
 
@@ -540,7 +549,7 @@ END CATCH
  GO
 
   ----------------------------------------------------------------------------------------------------------
-  Create PROC [dbo].[InterventionDetail_Save](@data xml=NULL)
+ Create PROC [dbo].[InterventionDetail_Save](@data xml=NULL)
  AS
 	DECLARE @IDs TABLE(ID uniqueidentifier);
 	DECLARE @message nvarchar(MAX)
@@ -551,11 +560,12 @@ select
  		T.N.value('(id/text())[1]', 'uniqueidentifier') Id, 
 		T.N.value('(employeAffecte/text())[1]', 'uniqueidentifier') EmployeAffecte, 
  		T.N.value('(chambreAffectee/text())[1]', 'uniqueidentifier') ChambreAffectee,
+ 		T.N.value('(intervention/text())[1]', 'uniqueidentifier') intervention,
  		T.N.value('(commentaire/text())[1]', 'nvarchar(MAX)') Commentaire,
-		T.N.value('(intervention/text())[1]', 'uniqueidentifier') Intervention,
   		T.N.value('(etat/text())[1]', 'uniqueidentifier') Etat
 		into #_InterventionDetail
 from @data.nodes('interventionDetail') as T(N)
+
 -- PARTIE2
 select @id=Id  from #_InterventionDetail
 -- Update  
@@ -564,10 +574,10 @@ BEGIN TRY
 			EmployeAffecte= t.EmployeAffecte, 
 			ChambreAffectee=t.ChambreAffectee, 
 			Commentaire=t.Commentaire,
-			Intervention=t.Intervention,
+			Intervention = t.intervention,
 			Etat=t.Etat
 					output inserted.Id into @IDs(ID)
-			from (select Id, EmployeAffecte, ChambreAffectee, Commentaire, Intervention,Etat from #_InterventionDetail where Id is not null) t
+			from (select Id, EmployeAffecte, ChambreAffectee, Commentaire, Intervention, Etat from #_InterventionDetail where Id is not null) t
 			where InterventionDetail.Id=t.Id
 END TRY
 BEGIN CATCH
@@ -578,7 +588,7 @@ END CATCH
 -- Insert
 insert InterventionDetail(EmployeAffecte, ChambreAffectee, Commentaire, Intervention,Etat )
 		output inserted.Id into @IDs(ID)
-	(select EmployeAffecte, ChambreAffectee, Commentaire, Intervention,Etat from #_InterventionDetail where Id is null )
+	(select EmployeAffecte, ChambreAffectee, Commentaire, intervention, Etat from #_InterventionDetail where Id is null )
 select @id=ID from @IDs
 select Id from @IDs
 GO

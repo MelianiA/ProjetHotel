@@ -47,21 +47,21 @@
                 <Menu Grid.Column="1" Cursor="Hand" Margin="0">
                     <MenuItem Header="..." Foreground="Navy" FontSize="16">
                         <MenuItem Header="Ajouter" Foreground="Navy" 
-                                  Command="{Binding MenuAddCommand}"/>
+                                  Command="{Binding AddCommand}"/>
 
                         <MenuItem Header="Supprimer" Foreground="Navy" 
-                                  Command="{Binding MenuDeleteCommand}"/>
+                                  Command="{Binding DeleteCommand}"/>
                         <Separator/>
 
 
                         <MenuItem Header="Tout ajoûter" Foreground="Navy" 
-                                  Command="{Binding MenuAddAllCommand}"/>
+                                  Command="{Binding AddAllCommand}"/>
 
                         <MenuItem Header="Tout supprimer" Foreground="Navy" 
-                                  Command="{Binding MenuDeleteAllCommand}"/>
+                                  Command="{Binding DeleteAllCommand}"/>
                         <Separator/>
                         <MenuItem Header="Enregistrer tout" Foreground="Navy" 
-                                  Command="{Binding MenuSaveAllCommand}"/>
+                                  Command="{Binding SaveAllCommand}"/>
                     </MenuItem>
                 </Menu>
             </Grid>
@@ -78,9 +78,9 @@
                     <RowDefinition></RowDefinition>
                 </Grid.RowDefinitions>
                 <TextBlock Text="Modifier" FontSize="22" Foreground="Navy" VerticalAlignment="Bottom"/>
-                <Button Grid.Column="2" Background="Transparent" BorderBrush="Transparent" BorderThickness="1" Command="{Binding InterventionDetailSaveCommand}" VerticalAlignment="Bottom">
+                <Button Grid.Column="2" Background="Transparent" BorderBrush="Transparent" BorderThickness="1" Command="{Binding SaveCommand}" VerticalAlignment="Bottom">
                     <Button.Content>
-                        <materialDesign:PackIcon Height="20" Width="Auto" Kind="Floppy" Foreground="{Binding CurrentInterventionDetail.SaveColor}" Margin="0,0,10,0" />
+                        <materialDesign:PackIcon Height="20" Width="Auto" Kind="Floppy" Foreground="{Binding CurrentDgSource.SaveColor}" Margin="0,0,10,0" />
                     </Button.Content>
                 </Button>
             </Grid>
@@ -93,7 +93,7 @@
 
                 <!--ChambreGroupeFilter -->
                 <TextBlock Text="Groupe de chambre" Margin="0,30,0,0"/>
-                <ComboBox ItemsSource="{Binding Etages}" SelectedItem="{Binding CurrentGroupeChambres}" FontSize="16">
+                <ComboBox ItemsSource="{Binding Etages}" SelectedItem="{Binding FilterEtage}" FontSize="16">
                     <ComboBox.ItemTemplate>
                         <DataTemplate>
                             <StackPanel Orientation="Horizontal">
@@ -106,8 +106,8 @@
 
                 <!-- EtatFilter -->
                 <TextBlock Text="Etat" Margin="0,30,0,0"/>
-                <ComboBox ItemsSource="{Binding EtatInterventionFilterCollectionView}"  
-                          SelectedItem="{Binding CurrentEtatIntervention}" FontSize="16">
+                <ComboBox ItemsSource="{Binding Etats}"  
+                          SelectedItem="{Binding FilterEtat}" FontSize="16">
                     <ComboBox.ItemTemplate>
                         <DataTemplate>
                             <StackPanel Orientation="Horizontal">
@@ -119,7 +119,7 @@
                 </ComboBox>
                 <!--Employé Filtre-->
                 <TextBlock Text="Employé" Margin="0,30,0,0"/>
-                <ComboBox ItemsSource="{Binding EmployeIntervention}" SelectedItem="{Binding CurentEmployeIntervention}" FontSize="16">
+                <ComboBox ItemsSource="{Binding Employes}" SelectedItem="{Binding FilterEmploye}" FontSize="16">
                     <ComboBox.ItemTemplate>
                         <DataTemplate>
                             <StackPanel Orientation="Horizontal">
@@ -135,10 +135,11 @@
         </Border>
         <!--Milieu-->
         <Border Grid.Column="1" Grid.Row="1" BorderBrush="Transparent" BorderThickness="1" CornerRadius="10" Margin="0" >
-            <DataGrid ItemsSource="{Binding InterventionDetailsCollectionView, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" x:Name="dg"
-                      SelectedItem="{Binding CurrentInterventionDetail, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"  
+            <DataGrid ItemsSource="{Binding DgSourceCollectionView}"
+                      SelectedItem="{Binding CurrentDgSource}"  
                           AutoGenerateColumns="False" HeadersVisibility="None" CanUserAddRows="False" VerticalScrollBarVisibility="Visible">
                     <DataGrid.Columns>
+                    <DataGridTextColumn Binding="{Binding Id}" Visibility="Visible"/>
                     <DataGridTemplateColumn Width="auto">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
@@ -190,13 +191,13 @@
         <Border Grid.Column="2" Grid.Row="1" BorderBrush="Transparent" BorderThickness="1" CornerRadius="10" HorizontalAlignment="Left" >
             <StackPanel Margin="5" Width="220">
                 <TextBlock Text="Commentaire" Margin="0,15,0,0" />
-                <TextBox FontSize="16"  Text="{Binding CurrentInterventionDetail.Commentaire, UpdateSourceTrigger=PropertyChanged}"
+                <TextBox FontSize="16"  Text="{Binding CurrentDgSource.Commentaire, UpdateSourceTrigger=PropertyChanged}"
                          TextWrapping="Wrap" TextAlignment="Left" IsEnabled="{Binding IsModifierEnabled}"> </TextBox>
 
                 <!--Employé-->
                 <TextBlock Text="Employé" Margin="0,15,0,0"/>
-                <ComboBox ItemsSource="{Binding EmployeInterventionCollectionView}" IsEnabled="{Binding IsModifierEnabled}"
-                          SelectedItem="{Binding CurrentInterventionDetail.Employe, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                <ComboBox ItemsSource="{Binding Employes}" IsEnabled="{Binding IsModifierEnabled}"
+                          SelectedItem="{Binding CurrentDgSource.Employe, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                           FontSize="16">
                     <ComboBox.ItemTemplate>
                         <DataTemplate>
@@ -210,8 +211,8 @@
                 
                 <!--Chambre-->
                 <TextBlock Text="Chambre" Margin="0,15,0,0"/>
-                <ComboBox ItemsSource="{Binding ChambreInterventionCollectionView}" IsEnabled="{Binding IsModifierEnabled}"
-                          SelectedItem="{Binding CurrentInterventionDetail.Chambre, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                <ComboBox ItemsSource="{Binding Chambres}" IsEnabled="{Binding IsModifierEnabled}"
+                          SelectedItem="{Binding CurrentDgSource.Chambre, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
                           FontSize="16">
                     <ComboBox.ItemTemplate>
                         <DataTemplate>
@@ -226,8 +227,8 @@
 
                 <!--Etat-->
                 <TextBlock Text="Etat" Margin="0,15,0,0"/>
-                <ComboBox ItemsSource="{Binding EtatInterventionCollectionView}" IsEnabled="{Binding IsModifierEnabled}"
-                          SelectedItem="{Binding CurrentInterventionDetail.Etat, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" FontSize="16">
+                <ComboBox ItemsSource="{Binding Etats}" IsEnabled="{Binding IsModifierEnabled}"
+                          SelectedItem="{Binding CurrentDgSource.Etat, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" FontSize="16">
                     <ComboBox.ItemTemplate>
                         <DataTemplate>
                             <StackPanel Orientation="Horizontal">
