@@ -44,7 +44,7 @@
                     <ColumnDefinition Width="*"></ColumnDefinition>
                     <ColumnDefinition Width="Auto"></ColumnDefinition>
                 </Grid.ColumnDefinitions>
-                <TextBlock FontSize="20" FontWeight="Normal" Foreground="Navy" Text="Interventions " VerticalAlignment="Bottom"/>
+                <TextBlock FontSize="20" FontWeight="Normal" Foreground="Navy" Text="{Binding Title}" VerticalAlignment="Bottom"/>
                 <Menu Grid.Column="1" Cursor="Hand" Margin="0">
                     <MenuItem Header="..." Foreground="Navy" FontSize="16">
                         <MenuItem Header="Ajouter" Foreground="Navy" Command="{Binding AddCommand}"/>

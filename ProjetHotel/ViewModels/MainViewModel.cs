@@ -15,7 +15,40 @@ namespace Makrisoft.Makfi.ViewModels
             get { return viewSelected; }
             set
             {
+                var exView = viewSelected;
                 viewSelected = value;
+
+                // Partie dynamique
+                switch (value)
+                {
+                    case ViewEnum.InterventionAjouter:
+                        Reference_ViewModel.InterventionAjouter.CheckAnnuler = true;
+                        Reference_ViewModel.InterventionAjouter.Load_Interventions($@"
+                                <interventions>
+                                    <hotel>{Reference_ViewModel.Header.CurrentHotel.Id}</hotel>
+                                    <delete>{Reference_ViewModel.Intervention.CurrentDgSource.Id}</delete>
+                                </interventions>");
+                        break;
+                    case ViewEnum.Intervention:
+                        break;
+                    case ViewEnum.InterventionDetail:
+                        Reference_ViewModel.InterventionDetail.Title = Reference_ViewModel.Intervention.CurrentDgSource.Libelle;
+                        if (exView == ViewEnum.InterventionAjouter)
+                        {
+                            foreach (var interD in Reference_ViewModel.InterventionAjouter.DgSource)
+                                Reference_ViewModel.InterventionDetail.DgSource.Add(interD);
+                        }
+                        else
+                            Reference_ViewModel.InterventionDetail.Load_DgSource();
+                        break;
+                    case ViewEnum.ChambreGroupe:
+                        Reference_ViewModel.ChambreGroupe.Load_AllChambres();
+                        Reference_ViewModel.ChambreGroupe.Load_Etages();
+                        break;
+                    case ViewEnum.Login:
+                        Reference_ViewModel.Header.Utilisateur_Load();
+                        break;
+                }
                 OnPropertyChanged("ViewSelected");
             }
         }
@@ -23,9 +56,9 @@ namespace Makrisoft.Makfi.ViewModels
 
         public MainViewModel()
         {
-            ViewSelected = ViewEnum.Login;
+            viewSelected = ViewEnum.Login;
 
-            
+
         }
     }
 }

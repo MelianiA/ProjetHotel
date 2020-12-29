@@ -250,11 +250,11 @@ namespace Makrisoft.Makfi.ViewModels
                     break;
 
                 case ViewEnum.Employe:
-                    Reference_ViewModel.InterventionDetail.Load_DgSource();
+                    //Reference_ViewModel.InterventionDetail.Load_DgSource(); // AM : 20201228
                     Reference_ViewModel.Main.ViewSelected = Dal.ViewEnum.Home;
                     break;
                 case ViewEnum.Chambre:
-                    Reference_ViewModel.InterventionDetail.Load_DgSource();
+                    //Reference_ViewModel.InterventionDetail.Load_DgSource(); // AM : 20201228
                     Reference_ViewModel.Main.ViewSelected = Dal.ViewEnum.Home;
                     break;
                 case ViewEnum.ChambreGroupe:
@@ -294,7 +294,6 @@ namespace Makrisoft.Makfi.ViewModels
                     }
                     break;
                 case ViewEnum.InterventionAjouter:
-                    Reference_ViewModel.InterventionAjouter.OnAddInterventionDetails();
                     Reference_ViewModel.Main.ViewSelected = Dal.ViewEnum.InterventionDetail;
                     break;
                 case ViewEnum.InterventionSupprimer:
@@ -316,7 +315,6 @@ namespace Makrisoft.Makfi.ViewModels
             Reference_ViewModel.Main.ViewSelected = ViewEnum.Login;
             CurrentUtilisateur = Utilisateurs.FirstOrDefault(g => g.Nom == Properties.Settings.Default.Login);
             CanChangeUtilisateur = true;
-            Utilisateur_Load();
             MenuVisibility = Visibility.Hidden;
             MessagesVisibility = Visibility.Visible;
 
@@ -337,7 +335,7 @@ namespace Makrisoft.Makfi.ViewModels
         private bool OnCanExecuteBackCommand()
         {
             if (Reference_ViewModel.Main.ViewSelected == ViewEnum.InterventionDetail)
-                return !Reference_ViewModel.InterventionDetail.OnCanExecuteMenuSaveAllCommand();
+                return !Reference_ViewModel.InterventionDetail.OnCanExecuteSaveAllCommand();
 
             if (Reference_ViewModel.Main.ViewSelected == ViewEnum.Intervention)
                 return !Reference_ViewModel.Intervention.DgSource.Any(x => x.SaveColor == "Red");
@@ -368,7 +366,7 @@ namespace Makrisoft.Makfi.ViewModels
         #endregion
 
         #region Load
-        private void Utilisateur_Load()
+        public void Utilisateur_Load()
         {
             Utilisateurs = new ObservableCollection<Utilisateur_VM>(
                MakfiData.Utilisateur_Read()

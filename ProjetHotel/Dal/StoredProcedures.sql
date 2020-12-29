@@ -65,9 +65,9 @@ select
 	@Hotel = T.N.value('hotel[1]', 'uniqueidentifier'),
 	@groupeChambre = T.N.value('groupeChambre[1]', 'uniqueidentifier') 
 from @data.nodes('chambres') as T(N)
-Select c.Id,Nom,Etat,Commentaire  
+Select distinct c.Id,Nom,Etat,Commentaire  
 from Chambre c
-inner join ChambreGroupeChambre cgc on cgc.Chambre = c.Id
+left outer join ChambreGroupeChambre cgc on cgc.Chambre = c.Id
 where (@hotel is null or Hotel=@Hotel) and (@groupeChambre is null or cgc.GroupeChambre = @groupeChambre)
 GO
  
@@ -118,10 +118,11 @@ GO
 ---------------------------------------------------------------------------------------------------
 CREATE PROC [dbo].[Intervention_Read](@data xml=NULL)
 AS
-DECLARE @Hotel uniqueidentifier=NULL
-select @Hotel = T.N.value('hotel[1]', 'uniqueidentifier') from @data.nodes('intervention') as T(N)
- select Id,Libelle,Etat,convert(date, Date1, 120) as Date1 , Commentaire, Model from Intervention i
-  where i.Hotel=@Hotel
+DECLARE @hotel uniqueidentifier=NULL
+DECLARE @delete uniqueidentifier=NULL
+select @hotel = T.N.value('hotel[1]', 'uniqueidentifier'),@delete = T.N.value('delete[1]', 'uniqueidentifier') from @data.nodes('interventions') as T(N)
+select Id,Libelle,Etat,convert(date, Date1, 120) as Date1 , Commentaire, Model from Intervention i
+  where (@hotel is null or i.Hotel=@hotel) and (@delete is null or i.Id != @delete)
  GO
 
 --exec Intervention_Read '<intervention><hotel>96176477-13a9-46b9-b729-197741a53cc7</hotel></intervention>'
@@ -132,7 +133,7 @@ select @Hotel = T.N.value('hotel[1]', 'uniqueidentifier') from @data.nodes('inte
 CREATE PROC [dbo].[InterventionDetail_Read](@data xml=NULL)
 AS
 DECLARE @Intervention uniqueidentifier=NULL
-select @Intervention = T.N.value('intervention[1]', 'uniqueidentifier') from @data.nodes('interventionDetail') as T(N)
+select @Intervention = T.N.value('intervention[1]', 'uniqueidentifier') from @data.nodes('interventionDetails') as T(N)
 
 select id.Id,EmployeAffecte, ChambreAffectee,id.Etat, id.Commentaire, c.Nom ChambreNom,e.Nom EmployeNom, e.Prenom EmployePrenom
 from InterventionDetail  id 
@@ -554,42 +555,61 @@ END CATCH
 	DECLARE @IDs TABLE(ID uniqueidentifier);
 	DECLARE @message nvarchar(MAX)
 	DECLARE @Id uniqueidentifier
+	DECLARE @intervention uniqueidentifier
+	DECLARE @n int
 
--- PARTIE recup XML :
-select 
- 		T.N.value('(id/text())[1]', 'uniqueidentifier') Id, 
-		T.N.value('(employeAffecte/text())[1]', 'uniqueidentifier') EmployeAffecte, 
- 		T.N.value('(chambreAffectee/text())[1]', 'uniqueidentifier') ChambreAffectee,
- 		T.N.value('(intervention/text())[1]', 'uniqueidentifier') intervention,
- 		T.N.value('(commentaire/text())[1]', 'nvarchar(MAX)') Commentaire,
-  		T.N.value('(etat/text())[1]', 'uniqueidentifier') Etat
-		into #_InterventionDetail
-from @data.nodes('interventionDetail') as T(N)
+select @n = Count(T.N.value('.', 'nvarchar(MAX)')) from @data.nodes('interventionDetails/interventionDetail') as T(N)
+IF @n > 0
+  BEGIN
+  select @intervention = T.N.value('(intervention/text())[1]', 'uniqueidentifier') from @data.nodes('interventionDetails') as T(N)
 
--- PARTIE2
-select @id=Id  from #_InterventionDetail
--- Update  
-BEGIN TRY
-	 update InterventionDetail set
-			EmployeAffecte= t.EmployeAffecte, 
-			ChambreAffectee=t.ChambreAffectee, 
-			Commentaire=t.Commentaire,
-			Intervention = t.intervention,
-			Etat=t.Etat
-					output inserted.Id into @IDs(ID)
-			from (select Id, EmployeAffecte, ChambreAffectee, Commentaire, Intervention, Etat from #_InterventionDetail where Id is not null) t
-			where InterventionDetail.Id=t.Id
-END TRY
-BEGIN CATCH
-       select @message = ERROR_MESSAGE() 
-    RAISERROR (@message, 16, 1);  
-       RETURN;
-END CATCH
--- Insert
-insert InterventionDetail(EmployeAffecte, ChambreAffectee, Commentaire, Intervention,Etat )
-		output inserted.Id into @IDs(ID)
-	(select EmployeAffecte, ChambreAffectee, Commentaire, intervention, Etat from #_InterventionDetail where Id is null )
-select @id=ID from @IDs
+  Insert InterventionDetail (employeAffecte, chambreAffectee, commentaire, intervention,etat)
+  output inserted.Id into @IDs(ID)
+  select 
+			T.N.value('(employeAffecte/text())[1]', 'uniqueidentifier'), 
+ 			T.N.value('(chambreAffectee/text())[1]', 'uniqueidentifier'),
+ 			T.N.value('(commentaire/text())[1]', 'nvarchar(MAX)'),
+ 			T.N.value('(intervention/text())[1]', 'uniqueidentifier'),
+  			T.N.value('(etat/text())[1]', 'uniqueidentifier')
+	from @data.nodes('interventionDetails/interventionDetail') as T(N)  END
+ELSE
+	BEGIN
+	-- PARTIE recup XML :
+	select 
+ 			T.N.value('(id/text())[1]', 'uniqueidentifier') Id, 
+			T.N.value('(employeAffecte/text())[1]', 'uniqueidentifier') EmployeAffecte, 
+ 			T.N.value('(chambreAffectee/text())[1]', 'uniqueidentifier') ChambreAffectee,
+ 			T.N.value('(intervention/text())[1]', 'uniqueidentifier') intervention,
+ 			T.N.value('(commentaire/text())[1]', 'nvarchar(MAX)') Commentaire,
+  			T.N.value('(etat/text())[1]', 'uniqueidentifier') Etat
+			into #_InterventionDetail
+	from @data.nodes('interventionDetail') as T(N)
+
+	-- PARTIE2
+	select @id=Id  from #_InterventionDetail
+	-- Update  
+	BEGIN TRY
+		 update InterventionDetail set
+				EmployeAffecte= t.EmployeAffecte, 
+				ChambreAffectee=t.ChambreAffectee, 
+				Commentaire=t.Commentaire,
+				Intervention = t.intervention,
+				Etat=t.Etat
+						output inserted.Id into @IDs(ID)
+				from (select Id, EmployeAffecte, ChambreAffectee, Commentaire, Intervention, Etat from #_InterventionDetail where Id is not null) t
+				where InterventionDetail.Id=t.Id
+	END TRY
+	BEGIN CATCH
+		   select @message = ERROR_MESSAGE() 
+		RAISERROR (@message, 16, 1);  
+		   RETURN;
+	END CATCH
+	-- Insert
+	insert InterventionDetail(EmployeAffecte, ChambreAffectee, Commentaire, Intervention,Etat )
+			output inserted.Id into @IDs(ID)
+		(select EmployeAffecte, ChambreAffectee, Commentaire, intervention, Etat from #_InterventionDetail where Id is null )
+	select @id=ID from @IDs
+END
 select Id from @IDs
 GO
 
@@ -705,11 +725,14 @@ go
 create PROC [dbo].InterventionDetails_Delete(@data xml=NULL)
 as
 DECLARE @id uniqueidentifier;
+DECLARE @intervention uniqueidentifier;
+
 select
-	@id= T.N.value('id[1]', 'uniqueidentifier') 
+	@id= T.N.value('id[1]', 'uniqueidentifier') ,
+	@intervention= T.N.value('intervention[1]', 'uniqueidentifier') 
  from @data.nodes('interventionDetails') as T(N) 
-delete from InterventionDetail
-where Id = @id
+delete from InterventionDetail 
+where (@id is null or Id = @id) and (@intervention is null or Intervention = @intervention)  
 go
 
 -- *************************************************************************************************

@@ -42,7 +42,7 @@
                     <ColumnDefinition Width="Auto"></ColumnDefinition>
                 </Grid.ColumnDefinitions>
                 <TextBlock FontSize="20" FontWeight="Normal" Foreground="Navy" VerticalAlignment="Bottom">
-                     <Run Text="{Binding CurrentIntervention.Libelle}"/>
+                     <Run Text="{Binding Title}"/>
                   </TextBlock>
                 <Menu Grid.Column="1" Cursor="Hand" Margin="0">
                     <MenuItem Header="..." Foreground="Navy" FontSize="16">
@@ -54,7 +54,7 @@
                         <Separator/>
 
 
-                        <MenuItem Header="Tout ajoûter" Foreground="Navy" 
+                        <MenuItem Header="Tout ajouter" Foreground="Navy" 
                                   Command="{Binding AddAllCommand}"/>
 
                         <MenuItem Header="Tout supprimer" Foreground="Navy" 
@@ -139,7 +139,7 @@
                       SelectedItem="{Binding CurrentDgSource}"  
                           AutoGenerateColumns="False" HeadersVisibility="None" CanUserAddRows="False" VerticalScrollBarVisibility="Visible">
                     <DataGrid.Columns>
-                    <DataGridTextColumn Binding="{Binding Id}" Visibility="Visible"/>
+                    <DataGridTextColumn Binding="{Binding Id}" Visibility="Collapsed" IsReadOnly="True"/>
                     <DataGridTemplateColumn Width="auto">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>

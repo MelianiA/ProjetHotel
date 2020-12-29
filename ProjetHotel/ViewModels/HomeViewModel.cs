@@ -106,8 +106,8 @@ namespace Makrisoft.Makfi.ViewModels
                 EtatControle = "Intervention du jour";
             }
 
-            Reference_ViewModel.Intervention.CurrentDgSource = intervention;
-            Reference_ViewModel.InterventionDetail.Load_DgSource();
+            //Reference_ViewModel.Intervention.CurrentDgSource = intervention; // AM : 20201228
+            //Reference_ViewModel.InterventionDetail.Load_DgSource();
         }
 
         #endregion

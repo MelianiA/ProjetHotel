@@ -230,8 +230,6 @@ namespace Makrisoft.Makfi.ViewModels
 
         private void OnEtageViewChangeCommand()
         {
-            Reference_ViewModel.ChambreGroupe.Load_AllChambres();
-            Reference_ViewModel.ChambreGroupe.Load_Etages();
             Reference_ViewModel.Main.ViewSelected = ViewEnum.ChambreGroupe;
         }
         private void OnFilterClearCommand()

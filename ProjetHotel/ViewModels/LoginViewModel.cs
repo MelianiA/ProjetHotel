@@ -68,13 +68,12 @@ namespace Makrisoft.Makfi.ViewModels
                         Reference_ViewModel.Header.CanChangeUtilisateur = false;
                         Reference_ViewModel.Home.IsAdmin = Reference_ViewModel.Header.CurrentUtilisateur.IsAdmin;
                         Reference_ViewModel.Header.MenuVisibility = Visibility.Visible;
-                        Reference_ViewModel.Message.Load_Message();
                     }
                     Password = "";
-                    if (Reference_ViewModel.Header.CurrentHotel != null)
+                    if (Reference_ViewModel.Header.CurrentHotel != null) // AM : 20201228
                     {
-                        Reference_ViewModel.Employe.Load_Employes();
-                        Reference_ViewModel.Chambre.Load_Chambres();
+                        //Reference_ViewModel.Employe.Load_Employes();
+                        //Reference_ViewModel.Chambre.Load_Chambres();
                         Reference_ViewModel.Home.ButtonInterventionDuJour();
                     }
                 }

@@ -201,7 +201,7 @@ namespace Makrisoft.Makfi.ViewModels
                             throw new Exception();
                     }
                 }
-                Reference_ViewModel.InterventionDetail.Load_DgSource();
+                //Reference_ViewModel.InterventionDetail.Load_DgSource(); // AM : 20201228
 
             }
             if (ParChambre)

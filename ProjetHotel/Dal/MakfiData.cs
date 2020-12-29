@@ -13,10 +13,10 @@ namespace Makrisoft.Makfi.Dal
     public enum ViewEnum
     {
         Header, Login, Home, Intervention, Chambre, InterventionNew, Employe, Synthese, Administration, ChambreGroupe, InterventionDetail,
-        Utilisateur, None, Hotel,InterventionAjouter, InterventionSupprimer, Message, Parametre
+        Utilisateur, None, Hotel, InterventionAjouter, InterventionSupprimer, Message, Parametre
     }
     public enum RoleEnum { None = 0, Gouvernante = 1, Reception = 2, Admin = 255 }
-    public enum EntiteEnum { Employe = 1, Chambre = 2, Intervention = 3, InterventionDetail=4, Message=5 }
+    public enum EntiteEnum { Employe = 1, Chambre = 2, Intervention = 3, InterventionDetail = 4, Message = 5, InterventionAjouter = 6 }
 
     public static class MakfiData
     {
@@ -54,7 +54,7 @@ namespace Makrisoft.Makfi.Dal
 
             return "";
         }
- 
+
         #endregion
 
         #region SqlServer objects
@@ -384,7 +384,7 @@ namespace Makrisoft.Makfi.Dal
                                          e.Employe = new Employe { Id = (Guid)Reader["EmployeAffecte"], Nom = Reader["EmployeNom"] as string, Prenom = Reader["EmployePrenom"] as string };
                                          e.Chambre = new Chambre { Id = (Guid)Reader["ChambreAffectee"], Nom = Reader["ChambreNom"] as string };
                                          e.Etat = (Guid)Reader["Etat"];
-                                         e.Commentaire= Reader["Commentaire"] as string;
+                                         e.Commentaire = Reader["Commentaire"] as string;
                                      },
                                      spParam
                                      );
