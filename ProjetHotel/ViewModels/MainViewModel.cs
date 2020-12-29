@@ -48,6 +48,10 @@ namespace Makrisoft.Makfi.ViewModels
                     case ViewEnum.Login:
                         Reference_ViewModel.Header.Utilisateur_Load();
                         break;
+                    case ViewEnum.Hotel:
+                        Reference_ViewModel.Hotel.Load_Receptions();
+                        Reference_ViewModel.Hotel.Load_Gouvernantes();
+                        break;
                 }
                 OnPropertyChanged("ViewSelected");
             }

@@ -59,7 +59,7 @@ namespace Makrisoft.Makfi.ViewModels
             {
                 currentUtilisateur = value;
                 Message = "";
-                Guid monID = default;
+                Guid? monID = default;
                 if (currentUtilisateur == null) return;
                 monID = currentUtilisateur.Id;
 
@@ -313,7 +313,7 @@ namespace Makrisoft.Makfi.ViewModels
         private void OnDeconnectCommand()
         {
             Reference_ViewModel.Main.ViewSelected = ViewEnum.Login;
-            CurrentUtilisateur = Utilisateurs.FirstOrDefault(g => g.Nom == Properties.Settings.Default.Login);
+            CurrentUtilisateur = Utilisateurs.FirstOrDefault(g => g.Nom.ToLower() == Properties.Settings.Default.Login.ToLower());
             CanChangeUtilisateur = true;
             MenuVisibility = Visibility.Hidden;
             MessagesVisibility = Visibility.Visible;

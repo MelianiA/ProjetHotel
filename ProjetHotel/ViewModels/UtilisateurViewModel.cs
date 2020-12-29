@@ -1,249 +1,142 @@
 ﻿using Makrisoft.Makfi.Dal;
-using Makrisoft.Makfi.Tools;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
 using System.Windows;
-using System.Windows.Data;
-using System.Windows.Input;
 
 namespace Makrisoft.Makfi.ViewModels
 {
-    public class UtilisateurViewModel : ViewModelBase
+    public class UtilisateurViewModel : ViewModel<Utilisateur_VM>
     {
+
         #region Constructeur
         public UtilisateurViewModel()
         {
-            RelayCommand();
-            Utilisateurs = new ObservableCollection<Utilisateur_VM>(MakfiData.Utilisateur_Read()
-                         .Select(x => new Utilisateur_VM
-                         {
-                             Id = x.Id,
-                             Nom = x.Nom,
-                             Image = $"/Makrisoft.Makfi;component/Assets/Photos/{x.Nom.ToLower()}.png",
-                             CodePin = x.CodePin,
-                             Statut = x.Statut,
-                             DateModified = default,
-                             SaveColor = "Navy"
-                         }));
-            CurrentUtilisateur = Utilisateurs.First();
-            UtilisateurCollectionView = new ListCollectionView(Utilisateurs);
+            EtatType = EntiteEnum.None;
+            SortDescriptions = new SortDescription[1] { new SortDescription("Nom", ListSortDirection.Ascending) };
+            Components = ComponentEnum.None;
+            Title = "Les utilisateurs";
 
+            Init();
         }
+        #endregion
 
-        public bool FilterUtilisateurs(object item)
+        #region DgSource
+        public override IEnumerable<Utilisateur_VM> DgSource_Read()
+        {
+            return new ObservableCollection<Utilisateur_VM>(MakfiData.Utilisateur_Read()
+                        .Select(x => new Utilisateur_VM
+                        {
+                            Id = x.Id,
+                            Nom = x.Nom,
+                            Image = $"/Makrisoft.Makfi;component/Assets/Photos/{x.Nom.ToLower()}.png",
+                            CodePin = x.CodePin,
+                            Statut = x.Statut,
+                            DateModified = default,
+                            SaveColor = "Navy"
+                        }));
+        }
+        public override void DgSource_Save()
+        {
+            var param = $@"<utilisateur>
+                                        <id>{CurrentDgSource.Id}</id>
+                                        <nom>{CurrentDgSource.Nom}</nom>
+                                        <codePin>{CurrentDgSource.CodePin}</codePin>
+                                        <statut>{(byte)CurrentDgSource.Statut}</statut>
+                                    </utilisateur>";
+            var ids = MakfiData.Utilisateur_Save(param);
+            if (ids.Count == 0) throw new Exception("Rien n'a été sauvgardé ! ");
+            CurrentDgSource.Id = ids[0].Id;
+            CurrentDgSource.SaveColor = "Navy";
+        }
+        public override bool DgSource_Filter(object item)
         {
             if (item is Utilisateur_VM utilisateur)
             {
                 return
-                (RoleAdminFilter && utilisateur.Statut == RoleEnum.Admin) ||
-                (RoleGouvFilter && utilisateur.Statut == RoleEnum.Gouvernante) ||
-                (RoleReceptionFilter && utilisateur.Statut == RoleEnum.Reception);
+                (FilterAdmin && utilisateur.Statut == RoleEnum.Admin) ||
+                (FilterGouv && utilisateur.Statut == RoleEnum.Gouvernante) ||
+                (FilterReception && utilisateur.Statut == RoleEnum.Reception);
             }
             return true;
-
         }
-        #endregion
-
-        #region Bindings
-
-        // RoleFilter
-        public bool RoleAdminFilter
-        {
-            get { return roleAdminFilter; }
-            set
-            {
-                CurrentUtilisateur = null;
-                roleAdminFilter = value;
-                OnPropertyChanged("RoleAdminFilter");
-                UtilisateurCollectionView.Filter = FilterUtilisateurs;
-                UtilisateurCollectionView.Refresh();
-            }
-        }
-        protected bool roleAdminFilter = true;
-
-        public bool RoleGouvFilter
-        {
-            get { return roleGouvFilter; }
-            set
-            {
-                CurrentUtilisateur = null;
-                roleGouvFilter = value;
-                OnPropertyChanged("RoleGouvFilter");
-                UtilisateurCollectionView.Filter = FilterUtilisateurs;
-                UtilisateurCollectionView.Refresh();
-            }
-        }
-        protected bool roleGouvFilter = true;
-
-        public bool RoleReceptionFilter
-        {
-            get { return roleReceptionFilter; }
-            set
-            {
-                CurrentUtilisateur = null;
-                roleReceptionFilter = value;
-                OnPropertyChanged("RoleReceptionFilter");
-                UtilisateurCollectionView.Filter = FilterUtilisateurs;
-                UtilisateurCollectionView.Refresh();
-
-            }
-        }
-        protected bool roleReceptionFilter = true;
-
-        // Utilisateurs
-        public ObservableCollection<Utilisateur_VM> Utilisateurs
-        {
-            get { return utilisateurs; }
-            set
-            {
-                utilisateurs = value;
-                OnPropertyChanged("Utilisateurs");
-            }
-        }
-        private ObservableCollection<Utilisateur_VM> utilisateurs;
-
-        public Utilisateur_VM CurrentUtilisateur
-        {
-            get
-            {
-                return currentUtilisateur;
-            }
-            set
-            {
-                currentUtilisateur = value;
-                if (currentUtilisateur == null || currentUtilisateur.IsAdmin) IsModifierEnabled = false;
-                else IsModifierEnabled = true;
-                OnPropertyChanged("CurrentUtilisateur");
-
-            }
-        }
-        private Utilisateur_VM currentUtilisateur;
-
-
-        public ListCollectionView UtilisateurCollectionView
-        {
-            get { return utilisateurCollectionView; }
-            set
-            {
-                utilisateurCollectionView = value;
-                OnPropertyChanged("UtilisateurCollectionView");
-            }
-        }
-        private ListCollectionView utilisateurCollectionView;
-
-        //IsModifierEnabled
-        public bool IsModifierEnabled
-        {
-            get { return isEnabled; }
-            set
-            {
-                isEnabled = value;
-                OnPropertyChanged("IsModifierEnabled");
-            }
-        }
-        private bool isEnabled;
 
         #endregion
 
-        #region Commands
-        //ICommand
-        public ICommand UtilisateurModifiedSaveCommand { get; set; }
-        public ICommand UtilisateurSelectedAddCommand { get; set; }
-        public ICommand UtilisateurSelectedDeleteCommand { get; set; }
-        public ICommand RoleCommand { get; set; }
-        public ICommand FilterClearCommand { get; set; }
-
-        // RelayCommand
-        private void RelayCommand()
-        {  // Icommand
-            UtilisateurModifiedSaveCommand = new RelayCommand(p => OnSaveCommand(), p => OnCanExecuteSaveCommand());
-            UtilisateurSelectedDeleteCommand = new RelayCommand(p => OnDeleteCommand(), p => OnCanExecuteDeleteCommand());
-            UtilisateurSelectedAddCommand = new RelayCommand(p => OnAddCommand(), p => OnCanExecuteAddCommand());
-            FilterClearCommand = new RelayCommand(p => OnFilterClearCommand());
-            RoleCommand = new RelayCommand(p => OnRoleCommand(p));
-        }
-
-        // Méthodes OnCommand
-        private void OnRoleCommand(object p)
+        #region Command
+        public override void OnAddCommand()
         {
-            if (currentUtilisateur == null) return;
-            CurrentUtilisateur.Statut = (RoleEnum)p;
+            CurrentDgSource = new Utilisateur_VM { Id = null, Nom = "(A définir)", Statut = RoleEnum.Gouvernante };
+            DgSource.Add(CurrentDgSource);
         }
-        private void OnAddCommand()
+        public override void OnDeleteCommand()
         {
-            CurrentUtilisateur = new Utilisateur_VM { Nom = "(A définir)", Statut = RoleEnum.Gouvernante };
-            Utilisateurs.Add(CurrentUtilisateur);
-            UtilisateurCollectionView.Refresh();
-        }
-        private void OnSaveCommand()
-        {
-            Guid? monID = null;
-            if (CurrentUtilisateur.Id != default) monID = CurrentUtilisateur.Id;
-            var param = $@"<utilisateur>
-                                    <id>{monID}</id>
-                                    <nom>{CurrentUtilisateur.Nom}</nom>
-                                    <codePin>{CurrentUtilisateur.CodePin}</codePin>
-                                    <statut>{(byte)CurrentUtilisateur.Statut}</statut>
-                                </utilisateur>";
-            var ids = MakfiData.Utilisateur_Save(param);
-            if (ids.Count == 0) throw new Exception("Rien n'a été sauvgardé ! ");
-            if (monID == null) CurrentUtilisateur.Id = ids[0].Id;
-            CurrentUtilisateur.SaveColor = "Navy";
-            Reference_ViewModel.Hotel.Gouvernante_Load();
-            Reference_ViewModel.Hotel.Reception_Load();
-        }
-        private void OnDeleteCommand()
-        {
-            var canDeletes = MakfiData.Utilisateur_CanDelete($"<utilisateur><id>{CurrentUtilisateur.Id}</id></utilisateur>");
+            var canDeletes = MakfiData.Utilisateur_CanDelete($"<utilisateurs><id>{CurrentDgSource.Id}</id></utilisateurs>");
             if (canDeletes.Count() == 0)
             {
-                var param = MakfiData.Utilisateur_Delete($"<utilisateur><id>{CurrentUtilisateur.Id}</id></utilisateur>");
+                var param = MakfiData.Utilisateur_Delete($"<utilisateurs><id>{CurrentDgSource.Id}</id></utilisateurs>");
                 if (param)
                 {
-                    Utilisateurs.Remove(CurrentUtilisateur);
-                    Reference_ViewModel.Hotel.Gouvernante_Load();
-                    Reference_ViewModel.Hotel.Reception_Load();
+                    DgSource.Remove(CurrentDgSource);
                 }
             }
             else
             {
-                MessageBox.Show($" Suppression impossible de l'utilsateur : {CurrentUtilisateur.Nom }", "Utilisateur_CanDelete");
+                MessageBox.Show($" Suppression impossible de l'utilsateur : {CurrentDgSource.Nom }", "Utilisateur_CanDelete");
             }
-            ///
-
         }
-        private void OnFilterClearCommand()
+        public override bool OnCanExecuteDeleteCommand()
         {
-            RoleGouvFilter = RoleReceptionFilter = RoleAdminFilter = true;
-            CurrentUtilisateur = Utilisateurs.Count > 0 ? Utilisateurs[0] : null;
-            UtilisateurCollectionView.Refresh();
+            return CurrentDgSource != null &&
+                (!CurrentDgSource.IsAdmin || (CurrentDgSource.IsAdmin && DgSource.Count(u => u.IsAdmin) > 1));
         }
 
-
-        // Méthodes OnCanExecuteCommand
-        private bool OnCanExecuteAddCommand()
+        public override void OnFilterClearCommand()
         {
-            return true;
-
-        }
-        private bool OnCanExecuteSaveCommand()
-        {
-            if (CurrentUtilisateur != null)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-
-        }
-        private bool OnCanExecuteDeleteCommand()
-        {
-            return CurrentUtilisateur != null 
-                && (!CurrentUtilisateur.IsAdmin || (CurrentUtilisateur.IsAdmin && Utilisateurs.Count(u=>u.IsAdmin && u.SaveColor!="Red")>1));
+            FilterAdmin = FilterGouv = FilterReception = true;
         }
         #endregion
+
+        #region Filter
+
+        public bool FilterAdmin
+        {
+            get { return filterAdmin; }
+            set
+            {
+                filterAdmin = value;
+                OnPropertyChanged("FilterAdmin");
+                DgSourceCollectionView.Refresh();
+            }
+        }
+        protected bool filterAdmin = true;
+
+        public bool FilterGouv
+        {
+            get { return filterGouv; }
+            set
+            {
+                filterGouv = value;
+                OnPropertyChanged("FilterGouv");
+                DgSourceCollectionView.Refresh();
+            }
+        }
+        protected bool filterGouv = true;
+
+        public bool FilterReception
+        {
+            get { return filterReception; }
+            set
+            {
+                filterReception = value;
+                OnPropertyChanged("FilterReception");
+                DgSourceCollectionView.Refresh();
+            }
+        }
+        protected bool filterReception = true;
+        #endregion
+
     }
 }

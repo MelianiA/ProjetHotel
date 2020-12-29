@@ -42,6 +42,8 @@ namespace Makrisoft.Makfi.ViewModels
                         <hotel>{Reference_ViewModel.Header.CurrentHotel.Id}</hotel>
                     </interventions>
                     ");
+                if (Components.HasFlag(ComponentEnum.Utilisateurs)) Load_Utilisateurs();
+
                 Load_DgSource();
             }
 
@@ -161,6 +163,19 @@ namespace Makrisoft.Makfi.ViewModels
         }
         private ObservableCollection<Intervention_VM> interventions;
 
+        // Utilisateurs
+        public ObservableCollection<Utilisateur_VM> Utilisateurs
+        {
+            get { return utilisateurs; }
+            set
+            {
+                utilisateurs = value;
+                OnPropertyChanged("Utilisateurs");
+            }
+        }
+        private ObservableCollection<Utilisateur_VM> utilisateurs;
+
+
         // Filter
         public Etat_VM FilterEtat
         {
@@ -264,7 +279,7 @@ namespace Makrisoft.Makfi.ViewModels
         public virtual void OnAddCommand() { }
         public virtual void OnDeleteCommand() { }
     
-        private void OnFilterClearCommand()
+        public virtual void OnFilterClearCommand()
         {
             FilterEtat = null;
             FilterDateDebut = null;
@@ -276,7 +291,7 @@ namespace Makrisoft.Makfi.ViewModels
 
         // Méthodes OnCanExecuteCommand
         private bool OnCanExecuteSaveCommand() { return CurrentDgSource != null; }
-        private bool OnCanExecuteDeleteCommand() { return CurrentDgSource != null; }
+        public virtual bool OnCanExecuteDeleteCommand() { return CurrentDgSource != null; }
         private bool OnCanExecuteChangeView() { return CurrentDgSource != null && CurrentDgSource.SaveColor != "Red"; }
 
         //Filter 
@@ -308,7 +323,7 @@ namespace Makrisoft.Makfi.ViewModels
                 foreach (var item in items) Etats.Add(item);
             }
         }
-        private void Load_Employes(Guid id)// AM : 20201228
+        private void Load_Employes(Guid? id)// AM : 20201228
         {
             var items = MakfiData
                 .Employe_Read($"<employes><hotel>{id}</hotel></employes>")
@@ -329,7 +344,7 @@ namespace Makrisoft.Makfi.ViewModels
                 foreach (var item in items) Employes.Add(item);
             }
         }
-        private void Load_Chambres(Guid id)// AM : 20201228
+        private void Load_Chambres(Guid? id)// AM : 20201228
         {
             var items = MakfiData
                 .Chambre_Read($"<chambres><hotel>{id}</hotel></chambres>")
@@ -349,7 +364,7 @@ namespace Makrisoft.Makfi.ViewModels
                 foreach (var item in items) Chambres.Add(item);
             }
         }
-        private void Load_Etages(Guid id)// AM : 20201228
+        private void Load_Etages(Guid? id)// AM : 20201228
         {
             var items = MakfiData
                 .GroupeChambre_Read($"<groupeChambres><hotel>{id}</hotel></groupeChambres>")
@@ -392,6 +407,28 @@ namespace Makrisoft.Makfi.ViewModels
                 foreach (var item in items) Interventions.Add(item);
             }
         }
+
+        private void Load_Utilisateurs( ) 
+        {
+            var items = new ObservableCollection<Utilisateur_VM>(MakfiData.Utilisateur_Read()
+                         .Select(x => new Utilisateur_VM
+                         {
+                             Id = x.Id,
+                             Nom = x.Nom,
+                             Image = $"/Makrisoft.Makfi;component/Assets/Photos/{x.Nom.ToLower()}.png",
+                             CodePin = x.CodePin,
+                             Statut = x.Statut,
+                             DateModified = default,
+                             SaveColor = "Navy"
+                         }));
+            if (Utilisateurs == null)
+                Utilisateurs = new ObservableCollection<Utilisateur_VM>(items);
+            else
+            {
+                Utilisateurs.Clear();
+                foreach (var item in items) Utilisateurs.Add(item);
+            }
+        }
         #endregion
 
         #region DgSource
@@ -410,7 +447,8 @@ namespace Makrisoft.Makfi.ViewModels
         Etages = 8,
         DateDebut = 16,
         DateFin = 32,
-        Interventions = 64
+        Interventions = 64,
+        Utilisateurs = 128
     }
 
 }

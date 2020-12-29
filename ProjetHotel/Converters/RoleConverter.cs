@@ -68,7 +68,7 @@ namespace Makrisoft.Makfi.Converters
         {
             if ((bool)value == true)
             {
-                Reference_ViewModel.Utilisateur.CurrentUtilisateur.Statut = (RoleEnum)parameter;
+                Reference_ViewModel.Utilisateur.CurrentDgSource.Statut = (RoleEnum)parameter;
                 return parameter;
             }
             return null;

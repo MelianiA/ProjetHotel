@@ -296,7 +296,7 @@ namespace Makrisoft.Makfi.ViewModels
         public void Load_Chambres()
         {
             //Load_Chambres
-            Guid monId = default;
+            Guid? monId = default;
             if (Reference_ViewModel.Header.CurrentHotel != null)
                 monId = Reference_ViewModel.Header.CurrentHotel.Id;
             //Load_ChambreGroupeChambre
@@ -315,7 +315,7 @@ namespace Makrisoft.Makfi.ViewModels
             ChambreCollectionView.Refresh();
 
             //Load_GroupeChambre
-            Guid idHotel = default;
+            Guid? idHotel = default;
             if (Reference_ViewModel.Header.CurrentHotel != null) idHotel = Reference_ViewModel.Header.CurrentHotel.Id;
             GroupeChambre = new ObservableCollection<Etage_VM>(
              MakfiData.GroupeChambre_Read($"<groupeChambre><hotel>{idHotel}</hotel></groupeChambre>")

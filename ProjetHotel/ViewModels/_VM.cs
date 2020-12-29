@@ -83,7 +83,7 @@ namespace Makrisoft.Makfi.ViewModels
     }
     public class Employe_VM : ViewModelBase
     {
-        public Guid Id { get; set; }
+        public Guid? Id { get; set; }
         public Etat_VM Etat
         {
             get { return etat; }
@@ -152,7 +152,7 @@ namespace Makrisoft.Makfi.ViewModels
     }
     public class Hotel_VM : ViewModelBase
     {
-        public Guid Id { get; set; }
+        public Guid? Id { get; set; }
         public string Nom
         {
             get { return nom; }
@@ -226,7 +226,7 @@ namespace Makrisoft.Makfi.ViewModels
     }
     public class Utilisateur_VM : ViewModelBase
     {
-        public Guid Id
+        public Guid? Id
         {
             get
             {
@@ -234,7 +234,7 @@ namespace Makrisoft.Makfi.ViewModels
             }
             set { id = value; }
         }
-        private Guid id;
+        private Guid? id;
 
         public string Nom
         {

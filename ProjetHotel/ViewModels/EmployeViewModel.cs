@@ -246,7 +246,7 @@ namespace Makrisoft.Makfi.ViewModels
         #region Load
         public void Load_Employes() 
         {
-            Guid idHotel = default;
+            Guid? idHotel = default;
             if (Reference_ViewModel.Header.CurrentHotel != null)
                  idHotel = Reference_ViewModel.Header.CurrentHotel.Id;
             else

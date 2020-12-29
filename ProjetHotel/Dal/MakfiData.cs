@@ -16,7 +16,9 @@ namespace Makrisoft.Makfi.Dal
         Utilisateur, None, Hotel, InterventionAjouter, InterventionSupprimer, Message, Parametre
     }
     public enum RoleEnum { None = 0, Gouvernante = 1, Reception = 2, Admin = 255 }
-    public enum EntiteEnum { Employe = 1, Chambre = 2, Intervention = 3, InterventionDetail = 4, Message = 5, InterventionAjouter = 6 }
+    public enum EntiteEnum { Employe = 1, Chambre = 2, Intervention = 3, InterventionDetail = 4, Message = 5, InterventionAjouter = 6,
+        None = 0
+    }
 
     public static class MakfiData
     {
