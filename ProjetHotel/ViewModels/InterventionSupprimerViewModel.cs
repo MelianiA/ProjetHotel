@@ -9,7 +9,7 @@ using System.Windows.Data;
 
 namespace Makrisoft.Makfi.ViewModels
 {
-    public class InterventionSupprimerViewModel : ViewModelBase
+    public class InterventionSupprimerViewModel_ : ViewModelBase
     {
         #region Constructeur
 

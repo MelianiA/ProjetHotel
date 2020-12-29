@@ -60,7 +60,7 @@
                         <MenuItem Header="Tout supprimer" Foreground="Navy" 
                                   Command="{Binding DeleteAllCommand}"/>
                         <Separator/>
-                        <MenuItem Header="Enregistrer tout" Foreground="Navy" 
+                        <MenuItem Header="Tout enregistrer" Foreground="Navy" 
                                   Command="{Binding SaveAllCommand}"/>
                     </MenuItem>
                 </Menu>

@@ -296,10 +296,10 @@ namespace Makrisoft.Makfi.ViewModels
                 case ViewEnum.InterventionAjouter:
                     Reference_ViewModel.Main.ViewSelected = Dal.ViewEnum.InterventionDetail;
                     break;
-                case ViewEnum.InterventionSupprimer:
-                    Reference_ViewModel.InterventionSupprimer.OnSupprimerParBloc();
-                    Reference_ViewModel.Main.ViewSelected = Dal.ViewEnum.InterventionDetail;
-                    break;
+                //case ViewEnum.InterventionSupprimer:
+                //    Reference_ViewModel.InterventionSupprimer.OnSupprimerParBloc();
+                //    Reference_ViewModel.Main.ViewSelected = Dal.ViewEnum.InterventionDetail;
+                //    break;
                 case ViewEnum.Message:
                     MessagesVisibility = Visibility.Visible;
 
