@@ -80,6 +80,12 @@ namespace Makrisoft.Makfi.ViewModels
             }
         }
 
+        internal void Load(ViewEnum exView)
+        {
+            Reference_ViewModel.Header.Utilisateur_Load();
+
+        }
+
         #endregion
 
         #region Constructeur

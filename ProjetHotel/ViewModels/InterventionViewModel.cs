@@ -36,6 +36,12 @@ namespace Makrisoft.Makfi.ViewModels
                   SaveColor = "Navy"
               }).OrderBy(x => x.Libelle).ToList();
         }
+
+        public override void Load(ViewEnum exView)
+        {
+            RetourIntervention = false;
+        }
+
         public override void DgSource_Save()
         {
             var param = $@"
@@ -91,7 +97,7 @@ namespace Makrisoft.Makfi.ViewModels
         public override void OnChangeViewCommand()
         {
             Reference_ViewModel.Main.ViewSelected = ViewEnum.InterventionDetail;
-            RevientIci = true;
+            RetourIntervention = true;
         }
         #endregion
     }

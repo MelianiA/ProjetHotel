@@ -22,35 +22,25 @@ namespace Makrisoft.Makfi.ViewModels
                 switch (value)
                 {
                     case ViewEnum.InterventionAjouter:
-                        Reference_ViewModel.InterventionAjouter.CheckAnnuler = true;
-                        Reference_ViewModel.InterventionAjouter.Load_Interventions($@"
-                                <interventions>
-                                    <hotel>{Reference_ViewModel.Header.CurrentHotel.Id}</hotel>
-                                    <delete>{Reference_ViewModel.Intervention.CurrentDgSource.Id}</delete>
-                                </interventions>");
+                        Reference_ViewModel.InterventionAjouter.Load(exView);
                         break;
                     case ViewEnum.Intervention:
+                        Reference_ViewModel.Intervention.Load(exView);
                         break;
                     case ViewEnum.InterventionDetail:
-                        Reference_ViewModel.InterventionDetail.Title = Reference_ViewModel.Intervention.CurrentDgSource.Libelle;
-                        if (exView == ViewEnum.InterventionAjouter)
-                        {
-                            foreach (var interD in Reference_ViewModel.InterventionAjouter.DgSource)
-                                Reference_ViewModel.InterventionDetail.DgSource.Add(interD);
-                        }
-                        else
-                            Reference_ViewModel.InterventionDetail.Load_DgSource();
+                        Reference_ViewModel.InterventionDetail.Load(exView);
                         break;
                     case ViewEnum.ChambreGroupe:
-                        Reference_ViewModel.ChambreGroupe.Load_AllChambres();
-                        Reference_ViewModel.ChambreGroupe.Load_Etages();
+                        Reference_ViewModel.ChambreGroupe.Load(exView);
                         break;
                     case ViewEnum.Login:
-                        Reference_ViewModel.Header.Utilisateur_Load();
+                        Reference_ViewModel.Login.Load(exView);
                         break;
                     case ViewEnum.Hotel:
-                        Reference_ViewModel.Hotel.Load_Receptions();
-                        Reference_ViewModel.Hotel.Load_Gouvernantes();
+                        Reference_ViewModel.Hotel.Load(exView);
+                        break;
+                    case ViewEnum.Home:
+                        Reference_ViewModel.Home.Load(exView);
                         break;
                 }
                 OnPropertyChanged("ViewSelected");
@@ -61,7 +51,6 @@ namespace Makrisoft.Makfi.ViewModels
         public MainViewModel()
         {
             viewSelected = ViewEnum.Login;
-
 
         }
     }

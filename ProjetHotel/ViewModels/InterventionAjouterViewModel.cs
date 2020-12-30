@@ -19,6 +19,16 @@ namespace Makrisoft.Makfi.ViewModels
             Title = "Tout ajouter !";
             Init();
         }
+
+        public override void Load(ViewEnum exView)
+        {
+            CheckAnnuler = true;
+            Load_Interventions($@"
+                                <interventions>
+                                    <hotel>{Reference_ViewModel.Header.CurrentHotel.Id}</hotel>
+                                    <delete>{Reference_ViewModel.Intervention.CurrentDgSource.Id}</delete>
+                                </interventions>");
+        }
         #endregion
         #region DgSource
         public override IEnumerable<InterventionDetail_VM> DgSource_Read()
@@ -83,7 +93,7 @@ namespace Makrisoft.Makfi.ViewModels
             set
             {
                 currentIntervention = value;
-            
+
                 Load_DgSource();
                 OnPropertyChanged("CurrentIntervention");
             }

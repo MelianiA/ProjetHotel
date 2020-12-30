@@ -61,6 +61,13 @@ namespace Makrisoft.Makfi.ViewModels
             get { return derniereIntervention; }
             set { derniereIntervention = value; OnPropertyChanged("DerniereIntervention"); }
         }
+
+        internal void Load(ViewEnum exView)
+        {
+           ButtonInterventionDuJour();
+
+        }
+
         private String derniereIntervention;
 
         #endregion
@@ -90,21 +97,22 @@ namespace Makrisoft.Makfi.ViewModels
 
         public void ButtonInterventionDuJour()
         {
+            DerniereIntervention = "";
+            EtatControle = "Intervention du jour";
             Intervention_VM intervention = null;
+
             if (Reference_ViewModel.Intervention.DgSource != null)
-                NbrControle = Reference_ViewModel.Intervention.DgSource.Where(x => x.Etat !=null &&  x.Etat.Libelle != "Terminée").Count().ToString();
-            var itervDispo = Reference_ViewModel.Intervention.DgSource.Where(x => x.Etat != null && x.Etat.Libelle != "Terminée").ToList();
-            if (itervDispo.Count() > 0)
             {
-                intervention = itervDispo[0];
-                DerniereIntervention = "Intervention du " + intervention.Date1.ToString("dddd dd MMMM", CultureInfo.CurrentCulture);
-                EtatControle = "Contrôle";
+                NbrControle = Reference_ViewModel.Intervention.DgSource.Where(x => x.Etat != null && x.Etat.Libelle != "Terminée").Count().ToString();
+                var itervDispo = Reference_ViewModel.Intervention.DgSource.Where(x => x.Etat != null && x.Etat.Libelle != "Terminée").ToList();
+                if (itervDispo.Count() > 0)
+                {
+                    intervention = itervDispo[0];
+                    DerniereIntervention = "Intervention du " + intervention.Date1.ToString("dddd dd MMMM", CultureInfo.CurrentCulture);
+                    EtatControle = "Contrôle";
+                }
             }
-            else
-            {
-                DerniereIntervention = "";
-                EtatControle = "Intervention du jour";
-            }
+             
 
             //Reference_ViewModel.Intervention.CurrentDgSource = intervention; // AM : 20201228
             //Reference_ViewModel.InterventionDetail.Load_DgSource();

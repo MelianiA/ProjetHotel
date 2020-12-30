@@ -18,7 +18,7 @@ namespace Makrisoft.Makfi.ViewModels
             // ICommand
             DeconnectCommand = new RelayCommand(p => OnDeconnectCommand(), p => OnCanExecuteDeconnectCommand());
             BackCommand = new RelayCommand(p => OnBackCommand(), p => OnCanExecuteBackCommand());
-            MessageDisplayAllCommand = new RelayCommand(p => OnMessageDisplayAllCommand(), p => OnCanExecuteMessageDisplayAllCommand());
+            MessageCommand = new RelayCommand(p => OnMessageCommand(), p => OnCanExecuteMessageCommand());
 
             // Utilisateur
             Utilisateur_Load();
@@ -31,7 +31,7 @@ namespace Makrisoft.Makfi.ViewModels
             MenuVisibility = Visibility.Hidden;
 
             //Messages
- 
+
         }
         #endregion
 
@@ -96,12 +96,12 @@ namespace Makrisoft.Makfi.ViewModels
                     MessagesCollectionView.SortDescriptions.Add(new System.ComponentModel.SortDescription("DateCreation", System.ComponentModel.ListSortDirection.Descending));
 
                 }
-                if (string.IsNullOrEmpty(currentUtilisateur.CodePin))
+                if (string.IsNullOrEmpty(CurrentUtilisateur.CodePin))
                 {
-                    Reference_ViewModel.Header.messagerieVisibility = Visibility.Hidden;
+                    MessagerieVisibility = Visibility.Hidden;
                     Message = "Tapez votre code pin";
                 }
-                
+
                 OnPropertyChanged("CurrentUtilisateur");
             }
         }
@@ -181,7 +181,6 @@ namespace Makrisoft.Makfi.ViewModels
         private DateTime horloge = DateTime.Now;
 
         //Messages 
-        
         public ListCollectionView MessagesCollectionView
         {
             get { return messagesCollectionView; }
@@ -230,7 +229,7 @@ namespace Makrisoft.Makfi.ViewModels
         // ICommand
         public ICommand DeconnectCommand { get; set; }
         public ICommand BackCommand { get; set; }
-        public ICommand MessageDisplayAllCommand { get; set; }
+        public ICommand MessageCommand { get; set; }
 
         // Méthode
         private void OnBackCommand()
@@ -240,7 +239,6 @@ namespace Makrisoft.Makfi.ViewModels
                 case ViewEnum.Administration:
                     Reference_ViewModel.Main.ViewSelected = Dal.ViewEnum.Home;
                     break;
-
                 case ViewEnum.Utilisateur:
                     Reference_ViewModel.Main.ViewSelected = Dal.ViewEnum.Administration;
                     break;
@@ -250,59 +248,27 @@ namespace Makrisoft.Makfi.ViewModels
                     break;
 
                 case ViewEnum.Employe:
-                    //Reference_ViewModel.InterventionDetail.Load_DgSource(); // AM : 20201228
                     Reference_ViewModel.Main.ViewSelected = Dal.ViewEnum.Home;
                     break;
                 case ViewEnum.Chambre:
-                    //Reference_ViewModel.InterventionDetail.Load_DgSource(); // AM : 20201228
                     Reference_ViewModel.Main.ViewSelected = Dal.ViewEnum.Home;
                     break;
                 case ViewEnum.ChambreGroupe:
                     Reference_ViewModel.Main.ViewSelected = Dal.ViewEnum.Chambre;
                     break;
                 case ViewEnum.Intervention:
-                    Reference_ViewModel.Home.ButtonInterventionDuJour();
                     Reference_ViewModel.Main.ViewSelected = Dal.ViewEnum.Home;
                     break;
                 case ViewEnum.InterventionDetail:
-
-                    /********mettre à jour l'etat de l'intervention dans la base de données********/
-              //      Guid? monID = null;
-              //      if (Reference_ViewModel.Intervention.CurrentDgSource.Id != default) monID = Reference_ViewModel.Intervention.CurrentDgSource.Id;
-              //      var param = $@"
-              //              <intervention>
-              //                  <id>{monID}</id>
-              //                  <libelle>{Reference_ViewModel.Intervention.CurrentDgSource.Libelle}</libelle>
-              //                  <commentaire>{Reference_ViewModel.Intervention.CurrentDgSource.Commentaire}</commentaire>    
-						        //<hotel>{Reference_ViewModel.Header.CurrentHotel.Id}</hotel>
-              //                  <date1>{Reference_ViewModel.Intervention.CurrentDgSource.Date1}</date1>    
-              //                  <model>{Reference_ViewModel.Intervention.CurrentDgSource.Model}</model>   
-              //                  <etat>{Reference_ViewModel.InterventionDetail.GetSommeEtats().Id}</etat> 
-              //               </intervention>";
-              //      var ids = MakfiData.Intervention_Save(param);
-              //      if (ids.Count == 0) throw new Exception("Rien n'a été sauvgardé ! ");
-                    /************************************************************************/
-                    if (Reference_ViewModel.Intervention.RevientIci == true)
-                    {
-                        Reference_ViewModel.Main.ViewSelected = Dal.ViewEnum.Intervention;
-                        Reference_ViewModel.Intervention.RevientIci = false;
-                    }
+                    if (Reference_ViewModel.Intervention.RetourIntervention)
+                        Reference_ViewModel.Main.ViewSelected = ViewEnum.Intervention;
                     else
-                    {
-                        Reference_ViewModel.Home.ButtonInterventionDuJour();
                         Reference_ViewModel.Main.ViewSelected = Dal.ViewEnum.Home;
-                    }
                     break;
                 case ViewEnum.InterventionAjouter:
                     Reference_ViewModel.Main.ViewSelected = Dal.ViewEnum.InterventionDetail;
                     break;
-                //case ViewEnum.InterventionSupprimer:
-                //    Reference_ViewModel.InterventionSupprimer.OnSupprimerParBloc();
-                //    Reference_ViewModel.Main.ViewSelected = Dal.ViewEnum.InterventionDetail;
-                //    break;
                 case ViewEnum.Message:
-                    MessagesVisibility = Visibility.Visible;
-
                     Reference_ViewModel.Main.ViewSelected = LastView;
                     break;
                 case ViewEnum.Parametre:
@@ -319,50 +285,33 @@ namespace Makrisoft.Makfi.ViewModels
             MessagesVisibility = Visibility.Visible;
 
         }
-        private void OnMessageDisplayAllCommand()
+        private void OnMessageCommand()
         {
             MessagesVisibility = Visibility.Collapsed;
             LastView = Reference_ViewModel.Main.ViewSelected;
             Reference_ViewModel.Main.ViewSelected = ViewEnum.Message;
         }
 
-        //Méthode on canExcute
-
-        private bool OnCanExecuteMessageDisplayAllCommand()
+        // Méthode OnCanExecute
+        private bool OnCanExecuteMessageCommand()
         {
             return Reference_ViewModel.Main.ViewSelected != ViewEnum.Login;
         }
         private bool OnCanExecuteBackCommand()
         {
-            if (Reference_ViewModel.Main.ViewSelected == ViewEnum.InterventionDetail)
-                return !Reference_ViewModel.InterventionDetail.OnCanExecuteSaveAllCommand();
+            return
+                (Reference_ViewModel.Main.ViewSelected == ViewEnum.InterventionDetail && !Reference_ViewModel.InterventionDetail.DgSource.Any(x => x.SaveColor == "Red")) ||
+                (Reference_ViewModel.Main.ViewSelected == ViewEnum.Intervention && !Reference_ViewModel.Intervention.DgSource.Any(x => x.SaveColor == "Red")) ||
+                (Reference_ViewModel.Main.ViewSelected == ViewEnum.Employe) && !Reference_ViewModel.Employe.Employes.Any(x => x.SaveColor == "Red") ||
+                (Reference_ViewModel.Main.ViewSelected == ViewEnum.Chambre) && !Reference_ViewModel.Chambre.ChambreGroupeChambre.Any(x => x.SaveColor == "Red") ||
+                (Reference_ViewModel.Main.ViewSelected == ViewEnum.ChambreGroupe) && !Reference_ViewModel.ChambreGroupe.Etages.Any(x => x.SaveColor == "Red") ||
+                (Reference_ViewModel.Main.ViewSelected != ViewEnum.Home && Reference_ViewModel.Main.ViewSelected != ViewEnum.Login);
 
-            if (Reference_ViewModel.Main.ViewSelected == ViewEnum.Intervention)
-                return !Reference_ViewModel.Intervention.DgSource.Any(x => x.SaveColor == "Red");
-
-            if (Reference_ViewModel.Main.ViewSelected == ViewEnum.Employe)
-                return !Reference_ViewModel.Employe.Employes.Any(x => x.SaveColor == "Red");
-
-            if (Reference_ViewModel.Main.ViewSelected == ViewEnum.Chambre)
-                return !Reference_ViewModel.Chambre.ChambreGroupeChambre.Any(x => x.SaveColor == "Red");
-
-            if (Reference_ViewModel.Main.ViewSelected == ViewEnum.ChambreGroupe)
-                return !Reference_ViewModel.ChambreGroupe.Etages.Any(x => x.SaveColor == "Red");
-
-            if (Reference_ViewModel.Main.ViewSelected == ViewEnum.Home ||
-                Reference_ViewModel.Main.ViewSelected == ViewEnum.Login)
-                return false;
-            else return true;
         }
         private bool OnCanExecuteDeconnectCommand()
         {
             return Reference_ViewModel.Main.ViewSelected != ViewEnum.Login;
         }
-        #endregion
-
-        #region Propriété
-        private readonly Timer HeaderTimer = new Timer(10000);
-
         #endregion
 
         #region Load
@@ -390,14 +339,14 @@ namespace Makrisoft.Makfi.ViewModels
         }
         #endregion
 
-        #region Divers
-
-
+        #region Horloge
+        private readonly Timer HeaderTimer = new Timer(10000);
         private void HorlogeLoop()
         {
             // Horloge
             Horloge = DateTime.Now;
         }
+
         #endregion
     }
 }

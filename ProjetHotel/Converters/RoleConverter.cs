@@ -35,7 +35,7 @@ namespace Makrisoft.Makfi.Converters
             throw new NotImplementedException();
         }
     }
-    public class RoleColorConverter : IValueConverter
+    public class StatutColorConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
@@ -56,7 +56,7 @@ namespace Makrisoft.Makfi.Converters
             throw new NotImplementedException();
         }
     }
-    public class RoleBoolConverter : IValueConverter
+    public class StatutBoolConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
@@ -66,14 +66,13 @@ namespace Makrisoft.Makfi.Converters
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if ((bool)value == true)
+            if ((bool)value)
             {
                 Reference_ViewModel.Utilisateur.CurrentDgSource.Statut = (RoleEnum)parameter;
-                return parameter;
+                return (RoleEnum)parameter;
             }
             return null;
 
-            //return parameter;
         }
     }
     public class BoolRoleConverter : IValueConverter

@@ -25,6 +25,18 @@ namespace Makrisoft.Makfi.ViewModels
 
         }
 
+        public override void Load(ViewEnum exView)
+        {
+            Title = Reference_ViewModel.Intervention.CurrentDgSource.Libelle;
+            if (exView == ViewEnum.InterventionAjouter)
+            {
+                foreach (var interD in Reference_ViewModel.InterventionAjouter.DgSource)
+                    Reference_ViewModel.InterventionDetail.DgSource.Add(interD);
+            }
+            else
+                Reference_ViewModel.InterventionDetail.Load_DgSource();
+        }
+
         private void OnSaveAllCommand()
         {
             var param =

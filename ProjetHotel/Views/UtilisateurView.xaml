@@ -12,8 +12,8 @@
     <Grid>
         <Grid.Resources>
             <conv:RoleConverter x:Key="RoleConverterKey"/>
-            <conv:RoleColorConverter x:Key="RoleColorConverterKey"/>
-            <conv:RoleBoolConverter x:Key="RoleBoolConverterKey"/>
+            <conv:StatutColorConverter x:Key="StatutColorConverterKey"/>
+            <conv:StatutBoolConverter x:Key="StatutBoolConverterKey"/>
             <conv:BoolRoleConverter x:Key="BoolRoleConverterKey"/>
             
             <Style x:Key="BorderRole" TargetType="Border">
@@ -144,14 +144,14 @@
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                      </DataGridTemplateColumn>
-                    <DataGridTemplateColumn  >
+                    <DataGridTemplateColumn >
                             <!--à gauche-->
                         <DataGridTemplateColumn.CellTemplate  >
                                 <DataTemplate>
                                     <Border Style="{StaticResource BorderRole}">
                                         <materialDesign:PackIcon Height="20" Width="Auto" 
                                                              Kind="{Binding Statut, Converter={StaticResource RoleConverterKey}}" 
-                                                             Foreground="{Binding Statut, Converter={StaticResource RoleColorConverterKey}}"/>
+                                                             Foreground="{Binding Statut, Converter={StaticResource StatutColorConverterKey}}"/>
                                     </Border>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
@@ -168,7 +168,7 @@
                 <StackPanel Orientation="Horizontal" Margin="0,30,0,0">
                     <materialDesign:PackIcon Height="20" Width="Auto" Kind="Person" Foreground="Silver" Margin="0,0,10,0"/>
                     <RadioButton GroupName="Group1" IsEnabled="{Binding IsModifierEnabled}"
-                                 IsChecked="{Binding CurrentDgSource.Statut, Converter={StaticResource RoleBoolConverterKey}, ConverterParameter={x:Static data:RoleEnum.Admin},
+                                 IsChecked="{Binding CurrentDgSource.Statut, Converter={StaticResource StatutBoolConverterKey}, ConverterParameter={x:Static data:RoleEnum.Admin},
                         UpdateSourceTrigger=PropertyChanged}" 
                                   />
                     <TextBlock Text="Administrateur" Margin="10,0,0,0" />
@@ -176,7 +176,7 @@
                 <StackPanel Orientation="Horizontal" Margin="0,30,0,0">
                     <materialDesign:PackIcon Height="20" Width="Auto" Kind="FaceWoman" Foreground="Silver" Margin="0,0,10,0"/>
                     <RadioButton GroupName="Group1" IsEnabled="{Binding IsModifierEnabled}"
-                                 IsChecked="{Binding CurrentDgSource.Statut, Converter={StaticResource RoleBoolConverterKey}, ConverterParameter={x:Static data:RoleEnum.Gouvernante},
+                                 IsChecked="{Binding CurrentDgSource.Statut, Converter={StaticResource StatutBoolConverterKey}, ConverterParameter={x:Static data:RoleEnum.Gouvernante},
                         UpdateSourceTrigger=PropertyChanged}"
                                   />
                     <TextBlock Text="Gouvernante" Margin="10,0,0,0" />
@@ -184,7 +184,7 @@
                 <StackPanel Orientation="Horizontal" Margin="0,30,0,0">
                     <materialDesign:PackIcon Height="20" Width="Auto" Kind="Building" Foreground="Silver" Margin="0,0,10,0"/>
                     <RadioButton GroupName="Group1" IsEnabled="{Binding IsModifierEnabled}"
-                                 IsChecked="{Binding CurrentDgSource.Statut, Converter={StaticResource RoleBoolConverterKey}, ConverterParameter={x:Static data:RoleEnum.Reception},
+                                 IsChecked="{Binding CurrentDgSource.Statut, Converter={StaticResource StatutBoolConverterKey}, ConverterParameter={x:Static data:RoleEnum.Reception},
                         UpdateSourceTrigger=PropertyChanged}"
                                   />
                     <TextBlock Text="Réception" Margin="10,0,0,0" />

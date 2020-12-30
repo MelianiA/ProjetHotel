@@ -22,8 +22,8 @@ namespace Makrisoft.Makfi.ViewModels
             Components = ComponentEnum.None;
             Title = "Les hôtels";
 
-             Load_Receptions();
-             Load_Gouvernantes();
+            Load_Receptions();
+            Load_Gouvernantes();
             Init();
         }
         #endregion
@@ -38,12 +38,19 @@ namespace Makrisoft.Makfi.ViewModels
                     Id = x.Id,
                     Nom = x.Nom,
                     Image = $"/Makrisoft.Makfi;component/Assets/hotels/{x.Nom.ToLower()}.png",
-                    Gouvernante = Gouvernantes.Where(u => u.Id == x.Gouvernante).SingleOrDefault(),
-                    Reception = Receptions.Where(u => u.Id == x.Reception).SingleOrDefault(),
+                    Gouvernante = Gouvernantes.Where(u => u.Id == x.Gouvernante).FirstOrDefault(),
+                    Reception = Receptions.Where(u => u.Id == x.Reception).FirstOrDefault(),
                     Commentaire = x.Commentaire,
                     SaveColor = "Navy"
                 }));
         }
+
+        public override void Load(ViewEnum exView)
+        {
+            Reference_ViewModel.Hotel.Load_Receptions();
+            Reference_ViewModel.Hotel.Load_Gouvernantes();
+        }
+
         public override void DgSource_Save()
         {
             var reception = CurrentDgSource.Reception == null ? null : CurrentDgSource.Reception.Id;
@@ -124,13 +131,16 @@ namespace Makrisoft.Makfi.ViewModels
                                         Statut = x.Statut,
                                         DateModified = default,
                                         SaveColor = "Navy"
-                                    }) );
+                                    }));
             if (Gouvernantes == null)
                 Gouvernantes = new ObservableCollection<Utilisateur_VM>(items);
             else
             {
-                Gouvernantes.Clear();
-                foreach (var item in items) Gouvernantes.Add(item);
+
+                foreach (var item in items)
+                    if (!Gouvernantes.Any(g=>g.Id ==item.Id))
+                        Gouvernantes.Add(item);
+                 
             }
         }
         public void Load_Receptions()
@@ -151,8 +161,12 @@ namespace Makrisoft.Makfi.ViewModels
                 Receptions = new ObservableCollection<Utilisateur_VM>(items);
             else
             {
-                receptions.Clear();
-                foreach (var item in items) receptions.Add(item);
+                // receptions.Clear();
+                foreach (var item in items)
+                {
+                    if (!Receptions.Any(g => g.Id == item.Id))
+                        Receptions.Add(item);
+                }
             }
         }
 

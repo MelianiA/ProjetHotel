@@ -29,6 +29,12 @@ namespace Makrisoft.Makfi.ViewModels
             }
         }
 
+        public   void Load(ViewEnum exView) //override
+        {
+            Load_AllChambres();
+            Load_Etages();
+        }
+
         #endregion
 
         #region Binding
@@ -117,7 +123,7 @@ namespace Makrisoft.Makfi.ViewModels
                     $"\nVous devez choisir un nom pour ce groupe de chambre.", "Remarque !");
                 return;
             }
-       
+
             //Etape01 : Insertion dans la table GroupeChambre
             Guid? monID = null;
             if (CurrentEtage.Id != default) monID = CurrentEtage.Id;
@@ -197,7 +203,7 @@ namespace Makrisoft.Makfi.ViewModels
             if (CurrentEtage == null) return false;
             else return true;
         }
-  
+
         #endregion
 
         #region Load
@@ -206,12 +212,12 @@ namespace Makrisoft.Makfi.ViewModels
 
             if (Reference_ViewModel.Header.CurrentHotel == null)
             {
-                if(Etages!=null) Etages.Clear();
+                if (Etages != null) Etages.Clear();
                 MessageBox.Show($"Aucun hôtel ne vous a été assigné  ", "Impossible d'enregistrer  !");
-                if (CurrentEtage != null)  Etages.Remove(CurrentEtage);
+                if (CurrentEtage != null) Etages.Remove(CurrentEtage);
                 return;
             }
-             
+
             Etages = new ObservableCollection<Etage_VM>(
               MakfiData.GroupeChambre_Read($"<groupeChambre><hotel>{Reference_ViewModel.Header.CurrentHotel.Id}</hotel></groupeChambre>")
               .Select(x => new Etage_VM

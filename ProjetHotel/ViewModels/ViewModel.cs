@@ -46,6 +46,10 @@ namespace Makrisoft.Makfi.ViewModels
 
                 Load_DgSource();
             }
+            else if (this is UtilisateurViewModel ||this is HotelViewModel)
+            {
+                Load_DgSource();
+            }
 
             // DgSourceCollectionView
             if (DgSource != null)
@@ -53,11 +57,11 @@ namespace Makrisoft.Makfi.ViewModels
                 DgSourceCollectionView = new ListCollectionView(DgSource);
                 DgSourceCollectionView.Filter = DgSource_Filter;
                 if (SortDescriptions != null) foreach (var d in SortDescriptions) DgSourceCollectionView.SortDescriptions.Add(d);
-                CurrentDgSource = DgSource.FirstOrDefault();
+                //CurrentDgSource = DgSource.FirstOrDefault();
             }
         }
 
-    
+
         #endregion
 
         #region Binding
@@ -244,7 +248,7 @@ namespace Makrisoft.Makfi.ViewModels
         private DateTime? filterDateFin = null;
 
         // Retour à cette page
-        public bool RevientIci
+        public bool RetourIntervention
         {
             get { return revientIci; }
             set { revientIci = value; }
@@ -266,19 +270,13 @@ namespace Makrisoft.Makfi.ViewModels
         // Méthodes OnCommand
         public void OnSaveCommand()
         {
-            if (Reference_ViewModel.Header.CurrentHotel == null)
-            {
-                MessageBox.Show($"Aucun hôtel ne vous a été assigné  ", "Impossible d'enregistrer  !");
-                DgSource.Remove(CurrentDgSource);
-                return;
-            }
-
+            
             DgSource_Save();
             DgSourceCollectionView.Refresh();
         }
         public virtual void OnAddCommand() { }
         public virtual void OnDeleteCommand() { }
-    
+
         public virtual void OnFilterClearCommand()
         {
             FilterEtat = null;
@@ -300,6 +298,15 @@ namespace Makrisoft.Makfi.ViewModels
         #endregion
 
         #region Load
+
+        public virtual void Load( ViewEnum exView)
+        {
+            if(!(this is MessageViewModel))
+            {
+                Reference_ViewModel.Header.MessagesVisibility = Visibility.Visible;
+            }
+
+        }
         public void Load_DgSource()// AM : 20201228
         {
             var items = DgSource_Read();
@@ -408,7 +415,7 @@ namespace Makrisoft.Makfi.ViewModels
             }
         }
 
-        private void Load_Utilisateurs( ) 
+        private void Load_Utilisateurs()
         {
             var items = new ObservableCollection<Utilisateur_VM>(MakfiData.Utilisateur_Read()
                          .Select(x => new Utilisateur_VM
