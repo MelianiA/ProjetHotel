@@ -24,7 +24,7 @@ namespace Makrisoft.Makfi.Converters
                     s == $"{ViewEnum.Employe}Messagerie" ||
                     s == $"{ViewEnum.Synthese}Messagerie" ||
                     s == $"{ViewEnum.Administration}Messagerie" ||
-                    s == $"{ViewEnum.ChambreGroupe}Messagerie" ||
+                    s == $"{ViewEnum.Etage}Messagerie" ||
                     s == $"{ViewEnum.Utilisateur}Messagerie" ||
                     s == $"{ViewEnum.Hotel}Messagerie" ||
                     s == $"{ViewEnum.InterventionAjouter}Messagerie" ||
@@ -41,7 +41,7 @@ namespace Makrisoft.Makfi.Converters
                     s == $"{ViewEnum.Administration}Back" ||
                     s == $"{ViewEnum.Utilisateur}Back" ||
                     s == $"{ViewEnum.Hotel}Back" ||
-                    s == $"{ViewEnum.ChambreGroupe}Back" ||
+                    s == $"{ViewEnum.Etage}Back" ||
                     s == $"{ViewEnum.InterventionAjouter}Back" ||
                     s == $"{ViewEnum.InterventionSupprimer}Back"||
                     s == $"{ViewEnum.Parametre}Back"  

@@ -49,7 +49,7 @@
                     <MenuItem Header="..." Foreground="Navy" FontSize="16">
                         <MenuItem Header="Ajouter" Foreground="Navy" Command="{Binding AddCommand}"/>
                         <MenuItem Header="Supprimer" Foreground="Navy" Command="{Binding DeleteCommand}"/>
-                        <MenuItem Header="Détails" Foreground="Navy" Command="{Binding ChangeView}"/>
+                        <MenuItem Header="Détails" Foreground="Navy" Command="{Binding ChangeViewCommand}"/>
                      </MenuItem>
                 </Menu>
             </Grid>

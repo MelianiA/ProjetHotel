@@ -107,10 +107,10 @@
     <Compile Include="Converters\ViewSelectedConverter.cs" />
     <Compile Include="Dal\MakfiData.cs" />
     <Compile Include="Models\Chambre.cs" />
-    <Compile Include="Models\ChambreGroupeChambre.cs" />
+    <Compile Include="Models\ChambreEtage.cs" />
     <Compile Include="Models\Employe.cs" />
     <Compile Include="Models\Etat.cs" />
-    <Compile Include="Models\GroupeChambre.cs" />
+    <Compile Include="Models\Etage.cs" />
     <Compile Include="Models\Hotel.cs" />
     <Compile Include="Models\HotelEmploye.cs" />
     <Compile Include="Models\Info.cs" />
@@ -119,7 +119,7 @@
     <Compile Include="Models\Utilisateur.cs" />
     <Compile Include="Tools\Tools.cs" />
     <Compile Include="ViewModels\AdministrationViewModel.cs" />
-    <Compile Include="ViewModels\ChambreGroupeViewModel.cs" />
+    <Compile Include="ViewModels\EtageViewModel.cs" />
     <Compile Include="ViewModels\ChambreViewModel.cs" />
     <Compile Include="ViewModels\EmployeViewModel.cs" />
     <Compile Include="ViewModels\HomeViewModel.cs" />
@@ -142,8 +142,8 @@
       <DependentUpon>AdministrationView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Converters\EmployeConverters.cs" />
-    <Compile Include="Views\ChambreGroupeView.xaml.cs">
-      <DependentUpon>ChambreGroupeView.xaml</DependentUpon>
+    <Compile Include="Views\EtageView.xaml.cs">
+      <DependentUpon>EtageView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\ChambreView.xaml.cs">
       <DependentUpon>ChambreView.xaml</DependentUpon>
@@ -221,7 +221,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Views\ChambreGroupeView.xaml">
+    <Page Include="Views\EtageView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

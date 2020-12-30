@@ -1,10 +1,4 @@
 ﻿using Makrisoft.Makfi.Dal;
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Makrisoft.Makfi.ViewModels
 {
@@ -18,7 +12,6 @@ namespace Makrisoft.Makfi.ViewModels
                 var exView = viewSelected;
                 viewSelected = value;
 
-                // Partie dynamique
                 switch (value)
                 {
                     case ViewEnum.InterventionAjouter:
@@ -30,7 +23,7 @@ namespace Makrisoft.Makfi.ViewModels
                     case ViewEnum.InterventionDetail:
                         Reference_ViewModel.InterventionDetail.Load(exView);
                         break;
-                    case ViewEnum.ChambreGroupe:
+                    case ViewEnum.Etage:
                         Reference_ViewModel.ChambreGroupe.Load(exView);
                         break;
                     case ViewEnum.Login:

@@ -27,7 +27,7 @@ namespace Makrisoft.Makfi.ViewModels
             AddCommand = new RelayCommand(p => OnAddCommand(), p => true);
             DeleteCommand = new RelayCommand(p => OnDeleteCommand(), p => OnCanExecuteDeleteCommand());
             FilterClearCommand = new RelayCommand(p => OnFilterClearCommand());
-            ChangeView = new RelayCommand(p => OnChangeViewCommand(), p => OnCanExecuteChangeView());
+            ChangeViewCommand = new RelayCommand(p => OnChangeViewCommand(), p => OnCanExecuteChangeView());
 
             // Load
             if (Reference_ViewModel.Header.CurrentHotel != null)
@@ -54,8 +54,10 @@ namespace Makrisoft.Makfi.ViewModels
             // DgSourceCollectionView
             if (DgSource != null)
             {
-                DgSourceCollectionView = new ListCollectionView(DgSource);
-                DgSourceCollectionView.Filter = DgSource_Filter;
+                DgSourceCollectionView = new ListCollectionView(DgSource)
+                {
+                    Filter = DgSource_Filter
+                };
                 if (SortDescriptions != null) foreach (var d in SortDescriptions) DgSourceCollectionView.SortDescriptions.Add(d);
                 //CurrentDgSource = DgSource.FirstOrDefault();
             }
@@ -265,7 +267,7 @@ namespace Makrisoft.Makfi.ViewModels
         public ICommand AddCommand { get; set; }
         public ICommand DeleteCommand { get; set; }
         public ICommand FilterClearCommand { get; set; }
-        public ICommand ChangeView { get; set; }
+        public ICommand ChangeViewCommand { get; set; }
 
         // Méthodes OnCommand
         public void OnSaveCommand()
@@ -290,7 +292,7 @@ namespace Makrisoft.Makfi.ViewModels
         // Méthodes OnCanExecuteCommand
         private bool OnCanExecuteSaveCommand() { return CurrentDgSource != null; }
         public virtual bool OnCanExecuteDeleteCommand() { return CurrentDgSource != null; }
-        private bool OnCanExecuteChangeView() { return CurrentDgSource != null && CurrentDgSource.SaveColor != "Red"; }
+        public virtual bool OnCanExecuteChangeView() { return CurrentDgSource != null && CurrentDgSource.SaveColor != "Red"; }
 
         //Filter 
         public virtual bool DgSource_Filter(object item) { return true; }
@@ -351,7 +353,7 @@ namespace Makrisoft.Makfi.ViewModels
                 foreach (var item in items) Employes.Add(item);
             }
         }
-        private void Load_Chambres(Guid? id)// AM : 20201228
+        public void Load_Chambres(Guid? id)// AM : 20201228
         {
             var items = MakfiData
                 .Chambre_Read($"<chambres><hotel>{id}</hotel></chambres>")
@@ -359,7 +361,7 @@ namespace Makrisoft.Makfi.ViewModels
                 {
                     Id = x.Id,
                     Nom = x.Nom,
-                    Etat = MakfiData.Etats.Where(e => e.Id == x.Etat.Id).Single(),
+                    Etat = MakfiData.Etats.Where(e => e.Id == x.Etat).Single(),
                     Commentaire = x.Commentaire,
                     SaveColor = "Navy"
                 });

@@ -30,8 +30,7 @@ namespace Makrisoft.Makfi.ViewModels
                 return;
             }
             if (Reference_ViewModel.Home != null)
-                Reference_ViewModel.Home.WithHotel = Reference_ViewModel.Header.CurrentHotel == null ? false : true;
-
+                Reference_ViewModel.Home.WithHotel = Reference_ViewModel.Header.CurrentHotel != null;
 
             Password += key.ToString();
             if (Password.Length == 4)

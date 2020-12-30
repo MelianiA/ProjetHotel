@@ -5,26 +5,27 @@ using System.Windows.Data;
 
 namespace Makrisoft.Makfi.ViewModels
 {
-    public class ChambreByEtage_VM : ViewModelBase
-    {
-        public Guid? GroupeChambre;
-        public string Nom;
-        public Guid IdDelaChambre;
-        public string NomChambre
-        {
-            get
-            { return nomChambre; }
-            set
-            {
-                nomChambre = value;
-                OnPropertyChanged("NomChambre");
-            }
-        }
-        private string nomChambre;
-    }
+    //public class ChambreByEtage_VM : ViewModelBase
+    //{
+    //    public Guid? GroupeChambre;
+    //    public string Nom;
+    //    public Guid IdDelaChambre;
+    //    public string NomChambre
+    //    {
+    //        get
+    //        { return nomChambre; }
+    //        set
+    //        {
+    //            nomChambre = value;
+    //            OnPropertyChanged("NomChambre");
+    //        }
+    //    }
+    //    private string nomChambre;
+    //}
     public class Chambre_VM : ViewModelBase
     {
         public Guid Id { get; set; }
+        public Guid? Etage { get; set; }
         public string Nom
         {
             get { return nom; }
@@ -69,17 +70,6 @@ namespace Makrisoft.Makfi.ViewModels
             }
         }
         private Hotel_VM hotel;
-        public string SaveColor
-        {
-            get
-            { return saveColor; }
-            set
-            {
-                saveColor = value;
-                OnPropertyChanged("SaveColor");
-            }
-        }
-        private string saveColor = "Navy";
     }
     public class Employe_VM : ViewModelBase
     {
@@ -128,17 +118,6 @@ namespace Makrisoft.Makfi.ViewModels
             }
         }
         private string commentaire;
-        public string SaveColor
-        {
-            get
-            { return saveColor; }
-            set
-            {
-                saveColor = value;
-                OnPropertyChanged("SaveColor");
-            }
-        }
-        private string saveColor = "Navy";
     }
     public class Etat_VM
     {
@@ -208,17 +187,6 @@ namespace Makrisoft.Makfi.ViewModels
             }
         }
         private string image;
-        public string SaveColor
-        {
-            get
-            { return saveColor; }
-            set
-            {
-                saveColor = value;
-                OnPropertyChanged("SaveColor");
-            }
-        }
-        private string saveColor = "Navy";
     }
     public class HotelEmploye_VM
     {
@@ -249,17 +217,6 @@ namespace Makrisoft.Makfi.ViewModels
         }
         private string nom;
 
-        public string SaveColor
-        {
-            get
-            { return saveColor; }
-            set
-            {
-                saveColor = value;
-                OnPropertyChanged("SaveColor");
-            }
-        }
-        private string saveColor = "Navy";
 
         public string Image
         {
@@ -347,7 +304,7 @@ namespace Makrisoft.Makfi.ViewModels
         }
         private ObservableCollection<Chambre_VM> chambres;
 
-        public ObservableCollection<ChambreByEtage_VM> AutresChambres
+        public ObservableCollection<Chambre_VM> AutresChambres
         {
             get { return chambreNotCurrentGroupe; }
             set
@@ -357,7 +314,7 @@ namespace Makrisoft.Makfi.ViewModels
 
             }
         }
-        private ObservableCollection<ChambreByEtage_VM> chambreNotCurrentGroupe;
+        private ObservableCollection<Chambre_VM> chambreNotCurrentGroupe;
         public ListCollectionView ChambresListview
         {
             get { return chambreCurrentGroupeListview; }
@@ -371,7 +328,7 @@ namespace Makrisoft.Makfi.ViewModels
         }
         private ListCollectionView chambreNotCurrentGroupeListview;
         //Les chambres associées à ce groupe de chambre 
-        public ChambreByEtage_VM CurrentChambreCG
+        public Chambre_VM CurrentChambreCG
         {
             get { return currentChambreCG; }
             set
@@ -380,8 +337,8 @@ namespace Makrisoft.Makfi.ViewModels
                 OnPropertyChanged("CurrentChambreCG");
             }
         }
-        private ChambreByEtage_VM currentChambreCG;
-        public ChambreByEtage_VM CurrentNotChambreCG
+        private Chambre_VM currentChambreCG;
+        public Chambre_VM CurrentNotChambreCG
         {
             get { return currentNotChambreCG; }
             set
@@ -390,21 +347,9 @@ namespace Makrisoft.Makfi.ViewModels
                 OnPropertyChanged("CurrentNotChambreCG");
             }
         }
-        private ChambreByEtage_VM currentNotChambreCG;
-
-        public string SaveColor
-        {
-            get
-            { return saveColor; }
-            set
-            {
-                saveColor = value;
-                OnPropertyChanged("SaveColor");
-            }
-        }
-        private string saveColor = "Navy";
+        private Chambre_VM currentNotChambreCG;
     }
-    public class ChambreGroupeChambre_VM : ViewModelBase
+    public class ChambreEtage_VM : ViewModelBase
     {
         public Guid Id;
         public string Nom
@@ -440,29 +385,17 @@ namespace Makrisoft.Makfi.ViewModels
             }
         }
         private string commentaire;
-        public string GroupeChambre
+        public Guid? Etage
         {
-            get { return groupeChambre; }
+            get { return etage; }
             set
             {
-                groupeChambre = value;
+                etage = value;
                 SaveColor = "Red";
-                OnPropertyChanged("GroupeChambre");
+                OnPropertyChanged("Etage");
             }
         }
-        private string groupeChambre;
-        public string SaveColor
-        {
-            get
-            { return saveColor; }
-            set
-            {
-                saveColor = value;
-                OnPropertyChanged("SaveColor");
-            }
-        }
-        private string saveColor = "Navy";
-
+        private Guid? etage;
     }
     public class Intervention_VM : ViewModelBase
     {
@@ -595,19 +528,6 @@ namespace Makrisoft.Makfi.ViewModels
             }
         }
         private string commentaire;
-
-        public string SaveColor
-        {
-            get
-            { return saveColor; }
-            set
-            {
-                saveColor = value;
-                OnPropertyChanged("SaveColor");
-            }
-        }
-        private string saveColor = "Navy";
-
     }
     public class Message_VM  : ViewModelBase
     {
@@ -684,19 +604,6 @@ namespace Makrisoft.Makfi.ViewModels
             }
         }
         private string objet;
-
-        public string SaveColor
-        {
-            get
-            { return saveColor; }
-            set
-            {
-                saveColor = value;
-                OnPropertyChanged("SaveColor");
-            }
-        }
-        private string saveColor = "Navy";
-
         public string ColorEtat
         {
             get

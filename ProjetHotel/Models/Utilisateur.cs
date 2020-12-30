@@ -13,8 +13,6 @@ namespace Makrisoft.Makfi.Models
         public string Nom;
         public Guid Gouvernante;
         public string CodePin;
-
-        public RoleEnum Statut { get; set; }
-
+        public RoleEnum Statut;
     }
 }

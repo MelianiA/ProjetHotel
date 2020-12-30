@@ -53,8 +53,8 @@ namespace Makrisoft.Makfi.ViewModels
 
         public override void DgSource_Save()
         {
-            var reception = CurrentDgSource.Reception == null ? null : CurrentDgSource.Reception.Id;
-            var gouv = CurrentDgSource.Gouvernante == null ? null : CurrentDgSource.Gouvernante.Id;
+            var reception = CurrentDgSource.Reception?.Id;
+            var gouv = CurrentDgSource.Gouvernante?.Id;
             var param = $@"<hotels>
                                 <id>{CurrentDgSource.Id}</id>
                                 <nom>{CurrentDgSource.Nom}</nom> 

@@ -253,7 +253,7 @@ namespace Makrisoft.Makfi.ViewModels
                 case ViewEnum.Chambre:
                     Reference_ViewModel.Main.ViewSelected = Dal.ViewEnum.Home;
                     break;
-                case ViewEnum.ChambreGroupe:
+                case ViewEnum.Etage:
                     Reference_ViewModel.Main.ViewSelected = Dal.ViewEnum.Chambre;
                     break;
                 case ViewEnum.Intervention:
@@ -300,13 +300,13 @@ namespace Makrisoft.Makfi.ViewModels
         private bool OnCanExecuteBackCommand()
         {
             return
-                (Reference_ViewModel.Main.ViewSelected == ViewEnum.InterventionDetail && !Reference_ViewModel.InterventionDetail.DgSource.Any(x => x.SaveColor == "Red")) ||
-                (Reference_ViewModel.Main.ViewSelected == ViewEnum.Intervention && !Reference_ViewModel.Intervention.DgSource.Any(x => x.SaveColor == "Red")) ||
-                (Reference_ViewModel.Main.ViewSelected == ViewEnum.Employe) && !Reference_ViewModel.Employe.Employes.Any(x => x.SaveColor == "Red") ||
-                (Reference_ViewModel.Main.ViewSelected == ViewEnum.Chambre) && !Reference_ViewModel.Chambre.ChambreGroupeChambre.Any(x => x.SaveColor == "Red") ||
-                (Reference_ViewModel.Main.ViewSelected == ViewEnum.ChambreGroupe) && !Reference_ViewModel.ChambreGroupe.Etages.Any(x => x.SaveColor == "Red") ||
+                (Reference_ViewModel.Main.ViewSelected == ViewEnum.InterventionDetail && Reference_ViewModel.InterventionDetail.DgSource!= null && !Reference_ViewModel.InterventionDetail.DgSource.Any(x => x.SaveColor == "Red")) ||
+                (Reference_ViewModel.Main.ViewSelected == ViewEnum.Intervention && Reference_ViewModel.InterventionDetail.DgSource != null && !Reference_ViewModel.Intervention.DgSource.Any(x => x.SaveColor == "Red")) ||
+                //(Reference_ViewModel.Main.ViewSelected == ViewEnum.Employe) && Reference_ViewModel.InterventionDetail.DgSource != null && !Reference_ViewModel.Employe.DgSource.Any(x => x.SaveColor == "Red") ||
+                (Reference_ViewModel.Main.ViewSelected == ViewEnum.Chambre) && Reference_ViewModel.InterventionDetail.DgSource != null && !Reference_ViewModel.Chambre.DgSource.Any(x => x.SaveColor == "Red") ||
+                (Reference_ViewModel.Main.ViewSelected == ViewEnum.Etage) && Reference_ViewModel.InterventionDetail.DgSource != null && !Reference_ViewModel.ChambreGroupe.DgSource.Any(x => x.SaveColor == "Red") ||
+               
                 (Reference_ViewModel.Main.ViewSelected != ViewEnum.Home && Reference_ViewModel.Main.ViewSelected != ViewEnum.Login);
-
         }
         private bool OnCanExecuteDeconnectCommand()
         {

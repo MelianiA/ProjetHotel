@@ -54,8 +54,8 @@
                 <local:ChambreView />
             </Border>
             <!--ChambreGroupe-->
-            <Border  Grid.Row="1" Visibility="{Binding ViewSelected, Converter={StaticResource ViewSelectedConverterKey}, ConverterParameter={x:Static data:ViewEnum.ChambreGroupe}}">
-                <local:ChambreGroupeView />
+            <Border  Grid.Row="1" Visibility="{Binding ViewSelected, Converter={StaticResource ViewSelectedConverterKey}, ConverterParameter={x:Static data:ViewEnum.Etage}}">
+                <local:EtageView />
             </Border>
             <!--Intervention--> 
             <Border  Grid.Row="1" Visibility="{Binding ViewSelected, Converter={StaticResource ViewSelectedConverterKey}, ConverterParameter={x:Static data:ViewEnum.Intervention}}">

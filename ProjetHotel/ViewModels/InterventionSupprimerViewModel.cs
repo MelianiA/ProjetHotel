@@ -42,7 +42,7 @@ namespace Makrisoft.Makfi.ViewModels
         }
         private Etage_VM currentEtage;
         //ChambreByGroupe 
-        public ObservableCollection<ChambreByEtage_VM> AllChambres
+        public ObservableCollection<Chambre_VM> AllChambres
         {
             get { return allChambres; }
             set
@@ -52,7 +52,7 @@ namespace Makrisoft.Makfi.ViewModels
 
             }
         }
-        private ObservableCollection<ChambreByEtage_VM> allChambres;
+        private ObservableCollection<Chambre_VM> allChambres;
 
         //Employe 
         public ObservableCollection<Employe_VM> EmployeIntervention
@@ -240,9 +240,9 @@ namespace Makrisoft.Makfi.ViewModels
                 CurentEmploye = EmployeIntervention.FirstOrDefault();
             }
             //chambres
-            if (Reference_ViewModel.Chambre.ChambreGroupeChambre != null)
+            if (Reference_ViewModel.Chambre.Chambres != null)
             {
-                ChambreIntervention = new ObservableCollection<Chambre_VM>(Reference_ViewModel.Chambre.ChambreGroupeChambre.Select(c => new Chambre_VM { Id = c.Id, Nom = c.Nom }).ToList());
+                ChambreIntervention = new ObservableCollection<Chambre_VM>(Reference_ViewModel.Chambre.Chambres.Select(c => new Chambre_VM { Id = c.Id, Nom = c.Nom }).ToList());
                 ChambreInterventionCollectionView = new ListCollectionView(ChambreIntervention);
                 CurrentChambre = ChambreIntervention.FirstOrDefault();
             }
@@ -250,14 +250,13 @@ namespace Makrisoft.Makfi.ViewModels
             GroupeChambres = Reference_ViewModel.ChambreGroupe.Etages;
             CurrentEtage = GroupeChambres.FirstOrDefault();
             //
-            AllChambres = new ObservableCollection<ChambreByEtage_VM>(
+            AllChambres = new ObservableCollection<Chambre_VM>(
               MakfiData.ChambreByGroupe_Read($"<chambreByGroupe><hotel>{Reference_ViewModel.Header.CurrentHotel.Id}</hotel></chambreByGroupe>")
-              .Select(x => new ChambreByEtage_VM
+              .Select(x => new Chambre_VM
               {
-                  GroupeChambre = x.GroupeChambre,
+                  Etage = x.Etage,
                   Nom = x.Nom,
-                  IdDelaChambre = x.IdDelaChambre,
-                  NomChambre = x.NomChambre
+                  Id = x.Id,
               }).ToList());
 
 

@@ -31,19 +31,6 @@ namespace Makrisoft.Makfi.ViewModels
             }
         }
         private bool voirMsgArchives;
-
-        public string SaveColor
-        {
-            get
-            { return saveColor; }
-            set
-            {
-                saveColor = value;
-                OnPropertyChanged("SaveColor");
-            }
-        }
-        private string saveColor = "Navy";
-
         #endregion
 
         #region Commands

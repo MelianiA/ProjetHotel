@@ -19,9 +19,9 @@ namespace Makrisoft.Makfi.Views
     /// <summary>
     /// Logique d'interaction pour ChambreView.xaml
     /// </summary>
-    public partial class ChambreGroupeView : UserControl
+    public partial class EtageView : UserControl
     {
-        public ChambreGroupeView()
+        public EtageView()
         {
             Reference_ViewModel.ChambreGroupe = new EtageViewModel();
             DataContext = Reference_ViewModel.ChambreGroupe;

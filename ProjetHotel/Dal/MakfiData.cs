@@ -12,11 +12,13 @@ namespace Makrisoft.Makfi.Dal
 {
     public enum ViewEnum
     {
-        Header, Login, Home, Intervention, Chambre, InterventionNew, Employe, Synthese, Administration, ChambreGroupe, InterventionDetail,
+        Header, Login, Home, Intervention, Chambre, InterventionNew, Employe, Synthese, Administration, Etage, InterventionDetail,
         Utilisateur, None, Hotel, InterventionAjouter, InterventionSupprimer, Message, Parametre
     }
     public enum RoleEnum { None = 0, Gouvernante = 1, Reception = 2, Admin = 255 }
-    public enum EntiteEnum { Employe = 1, Chambre = 2, Intervention = 3, InterventionDetail = 4, Message = 5, InterventionAjouter = 6,
+    public enum EntiteEnum
+    {
+        Employe = 1, Chambre = 2, Intervention = 3, InterventionDetail = 4, Message = 5, InterventionAjouter = 6,
         None = 0
     }
 
@@ -156,7 +158,7 @@ namespace Makrisoft.Makfi.Dal
         public static List<T> ReadAll<T>(string spName, Action<T> p, string spParam = null) where T : new()
         {
             List<T> entities = new List<T>();
-            T entite = default(T);
+            T entite;
             if (ExecuteReader(spName, spParam))
                 while (Reader.Read())
                 {
@@ -249,7 +251,7 @@ namespace Makrisoft.Makfi.Dal
                              {
                                  e.Id = (Guid)Reader["Id"];
                                  e.Nom = Reader["Nom"] as string;
-                                 e.Etat = new Etat { Id = (Guid)Reader["Etat"] };
+                                 e.Etat = (Guid)Reader["Etat"];
                                  e.Commentaire = Reader["Commentaire"] as string;
                              },
                              spParam
@@ -291,9 +293,9 @@ namespace Makrisoft.Makfi.Dal
 
 
 
-        internal static IEnumerable<ChambreGroupeChambre> ChambreGroupeChambre_Read(string spParam = null)
+        internal static IEnumerable<ChambreEtage> ChambreGroupeChambre_Read(string spParam = null)
         {
-            return ReadAll<ChambreGroupeChambre>
+            return ReadAll<ChambreEtage>
                           (
                           "ChambreGroupeChambre_Read",
                           e =>
@@ -302,15 +304,15 @@ namespace Makrisoft.Makfi.Dal
                               e.Nom = Reader["Nom"] as string;
                               e.Etat = (Guid)Reader["Etat"];
                               e.Commentaire = Reader["Commentaire"] as string;
-                              e.GroupeChambre = Reader["GroupeChambre"] as string;
+                              e.Etage = (Guid)Reader["GroupeChambre"];
 
                           },
                           spParam
                           );
         }
-        internal static IEnumerable<GroupeChambre> GroupeChambre_Read(string spParam = null)
+        internal static IEnumerable<Etage> GroupeChambre_Read(string spParam = null)
         {
-            return ReadAll<GroupeChambre>
+            return ReadAll<Etage>
                          (
                          "GroupeChambre_Read",
                          e =>
@@ -323,17 +325,17 @@ namespace Makrisoft.Makfi.Dal
                          );
         }
 
-        internal static IEnumerable<ChambreByGroupe> ChambreByGroupe_Read(string spParam = null)
+        internal static IEnumerable<ChambreEtage> ChambreByGroupe_Read(string spParam = null)
         {
-            return ReadAll<ChambreByGroupe>
+            return ReadAll<ChambreEtage>
                           (
                           "ChambreByGroupe_Read",
                           e =>
                           {
-                              e.IdDelaChambre = (Guid)Reader["IdDelaChambre"];
-                              e.GroupeChambre = Reader["GroupeChambre"] as Guid?;
+                              e.Id = (Guid)Reader["IdDelaChambre"];
+                              e.Etage = Reader["GroupeChambre"] as Guid?;
                               e.Nom = Reader["Nom"] as string;
-                              e.NomChambre = Reader["NomChambre"] as string;
+                              e.Nom = Reader["NomChambre"] as string;
                           },
                           spParam
                           );
@@ -462,9 +464,9 @@ namespace Makrisoft.Makfi.Dal
                );
         }
 
-        internal static List<GroupeChambre> GroupeChambre_Save(string spParam)
+        internal static List<Etage> GroupeChambre_Save(string spParam)
         {
-            return ReadAll<GroupeChambre>
+            return ReadAll<Etage>
               (
               "GroupeChambre_Save",
               e =>
@@ -474,9 +476,9 @@ namespace Makrisoft.Makfi.Dal
               spParam
               );
         }
-        internal static List<GroupeChambre> ChambreGroupeChambre_Save(string spParam)
+        internal static List<Etage> ChambreGroupeChambre_Save(string spParam)
         {
-            return ReadAll<GroupeChambre>
+            return ReadAll<Etage>
              (
              "ChambreGroupeChambre_Save",
              e =>

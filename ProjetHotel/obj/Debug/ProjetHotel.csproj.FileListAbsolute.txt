@@ -205,7 +205,6 @@ D:\ProjetHotel\ProjetHotel\bin\Debug\MaterialDesignThemes.Wpf.xml
 D:\ProjetHotel\ProjetHotel\bin\Debug\Microsoft.Xaml.Behaviors.pdb
 D:\ProjetHotel\ProjetHotel\bin\Debug\Microsoft.Xaml.Behaviors.xml
 D:\ProjetHotel\ProjetHotel\obj\Debug\Views\AdministrationView.g.cs
-D:\ProjetHotel\ProjetHotel\obj\Debug\Views\ChambreGroupeView.g.cs
 D:\ProjetHotel\ProjetHotel\obj\Debug\Views\ChambreView.g.cs
 D:\ProjetHotel\ProjetHotel\obj\Debug\Views\EmployeView.g.cs
 D:\ProjetHotel\ProjetHotel\obj\Debug\Views\HeaderView.g.cs
@@ -227,7 +226,6 @@ D:\ProjetHotel\ProjetHotel\obj\Debug\Makrisoft.Makfi_MarkupCompile.cache
 D:\ProjetHotel\ProjetHotel\obj\Debug\Makrisoft.Makfi_MarkupCompile.lref
 D:\ProjetHotel\ProjetHotel\obj\Debug\App.baml
 D:\ProjetHotel\ProjetHotel\obj\Debug\Views\AdministrationView.baml
-D:\ProjetHotel\ProjetHotel\obj\Debug\Views\ChambreGroupeView.baml
 D:\ProjetHotel\ProjetHotel\obj\Debug\Views\ChambreView.baml
 D:\ProjetHotel\ProjetHotel\obj\Debug\Views\EmployeView.baml
 D:\ProjetHotel\ProjetHotel\obj\Debug\Views\HeaderView.baml
@@ -249,4 +247,6 @@ D:\ProjetHotel\ProjetHotel\obj\Debug\ProjetHotel.csproj.CoreCompileInputs.cache
 D:\ProjetHotel\ProjetHotel\obj\Debug\ProjetHotel.csproj.CopyComplete
 D:\ProjetHotel\ProjetHotel\obj\Debug\Makrisoft.Makfi.exe
 D:\ProjetHotel\ProjetHotel\obj\Debug\Makrisoft.Makfi.pdb
+D:\ProjetHotel\ProjetHotel\obj\Debug\Views\EtageView.g.cs
+D:\ProjetHotel\ProjetHotel\obj\Debug\Views\EtageView.baml
 D:\ProjetHotel\ProjetHotel\obj\Debug\ProjetHotel.csprojAssemblyReference.cache
