@@ -9,7 +9,7 @@ namespace Makrisoft.Makfi.Models
     public class Employe
     {
         public Guid Id { get; set; }
-        public Etat Etat { get; set; }
+        public Guid Etat { get; set; }
         public string Nom { get; set; }
         public string Prenom { get; set; }
         public string Commentaire { get; set; }

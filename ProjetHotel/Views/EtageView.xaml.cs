@@ -23,8 +23,8 @@ namespace Makrisoft.Makfi.Views
     {
         public EtageView()
         {
-            Reference_ViewModel.ChambreGroupe = new EtageViewModel();
-            DataContext = Reference_ViewModel.ChambreGroupe;
+            Reference_ViewModel.Etage = new EtageViewModel();
+            DataContext = Reference_ViewModel.Etage;
             InitializeComponent();
         }
 

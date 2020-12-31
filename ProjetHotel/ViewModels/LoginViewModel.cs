@@ -69,11 +69,10 @@ namespace Makrisoft.Makfi.ViewModels
                         Reference_ViewModel.Header.MenuVisibility = Visibility.Visible;
                     }
                     Password = "";
-                    if (Reference_ViewModel.Header.CurrentHotel != null) // AM : 20201228
+                    if (Reference_ViewModel.Header.CurrentHotel != null) 
                     {
                         //Reference_ViewModel.Employe.Load_Employes();
                         //Reference_ViewModel.Chambre.Load_Chambres();
-                        Reference_ViewModel.Home.ButtonInterventionDuJour();
                     }
                 }
             }

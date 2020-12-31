@@ -16,12 +16,13 @@ namespace Makrisoft.Makfi.ViewModels
         {
             EtatType = EntiteEnum.None;
             SortDescriptions = new SortDescription[1] { new SortDescription("Nom", ListSortDirection.Ascending) };
-            Components = ComponentEnum.None;
+            Loads = LoadEnum.None;
             Title = "Les utilisateurs";
 
             Init();
         }
         #endregion
+
 
         #region DgSource
         public override IEnumerable<Utilisateur_VM> DgSource_Read()

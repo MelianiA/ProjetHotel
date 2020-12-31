@@ -96,11 +96,11 @@
 
                 <!--Date1FilterSelected-->
                 <TextBlock Text="Date début" Margin="0,30,0,0"/>
-                <DatePicker IsManipulationEnabled="False" SelectedDate="{Binding DateDebut}" FontSize="16"></DatePicker>
+                <DatePicker IsManipulationEnabled="False" SelectedDate="{Binding FilterDateDebut}" FontSize="16"></DatePicker>
                 
                 <!--Date2FilterSelected-->
                 <TextBlock Text="Date fin" Margin="0,30,0,0"/>
-                <DatePicker SelectedDate="{Binding DateFin}" FontSize="16"></DatePicker>
+                <DatePicker SelectedDate="{Binding FilterDateFin}" FontSize="16"></DatePicker>
             </StackPanel>
         </Border>
         <!--Milieu-->

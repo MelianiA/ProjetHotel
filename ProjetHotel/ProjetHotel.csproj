@@ -141,7 +141,6 @@
     <Compile Include="Views\AdministrationView.xaml.cs">
       <DependentUpon>AdministrationView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Converters\EmployeConverters.cs" />
     <Compile Include="Views\EtageView.xaml.cs">
       <DependentUpon>EtageView.xaml</DependentUpon>
     </Compile>
@@ -295,6 +294,7 @@
     <Folder Include="Assets\chambres\" />
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="Doc\MakfiDB.png" />
     <Resource Include="Doc\Manuel.txt" />
     <Resource Include="Assets\photos\Ziani.png" />
     <Resource Include="Assets\photos\meliani.png" />

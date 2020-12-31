@@ -13,5 +13,6 @@ namespace Makrisoft.Makfi.Models
         public Chambre Chambre;
         public string Commentaire;
         public Guid Etat;
+        public bool Insere;
     }
 }

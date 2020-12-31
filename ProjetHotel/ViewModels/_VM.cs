@@ -24,7 +24,7 @@ namespace Makrisoft.Makfi.ViewModels
     //}
     public class Chambre_VM : ViewModelBase
     {
-        public Guid Id { get; set; }
+        public Guid? Id { get; set; }
         public Guid? Etage { get; set; }
         public string Nom
         {
@@ -126,7 +126,7 @@ namespace Makrisoft.Makfi.ViewModels
         public string Libelle { get; set; }
         public string Couleur { get; set; }
         public EntiteEnum Entite { get; set; }
-        public Boolean EtatEtat { get; set; }
+        public bool EtatEtat { get; set; }
 
     }
     public class Hotel_VM : ViewModelBase
@@ -299,22 +299,22 @@ namespace Makrisoft.Makfi.ViewModels
             set
             {
                 chambres = value;
-                OnPropertyChanged("ChambreCurrentGroupe");
+                OnPropertyChanged("Chambres");
             }
         }
         private ObservableCollection<Chambre_VM> chambres;
 
         public ObservableCollection<Chambre_VM> AutresChambres
         {
-            get { return chambreNotCurrentGroupe; }
+            get { return autresChambres; }
             set
             {
-                chambreNotCurrentGroupe = value;
-                OnPropertyChanged("ChambreNotCurrentGroupe");
+                autresChambres = value;
+                OnPropertyChanged("AutresChambres");
 
             }
         }
-        private ObservableCollection<Chambre_VM> chambreNotCurrentGroupe;
+        private ObservableCollection<Chambre_VM> autresChambres;
         public ListCollectionView ChambresListview
         {
             get { return chambreCurrentGroupeListview; }

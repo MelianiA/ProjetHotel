@@ -120,7 +120,7 @@
                     <DataGridTemplateColumn Width="*">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                 <TextBlock Text="{Binding Commentaire}" TextWrapping="Wrap"/>     
+                                 <TextBlock Text="{Binding Commentaire}" TextWrapping="Wrap" VerticalAlignment="Center" FontStyle="Italic"/>     
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>

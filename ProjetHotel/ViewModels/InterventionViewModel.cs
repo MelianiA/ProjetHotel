@@ -14,7 +14,7 @@ namespace Makrisoft.Makfi.ViewModels
         {
             EtatType = EntiteEnum.Intervention;
             SortDescriptions = new SortDescription[1] { new SortDescription("Date1", System.ComponentModel.ListSortDirection.Descending) };
-            Components = ComponentEnum.Etats | ComponentEnum.DateDebut | ComponentEnum.DateFin;
+            Loads = LoadEnum.Etats | LoadEnum.DateDebut | LoadEnum.DateFin;
             Title = "Les interventions";
 
             Init();
@@ -36,12 +36,6 @@ namespace Makrisoft.Makfi.ViewModels
                   SaveColor = "Navy"
               }).OrderBy(x => x.Libelle).ToList();
         }
-
-        public override void Load(ViewEnum exView)
-        {
-            RetourIntervention = false;
-        }
-
         public override void DgSource_Save()
         {
             var param = $@"
@@ -99,6 +93,14 @@ namespace Makrisoft.Makfi.ViewModels
             Reference_ViewModel.Main.ViewSelected = ViewEnum.InterventionDetail;
             RetourIntervention = true;
         }
+        #endregion
+
+        #region Load
+        //public override void Load(ViewEnum exView)
+        //{
+        //    CurrentDgSource.Etat = SommeEtat();
+        //    base.Load(exView);
+        //}
         #endregion
     }
 }

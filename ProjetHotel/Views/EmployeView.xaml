@@ -9,11 +9,6 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
-        <Grid.Resources>
-            <conv:EmployeEtatIconeConverter x:Key="EmployeEtatIconeConverterKey"/>
-            <conv:EmployeEtatColorConverter x:Key="EmployeEtatColorConverterKey"/>
-        </Grid.Resources>
-
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="240"/>
             <ColumnDefinition Width="*"/>
@@ -49,8 +44,8 @@
                 <TextBlock FontSize="20" FontWeight="Normal" Foreground="Navy" Text="Liste des employés " VerticalAlignment="Bottom"/>
                 <Menu Grid.Column="1" Cursor="Hand" Margin="0">
                     <MenuItem Header="..." Foreground="Navy" FontSize="16">
-                        <MenuItem Header="Ajouter" Foreground="Navy" Command="{Binding EmployeSelectedAddCommand}"/>
-                        <MenuItem Header="Supprimer" Foreground="Navy" Command="{Binding EmployeSelectedDeleteCommand}"/>
+                        <MenuItem Header="Ajouter" Foreground="Navy" Command="{Binding AddCommand}"/>
+                        <MenuItem Header="Supprimer" Foreground="Navy" Command="{Binding DeleteCommand}"/>
                     </MenuItem>
                 </Menu>
             </Grid>
@@ -68,9 +63,9 @@
                 </Grid.RowDefinitions>
                 <TextBlock Text="Modifier" FontSize="22" Foreground="Navy" VerticalAlignment="Bottom"/>
 
-                <Button Grid.Column="2" Background="Transparent" BorderBrush="Transparent" BorderThickness="1" Command="{Binding EmployeModifiedSaveCommand}" VerticalAlignment="Bottom">
+                <Button Grid.Column="2" Background="Transparent" BorderBrush="Transparent" BorderThickness="1" Command="{Binding SaveCommand}" VerticalAlignment="Bottom">
                     <Button.Content>
-                        <materialDesign:PackIcon Height="20" Width="Auto" Kind="Floppy" Foreground="{Binding CurrentEmploye.SaveColor}" Margin="0,0,10,0" />
+                        <materialDesign:PackIcon Height="20" Width="Auto" Kind="Floppy" Foreground="{Binding CurrentDgSource.SaveColor}" Margin="0,0,10,0" />
                     </Button.Content>
                 </Button>
             </Grid>
@@ -83,8 +78,8 @@
 
                 <!--EmployeEtatFilterSelected-->
                 <TextBlock Text="Etat" Margin="0,30,0,0" FontSize="16"  />
-                <ComboBox ItemsSource="{Binding EtatEmployeCollectionView,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged }"
-                          SelectedItem="{Binding CurrentFilter,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" SelectedValue=""
+                <ComboBox ItemsSource="{Binding Etats,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged }"
+                          SelectedItem="{Binding FilterEtat,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" SelectedValue=""
                           FontSize="16">
                     <ComboBox.ItemTemplate>
                         <DataTemplate>
@@ -101,8 +96,8 @@
         <Border Grid.Column="1" Grid.Row="1" BorderBrush="Transparent" BorderThickness="1" CornerRadius="10" Margin="0" >
             <StackPanel>
                 <!-- IsModifierEnabled="{Binding PageNotModified.Value} "-->
-                <DataGrid ItemsSource="{Binding EmployesCollectionView,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" 
-                          SelectedItem="{Binding CurrentEmploye , Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  
+                <DataGrid ItemsSource="{Binding DgSourceCollectionView,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" 
+                          SelectedItem="{Binding CurrentDgSource, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  
                           AutoGenerateColumns="False" HeadersVisibility="None" CanUserAddRows="False" VerticalScrollBarVisibility="Visible">
                     <DataGrid.Columns>
                         <!--Nom-->
@@ -155,16 +150,16 @@
         <Border Grid.Column="2" Grid.Row="1" BorderBrush="Transparent" BorderThickness="1" CornerRadius="10" HorizontalAlignment="Left" >
             <StackPanel Margin="5" Width="220">
                 <TextBlock Text="Nom" Margin="0,15,0,0"/>
-                <TextBox FontSize="16" Text="{Binding CurrentEmploye.Nom, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding IsModifierEnabled}"/>
+                <TextBox FontSize="16" Text="{Binding CurrentDgSource.Nom, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding IsModifierEnabled}"/>
 
                 <TextBlock Text="Prénom" Margin="0,15,0,0"/>
-                <TextBox FontSize="16" Text="{Binding CurrentEmploye.Prenom, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding IsModifierEnabled}"/>
+                <TextBox FontSize="16" Text="{Binding CurrentDgSource.Prenom, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding IsModifierEnabled}"/>
 
                 <TextBlock Text="Commentaire" Margin="0,15,0,0"/>
-                <TextBox FontSize="16"  Text="{Binding CurrentEmploye.Commentaire, UpdateSourceTrigger=PropertyChanged}" TextWrapping="Wrap" TextAlignment="Left" IsEnabled="{Binding IsModifierEnabled}"/>
+                <TextBox FontSize="16"  Text="{Binding CurrentDgSource.Commentaire, UpdateSourceTrigger=PropertyChanged}" TextWrapping="Wrap" TextAlignment="Left" IsEnabled="{Binding IsModifierEnabled}"/>
 
                 <TextBlock Text="Etat" Margin="0,15,0,0"/>
-                <ComboBox ItemsSource="{Binding EtatEmploye}" SelectedItem="{Binding CurrentEmploye.Etat}" FontSize="16" IsEnabled="{Binding IsModifierEnabled}">
+                <ComboBox ItemsSource="{Binding Etats}" SelectedItem="{Binding CurrentDgSource.Etat}" FontSize="16" IsEnabled="{Binding IsModifierEnabled}">
                     <ComboBox.ItemTemplate>
                         <DataTemplate>
                             <StackPanel Orientation="Horizontal">

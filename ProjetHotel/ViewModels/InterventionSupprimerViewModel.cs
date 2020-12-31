@@ -201,7 +201,7 @@ namespace Makrisoft.Makfi.ViewModels
                             throw new Exception();
                     }
                 }
-                //Reference_ViewModel.InterventionDetail.Load_DgSource(); // AM : 20201228
+                //Reference_ViewModel.InterventionDetail.Load_DgSource(); 
 
             }
             if (ParChambre)
@@ -247,7 +247,7 @@ namespace Makrisoft.Makfi.ViewModels
                 CurrentChambre = ChambreIntervention.FirstOrDefault();
             }
             //GroupeChambres
-            GroupeChambres = Reference_ViewModel.ChambreGroupe.Etages;
+            GroupeChambres = Reference_ViewModel.Etage.Etages;
             CurrentEtage = GroupeChambres.FirstOrDefault();
             //
             AllChambres = new ObservableCollection<Chambre_VM>(

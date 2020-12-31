@@ -53,7 +53,8 @@ namespace Makrisoft.Makfi.Dal
                       Libelle = x.Libelle,
                       Icone = x.Icone,
                       Couleur = x.Couleur,
-                      Entite = x.Entite
+                      Entite = x.Entite,
+                      EtatEtat = x.EtatEtat
                   }).ToList();
 
             return "";
@@ -236,7 +237,7 @@ namespace Makrisoft.Makfi.Dal
                                 e.Nom = Reader["Nom"] as string;
                                 e.Prenom = Reader["Prenom"] as string;
                                 e.Commentaire = Reader["Commentaire"] as string;
-                                e.Etat = new Etat { Id = (Guid)Reader["Etat"] };
+                                e.Etat = (Guid)Reader["Etat"];
                             },
                             spParam
                             );
@@ -252,6 +253,7 @@ namespace Makrisoft.Makfi.Dal
                                  e.Id = (Guid)Reader["Id"];
                                  e.Nom = Reader["Nom"] as string;
                                  e.Etat = (Guid)Reader["Etat"];
+                                 e.Etage = Reader["GroupeChambre"] as Guid?;
                                  e.Commentaire = Reader["Commentaire"] as string;
                              },
                              spParam
@@ -270,7 +272,7 @@ namespace Makrisoft.Makfi.Dal
                                  e.Icone = Reader["Icone"] as string;
                                  e.Couleur = Reader["Couleur"] as string;
                                  e.Entite = (EntiteEnum)(byte)Reader["Entite"];
-                                 e.EtatEtat = (Boolean)Reader["EtatEtat"];
+                                 e.EtatEtat = (bool)Reader["EtatEtat"];
                              },
                              spParam
                              );
@@ -310,7 +312,7 @@ namespace Makrisoft.Makfi.Dal
                           spParam
                           );
         }
-        internal static IEnumerable<Etage> GroupeChambre_Read(string spParam = null)
+        internal static IEnumerable<Etage> Etage_Read(string spParam = null)
         {
             return ReadAll<Etage>
                          (
@@ -342,7 +344,7 @@ namespace Makrisoft.Makfi.Dal
         }
 
 
-        internal static IEnumerable<Intervention> Intervention_Read(string spParam)
+        internal static IEnumerable<Intervention> Intervention_Read(string spParam=null)
         {
             return ReadAll<Intervention>
                                     (
@@ -464,7 +466,7 @@ namespace Makrisoft.Makfi.Dal
                );
         }
 
-        internal static List<Etage> GroupeChambre_Save(string spParam)
+        internal static List<Etage> Etage_Save(string spParam)
         {
             return ReadAll<Etage>
               (
@@ -537,6 +539,7 @@ namespace Makrisoft.Makfi.Dal
             e =>
             {
                 e.Id = (Guid)Reader["Id"];
+                e.Insere = (bool) Reader["insere"];
             },
             spParam
             );
@@ -571,7 +574,7 @@ namespace Makrisoft.Makfi.Dal
         }
 
 
-        public static IEnumerable<CanDelete> GroupeChambre_CanDelete(string spParam)
+        public static IEnumerable<CanDelete> Etage_CanDelete(string spParam)
         {
             return CanDelete("GroupeChambre_CanDelete", spParam)
                  .Where(x => x.Nombre > 0);
@@ -613,7 +616,7 @@ namespace Makrisoft.Makfi.Dal
 
         }
 
-        internal static bool GroupeChambre_Delete(string spParam)
+        internal static bool Etage_Delete(string spParam)
         {
             return ExecuteNonQuery("GroupeChambre_Delete", spParam);
         }

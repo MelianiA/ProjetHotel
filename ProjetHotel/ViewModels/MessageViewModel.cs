@@ -84,16 +84,6 @@ namespace Makrisoft.Makfi.ViewModels
         private bool canChangeUtilisateur = true;
 
         //Etat
-        public ObservableCollection<Etat_VM> EtatList
-        {
-            get { return etatList; }
-            set
-            {
-                etatList = value;
-                OnPropertyChanged("EtatList");
-            }
-        }
-        private ObservableCollection<Etat_VM> etatList;
         public ListCollectionView EtatListCollectionView
         {
             get { return etatListCollectionView; }
@@ -407,22 +397,11 @@ namespace Makrisoft.Makfi.ViewModels
 
         private void Load_Etat()
         {
-            EtatList = new ObservableCollection<Etat_VM>(
-              MakfiData.Etat_Read()
-              .Select(x => new Etat_VM
-              {
-                  Id = x.Id,
-                  Libelle = x.Libelle,
-                  Icone = x.Icone,
-                  Couleur = x.Couleur,
-                  Entite = x.Entite,
-                  EtatEtat = x.EtatEtat
-              }).ToList()); ;
-            EtatListCollectionView = new ListCollectionView(EtatList);
+            EtatListCollectionView = new ListCollectionView(MakfiData.Etats);
             EtatListCollectionView.Refresh();
-            var etatMsg = EtatList.Where(x => x.Entite == EntiteEnum.Message).ToList();
+            var etatMsg = MakfiData.Etats.Where(x => x.Entite == EntiteEnum.Message).ToList();
             etatMsg.Remove(etatMsg.Where(e => e.Libelle == "Supprimé" && e.Entite == EntiteEnum.Message).SingleOrDefault());
-            EtatMessage = new ObservableCollection<Etat_VM>(EtatList.Where(x => x.Entite == EntiteEnum.Message).ToList());
+            EtatMessage = new ObservableCollection<Etat_VM>(MakfiData.Etats.Where(x => x.Entite == EntiteEnum.Message).ToList());
             EtatMessageCollectionView = new ListCollectionView(etatMsg);
         }
 

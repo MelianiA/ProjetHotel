@@ -40,12 +40,12 @@ namespace Makrisoft.Makfi.ViewModels
         private bool withHotel;
 
         //Nbr de controle 
-        public string NbrControle
+        public string NIntervNonTermine
         {
-            get { return nbrcontrole; }
-            set { nbrcontrole = value; OnPropertyChanged("NbrControle"); }
+            get { return nIntervNonTermine; }
+            set { nIntervNonTermine = value; OnPropertyChanged("NIntervNonTermine"); }
         }
-        private string nbrcontrole;
+        private string nIntervNonTermine;
 
         public string EtatControle
         {
@@ -64,12 +64,33 @@ namespace Makrisoft.Makfi.ViewModels
 
         internal void Load(ViewEnum exView)
         {
-           ButtonInterventionDuJour();
+            DerniereIntervention = "";
+            EtatControle = "Intervention du jour";
 
+            var interventions = MakfiData.Intervention_Read($"<interventions><hotel>{Reference_ViewModel.Header.CurrentHotel.Id}</hotel></interventions>")
+                .Select(x => new Intervention_VM
+                {
+                    Id = x.Id,
+                    Libelle = x.Libelle,
+                    Etat = MakfiData.Etats.Where(e => e.Id == x.Etat).Single(),
+                    Date1 = x.Date1,
+                    Commentaire = x.Commentaire,
+                    Model = x.Model,
+                    SaveColor = "Navy"
+                })
+                .Where(x => x.Etat != null && x.Etat.Libelle != "Terminée").ToList();
+
+            NIntervNonTermine = interventions.Count().ToString();
+            if (interventions.Count() > 0)
+            {
+                LastIntervention = interventions[0];
+                DerniereIntervention = "Intervention du " + interventions[0].Date1.ToString("dddd dd MMMM", CultureInfo.CurrentCulture);
+                EtatControle = "Contrôle";
+            }
         }
 
         private String derniereIntervention;
-
+        private Intervention_VM LastIntervention;
         #endregion
 
         #region ICommand
@@ -84,7 +105,11 @@ namespace Makrisoft.Makfi.ViewModels
                 Reference_ViewModel.Intervention.OnAddCommand();
                 Reference_ViewModel.Intervention.OnSaveCommand();
             }
+            else
+            {
+                Reference_ViewModel.Intervention.CurrentDgSource =  LastIntervention;
 
+            }
             Reference_ViewModel.Main.ViewSelected = (ViewEnum)view;
 
         }
@@ -94,29 +119,6 @@ namespace Makrisoft.Makfi.ViewModels
         #endregion
 
         #region Load
-
-        public void ButtonInterventionDuJour()
-        {
-            DerniereIntervention = "";
-            EtatControle = "Intervention du jour";
-            Intervention_VM intervention = null;
-
-            if (Reference_ViewModel.Intervention.DgSource != null)
-            {
-                NbrControle = Reference_ViewModel.Intervention.DgSource.Where(x => x.Etat != null && x.Etat.Libelle != "Terminée").Count().ToString();
-                var itervDispo = Reference_ViewModel.Intervention.DgSource.Where(x => x.Etat != null && x.Etat.Libelle != "Terminée").ToList();
-                if (itervDispo.Count() > 0)
-                {
-                    intervention = itervDispo[0];
-                    DerniereIntervention = "Intervention du " + intervention.Date1.ToString("dddd dd MMMM", CultureInfo.CurrentCulture);
-                    EtatControle = "Contrôle";
-                }
-            }
-             
-
-            //Reference_ViewModel.Intervention.CurrentDgSource = intervention; // AM : 20201228
-            //Reference_ViewModel.InterventionDetail.Load_DgSource();
-        }
 
         #endregion
 

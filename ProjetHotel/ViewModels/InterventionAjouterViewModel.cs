@@ -15,7 +15,7 @@ namespace Makrisoft.Makfi.ViewModels
         public InterventionAjouterViewModel()
         {
             EtatType = EntiteEnum.InterventionAjouter;
-            Components = ComponentEnum.Chambres | ComponentEnum.Employes | ComponentEnum.Interventions | ComponentEnum.Etages;
+            Loads = LoadEnum.Chambres | LoadEnum.Employes | LoadEnum.Interventions | LoadEnum.Etages;
             Title = "Tout ajouter !";
             Init();
         }
@@ -23,13 +23,10 @@ namespace Makrisoft.Makfi.ViewModels
         public override void Load(ViewEnum exView)
         {
             CheckAnnuler = true;
-            Load_Interventions($@"
-                                <interventions>
-                                    <hotel>{Reference_ViewModel.Header.CurrentHotel.Id}</hotel>
-                                    <delete>{Reference_ViewModel.Intervention.CurrentDgSource.Id}</delete>
-                                </interventions>");
+            base.Load(exView);
         }
         #endregion
+
         #region DgSource
         public override IEnumerable<InterventionDetail_VM> DgSource_Read()
         {
@@ -49,9 +46,7 @@ namespace Makrisoft.Makfi.ViewModels
                         Commentaire = x.Commentaire,
                         Etat = MakfiData.Etats.Where(e => e.Id == x.Etat).Single(),
                         SaveColor = "Red"
-                    })
-                    .OrderBy(x => x.Libelle)
-                    .ToList();
+                    });
             }
             else if (CurrentEtage != null && CurrentEmploye != null)
             {
@@ -149,258 +144,5 @@ namespace Makrisoft.Makfi.ViewModels
             }
         }
         private bool checkUnEtageUnEmploye = false;
-
-
-        //#region Constructeur
-        //public InterventionAjouterViewModel()
-        //{
-        //    // Icommand
-
-        //    // Load
-        //    Load_InterventionDetails();
-        //}
-        //#endregion
-
-        //#region Binding
-
-
-
-
-
-        ////GroupeChambre
-        //public ObservableCollection<Etage_VM> Etages
-        //{
-        //    get { return etages; }
-        //    set
-        //    {
-        //        etages = value;
-        //        OnPropertyChanged("GroupeChambres");
-
-        //    }
-        //}
-        //private ObservableCollection<Etage_VM> etages;
-
-        ////Interventions
-        //public ObservableCollection<Intervention_VM> Interventions
-        //{
-        //    get { return interventions; }
-        //    set { interventions = value; OnPropertyChanged("Interventions"); }
-        //}
-        //private ObservableCollection<Intervention_VM> interventions;
-
-
-        ////ChambreByGroupe 
-        //public ObservableCollection<ChambreByEtage_VM> AllChambres
-        //{
-        //    get { return allChambres; }
-        //    set
-        //    {
-        //        allChambres = value;
-        //        OnPropertyChanged("AllChambres");
-
-        //    }
-        //}
-        //private ObservableCollection<ChambreByEtage_VM> allChambres;
-
-        ////Employe 
-        //public ObservableCollection<Employe_VM> EmployeIntervention
-        //{
-        //    get { return employeIntervention; }
-        //    set
-        //    {
-        //        employeIntervention = value;
-        //        OnPropertyChanged("EmployeIntervention");
-        //    }
-        //}
-        //private ObservableCollection<Employe_VM> employeIntervention;
-
-        //public ListCollectionView EmployeInterventionCollectionView
-        //{
-        //    get { return employeInterventionCollectionView; }
-        //    set
-        //    {
-        //        employeInterventionCollectionView = value;
-        //        OnPropertyChanged("EmployeInterventionCollectionView");
-        //    }
-        //}
-        //private ListCollectionView employeInterventionCollectionView;
-
-        ////Chambres
-        //public ObservableCollection<Chambre_VM> Chambres
-        //{
-        //    get { return chambres; }
-        //    set
-        //    {
-        //        chambres = value; OnPropertyChanged("Chambres");
-        //    }
-        //}
-        //private ObservableCollection<Chambre_VM> chambres;
-
-        //public ObservableCollection<Chambre_VM> ChambreIntervention
-        //{
-        //    get { return chambreIntervention; }
-        //    set
-        //    {
-        //        chambreIntervention = value;
-        //        OnPropertyChanged("ChambreIntervention");
-        //    }
-        //}
-        //private ObservableCollection<Chambre_VM> chambreIntervention;
-
-        //public Chambre_VM CurrentChambre
-        //{
-        //    get { return currentChambre; }
-        //    set
-        //    {
-        //        currentChambre = value;
-        //        OnPropertyChanged("CurrentChambre");
-
-        //    }
-        //}
-        //private Chambre_VM currentChambre;
-
-        //public ListCollectionView ChambreInterventionCollectionView
-        //{
-        //    get { return chambreInterventionCollectionView; }
-        //    set
-        //    {
-        //        chambreInterventionCollectionView = value;
-        //        OnPropertyChanged("ChambreInterventionCollectionView");
-        //    }
-        //}
-        //private ListCollectionView chambreInterventionCollectionView;
-
-        ////InterventionDetails
-        //public ObservableCollection<InterventionDetail_VM> InterventionDetails
-        //{
-        //    get { return interventionDetails; }
-        //    set { interventionDetails = value; OnPropertyChanged("InterventionDetails"); }
-        //}
-        //private ObservableCollection<InterventionDetail_VM> interventionDetails;
-
-        //#endregion
-
-        //#region Commands
-        ////ICommand
-
-        //// Méthodes OnCommand
-        //public void OnAddInterventionDetails()
-        //{
-        //    if (CheckInterventionModel)
-        //    {
-        //        Guid? monId = default;
-        //        var iDetails = new ObservableCollection<InterventionDetail_VM>(
-        //            MakfiData.InterventionDetail_Read($"<interventionDetail><intervention>{Reference_ViewModel.Intervention.CurrentDgSource.Id}</intervention></interventionDetail>")
-        //           .Select(x => new InterventionDetail_VM
-        //           {
-        //               Id = x.Id,
-        //               Employe = new Employe_VM { Id = x.Employe.Id },
-        //               Chambre = new Chambre_VM { Id = x.Chambre.Id },
-        //               Etat = MakfiData.Etats.Where(e => e.Id == x.Etat).Single(),
-        //               Libelle = Reference_ViewModel.Intervention.CurrentDgSource.Libelle,
-        //               Commentaire = x.Commentaire,
-        //               SaveColor = "Red"
-        //           }).OrderBy(x => x.Libelle).ToList());
-
-        //        foreach (var item in iDetails)
-        //            Reference_ViewModel.InterventionDetail.DgSource.Add(item);
-        //    }
-
-        //    if (CheckUnEtageUnEmploye && CurrentEtage != null)
-        //    {
-
-        //        if (CurrentEtage.Chambres.Count == 0)
-        //        {
-        //            MessageBox.Show("Le groupe: " + CurrentEtage.Nom + " ne contient aucune chambre ");
-        //            return;
-        //        }
-        //        foreach (var item in CurrentEtage.Chambres)
-        //        {
-        //            var inteventionChambreEmploye = new InterventionDetail_VM
-        //            {
-        //                Chambre = new Chambre_VM { Id = item.Id, Nom = item.Nom },
-        //                Employe = CurentEmploye,
-        //                Etat = MakfiData.Etats.Where(e => e.Libelle == "None" && e.Entite == EntiteEnum.InterventionDetail)
-        //                .SingleOrDefault(),
-        //                SaveColor = "Red"
-        //            };
-        //            Reference_ViewModel.InterventionDetail.DgSource.Add(inteventionChambreEmploye);
-        //        }
-        //    }
-        //    Reference_ViewModel.Main.ViewSelected = ViewEnum.InterventionDetail;
-
-        //}
-
-        //// Méthodes OnCanExecuteCommand
-        ////private bool OnCanExcuteAddCommand()
-        ////{
-        ////    return CheckInterventionModel ==
-        ////        annuler == checkUnEtageUnEmploye == true;
-        ////}
-
-        ////Filter 
-        //#endregion
-
-        //#region Load
-
-        //public void Load_InterventionDetails()
-        //{
-
-        //    Chambres = new ObservableCollection<Chambre_VM>(
-        //        MakfiData.Chambre_Read()
-        //        .Select(x => new Chambre_VM
-        //        {
-        //            Id = x.Id,
-        //            Nom = x.Nom
-        //        }));
-
-        //    //Employe
-        //    if (Reference_ViewModel.Employe.Employes != null)
-        //    {
-        //        EmployeIntervention = Reference_ViewModel.Employe.Employes;
-        //        EmployeInterventionCollectionView = new ListCollectionView(EmployeIntervention);
-        //        CurentEmploye = EmployeIntervention.FirstOrDefault();
-        //    }
-        //    //chambres
-        //    if (Reference_ViewModel.Chambre.ChambreGroupeChambre != null)
-        //    {
-        //        ChambreIntervention = new ObservableCollection<Chambre_VM>(Reference_ViewModel.Chambre.ChambreGroupeChambre.Select(c => new Chambre_VM { Id = c.Id, Nom = c.Nom }).ToList());
-        //        ChambreInterventionCollectionView = new ListCollectionView(ChambreIntervention);
-        //        CurrentChambre = ChambreIntervention.FirstOrDefault();
-        //    }
-        //    //GroupeChambres
-        //    Etages = Reference_ViewModel.ChambreGroupe.Etages;
-        //    if (Etages != null)
-        //        CurrentEtage = Etages.FirstOrDefault();
-
-        //    //
-        //    if (Reference_ViewModel.Header.CurrentHotel != null)
-        //        AllChambres = new ObservableCollection<ChambreByEtage_VM>(
-        //          MakfiData.ChambreByGroupe_Read($"<chambreByGroupe><hotel>{Reference_ViewModel.Header.CurrentHotel.Id}</hotel></chambreByGroupe>")
-        //          .Select(x => new ChambreByEtage_VM
-        //          {
-        //              GroupeChambre = x.GroupeChambre,
-        //              Nom = x.Nom,
-        //              IdDelaChambre = x.IdDelaChambre,
-        //              NomChambre = x.NomChambre
-        //          }).ToList());
-
-        //    //Intervention 
-        //    if (Reference_ViewModel.Intervention.DgSource != null)
-        //        Interventions = new ObservableCollection<Intervention_VM>(
-        //            Reference_ViewModel.Intervention.DgSource.Where(i => i.Model == true));
-        //    //CurrentIntervention = Interventions.FirstOrDefault();
-        //}
-
-        //public void Load_ChambreCurrentGroupe()
-        //{
-        //    //if (CurrentEtage != null && AllChambres != null)
-        //    //{
-        //    //    CurrentEtage.Chambres = new ObservableCollection<Chambre_VM>(
-        //    //        AllChambres.Where(c => c.GroupeChambre == CurrentEtage.Id)
-        //    //        );
-        //    //}
-        //}
-        //#endregion
     }
 }

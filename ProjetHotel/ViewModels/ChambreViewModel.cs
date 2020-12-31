@@ -12,9 +12,9 @@ namespace Makrisoft.Makfi.ViewModels
         #region Constructeur
         public ChambreViewModel()
         {
-            EtatType = EntiteEnum.Intervention;
+            EtatType = EntiteEnum.Chambre;
             SortDescriptions = new SortDescription[1] { new SortDescription("Nom", System.ComponentModel.ListSortDirection.Ascending) };
-            Components = ComponentEnum.Etats;
+            Loads = LoadEnum.Etats | LoadEnum.Etages;
             Title = "Les chambres";
 
             Init();
@@ -36,11 +36,6 @@ namespace Makrisoft.Makfi.ViewModels
                 });
         }
 
-        public override void Load(ViewEnum exView)
-        {
-            RetourIntervention = false;
-        }
-
         public override void DgSource_Save()
         {
             var param = $@"
@@ -59,7 +54,7 @@ namespace Makrisoft.Makfi.ViewModels
         public override bool DgSource_Filter(object item)
         {
             var chambre = (Chambre_VM)item;
-            return (FilterEtage == null || Etages.Any(e => chambre.Etage.Value == FilterEtage.Id)) &&
+            return (FilterEtage == null || (chambre.Etage != null && Etages.Any(e => chambre.Etage.Value == FilterEtage.Id))) &&
                    (FilterEtat == null || Etats.Any(e => chambre.Etat.Id == FilterEtat.Id));
         }
 
@@ -70,8 +65,9 @@ namespace Makrisoft.Makfi.ViewModels
         {
             CurrentDgSource = new Chambre_VM
             {
+                Id = null,
                 Nom = "( A définir !)",
-                Etat = MakfiData.Etats.Where(e => e.Entite == EntiteEnum.Chambre && e.Libelle == "None").Single()
+                Etat = MakfiData.Etats.Where(e => e.Entite == EntiteEnum.Chambre && e.Libelle == "Disponible").Single()
             };
             DgSource.Add(CurrentDgSource);
         }
