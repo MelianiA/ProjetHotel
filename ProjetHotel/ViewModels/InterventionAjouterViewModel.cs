@@ -1,16 +1,13 @@
 ﻿using Makrisoft.Makfi.Dal;
 using Makrisoft.Makfi.Models;
+using Makrisoft.Makfi.Views;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Linq;
-using System.Windows;
-using System.Windows.Data;
 
 namespace Makrisoft.Makfi.ViewModels
 {
-    public class InterventionAjouterViewModel : ViewModel<InterventionDetail_VM>
+    public class InterventionAjouterViewModel : ViewModel<InterventionDetail_VM, InterventionDetail>
     {
         #region Constructeur
         public InterventionAjouterViewModel()
@@ -18,7 +15,7 @@ namespace Makrisoft.Makfi.ViewModels
             EtatType = EntiteEnum.InterventionAjouter;
             Loads = LoadEnum.Chambres | LoadEnum.Employes | LoadEnum.Interventions | LoadEnum.Etages;
             Title = "Tout ajouter !";
-            Init();
+            Init<InterventionDetail>();
         }
 
         public override void Load()

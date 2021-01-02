@@ -11,7 +11,7 @@ using System.Windows.Input;
 
 namespace Makrisoft.Makfi.ViewModels
 {
-    public class EtageViewModel : ViewModel<Etage_VM>
+    public class EtageViewModel : ViewModel<Etage_VM, Etage>
     {
 
         public Chambre_VM CurrentChambreDispo
@@ -35,7 +35,7 @@ namespace Makrisoft.Makfi.ViewModels
             Loads = LoadEnum.Etats | LoadEnum.Chambres;
             Title = "Les groupes de chambres";
 
-            Init();
+            Init<Etage>();
 
             // Icommand
             AjouterChambreCommand = new RelayCommand(p => OnAjouterChambreCommand(), p => OnCanExecuteAjouterChambreCommand());
@@ -97,39 +97,21 @@ namespace Makrisoft.Makfi.ViewModels
                               Nom = c.Nom,
                           }))
               });
-            //foreach(var etage in etages)
-            //{
-            //    etage.Chambres = new ObservableCollection<Chambre_VM>(MakfiData.Chambre_Read($"<chambres><hotel>{Reference_ViewModel.Header.CurrentHotel.Id}</hotel><groupeChambre>{etage.Id}</groupeChambre></chambres>")
-            //              .Select(x => new Chambre_VM
-            //              {
-            //                  Id = x.Id,
-            //                  Nom = x.Nom,
-            //              }));
-            //    etage.AutresChambres = new ObservableCollection<Chambre_VM>(MakfiData.Chambre_Read($"<chambres><hotel>{Reference_ViewModel.Header.CurrentHotel.Id}</hotel><notGroupeChambre>{etage.Id}</notGroupeChambre></chambres>")
-            //              .Select(x => new Chambre_VM
-            //              {
-            //                  Id = x.Id,
-            //                  Nom = x.Nom,
-            //              }));
-            //}
             return etages;
         }
 
-        public override void DgSource_Save()
+        public override void DgSource_Save(string spName, string spParam)
         {
-            var param = $@"
-                        <groupeChambres>
-                            <id>{CurrentDgSource.Id}</id>
-                            <nom>{CurrentDgSource.Nom}</nom>
-                            <hotel>{Reference_ViewModel.Header.CurrentHotel.Id}</hotel>
-                            <chambres>{string.Join("", CurrentDgSource.Chambres.Select(c => $"<chambre>{c.Id}</chambre>"))}</chambres>
-                            <commentaire>{CurrentDgSource.Commentaire}</commentaire>    
-                          </groupeChambres>";
-            var ids = MakfiData.Save<Etage>("Etage_Save", param);
-
-            if (ids.Count == 0) throw new Exception("EtageViewModel.DgSource_Save");
-            CurrentDgSource.Id = ids[0].Id;
-            CurrentDgSource.SaveColor = "Navy";
+            base.DgSource_Save(
+                "Etage_Save",
+                $@"
+                <groupeChambres>
+                    <id>{CurrentDgSource.Id}</id>
+                    <nom>{CurrentDgSource.Nom}</nom>
+                    <hotel>{Reference_ViewModel.Header.CurrentHotel.Id}</hotel>
+                    <chambres>{string.Join("", CurrentDgSource.Chambres.Select(c => $"<chambre>{c.Id}</chambre>"))}</chambres>
+                    <commentaire>{CurrentDgSource.Commentaire}</commentaire>    
+                </groupeChambres>");
         }
         #endregion
 

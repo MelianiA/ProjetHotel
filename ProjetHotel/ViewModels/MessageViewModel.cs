@@ -14,7 +14,7 @@ using System.Xml.Serialization;
 
 namespace Makrisoft.Makfi.ViewModels
 {
-    public class MessageViewModel : ViewModel<Message_VM>
+    public class MessageViewModel : ViewModel<Message_VM, Message>
     {
 
         #region Constructeur
@@ -25,7 +25,7 @@ namespace Makrisoft.Makfi.ViewModels
             Loads = LoadEnum.Etats | LoadEnum.Utilisateurs;
             Title = "Les messages";
 
-            Init();
+            Init<Message>();
         }
         #endregion
 
@@ -84,12 +84,14 @@ namespace Makrisoft.Makfi.ViewModels
             }
             return messages;
         }
-        public override void DgSource_Save()
+        public override void DgSource_Save(string spName, string spParam)
         {
             CurrentDgSource.Etat = MakfiData.Etats.Where(e => e.Entite == EntiteEnum.Message && e.Libelle == "Envoyé").Single();
             CurrentDgSource.SaveColor = "Navy";
 
-            var spParam = $@"
+            base.DgSource_Save(
+                "Message_Save",
+                $@"
                     <messages>
                         <id>{CurrentDgSource.Id}</id>
                         <de>{CurrentDgSource.De?.Id}</de>
@@ -98,18 +100,7 @@ namespace Makrisoft.Makfi.ViewModels
                         <libelle>{CurrentDgSource.Libelle}</libelle>
                         <objet>{CurrentDgSource.Objet}</objet>
                         <etat>{CurrentDgSource.Etat.Id}</etat>
-                     </messages>";
-            var ids = MakfiData.Save<Message>("Message_Save", spParam);
-            if (MakfiData.Erreur != string.Empty)
-            {
-                MessageBox.Show(MakfiData.Erreur, "MessageViewModel.DgSource_Save");
-            }
-            else if (ids.Count == 0)
-                throw new Exception("MessageViewModel.DgSource_Save");
-            else
-            {
-                CurrentDgSource.Id = ids[0].Id;
-            }
+                     </messages>");
         }
         public override bool DgSource_Filter(object item)
         {

@@ -9,7 +9,7 @@ using System.Windows;
 
 namespace Makrisoft.Makfi.ViewModels
 {
-    public class UtilisateurViewModel : ViewModel<Utilisateur_VM>
+    public class UtilisateurViewModel : ViewModel<Utilisateur_VM, Utilisateur>
     {
 
         #region Constructeur
@@ -20,7 +20,7 @@ namespace Makrisoft.Makfi.ViewModels
             Loads = LoadEnum.None;
             Title = "Les utilisateurs";
 
-            Init();
+            Init<Utilisateur>();
         }
         #endregion
 
@@ -40,27 +40,26 @@ namespace Makrisoft.Makfi.ViewModels
                         e.Statut = (RoleEnum)(byte)MakfiData.Reader["Statut"];
                     })
                 .Select(x => new Utilisateur_VM
-                    {
-                        Id = x.Id,
-                        Nom = x.Nom,
-                        Image = $"/Makrisoft.Makfi;component/Assets/Photos/{x.Nom.ToLower()}.png",
-                        CodePin = x.CodePin,
-                        Statut = x.Statut,
-                        DateModified = default,
-                        SaveColor = "Navy"}));
+                {
+                    Id = x.Id,
+                    Nom = x.Nom,
+                    Image = $"/Makrisoft.Makfi;component/Assets/Photos/{x.Nom.ToLower()}.png",
+                    CodePin = x.CodePin,
+                    Statut = x.Statut,
+                    DateModified = default,
+                    SaveColor = "Navy"
+                }));
         }
-        public override void DgSource_Save()
+        public override void DgSource_Save(string spName, string spParam)
         {
-            var param = $@"<utilisateur>
-                                        <id>{CurrentDgSource.Id}</id>
-                                        <nom>{CurrentDgSource.Nom}</nom>
-                                        <codePin>{CurrentDgSource.CodePin}</codePin>
-                                        <statut>{(byte)CurrentDgSource.Statut}</statut>
-                                    </utilisateur>";
-            var ids = MakfiData.Save<Utilisateur>("Utilisateur_Save", param);
-            if (ids.Count == 0) throw new Exception("Rien n'a été sauvgardé ! ");
-            CurrentDgSource.Id = ids[0].Id;
-            CurrentDgSource.SaveColor = "Navy";
+            base.DgSource_Save(
+                "Utilisateur_Save",
+                $@"<utilisateur>
+                        <id>{CurrentDgSource.Id}</id>
+                        <nom>{CurrentDgSource.Nom}</nom>
+                        <codePin>{CurrentDgSource.CodePin}</codePin>
+                        <statut>{(byte)CurrentDgSource.Statut}</statut>
+                    </utilisateur>");
         }
         public override bool DgSource_Filter(object item)
         {

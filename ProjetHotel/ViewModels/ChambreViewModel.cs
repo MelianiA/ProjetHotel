@@ -8,7 +8,7 @@ using System.Windows;
 
 namespace Makrisoft.Makfi.ViewModels
 {
-    public class ChambreViewModel : ViewModel<Chambre_VM>
+    public class ChambreViewModel : ViewModel<Chambre_VM, Chambre>
     {
         #region Constructeur
         public ChambreViewModel()
@@ -18,7 +18,7 @@ namespace Makrisoft.Makfi.ViewModels
             Loads = LoadEnum.Etats | LoadEnum.Etages;
             Title = "Les chambres";
 
-            Init();
+            Init<Chambre>();
         }
         #endregion
 
@@ -48,22 +48,17 @@ namespace Makrisoft.Makfi.ViewModels
                 });
         }
 
-        public override void DgSource_Save()
+        public override void DgSource_Save(string spName, string spParam)
         {
-            var spParam = $@"
-                <chambres>
+            base.DgSource_Save(
+                "Chambre_Save",
+                $@"<chambres>
                     <id>{CurrentDgSource.Id}</id>
                     <nom>{CurrentDgSource.Nom}</nom>
                     <etat>{CurrentDgSource.Etat.Id}</etat>
                     <commentaire>{CurrentDgSource.Commentaire}</commentaire>    
                     <hotel>{Reference_ViewModel.Header.CurrentHotel.Id}</hotel>
-                </chambres>";
-            var spName = "Chambre_Save";
-
-            var ids = MakfiData.Save<Chambre>(spName, spParam);
-            if (ids.Count == 0) throw new Exception("ChambreViewModel.DgSource_Save");
-            CurrentDgSource.Id = ids[0].Id;
-            CurrentDgSource.SaveColor = "Navy";
+                </chambres>");
         }
         public override bool DgSource_Filter(object item)
         {

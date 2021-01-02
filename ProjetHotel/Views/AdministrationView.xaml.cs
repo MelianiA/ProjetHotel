@@ -16,9 +16,6 @@ using System.Windows.Shapes;
 
 namespace Makrisoft.Makfi.Views
 {
-    /// <summary>
-    /// Logique d'interaction pour AdministrationView.xaml
-    /// </summary>
     public partial class AdministrationView : UserControl
     {
         public AdministrationView()

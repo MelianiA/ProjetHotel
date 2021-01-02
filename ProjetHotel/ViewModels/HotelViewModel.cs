@@ -12,7 +12,7 @@ using System.Windows.Input;
 
 namespace Makrisoft.Makfi.ViewModels
 {
-    public class HotelViewModel : ViewModel<Hotel_VM>
+    public class HotelViewModel : ViewModel<Hotel_VM, Hotel>
     {
 
         #region Constructeur
@@ -23,7 +23,7 @@ namespace Makrisoft.Makfi.ViewModels
             Loads = LoadEnum.Gouvernantes | LoadEnum.Receptions;
             Title = "Les hôtels";
 
-            Init();
+            Init<Hotel>();
         }
         #endregion
 
@@ -55,21 +55,17 @@ namespace Makrisoft.Makfi.ViewModels
                 }));
         }
 
-        public override void DgSource_Save()
+        public override void DgSource_Save(string spName, string spParam)
         {
-            var reception = CurrentDgSource.Reception?.Id;
-            var gouv = CurrentDgSource.Gouvernante?.Id;
-            var param = $@"<hotels>
-                                <id>{CurrentDgSource.Id}</id>
-                                <nom>{CurrentDgSource.Nom}</nom> 
-                                <reception>{reception}</reception>
-                                <gouvernante>{gouv}</gouvernante>
-                                <commentaire>{CurrentDgSource.Commentaire}</commentaire>       
-                            </hotels>";
-            var ids = MakfiData.Save<Hotel>("Hotel_Save", param);
-            if (ids.Count == 0) throw new Exception("Rien n'a été sauvegardé ! ");
-            CurrentDgSource.Id = ids[0].Id;
-            CurrentDgSource.SaveColor = "Navy";
+            base.DgSource_Save(
+                "Hotel_Save",
+                $@"<hotels>
+                        <id>{CurrentDgSource.Id}</id>
+                        <nom>{CurrentDgSource.Nom}</nom> 
+                        <reception>{CurrentDgSource.Reception?.Id}</reception>
+                        <gouvernante>{CurrentDgSource.Gouvernante?.Id}</gouvernante>
+                        <commentaire>{CurrentDgSource.Commentaire}</commentaire>       
+                    </hotels>");
         }
 
         #endregion

@@ -12,7 +12,7 @@ using System.Windows.Input;
 
 namespace Makrisoft.Makfi.ViewModels
 {
-    public class EmployeViewModel : ViewModel<Employe_VM>
+    public class EmployeViewModel : ViewModel<Employe_VM, Employe>
     {
         #region Constructeur
         public EmployeViewModel()
@@ -22,7 +22,7 @@ namespace Makrisoft.Makfi.ViewModels
             Loads = LoadEnum.Etats;
             Title = "Les employés";
 
-            Init();
+            Init<Employe>();
         }
         #endregion
 
@@ -52,22 +52,19 @@ namespace Makrisoft.Makfi.ViewModels
                     });
         }
 
-        public override void DgSource_Save()
+        public override void DgSource_Save(string spName, string spParam)
         {
-            var param = $@"
-                        <employes>
-                            <id>{CurrentDgSource.Id}</id>
-                            <nom>{CurrentDgSource.Nom}</nom>
-                            <hotel>{Reference_ViewModel.Header.CurrentHotel.Id}</hotel>
-                            <prenom>{CurrentDgSource.Prenom}</prenom>
-                            <etat>{CurrentDgSource.Etat.Id}</etat>
-                            <commentaire>{CurrentDgSource.Commentaire}</commentaire>       
-                        </employes>";
-            var ids = MakfiData.Save<Employe>("Employe_Save", param);
-
-            if (ids.Count == 0) throw new Exception("EmployeViewModel.DgSource_Save");
-            CurrentDgSource.Id = ids[0].Id;
-            CurrentDgSource.SaveColor = "Navy";
+            base.DgSource_Save(
+                "Employe_Save",
+                $@"
+                <employes>
+                    <id>{CurrentDgSource.Id}</id>
+                    <nom>{CurrentDgSource.Nom}</nom>
+                    <hotel>{Reference_ViewModel.Header.CurrentHotel.Id}</hotel>
+                    <prenom>{CurrentDgSource.Prenom}</prenom>
+                    <etat>{CurrentDgSource.Etat.Id}</etat>
+                    <commentaire>{CurrentDgSource.Commentaire}</commentaire>       
+                </employes>");
         }
         public override bool DgSource_Filter(object item)
         {

@@ -9,7 +9,7 @@ using System.Windows.Input;
 
 namespace Makrisoft.Makfi.ViewModels
 {
-    public class InterventionDetailViewModel : ViewModel<InterventionDetail_VM>
+    public class InterventionDetailViewModel : ViewModel<InterventionDetail_VM, InterventionDetail>
     {
         #region Constructeur
         public InterventionDetailViewModel()
@@ -18,7 +18,7 @@ namespace Makrisoft.Makfi.ViewModels
             SortDescriptions = new SortDescription[1] { new SortDescription("Chambre.Nom", ListSortDirection.Ascending) };
             Loads = LoadEnum.Etats | LoadEnum.Employes | LoadEnum.Chambres | LoadEnum.Etages;
 
-            Init();
+            Init<InterventionDetail>();
 
             AddAllCommand = new RelayCommand(p => OnAddAllCommand(), p => true);
             SaveAllCommand = new RelayCommand(p => OnSaveAllCommand(), p => OnCanExecuteSaveAllCommand());
@@ -68,7 +68,7 @@ namespace Makrisoft.Makfi.ViewModels
                     SaveColor = "Navy"
                 });
         }
-        public override void DgSource_Save()
+        public override void DgSource_Save(string spName, string spParam)
         {
             var param = $@"<interventionDetails><intervention>{Reference_ViewModel.Intervention.CurrentDgSource.Id}</intervention> <interventionDetail>
                             <id>{CurrentDgSource.Id}</id>

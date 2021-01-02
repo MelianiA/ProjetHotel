@@ -115,7 +115,7 @@ namespace Makrisoft.Makfi.ViewModels
             if ((ViewEnum)view == ViewEnum.InterventionDetail && EtatControle == "Intervention du jour")
             {
                 Reference_ViewModel.Intervention.OnAddCommand();
-                Reference_ViewModel.Intervention.OnSaveCommand();
+                Reference_ViewModel.Intervention.OnSaveCommand<Intervention>();
             }
             else
             {

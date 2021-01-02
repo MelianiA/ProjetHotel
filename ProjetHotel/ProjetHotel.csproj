@@ -118,26 +118,25 @@
     <Compile Include="Models\_Modele.cs" />
     <Compile Include="Models\Utilisateur.cs" />
     <Compile Include="Tools\RelayCommand.cs" />
-    <Compile Include="ViewModels\AdministrationViewModel.cs" />
+    <Compile Include="ViewModels\AdministrationViewModel__.cs" />
     <Compile Include="ViewModels\EtageViewModel.cs" />
     <Compile Include="ViewModels\ChambreViewModel.cs" />
     <Compile Include="ViewModels\EmployeViewModel.cs" />
-    <Compile Include="ViewModels\HomeViewModel.cs" />
+    <Compile Include="ViewModels\HomeViewModel__.cs" />
     <Compile Include="ViewModels\HotelViewModel.cs" />
     <Compile Include="ViewModels\InterventionAjouterViewModel.cs" />
     <Compile Include="ViewModels\InterventionDetailViewModel.cs" />
-    <Compile Include="ViewModels\InterventionSupprimerViewModel.cs" />
     <Compile Include="ViewModels\InterventionViewModel.cs" />
     <Compile Include="ViewModels\MessageViewModel.cs" />
-    <Compile Include="ViewModels\ParametreViewModel.cs" />
-    <Compile Include="ViewModels\_ViewModel.cs" />
+    <Compile Include="ViewModels\ParametreViewModel__.cs" />
+    <Compile Include="ViewModels\__ViewModel.cs" />
     <Compile Include="Tools\Reference_ViewModel.cs" />
-    <Compile Include="ViewModels\HeaderViewModel.cs" />
-    <Compile Include="ViewModels\LoginViewModel.cs" />
-    <Compile Include="ViewModels\MainViewModel.cs" />
+    <Compile Include="ViewModels\HeaderViewModel__.cs" />
+    <Compile Include="ViewModels\LoginViewModel__.cs" />
+    <Compile Include="ViewModels\MainViewModel__.cs" />
     <Compile Include="ViewModels\UtilisateurViewModel.cs" />
     <Compile Include="Tools\ViewModelBase.cs" />
-    <Compile Include="ViewModels\_VM.cs" />
+    <Compile Include="ViewModels\__VM.cs" />
     <Compile Include="Views\AdministrationView.xaml.cs">
       <DependentUpon>AdministrationView.xaml</DependentUpon>
     </Compile>

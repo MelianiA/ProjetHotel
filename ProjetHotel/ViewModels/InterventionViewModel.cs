@@ -8,7 +8,7 @@ using System.Windows;
 
 namespace Makrisoft.Makfi.ViewModels
 {
-    public class InterventionViewModel : ViewModel<Intervention_VM>
+    public class InterventionViewModel : ViewModel<Intervention_VM, Intervention>
     {
         #region Constructeur
         public InterventionViewModel()
@@ -18,7 +18,7 @@ namespace Makrisoft.Makfi.ViewModels
             Loads = LoadEnum.Etats | LoadEnum.DateDebut | LoadEnum.DateFin;
             Title = "Les interventions";
 
-            Init();
+            Init<Intervention>();
         }
         #endregion
 
@@ -48,9 +48,11 @@ namespace Makrisoft.Makfi.ViewModels
                   SaveColor = "Navy"
               }).OrderBy(x => x.Libelle).ToList();
         }
-        public override void DgSource_Save()
+        public override void DgSource_Save(string spName, string spParam)
         {
-            var param = $@"
+            base.DgSource_Save(
+                "Intervention_Save",
+                $@"
                     <intervention>
                         <id>{CurrentDgSource.Id}</id>
                         <libelle>{CurrentDgSource.Libelle}</libelle>
@@ -59,13 +61,7 @@ namespace Makrisoft.Makfi.ViewModels
                         <date1>{CurrentDgSource.Date1}</date1>    
                         <model>{CurrentDgSource.Model}</model>   
                         <etat>{CurrentDgSource.Etat.Id}</etat> 
-                     </intervention>";
-            var ids = MakfiData.Save<Intervention>("Intervention_Save", param);
-
-            if (ids.Count == 0) throw new Exception("Rien n'a été sauvgardé ! ");
-            CurrentDgSource.Id = ids[0].Id;
-
-            CurrentDgSource.SaveColor = "Navy";
+                     </intervention>");
         }
         public override bool DgSource_Filter(object item)
         {

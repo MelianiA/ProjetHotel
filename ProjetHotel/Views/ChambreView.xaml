@@ -8,10 +8,6 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
-        <!--<Grid.Resources>
-            <conv:ChambreEtatIconeConverter x:Key="ChambreEtatIconeConverterKey"/>
-            <conv:ChambreEtatColorConverter x:Key="ChambreEtatColorConverterKey"/>
-        </Grid.Resources>-->
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="240"/>
             <ColumnDefinition Width="*"/>
@@ -131,13 +127,6 @@
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
-                    <!--<DataGridTemplateColumn Width="auto">
-                        <DataGridTemplateColumn.CellTemplate>
-                            <DataTemplate>
-                                <TextBlock Text="{Binding Etage }" TextWrapping="Wrap"  FontWeight="SemiBold"/>
-                            </DataTemplate>
-                        </DataGridTemplateColumn.CellTemplate>
-                    </DataGridTemplateColumn>-->
                     <DataGridTemplateColumn Width="*">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
