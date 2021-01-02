@@ -1,4 +1,5 @@
 ﻿using Makrisoft.Makfi.Dal;
+using Makrisoft.Makfi.Models;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -187,7 +188,7 @@ namespace Makrisoft.Makfi.ViewModels
                 var employe = Reference_ViewModel.InterventionDetail.DgSource.Where(i => i.Employe.Id == CurentEmploye.Id).ToList();
                 foreach (var item in employe)
                 {
-                    var param = MakfiData.InterventionDetails_Delete($"<interventionDetails><id>{item.Id}</id></interventionDetails>");
+                    var param = MakfiData.Delete("InterventionDetails_Delete", $" < interventionDetails><id>{item.Id}</id></interventionDetails>");
                     if (param) Reference_ViewModel.InterventionDetail.DgSource.Remove(item);
                 }
             }
@@ -197,7 +198,7 @@ namespace Makrisoft.Makfi.ViewModels
                 {
                     if (CurrentEtage.Chambres.Any(c => c.Id == item.Chambre.Id))
                     {
-                        if (!MakfiData.InterventionDetails_Delete($"<interventionDetails><id>{item.Id}</id></interventionDetails>"))
+                        if (!MakfiData.Delete("InterventionDetails_Delete", $" < interventionDetails><id>{item.Id}</id></interventionDetails>"))
                             throw new Exception();
                     }
                 }
@@ -209,7 +210,7 @@ namespace Makrisoft.Makfi.ViewModels
                 var employe = Reference_ViewModel.InterventionDetail.DgSource.Where(i => i.Chambre.Id == currentChambre.Id).ToList();
                 foreach (var item in employe)
                 {
-                    var param = MakfiData.InterventionDetails_Delete($"<interventionDetails><id>{item.Id}</id></interventionDetails>");
+                    var param = MakfiData.Delete("InterventionDetails_Delete", $" < interventionDetails><id>{item.Id}</id></interventionDetails>");
                     if (param) Reference_ViewModel.InterventionDetail.DgSource.Remove(item);
                 }
             }
@@ -225,7 +226,18 @@ namespace Makrisoft.Makfi.ViewModels
         {
 
             Chambres = new ObservableCollection<Chambre_VM>(
-                MakfiData.Chambre_Read()
+                MakfiData.Read<Chambre>
+                (
+                    "Chambre_Read",
+                    null,
+                    e =>
+                    {
+                        e.Id = (Guid)MakfiData.Reader["Id"];
+                        e.Nom = MakfiData.Reader["Nom"] as string;
+                        e.Etat = (Guid)MakfiData.Reader["Etat"];
+                        e.Etage = MakfiData.Reader["GroupeChambre"] as Guid?;
+                        e.Commentaire = MakfiData.Reader["Commentaire"] as string;
+                    })
                 .Select(x => new Chambre_VM
                 {
                     Id = x.Id,
@@ -250,8 +262,18 @@ namespace Makrisoft.Makfi.ViewModels
             GroupeChambres = Reference_ViewModel.Etage.Etages;
             CurrentEtage = GroupeChambres.FirstOrDefault();
             //
-            AllChambres = new ObservableCollection<Chambre_VM>(
-              MakfiData.ChambreByGroupe_Read($"<chambreByGroupe><hotel>{Reference_ViewModel.Header.CurrentHotel.Id}</hotel></chambreByGroupe>")
+            AllChambres = new ObservableCollection<Chambre_VM>
+                (
+                MakfiData.Read<Chambre>(
+                    "ChambreByGroupe_Read",
+                    $"<chambreByGroupe><hotel>{Reference_ViewModel.Header.CurrentHotel.Id}</hotel></chambreByGroupe>",
+                    e =>
+                    {
+                        e.Id = (Guid)MakfiData.Reader["IdDelaChambre"];
+                        e.Etage = MakfiData.Reader["GroupeChambre"] as Guid?;
+                        e.Nom = MakfiData.Reader["Nom"] as string;
+                        e.Nom = MakfiData.Reader["NomChambre"] as string;
+                    })
               .Select(x => new Chambre_VM
               {
                   Etage = x.Etage,

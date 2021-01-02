@@ -7,12 +7,14 @@ using System.Threading.Tasks;
 
 namespace Makrisoft.Makfi.Models
 {
-    public class Etat : Modele
+    public class Message : Modele
     {
+        public Guid? IdHisto;
+        public Guid? De;
+        public Guid? A;
+        public DateTime DateEnvoi;
+        public Guid Etat;
         public string Libelle;
-        public string Icone;
-        public string Couleur;
-        public EntiteEnum Entite;
-        public Boolean EtatEtat;
+        public string Objet;
     }
 }

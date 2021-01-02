@@ -6,13 +6,11 @@ using System.Threading.Tasks;
 
 namespace Makrisoft.Makfi.Models
 {
-    public class InterventionDetail
+    public class InterventionDetail : Modele
     {
-        public Guid Id;
         public Employe Employe;
         public Chambre Chambre;
         public string Commentaire;
         public Guid Etat;
-        public bool Insere;
     }
 }

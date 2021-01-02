@@ -6,17 +6,13 @@ using System.Threading.Tasks;
 
 namespace Makrisoft.Makfi.Models
 {
-    public class Intervention
+    public class Intervention : Modele
     {
-        public Guid Id;
         public string Libelle;
         public Guid Etat;
         public DateTime Date1;
         public string Commentaire;
         public Guid? GroupeChambre;
-
-        public bool Model;
-
-
+        public bool IsModele;
     }
 }

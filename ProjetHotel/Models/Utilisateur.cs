@@ -7,9 +7,8 @@ using System.Threading.Tasks;
 
 namespace Makrisoft.Makfi.Models
 {
-    public class Utilisateur 
+    public class Utilisateur : Modele
     {
-        public Guid Id;
         public string Nom;
         public Guid Gouvernante;
         public string CodePin;

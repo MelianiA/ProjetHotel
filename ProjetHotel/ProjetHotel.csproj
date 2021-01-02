@@ -107,17 +107,17 @@
     <Compile Include="Converters\ViewSelectedConverter.cs" />
     <Compile Include="Dal\MakfiData.cs" />
     <Compile Include="Models\Chambre.cs" />
-    <Compile Include="Models\ChambreEtage.cs" />
     <Compile Include="Models\Employe.cs" />
     <Compile Include="Models\Etat.cs" />
     <Compile Include="Models\Etage.cs" />
     <Compile Include="Models\Hotel.cs" />
-    <Compile Include="Models\HotelEmploye.cs" />
     <Compile Include="Models\Info.cs" />
     <Compile Include="Models\Intervention.cs" />
     <Compile Include="Models\InterventionDetail.cs" />
+    <Compile Include="Models\Message.cs" />
+    <Compile Include="Models\_Modele.cs" />
     <Compile Include="Models\Utilisateur.cs" />
-    <Compile Include="Tools\Tools.cs" />
+    <Compile Include="Tools\RelayCommand.cs" />
     <Compile Include="ViewModels\AdministrationViewModel.cs" />
     <Compile Include="ViewModels\EtageViewModel.cs" />
     <Compile Include="ViewModels\ChambreViewModel.cs" />
@@ -130,13 +130,13 @@
     <Compile Include="ViewModels\InterventionViewModel.cs" />
     <Compile Include="ViewModels\MessageViewModel.cs" />
     <Compile Include="ViewModels\ParametreViewModel.cs" />
-    <Compile Include="ViewModels\ViewModel.cs" />
-    <Compile Include="ViewModels\_Reference_ViewModel.cs" />
+    <Compile Include="ViewModels\_ViewModel.cs" />
+    <Compile Include="Tools\Reference_ViewModel.cs" />
     <Compile Include="ViewModels\HeaderViewModel.cs" />
     <Compile Include="ViewModels\LoginViewModel.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
     <Compile Include="ViewModels\UtilisateurViewModel.cs" />
-    <Compile Include="ViewModels\_ViewModelBase.cs" />
+    <Compile Include="Tools\ViewModelBase.cs" />
     <Compile Include="ViewModels\_VM.cs" />
     <Compile Include="Views\AdministrationView.xaml.cs">
       <DependentUpon>AdministrationView.xaml</DependentUpon>

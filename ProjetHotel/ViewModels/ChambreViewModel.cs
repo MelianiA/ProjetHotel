@@ -1,4 +1,5 @@
 ﻿using Makrisoft.Makfi.Dal;
+using Makrisoft.Makfi.Models;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -24,7 +25,18 @@ namespace Makrisoft.Makfi.ViewModels
         #region DgSource
         public override IEnumerable<Chambre_VM> DgSource_Read()
         {
-            return MakfiData.Chambre_Read($"<chambres><hotel>{Reference_ViewModel.Header.CurrentHotel.Id}</hotel></chambres>")
+            return MakfiData.Read<Chambre>
+                (
+                "Chambre_Read",
+                $"<chambres><hotel>{Reference_ViewModel.Header.CurrentHotel.Id}</hotel></chambres>",
+                e =>
+                {
+                    e.Id = (Guid)MakfiData.Reader["Id"];
+                    e.Nom = MakfiData.Reader["Nom"] as string;
+                    e.Etat = (Guid)MakfiData.Reader["Etat"];
+                    e.Etage = MakfiData.Reader["GroupeChambre"] as Guid?;
+                    e.Commentaire = MakfiData.Reader["Commentaire"] as string;
+                })
                 .Select(x => new Chambre_VM
                 {
                     Id = x.Id,
@@ -38,7 +50,7 @@ namespace Makrisoft.Makfi.ViewModels
 
         public override void DgSource_Save()
         {
-            var param = $@"
+            var spParam = $@"
                 <chambres>
                     <id>{CurrentDgSource.Id}</id>
                     <nom>{CurrentDgSource.Nom}</nom>
@@ -46,7 +58,9 @@ namespace Makrisoft.Makfi.ViewModels
                     <commentaire>{CurrentDgSource.Commentaire}</commentaire>    
                     <hotel>{Reference_ViewModel.Header.CurrentHotel.Id}</hotel>
                 </chambres>";
-            var ids = MakfiData.Chambre_Save(param);
+            var spName = "Chambre_Save";
+
+            var ids = MakfiData.Save<Chambre>(spName, spParam);
             if (ids.Count == 0) throw new Exception("ChambreViewModel.DgSource_Save");
             CurrentDgSource.Id = ids[0].Id;
             CurrentDgSource.SaveColor = "Navy";
@@ -71,16 +85,11 @@ namespace Makrisoft.Makfi.ViewModels
             };
             DgSource.Add(CurrentDgSource);
         }
-        public override void OnDeleteCommand()
+        public override void OnDeleteCommand(string spName, string spParam)
         {
-            var canDeletes = MakfiData.Chambre_CanDelete($"<chambres><id>{CurrentDgSource.Id}</id></chambres>");
-            if (canDeletes.Count() == 0)
-            {
-                var param = MakfiData.Chambre_Delete($"<chambres><id>{CurrentDgSource.Id}</id></chambres>");
-                if (param) DgSource.Remove(CurrentDgSource);
-            }
-            else
-                MessageBox.Show($"Suppression impossible", "Erreur");
+            spName = "Chambre_CanDelete";
+            spParam = $"<chambres><id>{CurrentDgSource.Id}</id></chambres> ";
+            base.OnDeleteCommand(spName, spParam);
         }
         public override void OnChangeViewCommand()
         {

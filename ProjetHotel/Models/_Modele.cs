@@ -6,12 +6,9 @@ using System.Threading.Tasks;
 
 namespace Makrisoft.Makfi.Models
 {
-    public class HotelEmploye
+    public class Modele
     {
-        public Guid Id { get; set; }
-
-        public Guid Employe { get; set; }
-        public Guid Hotel { get; set; }
-
+        public Guid? Id;
+        public bool Insere;
     }
 }

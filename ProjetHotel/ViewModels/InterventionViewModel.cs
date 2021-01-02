@@ -1,4 +1,5 @@
 ﻿using Makrisoft.Makfi.Dal;
+using Makrisoft.Makfi.Models;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -24,7 +25,18 @@ namespace Makrisoft.Makfi.ViewModels
         #region DgSource
         public override IEnumerable<Intervention_VM> DgSource_Read()
         {
-            return MakfiData.Intervention_Read($"<interventions><hotel>{Reference_ViewModel.Header.CurrentHotel.Id}</hotel></interventions>")
+            return MakfiData.Read<Intervention>(
+                "Intervention_Read",
+                $"<interventions><hotel>{Reference_ViewModel.Header.CurrentHotel.Id}</hotel></interventions>",
+                e =>
+                {
+                    e.Id = (Guid)MakfiData.Reader["Id"];
+                    e.Libelle = MakfiData.Reader["Libelle"] as string;
+                    e.Etat = (Guid)MakfiData.Reader["Etat"];
+                    e.Date1 = (DateTime)MakfiData.Reader["Date1"];
+                    e.Commentaire = MakfiData.Reader["Commentaire"] as string;
+                    e.IsModele = (bool)MakfiData.Reader["Model"];
+                })
               .Select(x => new Intervention_VM
               {
                   Id = x.Id,
@@ -32,7 +44,7 @@ namespace Makrisoft.Makfi.ViewModels
                   Etat = MakfiData.Etats.Where(e => e.Id == x.Etat).Single(),
                   Date1 = x.Date1,
                   Commentaire = x.Commentaire,
-                  Model = x.Model,
+                  Model = x.IsModele,
                   SaveColor = "Navy"
               }).OrderBy(x => x.Libelle).ToList();
         }
@@ -48,7 +60,8 @@ namespace Makrisoft.Makfi.ViewModels
                         <model>{CurrentDgSource.Model}</model>   
                         <etat>{CurrentDgSource.Etat.Id}</etat> 
                      </intervention>";
-            var ids = MakfiData.Intervention_Save(param);
+            var ids = MakfiData.Save<Intervention>("Intervention_Save", param);
+
             if (ids.Count == 0) throw new Exception("Rien n'a été sauvgardé ! ");
             CurrentDgSource.Id = ids[0].Id;
 
@@ -77,30 +90,18 @@ namespace Makrisoft.Makfi.ViewModels
                 };
             DgSource.Add(CurrentDgSource);
         }
-        public override void OnDeleteCommand()
+        public override void OnDeleteCommand(string spName, string spParam)
         {
-            var canDeletes = MakfiData.Intervention_CanDelete($"<intervention><id>{CurrentDgSource.Id}</id></intervention>");
-            if (canDeletes.Count() == 0)
-            {
-                var param = MakfiData.Intervention_Delete($"<intervention><id>{CurrentDgSource.Id}</id></intervention>");
-                if (param) DgSource.Remove(CurrentDgSource);
-            }
-            else
-                MessageBox.Show($" Suppression impossible de l'intervention: {CurrentDgSource.Libelle }", "Remarque !");
+            spName = "Intervention_CanDelete";
+            spParam = $"<intervention><id>{CurrentDgSource.Id}</id></intervention>";
+
+            base.OnDeleteCommand(spName, spParam);
         }
         public override void OnChangeViewCommand()
         {
             Reference_ViewModel.Main.ViewSelected = ViewEnum.InterventionDetail;
             RetourIntervention = true;
         }
-        #endregion
-
-        #region Load
-        //public override void Load(ViewEnum exView)
-        //{
-        //    CurrentDgSource.Etat = SommeEtat();
-        //    base.Load(exView);
-        //}
         #endregion
     }
 }

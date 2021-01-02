@@ -5,26 +5,8 @@ using System.Windows.Data;
 
 namespace Makrisoft.Makfi.ViewModels
 {
-    //public class ChambreByEtage_VM : ViewModelBase
-    //{
-    //    public Guid? GroupeChambre;
-    //    public string Nom;
-    //    public Guid IdDelaChambre;
-    //    public string NomChambre
-    //    {
-    //        get
-    //        { return nomChambre; }
-    //        set
-    //        {
-    //            nomChambre = value;
-    //            OnPropertyChanged("NomChambre");
-    //        }
-    //    }
-    //    private string nomChambre;
-    //}
     public class Chambre_VM : ViewModelBase
     {
-        public Guid? Id { get; set; }
         public Guid? Etage { get; set; }
         public string Nom
         {
@@ -121,7 +103,7 @@ namespace Makrisoft.Makfi.ViewModels
     }
     public class Etat_VM
     {
-        public Guid Id { get; set; }
+        public Guid? Id { get; set; }
         public string Icone { get; set; }
         public string Libelle { get; set; }
         public string Couleur { get; set; }
@@ -187,10 +169,6 @@ namespace Makrisoft.Makfi.ViewModels
             }
         }
         private string image;
-    }
-    public class HotelEmploye_VM
-    {
-        public Guid Employe { get; set; }
     }
     public class Utilisateur_VM : ViewModelBase
     {
@@ -266,7 +244,6 @@ namespace Makrisoft.Makfi.ViewModels
 
 
     }
-
     public class Etage_VM : ViewModelBase
     {
         public Guid? Id;
@@ -348,54 +325,6 @@ namespace Makrisoft.Makfi.ViewModels
             }
         }
         private Chambre_VM currentNotChambreCG;
-    }
-    public class ChambreEtage_VM : ViewModelBase
-    {
-        public Guid Id;
-        public string Nom
-        {
-            get { return nom; }
-            set
-            {
-                nom = value;
-                SaveColor = "Red";
-                OnPropertyChanged("Nom");
-            }
-        }
-        private string nom;
-        public Etat_VM Etat
-        {
-            get { return etat; }
-            set
-            {
-                etat = value;
-                SaveColor = "Red";
-                OnPropertyChanged("Etat");
-            }
-        }
-        private Etat_VM etat;
-        public string Commentaire
-        {
-            get { return commentaire; }
-            set
-            {
-                commentaire = value;
-                SaveColor = "Red";
-                OnPropertyChanged("Commentaire");
-            }
-        }
-        private string commentaire;
-        public Guid? Etage
-        {
-            get { return etage; }
-            set
-            {
-                etage = value;
-                SaveColor = "Red";
-                OnPropertyChanged("Etage");
-            }
-        }
-        private Guid? etage;
     }
     public class Intervention_VM : ViewModelBase
     {
@@ -531,8 +460,8 @@ namespace Makrisoft.Makfi.ViewModels
     }
     public class Message_VM  : ViewModelBase
     {
-        public Guid Id;
-        public Guid MessageInitial;
+        public Guid? Id;
+        public Guid? IdHisto;
         public string Libelle
         {
             get { return libelle; }
@@ -604,22 +533,10 @@ namespace Makrisoft.Makfi.ViewModels
             }
         }
         private string objet;
-        public string ColorEtat
-        {
-            get
-            { return colorEtat; }
-            set
-            {
-                colorEtat = value;
-                OnPropertyChanged("ColorEtat");
-            }
-        }
-        private string colorEtat;
-
     }
     public class Info_VM
     {
-        public Guid Id;
+        public Guid? Id;
         public string Cle { get; set; }
         public string Valeur { get; set; }
 

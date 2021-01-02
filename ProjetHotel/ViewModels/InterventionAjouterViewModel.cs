@@ -1,4 +1,5 @@
 ﻿using Makrisoft.Makfi.Dal;
+using Makrisoft.Makfi.Models;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -20,10 +21,10 @@ namespace Makrisoft.Makfi.ViewModels
             Init();
         }
 
-        public override void Load(ViewEnum exView)
+        public override void Load()
         {
             CheckAnnuler = true;
-            base.Load(exView);
+            base.Load();
         }
         #endregion
 
@@ -33,10 +34,20 @@ namespace Makrisoft.Makfi.ViewModels
             if (CurrentIntervention != null)
             {
                 return MakfiData
-                    .InterventionDetail_Read($@"
+                    .Read<InterventionDetail>(
+                    "InterventionDetail_Read",
+                    $@"
                         <interventionDetails>
                             <intervention>{CurrentIntervention.Id}</intervention>
-                        </interventionDetails>")
+                        </interventionDetails>",
+                    e =>
+                    {
+                        e.Id = (Guid)MakfiData.Reader["Id"];
+                        e.Employe = new Employe { Id = (Guid)MakfiData.Reader["EmployeAffecte"], Nom = MakfiData.Reader["EmployeNom"] as string, Prenom = MakfiData.Reader["EmployePrenom"] as string };
+                        e.Chambre = new Chambre { Id = (Guid)MakfiData.Reader["ChambreAffectee"], Nom = MakfiData.Reader["ChambreNom"] as string };
+                        e.Etat = (Guid)MakfiData.Reader["Etat"];
+                        e.Commentaire = MakfiData.Reader["Commentaire"] as string;
+                    })
                     .Select(x => new InterventionDetail_VM
                     {
                         Id = null,
@@ -51,7 +62,18 @@ namespace Makrisoft.Makfi.ViewModels
             else if (CurrentEtage != null && CurrentEmploye != null)
             {
                 var interDetails = new List<InterventionDetail_VM>();
-                var chambres = MakfiData.Chambre_Read($"<chambres><groupeChambre>{CurrentEtage.Id}</groupeChambre></chambres>");
+                var chambres = MakfiData.Read<Chambre>
+                    (
+                    "Chambre_Read",
+                    $"<chambres><groupeChambre>{CurrentEtage.Id}</groupeChambre></chambres>",
+                    e =>
+                    {
+                        e.Id = (Guid)MakfiData.Reader["Id"];
+                        e.Nom = MakfiData.Reader["Nom"] as string;
+                        e.Etat = (Guid)MakfiData.Reader["Etat"];
+                        e.Etage = MakfiData.Reader["GroupeChambre"] as Guid?;
+                        e.Commentaire = MakfiData.Reader["Commentaire"] as string;
+                    });
                 foreach (var chambre in chambres)
                 {
                     interDetails.Add(new InterventionDetail_VM

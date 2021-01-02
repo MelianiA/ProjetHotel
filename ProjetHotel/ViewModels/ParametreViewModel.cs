@@ -1,4 +1,5 @@
 ﻿using Makrisoft.Makfi.Dal;
+using Makrisoft.Makfi.Models;
 using Makrisoft.Makfi.Tools;
 using System;
 using System.Collections.ObjectModel;
@@ -49,14 +50,22 @@ namespace Makrisoft.Makfi.ViewModels
         public void Load_Parametres()
         {
             var infoList = new ObservableCollection<Info_VM>(
-             MakfiData.Info_Read()
+             MakfiData.Read<Info>(
+                 "Info_Read",
+                 null,
+                e =>
+                {
+                    e.Id = (Guid)MakfiData.Reader["Id"];
+                    e.Cle = MakfiData.Reader["Cle"] as string;
+                    e.Valeur = MakfiData.Reader["Valeur"] as string;
+                })
              .Select(x => new Info_VM
              {
                  Id = x.Id,
                  Cle = x.Cle,
                  Valeur = x.Valeur
              }).ToList());
-            //VoirMsgArchives = bool.Parse(infoList.Where(i => i.Cle == "VoirMsgArchives").Select(i => i.Valeur).Single());
+            VoirMsgArchives = bool.Parse(infoList.Where(i => i.Cle == "VoirMsgArchives").Select(i => i.Valeur).Single());
         }
         #endregion
     }

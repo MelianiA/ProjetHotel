@@ -1,4 +1,5 @@
 ﻿using Makrisoft.Makfi.Dal;
+using Makrisoft.Makfi.Models;
 using Makrisoft.Makfi.Tools;
 using System;
 using System.Windows;
@@ -47,7 +48,7 @@ namespace Makrisoft.Makfi.ViewModels
                                     <codePin>{Reference_ViewModel.Header.CurrentUtilisateur.CodePin}</codePin>
                                     <statut>{(byte)Reference_ViewModel.Header.CurrentUtilisateur.Statut}</statut>
                                 </utilisateur>";
-                    var ids = MakfiData.Utilisateur_Save(param);
+                    var ids = MakfiData.Save<Utilisateur>("Utilisateur_Save", param);
                     if (ids.Count == 0) throw new Exception("Rien n'a été sauvgardé ! ");
                     Reference_ViewModel.Header.Message = "";
                 }
@@ -78,7 +79,7 @@ namespace Makrisoft.Makfi.ViewModels
             }
         }
 
-        internal void Load(ViewEnum exView)
+        public override void Load()
         {
             Reference_ViewModel.Header.Utilisateur_Load();
 

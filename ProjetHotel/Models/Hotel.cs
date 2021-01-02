@@ -6,9 +6,8 @@ using System.Threading.Tasks;
 
 namespace Makrisoft.Makfi.Models
 {
-    public class Hotel
+    public class Hotel : Modele
     {
-        public Guid Id;
         public string Nom;   
         public Guid? Reception;
         public Guid? Gouvernante;

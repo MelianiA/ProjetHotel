@@ -1,4 +1,5 @@
 ﻿using Makrisoft.Makfi.Dal;
+using Makrisoft.Makfi.Models;
 using Makrisoft.Makfi.Tools;
 using System;
 using System.Collections.Generic;
@@ -45,20 +46,51 @@ namespace Makrisoft.Makfi.ViewModels
         #region DgSource
         public override IEnumerable<Etage_VM> DgSource_Read()
         {
-            var etages = MakfiData.Etage_Read($"<groupeChambres><hotel>{Reference_ViewModel.Header.CurrentHotel.Id}</hotel></groupeChambres>")
+            var etages = MakfiData.Read<Etage>
+                (
+                "Etage_Read",
+                $"<groupeChambres><hotel>{Reference_ViewModel.Header.CurrentHotel.Id}</hotel></groupeChambres>",
+                e =>
+                {
+                    e.Id = (Guid)MakfiData.Reader["Id"];
+                    e.Nom = MakfiData.Reader["Nom"] as string;
+                    e.Commentaire = MakfiData.Reader["Commentaire"] as string;
+                })
               .Select(x => new Etage_VM
               {
                   Id = x.Id,
                   Nom = x.Nom,
                   Commentaire = x.Commentaire,
                   SaveColor = "Navy",
-                  Chambres = new ObservableCollection<Chambre_VM>(MakfiData.Chambre_Read($"<chambres><hotel>{Reference_ViewModel.Header.CurrentHotel.Id}</hotel><groupeChambre>{x.Id}</groupeChambre></chambres>")
-                          .Select(c => new Chambre_VM
+                  Chambres = new ObservableCollection<Chambre_VM>(
+                      MakfiData.Read<Chambre>(
+                            "Chambre_Read",
+                            $"<chambres><hotel>{Reference_ViewModel.Header.CurrentHotel.Id}</hotel><groupeChambre>{x.Id}</groupeChambre></chambres>",
+                            e =>
+                            {
+                                e.Id = (Guid)MakfiData.Reader["Id"];
+                                e.Nom = MakfiData.Reader["Nom"] as string;
+                                e.Etat = (Guid)MakfiData.Reader["Etat"];
+                                e.Etage = MakfiData.Reader["GroupeChambre"] as Guid?;
+                                e.Commentaire = MakfiData.Reader["Commentaire"] as string;
+                            })
+                  .Select(c => new Chambre_VM
+                  {
+                      Id = c.Id,
+                      Nom = c.Nom,
+                  })),
+                  AutresChambres = new ObservableCollection<Chambre_VM>(
+                      MakfiData.Read<Chambre>(
+                          "Chambre_Read",
+                          $"<chambres><hotel>{Reference_ViewModel.Header.CurrentHotel.Id}</hotel><notGroupeChambre>{x.Id}</notGroupeChambre></chambres>",
+                          e =>
                           {
-                              Id = c.Id,
-                              Nom = c.Nom,
-                          })),
-                  AutresChambres = new ObservableCollection<Chambre_VM>(MakfiData.Chambre_Read($"<chambres><hotel>{Reference_ViewModel.Header.CurrentHotel.Id}</hotel><notGroupeChambre>{x.Id}</notGroupeChambre></chambres>")
+                              e.Id = (Guid)MakfiData.Reader["Id"];
+                              e.Nom = MakfiData.Reader["Nom"] as string;
+                              e.Etat = (Guid)MakfiData.Reader["Etat"];
+                              e.Etage = MakfiData.Reader["GroupeChambre"] as Guid?;
+                              e.Commentaire = MakfiData.Reader["Commentaire"] as string;
+                          })
                           .Select(c => new Chambre_VM
                           {
                               Id = c.Id,
@@ -93,7 +125,8 @@ namespace Makrisoft.Makfi.ViewModels
                             <chambres>{string.Join("", CurrentDgSource.Chambres.Select(c => $"<chambre>{c.Id}</chambre>"))}</chambres>
                             <commentaire>{CurrentDgSource.Commentaire}</commentaire>    
                           </groupeChambres>";
-            var ids = MakfiData.Etage_Save(param);
+            var ids = MakfiData.Save<Etage>("Etage_Save", param);
+
             if (ids.Count == 0) throw new Exception("EtageViewModel.DgSource_Save");
             CurrentDgSource.Id = ids[0].Id;
             CurrentDgSource.SaveColor = "Navy";
@@ -110,16 +143,12 @@ namespace Makrisoft.Makfi.ViewModels
             };
             DgSource.Add(CurrentDgSource);
         }
-        public override void OnDeleteCommand()
+        public override void OnDeleteCommand(string spName, string spParam)
         {
-            var canDeletes = MakfiData.Etage_CanDelete($"<groupechambres><id>{CurrentDgSource.Id}</id></groupechambres>");
-            if (canDeletes.Count() == 0)
-            {
-                var param = MakfiData.Etage_Delete($"<groupechambres><id>{CurrentDgSource.Id}</id></groupechambres>");
-                if (param) DgSource.Remove(CurrentDgSource);
-            }
-            else
-                MessageBox.Show($"Suppression impossible", "Erreur");
+            spName = "Etage_CanDelete";
+            spParam = $"<groupechambres><id>{CurrentDgSource.Id}</id></groupechambres>";
+
+            base.OnDeleteCommand(spName, spParam);
         }
         //ICommand
         public ICommand AjouterChambreCommand { get; set; }

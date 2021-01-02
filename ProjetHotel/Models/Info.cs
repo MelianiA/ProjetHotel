@@ -6,9 +6,8 @@ using System.Threading.Tasks;
 
 namespace Makrisoft.Makfi.Models
 {
-    public class Info 
+    public class Info : Modele
     {
-        public Guid Id;
         public string Cle;
         public string Valeur;
 

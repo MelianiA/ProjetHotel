@@ -1,4 +1,5 @@
 ﻿using Makrisoft.Makfi.Dal;
+using Makrisoft.Makfi.Models;
 using Makrisoft.Makfi.Tools;
 using System;
 using System.Collections.Generic;
@@ -11,12 +12,13 @@ using System.Windows.Input;
 
 namespace Makrisoft.Makfi.ViewModels
 {
-    public class ViewModel<Dg_VM> : ViewModelBase where Dg_VM : ViewModelBase
+    public class ViewModel<VM> : ViewModelBase where VM : ViewModelBase
     {
         #region Propriétés
         protected EntiteEnum EtatType;
         protected SortDescription[] SortDescriptions = null;
         public LoadEnum Loads = LoadEnum.None;
+
         #endregion
 
         #region Constructeur
@@ -25,34 +27,12 @@ namespace Makrisoft.Makfi.ViewModels
             // Icommand
             SaveCommand = new RelayCommand(p => OnSaveCommand(), p => OnCanExecuteSaveCommand());
             AddCommand = new RelayCommand(p => OnAddCommand(), p => true);
-            DeleteCommand = new RelayCommand(p => OnDeleteCommand(), p => OnCanExecuteDeleteCommand());
+            DeleteCommand = new RelayCommand(p => OnDeleteCommand(null, null), p => OnCanExecuteDeleteCommand());
             FilterClearCommand = new RelayCommand(p => OnFilterClearCommand());
             ChangeViewCommand = new RelayCommand(p => OnChangeViewCommand(), p => OnCanExecuteChangeView());
 
-            //// Load
-            //if (Reference_ViewModel.Header.CurrentHotel != null)
-            //{
-            //    if (Components.HasFlag(ComponentEnum.Etats)) Load_Etats();
-            //    if (Components.HasFlag(ComponentEnum.Employes)) Load_Employes(Reference_ViewModel.Header.CurrentHotel.Id);
-            //    if (Components.HasFlag(ComponentEnum.Chambres)) Load_Chambres(Reference_ViewModel.Header.CurrentHotel.Id);
-            //    if (Components.HasFlag(ComponentEnum.Etages)) Load_Etages(Reference_ViewModel.Header.CurrentHotel.Id);
-            //    if (Components.HasFlag(ComponentEnum.Interventions)) Load_Interventions(
-            //        $@"
-            //        <interventions>
-            //            <hotel>{Reference_ViewModel.Header.CurrentHotel.Id}</hotel>
-            //        </interventions>
-            //        ");
-            //    if (Components.HasFlag(ComponentEnum.Utilisateurs)) Load_Utilisateurs();
-
-            //    Load_DgSource();
-            //}
-            //else if (this is UtilisateurViewModel || this is HotelViewModel)
-            //{
-            //    Load_DgSource();
-            //}
-
             // DgSourceCollectionView
-            DgSource = new ObservableCollection<Dg_VM>();
+            DgSource = new ObservableCollection<VM>();
             DgSourceCollectionView = new ListCollectionView(DgSource) { Filter = DgSource_Filter };
             if (SortDescriptions != null) foreach (var d in SortDescriptions) DgSourceCollectionView.SortDescriptions.Add(d);
         }
@@ -62,24 +42,29 @@ namespace Makrisoft.Makfi.ViewModels
 
         #region Binding
         // DgSource
-        public ObservableCollection<Dg_VM> DgSource
+        public ObservableCollection<VM> DgSource
         {
             get { return dgSource; }
             set { dgSource = value; OnPropertyChanged("DgSource"); }
         }
-        private ObservableCollection<Dg_VM> dgSource;
-        public Dg_VM CurrentDgSource
+        private ObservableCollection<VM> dgSource;
+        public VM CurrentDgSource
         {
             get { return currentDgSource; }
             set
             {
                 currentDgSource = value;
-                if (currentDgSource == null) IsModifierEnabled = false;
-                else IsModifierEnabled = true;
+                IsModifierEnabled = currentDgSource != null;
+                DgSource_Change();
                 OnPropertyChanged("CurrentDgSource");
             }
         }
-        private Dg_VM currentDgSource;
+
+        public virtual void DgSource_Change()
+        {
+        }
+
+        private VM currentDgSource;
         public ListCollectionView DgSourceCollectionView
         {
             get { return dgSourceCollectionView; }
@@ -197,8 +182,31 @@ namespace Makrisoft.Makfi.ViewModels
         }
         private ObservableCollection<Utilisateur_VM> receptions;
 
+        // Messages
+        public ObservableCollection<Message_VM> Messages
+        {
+            get { return messages; }
+            set
+            {
+                messages = value;
+                OnPropertyChanged("Messages");
+            }
+        }
+        private ObservableCollection<Message_VM> messages;
+
 
         // Filter
+        public Utilisateur_VM FilterUtilisateur
+        {
+            get { return filterUtilisateur; }
+            set
+            {
+                filterUtilisateur = value;
+                OnPropertyChanged("FilterUtilisateur");
+                DgSourceCollectionView.Refresh();
+            }
+        }
+        private Utilisateur_VM filterUtilisateur;
         public Etat_VM FilterEtat
         {
             get { return filterEtat; }
@@ -219,11 +227,21 @@ namespace Makrisoft.Makfi.ViewModels
                 if (FilterEtage != null)
                 {
                     filterEtage.Chambres = new ObservableCollection<Chambre_VM>(
-                        MakfiData.Chambre_Read($"<chambres><groupeChambre>{filterEtage.Id}</groupeChambre></chambres>")
-                        .Select(x => new Chambre_VM
-                        {
-                            Id = x.Id
-                        }));
+                        MakfiData.Read<Chambre>(
+                            "Chambre_Read",
+                            $"<chambres><groupeChambre>{filterEtage.Id}</groupeChambre></chambres>",
+                            e =>
+                            {
+                                e.Id = (Guid)MakfiData.Reader["Id"];
+                                e.Nom = MakfiData.Reader["Nom"] as string;
+                                e.Etat = (Guid)MakfiData.Reader["Etat"];
+                                e.Etage = MakfiData.Reader["GroupeChambre"] as Guid?;
+                                e.Commentaire = MakfiData.Reader["Commentaire"] as string;
+                            })
+                            .Select(x => new Chambre_VM
+                            {
+                                Id = x.Id
+                            }));
                 }
                 OnPropertyChanged("FilterEtage");
                 DgSourceCollectionView.Refresh();
@@ -293,7 +311,20 @@ namespace Makrisoft.Makfi.ViewModels
             DgSourceCollectionView.Refresh();
         }
         public virtual void OnAddCommand() { }
-        public virtual void OnDeleteCommand() { }
+        public virtual void OnDeleteCommand(string spName, string spParam)
+        {
+            var canDeletes = MakfiData.CanDelete(spName, spParam);
+            if (MakfiData.Erreur == string.Empty && canDeletes.Count() == 0)
+            {
+                var param = MakfiData.Delete(spName, spParam);
+                if (MakfiData.Erreur == string.Empty && param)
+                {
+                    DgSource.Remove(CurrentDgSource);
+                    return;
+                }
+            }
+            MessageBox.Show(MakfiData.Erreur, "ChambreViewModel.OnDeleteCommand");
+        }
 
         public virtual void OnFilterClearCommand()
         {
@@ -302,11 +333,12 @@ namespace Makrisoft.Makfi.ViewModels
             FilterDateFin = null;
             FilterEtage = null;
             FilterEmploye = null;
+            FilterUtilisateur = null;
         }
         public virtual void OnChangeViewCommand() { }
 
         // Méthodes OnCanExecuteCommand
-        private bool OnCanExecuteSaveCommand() { return CurrentDgSource != null; }
+        public virtual bool OnCanExecuteSaveCommand() { return CurrentDgSource != null; }
         public virtual bool OnCanExecuteDeleteCommand() { return CurrentDgSource != null; }
         public virtual bool OnCanExecuteChangeView() { return CurrentDgSource != null && CurrentDgSource.SaveColor != "Red"; }
 
@@ -317,13 +349,14 @@ namespace Makrisoft.Makfi.ViewModels
 
         #region Load
 
-        public virtual void Load(ViewEnum exView)
+        public override void Load()
         {
             // Divers
             if (!(this is MessageViewModel)) Reference_ViewModel.Header.MessagesVisibility = Visibility.Visible;
             RetourIntervention = false;
 
             // Load
+            if (Loads.HasFlag(LoadEnum.Messages)) Load_Messages();
             if (Loads.HasFlag(LoadEnum.Etats)) Load_Etats();
             if (Loads.HasFlag(LoadEnum.Employes)) Load_Employes();
             if (Loads.HasFlag(LoadEnum.Gouvernantes)) Load_Gouvernantes();
@@ -343,8 +376,17 @@ namespace Makrisoft.Makfi.ViewModels
         }
         public void Load_Chambres()
         {
-            var items = MakfiData
-                .Chambre_Read($"<chambres><hotel>{Reference_ViewModel.Header.CurrentHotel.Id}</hotel></chambres>")
+            var items = MakfiData.Read<Chambre>(
+                "Chambre_Read",
+                $"<chambres><hotel>{Reference_ViewModel.Header.CurrentHotel.Id}</hotel></chambres>",
+                e =>
+                {
+                    e.Id = (Guid)MakfiData.Reader["Id"];
+                    e.Nom = MakfiData.Reader["Nom"] as string;
+                    e.Etat = (Guid)MakfiData.Reader["Etat"];
+                    e.Etage = MakfiData.Reader["GroupeChambre"] as Guid?;
+                    e.Commentaire = MakfiData.Reader["Commentaire"] as string;
+                })
                 .Select(x => new Chambre_VM
                 {
                     Id = x.Id,
@@ -353,7 +395,7 @@ namespace Makrisoft.Makfi.ViewModels
                     Commentaire = x.Commentaire,
                     SaveColor = "Navy"
                 })
-                .OrderBy(c=>c.Nom);
+                .OrderBy(c => c.Nom);
             if (Chambres == null)
                 Chambres = new ObservableCollection<Chambre_VM>(items);
             else
@@ -372,7 +414,17 @@ namespace Makrisoft.Makfi.ViewModels
         public void Load_Employes()
         {
             var items = MakfiData
-                .Employe_Read($"<employes><hotel>{Reference_ViewModel.Header.CurrentHotel.Id}</hotel></employes>")
+                .Read<Employe>(
+                    "Employe_Read",
+                    $"<employes><hotel>{Reference_ViewModel.Header.CurrentHotel.Id}</hotel></employes>",
+                    e =>
+                    {
+                        e.Id = (Guid)MakfiData.Reader["Id"];
+                        e.Nom = MakfiData.Reader["Nom"] as string;
+                        e.Prenom = MakfiData.Reader["Prenom"] as string;
+                        e.Commentaire = MakfiData.Reader["Commentaire"] as string;
+                        e.Etat = (Guid)MakfiData.Reader["Etat"];
+                    })
                 .Select(x => new Employe_VM
                 {
                     Id = x.Id,
@@ -392,8 +444,15 @@ namespace Makrisoft.Makfi.ViewModels
         }
         public void Load_Etages()
         {
-            var items = MakfiData
-                .Etage_Read($"<groupeChambres><hotel>{Reference_ViewModel.Header.CurrentHotel.Id}</hotel></groupeChambres>")
+            var items = MakfiData.Read<Etage>(
+                "Etage_Read",
+                $"<groupeChambres><hotel>{Reference_ViewModel.Header.CurrentHotel.Id}</hotel></groupeChambres>",
+                e =>
+                {
+                    e.Id = (Guid)MakfiData.Reader["Id"];
+                    e.Nom = MakfiData.Reader["Nom"] as string;
+                    e.Commentaire = MakfiData.Reader["Commentaire"] as string;
+                })
                 .Select(x => new Etage_VM
                 {
                     Id = x.Id,
@@ -423,7 +482,18 @@ namespace Makrisoft.Makfi.ViewModels
         }
         public void Load_Interventions(string xml)
         {
-            var items = MakfiData.Intervention_Read(xml)
+            var items = MakfiData.Read<Intervention>(
+                "Intervention_Read",
+                xml,
+                e =>
+                {
+                    e.Id = (Guid)MakfiData.Reader["Id"];
+                    e.Libelle = MakfiData.Reader["Libelle"] as string;
+                    e.Etat = (Guid)MakfiData.Reader["Etat"];
+                    e.Date1 = (DateTime)MakfiData.Reader["Date1"];
+                    e.Commentaire = MakfiData.Reader["Commentaire"] as string;
+                    e.IsModele = (bool)MakfiData.Reader["Model"];
+                })
               .Select(x => new Intervention_VM
               {
                   Id = x.Id,
@@ -431,7 +501,7 @@ namespace Makrisoft.Makfi.ViewModels
                   Etat = MakfiData.Etats.Where(e => e.Id == x.Etat).Single(),
                   Date1 = x.Date1,
                   Commentaire = x.Commentaire,
-                  Model = x.Model,
+                  Model = x.IsModele,
                   SaveColor = "Navy"
               }).OrderBy(x => x.Libelle).ToList();
 
@@ -446,17 +516,27 @@ namespace Makrisoft.Makfi.ViewModels
         }
         private void Load_Utilisateurs()
         {
-            var items = new ObservableCollection<Utilisateur_VM>(MakfiData.Utilisateur_Read()
-                         .Select(x => new Utilisateur_VM
-                         {
-                             Id = x.Id,
-                             Nom = x.Nom,
-                             Image = $"/Makrisoft.Makfi;component/Assets/Photos/{x.Nom.ToLower()}.png",
-                             CodePin = x.CodePin,
-                             Statut = x.Statut,
-                             DateModified = default,
-                             SaveColor = "Navy"
-                         }));
+            var items = new ObservableCollection<Utilisateur_VM>(
+                MakfiData.Read<Utilisateur>(
+                   "Read_Utilisateur",
+                   null,
+                    e =>
+                    {
+                        e.Id = (Guid)MakfiData.Reader["Id"];
+                        e.Nom = MakfiData.Reader["Nom"] as string;
+                        e.CodePin = MakfiData.Reader["CodePin"] as string;
+                        e.Statut = (RoleEnum)(byte)MakfiData.Reader["Statut"];
+                    })
+                .Select(x => new Utilisateur_VM
+                {
+                    Id = x.Id,
+                    Nom = x.Nom,
+                    Image = $"/Makrisoft.Makfi;component/Assets/Photos/{x.Nom.ToLower()}.png",
+                    CodePin = x.CodePin,
+                    Statut = x.Statut,
+                    DateModified = default,
+                    SaveColor = "Navy"
+                }));
             if (Utilisateurs == null)
                 Utilisateurs = new ObservableCollection<Utilisateur_VM>(items);
             else
@@ -467,18 +547,28 @@ namespace Makrisoft.Makfi.ViewModels
         }
         public void Load_Gouvernantes()
         {
-            var items = new ObservableCollection<Utilisateur_VM>(MakfiData.Utilisateur_Read()
-                                    .Where(u => u.Statut == RoleEnum.Gouvernante)
-                                    .Select(x => new Utilisateur_VM
-                                    {
-                                        Id = x.Id,
-                                        Nom = x.Nom,
-                                        Image = $"/Makrisoft.Makfi;component/Assets/Photos/{x.Nom.ToLower()}.png",
-                                        CodePin = x.CodePin,
-                                        Statut = x.Statut,
-                                        DateModified = default,
-                                        SaveColor = "Navy"
-                                    }));
+            var items = new ObservableCollection<Utilisateur_VM>(
+                MakfiData.Read<Utilisateur>(
+                   "Read_Utilisateur",
+                   null,
+                    e =>
+                    {
+                        e.Id = (Guid)MakfiData.Reader["Id"];
+                        e.Nom = MakfiData.Reader["Nom"] as string;
+                        e.CodePin = MakfiData.Reader["CodePin"] as string;
+                        e.Statut = (RoleEnum)(byte)MakfiData.Reader["Statut"];
+                    })
+                .Where(u => u.Statut == RoleEnum.Gouvernante)
+                .Select(x => new Utilisateur_VM
+                {
+                    Id = x.Id,
+                    Nom = x.Nom,
+                    Image = $"/Makrisoft.Makfi;component/Assets/Photos/{x.Nom.ToLower()}.png",
+                    CodePin = x.CodePin,
+                    Statut = x.Statut,
+                    DateModified = default,
+                    SaveColor = "Navy"
+                }));
             if (Gouvernantes == null)
                 Gouvernantes = new ObservableCollection<Utilisateur_VM>(items);
             else
@@ -489,18 +579,28 @@ namespace Makrisoft.Makfi.ViewModels
         }
         public void Load_Receptions()
         {
-            var items = new ObservableCollection<Utilisateur_VM>(MakfiData.Utilisateur_Read()
-                                         .Where(u => u.Statut == RoleEnum.Reception)
-                                         .Select(x => new Utilisateur_VM
-                                         {
-                                             Id = x.Id,
-                                             Nom = x.Nom,
-                                             Image = $"/Makrisoft.Makfi;component/Assets/Photos/{x.Nom.ToLower()}.png",
-                                             CodePin = x.CodePin,
-                                             Statut = x.Statut,
-                                             DateModified = default,
-                                             SaveColor = "Navy"
-                                         }));
+            var items = new ObservableCollection<Utilisateur_VM>(
+                MakfiData.Read<Utilisateur>(
+                   "Read_Utilisateur",
+                   null,
+                    e =>
+                    {
+                        e.Id = (Guid)MakfiData.Reader["Id"];
+                        e.Nom = MakfiData.Reader["Nom"] as string;
+                        e.CodePin = MakfiData.Reader["CodePin"] as string;
+                        e.Statut = (RoleEnum)(byte)MakfiData.Reader["Statut"];
+                    })
+                .Where(u => u.Statut == RoleEnum.Reception)
+                .Select(x => new Utilisateur_VM
+                {
+                    Id = x.Id,
+                    Nom = x.Nom,
+                    Image = $"/Makrisoft.Makfi;component/Assets/Photos/{x.Nom.ToLower()}.png",
+                    CodePin = x.CodePin,
+                    Statut = x.Statut,
+                    DateModified = default,
+                    SaveColor = "Navy"
+                }));
             if (Receptions == null)
                 Receptions = new ObservableCollection<Utilisateur_VM>(items);
             else
@@ -509,11 +609,40 @@ namespace Makrisoft.Makfi.ViewModels
                 foreach (var item in items) Receptions.Add(item);
             }
         }
+        public void Load_Messages()
+        {
+            var items = new ObservableCollection<Message_VM>(MakfiData.Read<Message>(
+                 "Message_Read",
+                null,
+                e =>
+                {
+                    e.Id = (Guid)MakfiData.Reader["Id"];
+                    e.IdHisto = MakfiData.Reader["IdHisto"] as Guid?;
+                    e.De = MakfiData.Reader["De"] as Guid?;
+                    e.A = MakfiData.Reader["A"] as Guid?;
+                    e.DateEnvoi = (DateTime)MakfiData.Reader["EnvoyeLe"];
+                    e.Etat = (Guid)MakfiData.Reader["Etat"];
+                    e.Libelle = MakfiData.Reader["Libelle"] as string;
+                    e.Objet = MakfiData.Reader["Objet"] as string;
+                })
+                .Select(x => new Message_VM
+                    {
+                        Id = x.Id,
+                        SaveColor = "Navy"
+                    }));
+            if (Messages == null)
+                Messages = new ObservableCollection<Message_VM>(items);
+            else
+            {
+                Messages.Clear();
+                foreach (var item in items) Messages.Add(item);
+            }
+        }
 
         #endregion
 
         #region DgSource
-        public virtual IEnumerable<Dg_VM> DgSource_Read() { return null; }
+        public virtual IEnumerable<VM> DgSource_Read() { return null; }
         public virtual void DgSource_Save() { }
         #endregion
     }
@@ -531,7 +660,8 @@ namespace Makrisoft.Makfi.ViewModels
         Interventions = 64,
         Utilisateurs = 128,
         Gouvernantes = 256,
-        Receptions = 512
+        Receptions = 512,
+        Messages = 1024
     }
 
 }

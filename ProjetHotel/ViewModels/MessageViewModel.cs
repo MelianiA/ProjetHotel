@@ -1,449 +1,203 @@
 ﻿using Makrisoft.Makfi.Dal;
+using Makrisoft.Makfi.Models;
 using Makrisoft.Makfi.Tools;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Data;
 using System.Windows.Input;
-using System.Xml;
 using System.Xml.Serialization;
 
 namespace Makrisoft.Makfi.ViewModels
 {
-    public class MessageViewModel : ViewModelBase
+    public class MessageViewModel : ViewModel<Message_VM>
     {
+
         #region Constructeur
         public MessageViewModel()
         {
+            EtatType = EntiteEnum.Message;
+            SortDescriptions = new SortDescription[1] { new SortDescription("DateCreation", System.ComponentModel.ListSortDirection.Descending) };
+            Loads = LoadEnum.Etats | LoadEnum.Utilisateurs;
+            Title = "Les messages";
 
-            //Command
-            AjouterMessage = new RelayCommand(p => OnAjouterMessage(), p => true);
-            ActualiserMessage = new RelayCommand(p => OnActualiserMessage(), p => true);
-            MessageSaveCommand = new RelayCommand(p => OnMessageSaveCommand(), p => OnCanExecuteMessageSaveCommand());
-            SupprimerMessage = new RelayCommand(p => OnSupprimerMessageCommand(), p => OnCanExecuteSupprimerMessageCommand());
-            RepondreMessage = new RelayCommand(p => OnRepondreMessage(), p => OnCanExecuteRepondreMessageCommand());
-            FilterClearCommand = new RelayCommand(p => OnFilterClearCommand(), p => OnCanExecuteFilterClearCommand());
-
-
-
-            //Load 
-            
-            Messages = new ObservableCollection<Message_VM>();
-            MessagesCollectionView = new ListCollectionView(Messages);
-
-            Load_Etat();
-            Load_Message();
-            Reference_ViewModel.Header.MessagesCollectionView = MessagesCollectionView;
-
+            Init();
         }
-
-
         #endregion
 
-        #region Bindings
-        // Utilisateur
-        public ObservableCollection<Utilisateur_VM> Utilisateurs
+        #region DgSource
+        public override IEnumerable<Message_VM> DgSource_Read()
         {
-            get { return utilisateurs; }
-            set
-            {
-                utilisateurs = value;
-                OnPropertyChanged("Utilisateurs");
-
-            }
-        }
-        private ObservableCollection<Utilisateur_VM> utilisateurs;
-        public Utilisateur_VM CurrentUtilisateur
-        {
-            get
-            {
-                return
-                  currentUtilisateur;
-            }
-            set
-            {
-                currentUtilisateur = value;
-                OnPropertyChanged("CurrentUtilisateur");
-            }
-        }
-        private Utilisateur_VM currentUtilisateur;
-        public bool CanChangeUtilisateur
-        {
-            get { return canChangeUtilisateur; }
-            set
-            {
-                canChangeUtilisateur = value;
-                OnPropertyChanged("CanChangeUtilisateur");
-            }
-        }
-        private bool canChangeUtilisateur = true;
-
-        //Etat
-        public ListCollectionView EtatListCollectionView
-        {
-            get { return etatListCollectionView; }
-            set { etatListCollectionView = value; OnPropertyChanged("EtatListCollectionView"); }
-        }
-        private ListCollectionView etatListCollectionView;
-
-        //EtatMessage
-        public ObservableCollection<Etat_VM> EtatMessage
-        {
-            get { return etatMessage; }
-            set
-            {
-                etatMessage = value;
-                OnPropertyChanged("EtatMessage");
-            }
-        }
-        private ObservableCollection<Etat_VM> etatMessage;
-        public ListCollectionView EtatMessageCollectionView
-        {
-            get { return etatMessageCollectionView; }
-            set
-            {
-                etatMessageCollectionView = value;
-                OnPropertyChanged("EtatMessageCollectionView");
-            }
-        }
-        private ListCollectionView etatMessageCollectionView;
-
-        //Message
-
-        public ObservableCollection<Message_VM> Messages
-        {
-            get { return messages; }
-            set { messages = value; OnPropertyChanged("Messages"); }
-        }
-        private ObservableCollection<Message_VM> messages;
-
-        public Message_VM CurrentMessage
-        {
-            get { return currentMessage; }
-            set
-            {
-                currentMessage = value;
-                if (currentMessage != null)
+            var SupprXml = !Reference_ViewModel.Parametre.VoirMsgArchives ? "<exclude>Supprimé</exclude>" : "";
+            var messages = MakfiData.Read<Message>
+                (
+                "Message_Read",
+                $"<messages>{SupprXml}<deOuA>{Reference_ViewModel.Header.CurrentUtilisateur.Id}</deOuA></messages>",
+                e =>
                 {
-                    HistEnable = true;
-                    if (currentMessage.A != null &&
-                    currentMessage.A.Id == Reference_ViewModel.Header.CurrentUtilisateur.Id && currentMessage.ColorEtat == "orange")
-                    {
-                        currentMessage.Etat = EtatMessage.Where(e => e.Libelle == "Lu").Single();
-                        currentMessage.ColorEtat = "black";
-                        OnMessageSaveCommand();
-                    }
-                    if (CurrentMessage.Etat != null)
-                    {
-                        IsModifierEnabled = false;
-                        IsReadOnly = true;
-                    }
-                    else
-                    {
-                        IsModifierEnabled = true;
-                        IsReadOnly = false;
-                        CurrentMessage.Etat = EtatMessage.Where(x => x.Libelle == "Non lu").Single();
+                    e.Id = (Guid)MakfiData.Reader["Id"];
+                    e.IdHisto = MakfiData.Reader["IdHisto"] as Guid?;
+                    e.De = MakfiData.Reader["De"] as Guid?;
+                    e.A = MakfiData.Reader["A"] as Guid?;
+                    e.DateEnvoi = (DateTime)MakfiData.Reader["EnvoyeLe"];
+                    e.Etat = (Guid)MakfiData.Reader["Etat"];
+                    e.Libelle = MakfiData.Reader["Libelle"] as string;
+                    e.Objet = MakfiData.Reader["Objet"] as string;
+                })
+              .Select(x => new Message_VM
+              {
+                  Id = x.Id,
+                  IdHisto = x.IdHisto,
+                  De = Utilisateurs.Single(u => u.Id == x.De),
+                  A = Utilisateurs.Single(u => u.Id == x.A),
+                  DateCreation = x.DateEnvoi,
+                  Libelle = x.Libelle,
+                  Objet = x.Objet,
+                  Etat = MakfiData.Etats.Where(e => e.Id == x.Etat).Single(),
+                  SaveColor = "Navy"
+              }).ToList();
 
-                    }
+            // Envoyés deviennent non lus
+            foreach (var message in messages)
+            {
+                if (message.A.Id == Reference_ViewModel.Header.CurrentUtilisateur.Id &&
+                    message.Etat == MakfiData.Etats.Where(e => e.Entite == EntiteEnum.Message && e.Libelle == "Envoyé").Single())
+                {
+                    message.Etat = MakfiData.Etats.Where(e => e.Entite == EntiteEnum.Message && e.Libelle == "Non lu").Single();
+                    message.SaveColor = "Red";
+                    var spParam = $@"
+                    <messages>
+                        <id>{message.Id}</id>
+                        <de>{message.De?.Id}</de>
+                        <a>{message.A?.Id}</a>
+                        <envoyeLe>{message.DateCreation}</envoyeLe>
+                        <libelle>{message.Libelle}</libelle>
+                        <objet>{message.Objet}</objet>
+                        <etat>{message.Etat.Id}</etat>
+                     </messages>";
+                    var ids = MakfiData.Save<Message>("Message_Save", spParam);
                 }
-                else
-                    HistEnable = false;
-
-                OnPropertyChanged("CurrentMessage");
             }
+            return messages;
         }
-        private Message_VM currentMessage;
-
-        public ListCollectionView MessagesCollectionView
+        public override void DgSource_Save()
         {
-            get { return messagesCollectionView; }
-            set
-            {
-                messagesCollectionView = value;
-                OnPropertyChanged("MessagesCollectionView");
-            }
-        }
-        private ListCollectionView messagesCollectionView;
+            CurrentDgSource.Etat = MakfiData.Etats.Where(e => e.Entite == EntiteEnum.Message && e.Libelle == "Envoyé").Single();
+            CurrentDgSource.SaveColor = "Navy";
 
-        //Filter
-        public Etat_VM FilterEtat
-        {
-            get { return currentFilterEtat; }
-            set
+            var spParam = $@"
+                    <messages>
+                        <id>{CurrentDgSource.Id}</id>
+                        <de>{CurrentDgSource.De?.Id}</de>
+                        <a>{CurrentDgSource.A?.Id}</a>
+                        <envoyeLe>{CurrentDgSource.DateCreation}</envoyeLe>
+                        <libelle>{CurrentDgSource.Libelle}</libelle>
+                        <objet>{CurrentDgSource.Objet}</objet>
+                        <etat>{CurrentDgSource.Etat.Id}</etat>
+                     </messages>";
+            var ids = MakfiData.Save<Message>("Message_Save", spParam);
+            if (MakfiData.Erreur != string.Empty)
             {
-                currentFilterEtat = value;
-                if (MessagesCollectionView != null)
-                    MessagesCollectionView.Filter = FilterMessages;
-                OnPropertyChanged("FilterEtat");
+                MessageBox.Show(MakfiData.Erreur, "MessageViewModel.DgSource_Save");
+            }
+            else if (ids.Count == 0)
+                throw new Exception("MessageViewModel.DgSource_Save");
+            else
+            {
+                CurrentDgSource.Id = ids[0].Id;
             }
         }
-        private Etat_VM currentFilterEtat;
-
-        public Utilisateur_VM CurrentFilterUtilisateur
+        public override bool DgSource_Filter(object item)
         {
-            get { return currentFilterUtilisateur; }
-            set
-            {
-                currentFilterUtilisateur = value;
-                if (MessagesCollectionView != null)
-                    MessagesCollectionView.Filter = FilterMessages;
-                OnPropertyChanged("CurrentFilterUtilisateur");
-            }
+            var message = (Message_VM)item;
+            return
+                (!FilterHistorique || CurrentDgSource == null || message.IdHisto == CurrentDgSource.Id) &&
+                (FilterUtilisateur == null || message.De.Id == FilterUtilisateur.Id || message.A.Id == FilterUtilisateur.Id) &&
+                (FilterEtat == null || Etats.Any(e => message.Etat.Id == FilterEtat.Id));
         }
-        private Utilisateur_VM currentFilterUtilisateur;
-
-        public bool HistoriqueFilter
-        {
-            get { return historiqueFilter; }
-            set
-            {
-                historiqueFilter = value;
-                if (MessagesCollectionView != null)
-                    MessagesCollectionView.Filter = FilterMessages;
-                OnPropertyChanged("HistoriqueFilter");
-            }
-        }
-        private bool historiqueFilter = false;
-
-        public bool HistEnable
-        {
-            get { return histEnable; }
-            set
-            {
-                histEnable = value;
-                OnPropertyChanged("HistEnable");
-            }
-        }
-        private bool histEnable;
-
-        //IsEnable
-        public bool IsModifierEnabled
-        {
-            get { return isEnabled; }
-            set
-            {
-                isEnabled = value;
-                OnPropertyChanged("IsModifierEnabled");
-            }
-        }
-        private bool isEnabled;
-        public bool IsReadOnly
-        {
-            get { return isReadOnly; }
-            set
-            {
-                isReadOnly = value;
-                OnPropertyChanged("IsReadOnly");
-            }
-        }
-        private bool isReadOnly;
 
         #endregion
 
         #region Command
-        // ICommand
-        //public ICommand PersistMessageCommand { get; set; }
-        public ICommand AjouterMessage { get; set; }
-        public ICommand ActualiserMessage { get; set; }
-        public ICommand MessageSaveCommand { get; set; }
-        public ICommand SupprimerMessage { get; set; }
-        public ICommand RepondreMessage { get; set; }
-        public ICommand FilterClearCommand { get; set; }
-
-
-        // Méthode OnCommand
-        private void OnAjouterMessage()
+        public override void OnAddCommand()
         {
-            IsModifierEnabled = true;
-            CurrentMessage = new Message_VM
-            {
-                Id = Guid.NewGuid(),
-                MessageInitial = Guid.NewGuid(),
-                De = Reference_ViewModel.Header.CurrentUtilisateur,
-                DateCreation = DateTime.Now,
-                ColorEtat = "black",
-            };
-            Messages.Add(CurrentMessage);
-        }
-        private void OnActualiserMessage()
-        {
-            Load_Message();
-        }
-        private void OnMessageSaveCommand()
-        {
-            //CurrentMessage.Etat = EtatMessage.Where(x => x.Libelle == "Non lu").Single();
-            var s = new XmlSerializer(typeof(Message_VM));
-            var writer = new StreamWriter($@"{Properties.Settings.Default.MessagePath}\{CurrentMessage.Id}.xml");
-            s.Serialize(writer, CurrentMessage);
-            writer.Close();
-            CurrentMessage.SaveColor = "Navy";
-        }
-        private void OnSupprimerMessageCommand()
-        {
-            foreach (var file in Directory.GetFiles(Properties.Settings.Default.MessagePath))
-            {
-                var s = new XmlSerializer(typeof(Message_VM));
-
-                //Reader
-                var reader = new StreamReader(file);
-                var message = (Message_VM)s.Deserialize(reader);
-                reader.Close();
-                if (message.Id == CurrentMessage.Id)
+            CurrentDgSource =
+                new Message_VM
                 {
-                    message.Etat = EtatMessage.Where(e => e.Libelle == "Supprimé" && e.Entite == EntiteEnum.Message).Single();
-
-                    //Writer
-                    var writer = new StreamWriter(file);
-                    s.Serialize(writer, message);
-                    writer.Close();
-                }
-
-            }
-            Messages.Remove(CurrentMessage);
+                    Id = null,
+                    IdHisto = Guid.NewGuid(),
+                    De = Reference_ViewModel.Header.CurrentUtilisateur,
+                    DateCreation = DateTime.Now,
+                    Etat = MakfiData.Etats.Where(e => e.Entite == EntiteEnum.Message && e.Libelle == "Brouillon").Single(),
+                    SaveColor = "Red"
+                };
+            DgSource.Add(CurrentDgSource);
         }
-        private void OnFilterClearCommand()
+        public override void OnDeleteCommand(string spName, string spParam)
         {
-            FilterEtat = null;
-            CurrentFilterUtilisateur = null;
-            HistoriqueFilter = false;
+            spName = "Message_CanDelete";
+            spParam = $@"
+                    <messages>
+                        <archive>{CurrentDgSource.Id}</archive>
+                     </messages>";
+
+            base.OnDeleteCommand(spName, spParam);
         }
-        private void OnRepondreMessage()
-        {
-            var msgIntial = currentMessage.MessageInitial;
-            var objet = currentMessage.Objet;
-            var a = currentMessage.De;
-            CurrentMessage = new Message_VM
-            {
-                Id = Guid.NewGuid(),
-                A = a,
-                MessageInitial = msgIntial,
-                De = Reference_ViewModel.Header.CurrentUtilisateur,
-                DateCreation = DateTime.Now,
-                ColorEtat = "black",
-                Objet = objet
-            };
-            IsModifierEnabled = false;
-            Messages.Add(CurrentMessage);
-
-        }
-
-        //Méthode on canExcute
-        private bool OnCanExecuteMessageSaveCommand()
-        {
-            return CurrentMessage != null && CurrentMessage.SaveColor == "Red" && CurrentMessage.A != null;
-        }
-        private bool OnCanExecuteSupprimerMessageCommand()
-        {
-            if (CurrentMessage != null && CurrentMessage.SaveColor != "Red")
-                return (CurrentMessage.Etat.Libelle != "Non lu");
-            else
-                return true;
-        }
-        private bool OnCanExecuteFilterClearCommand()
-        {
-            return (FilterEtat != null || CurrentFilterUtilisateur != null || HistoriqueFilter == true);
-        }
-        private bool OnCanExecuteRepondreMessageCommand()
-        {
-            return CurrentMessage != null && CurrentMessage.A != null &&
-                CurrentMessage.A.Id == Reference_ViewModel.Header.CurrentUtilisateur.Id;
-        }
-
-        //filter 
-        private bool FilterMessages(object item)
-        {
-
-            if (item is Message_VM message)
-            {
-                //3filter au meme temps 
-                if ((CurrentMessage != null && HistoriqueFilter == true) && FilterEtat != null && CurrentFilterUtilisateur != null)
-                    return message.Etat.Id == currentFilterEtat.Id && message.A.Id == CurrentFilterUtilisateur.Id && message.MessageInitial == CurrentMessage.MessageInitial;
-
-                //etat et utilisateur 
-                if (FilterEtat != null && CurrentFilterUtilisateur != null)
-                    return message.Etat.Id == currentFilterEtat.Id && message.A.Id == CurrentFilterUtilisateur.Id;
-
-                //etat et historique 
-                if (FilterEtat != null && (CurrentMessage != null && HistoriqueFilter == true))
-                    return message.Etat.Id == currentFilterEtat.Id && message.MessageInitial == CurrentMessage.MessageInitial;
-
-                //utilisateur et hitorique 
-                if ((CurrentMessage != null && HistoriqueFilter == true) && CurrentFilterUtilisateur != null)
-                    return message.A.Id == CurrentFilterUtilisateur.Id && message.MessageInitial == CurrentMessage.MessageInitial;
-
-                if (FilterEtat != null)
-                    return message.Etat.Id == currentFilterEtat.Id;
-
-                if (CurrentFilterUtilisateur != null)
-                    return message.A.Id == CurrentFilterUtilisateur.Id;
-
-                //L'historique 
-                if (CurrentMessage != null && HistoriqueFilter == true)
-                    return message.MessageInitial == CurrentMessage.MessageInitial;
-                else
-                    return true;
-            }
-            return true;
-        }
+        public override bool OnCanExecuteSaveCommand() { return CurrentDgSource != null && CurrentDgSource.SaveColor == "Red"; }
 
         #endregion
 
-        #region Load
-
-        private void Load_Etat()
+        public bool FilterHistorique
         {
-            EtatListCollectionView = new ListCollectionView(MakfiData.Etats);
-            EtatListCollectionView.Refresh();
-            var etatMsg = MakfiData.Etats.Where(x => x.Entite == EntiteEnum.Message).ToList();
-            etatMsg.Remove(etatMsg.Where(e => e.Libelle == "Supprimé" && e.Entite == EntiteEnum.Message).SingleOrDefault());
-            EtatMessage = new ObservableCollection<Etat_VM>(MakfiData.Etats.Where(x => x.Entite == EntiteEnum.Message).ToList());
-            EtatMessageCollectionView = new ListCollectionView(etatMsg);
-        }
-
-        public void Load_Message()
-        {
-            Utilisateurs = Reference_ViewModel.Header.Utilisateurs;
-            Messages.Clear();
-            foreach (var file in Directory.GetFiles(Properties.Settings.Default.MessagePath))
+            get { return filterHistorique; }
+            set
             {
-                var s = new XmlSerializer(typeof(Message_VM));
-                var reader = new StreamReader(file);
-                var message = (Message_VM)s.Deserialize(reader);
-                if(Reference_ViewModel.Parametre!=null && Reference_ViewModel.Parametre.VoirMsgArchives)
-                {
-                    if (message.Etat.Libelle != "Supprimé")
-                    {
-                        if (message.A.Id == Reference_ViewModel.Header.CurrentUtilisateur.Id && message.Etat.Libelle == "Non lu")
-                            message.ColorEtat = "orange";
-                        else
-                        {
-                            message.ColorEtat = "black";
-                        }
-                        message.SaveColor = "Navy";
-                        if (message.De.Id == Reference_ViewModel.Header.CurrentUtilisateur.Id || message.A.Id == Reference_ViewModel.Header.CurrentUtilisateur.Id)
-                            Messages.Add(message);
-                    }
-                }
-                else
-                {
-                    message.SaveColor = "Navy";
-                    if (message.De.Id == Reference_ViewModel.Header.CurrentUtilisateur.Id || message.A.Id == Reference_ViewModel.Header.CurrentUtilisateur.Id)
-                        Messages.Add(message);
-                }
-                 
-
-                reader.Close();
+                filterHistorique = value;
+                OnPropertyChanged("filterHistorique");
             }
-            MessagesCollectionView.SortDescriptions.Add(new System.ComponentModel.SortDescription("DateCreation", System.ComponentModel.ListSortDirection.Descending));
-            FilterEtat = null;
+        }
+        private bool filterHistorique = false;
 
+        public bool HistoEnabled
+        {
+            get { return histoEnabled; }
+            set
+            {
+                histoEnabled = value;
+                OnPropertyChanged("HistoEnabled");
+            }
+        }
+        private bool histoEnabled;
+
+        public override void DgSource_Change()
+        {
+            if (CurrentDgSource == null) return;
+            if (CurrentDgSource.A != null && 
+                CurrentDgSource.A.Id == Reference_ViewModel.Header.CurrentUtilisateur.Id && 
+                CurrentDgSource.Etat == MakfiData.Etats.Where(e => e.Entite == EntiteEnum.Message && e.Libelle == "Non lu").Single())
+            {
+                CurrentDgSource.Etat = MakfiData.Etats.Where(e => e.Entite == EntiteEnum.Message && e.Libelle == "Lu").Single();
+                CurrentDgSource.SaveColor = "Navy";
+                // Save
+                var spParam = $@"
+                    <messages>
+                        <id>{CurrentDgSource.Id}</id>
+                        <de>{CurrentDgSource.De?.Id}</de>
+                        <a>{CurrentDgSource.A?.Id}</a>
+                        <envoyeLe>{CurrentDgSource.DateCreation}</envoyeLe>
+                        <libelle>{CurrentDgSource.Libelle}</libelle>
+                        <objet>{CurrentDgSource.Objet}</objet>
+                        <etat>{CurrentDgSource.Etat.Id}</etat>
+                     </messages>";
+                var ids = MakfiData.Save<Message>("Message_Save", spParam);
+
+            }
+            HistoEnabled = CurrentDgSource != null;
         }
 
-        #endregion
     }
 }

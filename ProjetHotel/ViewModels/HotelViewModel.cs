@@ -1,4 +1,5 @@
 ﻿using Makrisoft.Makfi.Dal;
+using Makrisoft.Makfi.Models;
 using Makrisoft.Makfi.Tools;
 using System;
 using System.Collections.Generic;
@@ -30,8 +31,19 @@ namespace Makrisoft.Makfi.ViewModels
         public override IEnumerable<Hotel_VM> DgSource_Read()
         {
             return new ObservableCollection<Hotel_VM>(
-                MakfiData.Hotel_Read()
-                .Select(x => new Hotel_VM
+                MakfiData.Read<Hotel>
+                (
+                    "Hotel_Read",
+                    null,
+                    e =>
+                    {
+                        e.Id = (Guid)MakfiData.Reader["Id"];
+                        e.Nom = MakfiData.Reader["Nom"] as string;
+                        e.Gouvernante = MakfiData.Reader["Gouvernante"] as Guid?;
+                        e.Reception = MakfiData.Reader["Reception"] as Guid?;
+                        e.Commentaire = MakfiData.Reader["Commentaire"] as string;
+                    }
+                ).Select(x => new Hotel_VM
                 {
                     Id = x.Id,
                     Nom = x.Nom,
@@ -42,12 +54,6 @@ namespace Makrisoft.Makfi.ViewModels
                     SaveColor = "Navy"
                 }));
         }
-
-        //public override void Load(ViewEnum exView)
-        //{
-        //    Reference_ViewModel.Hotel.Load_Receptions();
-        //    Reference_ViewModel.Hotel.Load_Gouvernantes();
-        //}
 
         public override void DgSource_Save()
         {
@@ -60,7 +66,7 @@ namespace Makrisoft.Makfi.ViewModels
                                 <gouvernante>{gouv}</gouvernante>
                                 <commentaire>{CurrentDgSource.Commentaire}</commentaire>       
                             </hotels>";
-            var ids = MakfiData.Hotel_Save(param);
+            var ids = MakfiData.Save<Hotel>("Hotel_Save", param);
             if (ids.Count == 0) throw new Exception("Rien n'a été sauvegardé ! ");
             CurrentDgSource.Id = ids[0].Id;
             CurrentDgSource.SaveColor = "Navy";
@@ -74,21 +80,12 @@ namespace Makrisoft.Makfi.ViewModels
             CurrentDgSource = new Hotel_VM { Id = null, Nom = "(A définir)" };
             DgSource.Add(CurrentDgSource);
         }
-        public override void OnDeleteCommand()
+        public override void OnDeleteCommand(string spName, string spParam)
         {
-            var canDeletes = MakfiData.Hotel_CanDelete($"<hotels><id>{CurrentDgSource.Id}</id></hotels>");
-            if (canDeletes.Count() == 0)
-            {
-                var param = MakfiData.Hotel_Delete($"<hotels><id>{CurrentDgSource.Id}</id></hotels>");
-                if (param)
-                {
-                    DgSource.Remove(CurrentDgSource);
-                }
-            }
-            else
-            {
-                MessageBox.Show($" Suppression impossible de l'hôtel : {CurrentDgSource.Nom }", "Hotel_CanDelete");
-            }
+            spName = "Hotel_CanDelete";
+            spParam = $"<hotels><id>{CurrentDgSource.Id}</id></hotels>";
+
+            base.OnDeleteCommand(spName, spParam);
         }
         #endregion
 

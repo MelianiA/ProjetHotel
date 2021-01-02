@@ -1,4 +1,5 @@
 ﻿using Makrisoft.Makfi.Dal;
+using Makrisoft.Makfi.Models;
 using Makrisoft.Makfi.Tools;
 using System;
 using System.Globalization;
@@ -62,12 +63,23 @@ namespace Makrisoft.Makfi.ViewModels
             set { derniereIntervention = value; OnPropertyChanged("DerniereIntervention"); }
         }
 
-        internal void Load(ViewEnum exView)
+        public override void Load()
         {
             DerniereIntervention = "";
             EtatControle = "Intervention du jour";
 
-            var interventions = MakfiData.Intervention_Read($"<interventions><hotel>{Reference_ViewModel.Header.CurrentHotel.Id}</hotel></interventions>")
+            var interventions = MakfiData.Read<Intervention>(
+                "Intervention_Read",
+                $"<interventions><hotel>{Reference_ViewModel.Header.CurrentHotel.Id}</hotel></interventions>",
+                e =>
+                {
+                    e.Id = (Guid)MakfiData.Reader["Id"];
+                    e.Libelle = MakfiData.Reader["Libelle"] as string;
+                    e.Etat = (Guid)MakfiData.Reader["Etat"];
+                    e.Date1 = (DateTime)MakfiData.Reader["Date1"];
+                    e.Commentaire = MakfiData.Reader["Commentaire"] as string;
+                    e.IsModele = (bool)MakfiData.Reader["Model"];
+                })
                 .Select(x => new Intervention_VM
                 {
                     Id = x.Id,
@@ -75,7 +87,7 @@ namespace Makrisoft.Makfi.ViewModels
                     Etat = MakfiData.Etats.Where(e => e.Id == x.Etat).Single(),
                     Date1 = x.Date1,
                     Commentaire = x.Commentaire,
-                    Model = x.Model,
+                    Model = x.IsModele,
                     SaveColor = "Navy"
                 })
                 .Where(x => x.Etat != null && x.Etat.Libelle != "Terminée").ToList();

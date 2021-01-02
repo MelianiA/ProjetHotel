@@ -1,4 +1,5 @@
 ﻿using Makrisoft.Makfi.Dal;
+using Makrisoft.Makfi.Models;
 using Makrisoft.Makfi.Tools;
 using System;
 using System.Collections.Generic;
@@ -25,18 +26,18 @@ namespace Makrisoft.Makfi.ViewModels
 
         }
 
-        public override void Load(ViewEnum exView)
+        public override void Load()
         {
             Title = Reference_ViewModel.Intervention.CurrentDgSource.Libelle;
 
 
-            if (exView == ViewEnum.InterventionAjouter)
+            if (LastView == ViewEnum.InterventionAjouter)
             {
                 foreach (var interD in Reference_ViewModel.InterventionAjouter.DgSource)
                     Reference_ViewModel.InterventionDetail.DgSource.Add(interD);
             }
             else
-                base.Load(exView);
+                base.Load();
         }
 
         #endregion
@@ -45,8 +46,17 @@ namespace Makrisoft.Makfi.ViewModels
         public override IEnumerable<InterventionDetail_VM> DgSource_Read()
         {
             if (Reference_ViewModel.Intervention.CurrentDgSource == null) return null;
-            return MakfiData
-                .InterventionDetail_Read($"<interventionDetails><intervention>{Reference_ViewModel.Intervention.CurrentDgSource.Id}</intervention></interventionDetails>")
+            return MakfiData.Read<InterventionDetail>(
+                "InterventionDetail_Read",
+                $"<interventionDetails><intervention>{Reference_ViewModel.Intervention.CurrentDgSource.Id}</intervention></interventionDetails>",
+                e =>
+                {
+                    e.Id = (Guid)MakfiData.Reader["Id"];
+                    e.Employe = new Employe { Id = (Guid)MakfiData.Reader["EmployeAffecte"], Nom = MakfiData.Reader["EmployeNom"] as string, Prenom = MakfiData.Reader["EmployePrenom"] as string };
+                    e.Chambre = new Chambre { Id = (Guid)MakfiData.Reader["ChambreAffectee"], Nom = MakfiData.Reader["ChambreNom"] as string };
+                    e.Etat = (Guid)MakfiData.Reader["Etat"];
+                    e.Commentaire = MakfiData.Reader["Commentaire"] as string;
+                })
                 .Select(x => new InterventionDetail_VM
                 {
                     Id = x.Id,
@@ -56,9 +66,7 @@ namespace Makrisoft.Makfi.ViewModels
                     Commentaire = x.Commentaire,
                     Etat = MakfiData.Etats.Where(e => e.Id == x.Etat).Single(),
                     SaveColor = "Navy"
-                })
-                .OrderBy(x => x.Libelle)
-                .ToList();
+                });
         }
         public override void DgSource_Save()
         {
@@ -69,7 +77,8 @@ namespace Makrisoft.Makfi.ViewModels
                             <chambreAffectee>{CurrentDgSource.Chambre.Id}</chambreAffectee>
                             <etat>{CurrentDgSource.Etat.Id}</etat> 
                            </interventionDetail></interventionDetails>";
-            var ids = MakfiData.InterventionDetail_Save(param);
+            var ids = MakfiData.Save<InterventionDetail>("InterventionDetail_Save", param);
+
             if (ids.Count == 0) throw new Exception("InterventionDetailViewModel.DgSource_Save:1");
             CurrentDgSource.Id = ids[0].Id;
             CurrentDgSource.SaveColor = "Navy";
@@ -85,7 +94,8 @@ namespace Makrisoft.Makfi.ViewModels
                         <etat>{SommeEtat().Id}</etat> 
                      </intervention>";
 
-            var ids2 = MakfiData.Intervention_Save(param);
+            var ids2 = MakfiData.Save<Intervention>("Intervention_Save", param);
+
             if (ids2.Count == 0) throw new Exception("InterventionDetailViewModel.DgSource_Save:2");
         }
         public override bool DgSource_Filter(object item)
@@ -124,16 +134,16 @@ namespace Makrisoft.Makfi.ViewModels
             DgSource.Add(CurrentDgSource);
         }
 
-        public override void OnDeleteCommand()
+        public override void OnDeleteCommand(string spName, string spParam)
         {
             if (CurrentDgSource.Id != null)
             {
-                MakfiData.InterventionDetails_Delete($"<interventionDetails><id>{CurrentDgSource.Id}</id></interventionDetails>");
+                MakfiData.Delete("InterventionDetails_Delete", $" < interventionDetails><id>{CurrentDgSource.Id}</id></interventionDetails>");
             }
             DgSource.Remove(CurrentDgSource);
 
             // Maj intervention Etat 
-            var param = $@"
+            spParam = $@"
                     <intervention>
                         <id>{Reference_ViewModel.Intervention.CurrentDgSource.Id}</id>
                         <libelle>{Reference_ViewModel.Intervention.CurrentDgSource.Libelle}</libelle>
@@ -144,7 +154,8 @@ namespace Makrisoft.Makfi.ViewModels
                         <etat>{SommeEtat().Id}</etat> 
                      </intervention>";
 
-            var ids2 = MakfiData.Intervention_Save(param);
+            var ids2 = MakfiData.Save<Intervention>("Intervention_Save", spParam);
+
             if (ids2.Count == 0) throw new Exception("InterventionDetailViewModel.DgSource_Save:2");
         }
 
@@ -169,7 +180,8 @@ namespace Makrisoft.Makfi.ViewModels
                     </interventionDetail>
                     "))
                 + "</interventionDetails>";
-            var ids = MakfiData.InterventionDetail_Save(param); // insere = insert | update
+            var ids = MakfiData.Save<InterventionDetail>("InterventionDetail_Save", param);
+
             if (ids.Count == 0) throw new Exception("InterventionDetailViewModel.OnSaveAllCommand");
             ids = ids.Where(x => x.Insere).ToList();
             int i = 0;
@@ -194,14 +206,15 @@ namespace Makrisoft.Makfi.ViewModels
                         <etat>{SommeEtat().Id}</etat> 
                      </intervention>";
 
-            var ids2 = MakfiData.Intervention_Save(param);
+            var ids2 = MakfiData.Save<Intervention>("Intervention_Save", param);
+
             if (ids2.Count == 0) throw new Exception("InterventionDetailViewModel.DgSource_Save:2");
         }
 
         private void OnDeleteAllCommand()
         {
             DgSource.Clear();
-            MakfiData.InterventionDetails_Delete($"<interventionDetails><intervention>{Reference_ViewModel.Intervention.CurrentDgSource.Id}</intervention></interventionDetails>");
+            MakfiData.Delete("InterventionDetails_Delete", $" < interventionDetails><intervention>{Reference_ViewModel.Intervention.CurrentDgSource.Id}</intervention></interventionDetails>");
 
             // Maj intervention Etat 
             var param = $@"
@@ -215,7 +228,8 @@ namespace Makrisoft.Makfi.ViewModels
                         <etat>{SommeEtat().Id}</etat> 
                      </intervention>";
 
-            var ids2 = MakfiData.Intervention_Save(param);
+            var ids2 = MakfiData.Save<Intervention>("Intervention_Save", param);
+
             if (ids2.Count == 0) throw new Exception("InterventionDetailViewModel.OnDeleteAllCommand");
 
 

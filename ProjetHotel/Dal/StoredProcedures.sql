@@ -149,6 +149,25 @@ from InterventionDetail  id
 inner join Employe e  on e.Id = id.EmployeAffecte
 inner join Chambre c  on c.Id = id.ChambreAffectee
 where Intervention=@Intervention
+GO  
+
+---------------------------------------------------------------------------------------------------
+CREATE PROC [dbo].[Message_Read](@data xml=NULL)
+AS
+DECLARE @deOuA uniqueidentifier=NULL
+DECLARE @exclude nvarchar(MAX)=NULL
+
+select 
+	@deOuA = T.N.value('deOuA[1]', 'uniqueidentifier'),
+	@exclude = T.N.value('exclude[1]', 'nvarchar(MAX)') 
+from @data.nodes('messages') as T(N)
+
+select m.Id, IdHisto, De, A, EnvoyeLe, m.Libelle, Etat, Objet
+from Message m 
+inner join Etat e on m.Etat=e.Id
+where 
+	(@exclude is null or  e.Libelle <> @exclude) and 
+	(@deOuA is null or (De=@deOuA or A=@deOuA))
 GO
 
 --exec InterventionDetail_Read '<interventionDetail><intervention>48632a88-c16b-4869-a3e5-6d1eae5d8e10</intervention></interventionDetail>'
@@ -161,7 +180,72 @@ GO
  -- *************************************************************************************************
 -- save
 -- *************************************************************************************************
+create PROC [dbo].[Message_Save](@data xml=NULL)
+AS
+DECLARE @IDs TABLE(ID uniqueidentifier);
+DECLARE @archive nvarchar(MAX)
+DECLARE @etat uniqueidentifier
+DECLARE @id uniqueidentifier
+DECLARE @message nvarchar(MAX)
+
+select 
+	T.N.value('(archive/text())[1]', 'uniqueidentifier') archive, 
+	T.N.value('(id/text())[1]', 'uniqueidentifier') id, 
+	T.N.value('(idHisto/text())[1]', 'uniqueidentifier') idHisto, 
+	T.N.value('(de/text())[1]', 'uniqueidentifier') de, 
+	T.N.value('(a/text())[1]', 'uniqueidentifier') a,
+	T.N.value('(envoyeLe/text())[1]', 'datetime') envoyeLe,
+	T.N.value('(libelle/text())[1]', 'nvarchar(MAX)') libelle,
+	T.N.value('(objet/text())[1]', 'nvarchar(MAX)') objet,
+	T.N.value('(etat/text())[1]', 'uniqueidentifier') etat
+into #message	
+from @data.nodes('messages') as T(N)
+
+  -- PARTIE2
+  select @id=Id, @archive=archive from #message
+
+  IF @archive is not null
+  BEGIN
+	  select @etat = Id from Etat where Entite=5 and Libelle='Supprimé' 
+	  update Message set Etat = @etat where Id=@archive
+	  select @archive id
+  END
+ELSE
+BEGIN
+	  -- Update
+	  BEGIN TRY
+		   update [Message] set 
+					  idHisto=t.idHisto,
+					  De = t.de,
+					  A = t.a,
+					  EnvoyeLe = t.EnvoyeLe,
+					  Libelle = t.Libelle,
+					  Objet = t.Objet,
+					  Etat= t.Etat
+		   output inserted.Id into @IDs(ID)
+		   from (select idHisto, de, a, envoyeLe, libelle, objet, etat  from #message where Id is not null) t
+		   where Message.Id=@id
+	  END TRY
+	  BEGIN CATCH
+		select @message = ERROR_MESSAGE() 
+		RAISERROR (@message, 16, 1);  
+		RETURN;
+	END CATCH
+
+  -- Insert
+  insert [Message]( idHisto, De, A, EnvoyeLe, Libelle, Objet, Etat )
+    output inserted.Id into @IDs(ID)
+   (
+   select 
+	idHisto, de, a, envoyeLe, libelle, objet, etat  
+   from #message where Id is null
+   )
+  
+  select Id from @IDs
+END
+GO
  
+----------------------------------------------------------------------------------------------------------
 create PROC [dbo].[Utilisateur_Save](@data xml=NULL)
 AS
 DECLARE @IDs TABLE(ID uniqueidentifier);

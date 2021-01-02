@@ -1,4 +1,5 @@
 ﻿using Makrisoft.Makfi.Dal;
+using Makrisoft.Makfi.Models;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -27,17 +28,26 @@ namespace Makrisoft.Makfi.ViewModels
         #region DgSource
         public override IEnumerable<Utilisateur_VM> DgSource_Read()
         {
-            return new ObservableCollection<Utilisateur_VM>(MakfiData.Utilisateur_Read()
-                        .Select(x => new Utilisateur_VM
-                        {
-                            Id = x.Id,
-                            Nom = x.Nom,
-                            Image = $"/Makrisoft.Makfi;component/Assets/Photos/{x.Nom.ToLower()}.png",
-                            CodePin = x.CodePin,
-                            Statut = x.Statut,
-                            DateModified = default,
-                            SaveColor = "Navy"
-                        }));
+            return new ObservableCollection<Utilisateur_VM>(
+                MakfiData.Read<Utilisateur>(
+                   "Read_Utilisateur",
+                   null,
+                    e =>
+                    {
+                        e.Id = (Guid)MakfiData.Reader["Id"];
+                        e.Nom = MakfiData.Reader["Nom"] as string;
+                        e.CodePin = MakfiData.Reader["CodePin"] as string;
+                        e.Statut = (RoleEnum)(byte)MakfiData.Reader["Statut"];
+                    })
+                .Select(x => new Utilisateur_VM
+                    {
+                        Id = x.Id,
+                        Nom = x.Nom,
+                        Image = $"/Makrisoft.Makfi;component/Assets/Photos/{x.Nom.ToLower()}.png",
+                        CodePin = x.CodePin,
+                        Statut = x.Statut,
+                        DateModified = default,
+                        SaveColor = "Navy"}));
         }
         public override void DgSource_Save()
         {
@@ -47,7 +57,7 @@ namespace Makrisoft.Makfi.ViewModels
                                         <codePin>{CurrentDgSource.CodePin}</codePin>
                                         <statut>{(byte)CurrentDgSource.Statut}</statut>
                                     </utilisateur>";
-            var ids = MakfiData.Utilisateur_Save(param);
+            var ids = MakfiData.Save<Utilisateur>("Utilisateur_Save", param);
             if (ids.Count == 0) throw new Exception("Rien n'a été sauvgardé ! ");
             CurrentDgSource.Id = ids[0].Id;
             CurrentDgSource.SaveColor = "Navy";
@@ -72,21 +82,12 @@ namespace Makrisoft.Makfi.ViewModels
             CurrentDgSource = new Utilisateur_VM { Id = null, Nom = "(A définir)", Statut = RoleEnum.Gouvernante };
             DgSource.Add(CurrentDgSource);
         }
-        public override void OnDeleteCommand()
+        public override void OnDeleteCommand(string spName, string spParam)
         {
-            var canDeletes = MakfiData.Utilisateur_CanDelete($"<utilisateurs><id>{CurrentDgSource.Id}</id></utilisateurs>");
-            if (canDeletes.Count() == 0)
-            {
-                var param = MakfiData.Utilisateur_Delete($"<utilisateurs><id>{CurrentDgSource.Id}</id></utilisateurs>");
-                if (param)
-                {
-                    DgSource.Remove(CurrentDgSource);
-                }
-            }
-            else
-            {
-                MessageBox.Show($" Suppression impossible de l'utilsateur : {CurrentDgSource.Nom }", "Utilisateur_CanDelete");
-            }
+            spName = "Utilisateur_CanDelete";
+            spParam = $"<utilisateurs><id>{CurrentDgSource.Id}</id></utilisateurs>";
+
+            base.OnDeleteCommand(spName, spParam);
         }
         public override bool OnCanExecuteDeleteCommand()
         {

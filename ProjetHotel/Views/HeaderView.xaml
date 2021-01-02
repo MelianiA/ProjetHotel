@@ -83,7 +83,8 @@
                                 <TextBlock Text="Messagerie" Foreground="Navy" FontSize="20" VerticalAlignment="Bottom"/>
                                 <Menu Grid.Column="1" Background="White" Cursor="Hand" Visibility="{Binding MenuVisibility}">
                                     <MenuItem Header="..." Foreground="Navy" FontSize="22">
-                                        <MenuItem Header="Voir tous les messages" Foreground="Navy" FontSize="18" Command="{Binding MessageDisplayAllCommand}"/>
+                                        <MenuItem Header="Voir tous les messages" Foreground="Navy" FontSize="18" 
+                                                  Command="{Binding MessageViewCommand}"/>
                                      </MenuItem>
                                 </Menu>
                             </Grid>
