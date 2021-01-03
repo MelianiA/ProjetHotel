@@ -87,14 +87,12 @@ namespace Makrisoft.Makfi.ViewModels
                 }
                 else
                 {
-                    Guid? monID = currentUtilisateur.Id;
-
                     // Hotel
                     Hotels = new ObservableCollection<Hotel_VM>(
                         MakfiData.Read<Hotel>
                         (
                             "Hotel_Read",
-                            $"<hotel><gouvernante>{monID}</gouvernante></hotel>",
+                            $"<hotels><gouvernante>{currentUtilisateur.Id}</gouvernante></hotels>",
                             e =>
                             {
                                 e.Id = (Guid)MakfiData.Reader["Id"];

@@ -231,7 +231,7 @@ namespace Makrisoft.Makfi.ViewModels
                     filterEtage.Chambres = new ObservableCollection<Chambre_VM>(
                         MakfiData.Read<Chambre>(
                             "Chambre_Read",
-                            $"<chambres><groupeChambre>{filterEtage.Id}</groupeChambre></chambres>",
+                            $"<chambres><hotel>{Reference_ViewModel.Header.CurrentHotel.Id}</hotel><groupeChambre>{filterEtage.Id}</groupeChambre></chambres>",
                             e =>
                             {
                                 e.Id = (Guid)MakfiData.Reader["Id"];
@@ -314,7 +314,9 @@ namespace Makrisoft.Makfi.ViewModels
         public virtual void OnAddCommand() { }
         public virtual void OnDeleteCommand(string spName, string spParam)
         {
-            var canDeletes = MakfiData.CanDelete(spName, spParam);
+            var canDeletes = MakfiData.CanDelete(
+                spName.Replace("_Delete","_CanDelete"), 
+                spParam);
             if (MakfiData.Erreur == string.Empty && canDeletes.Count() == 0)
             {
                 var param = MakfiData.Delete(spName, spParam);
@@ -324,7 +326,7 @@ namespace Makrisoft.Makfi.ViewModels
                     return;
                 }
             }
-            MessageBox.Show(MakfiData.Erreur, "ChambreViewModel.OnDeleteCommand");
+            MessageBox.Show($"{MakfiData.Erreur}{Environment.NewLine}{spParam}", spName);
         }
 
         public virtual void OnFilterClearCommand()
@@ -359,12 +361,12 @@ namespace Makrisoft.Makfi.ViewModels
             if (Loads.HasFlag(LoadEnum.Messages)) Load_Messages("Message_Read", null);
             if (Loads.HasFlag(LoadEnum.Etats)) Load_Etats(null, null);
             if (Loads.HasFlag(LoadEnum.Employes)) Load_Employes("Employe_Read", $"<employes><hotel>{Reference_ViewModel.Header.CurrentHotel.Id}</hotel></employes>");
-            if (Loads.HasFlag(LoadEnum.Gouvernantes)) Load_Gouvernantes("Read_Utilisateur", null);
-            if (Loads.HasFlag(LoadEnum.Receptions)) Load_Receptions("Read_Utilisateur", null);
+            if (Loads.HasFlag(LoadEnum.Gouvernantes)) Load_Gouvernantes("Utilisateur_Read", $"<utilisateurs><statut>{(int)RoleEnum.Gouvernante}</statut></utilisateurs>");
+            if (Loads.HasFlag(LoadEnum.Receptions)) Load_Receptions("Utilisateur_Read", $"<utilisateurs><statut>{(int)RoleEnum.Reception}</statut></utilisateurs>");
             if (Loads.HasFlag(LoadEnum.Chambres)) Load_Chambres("Chambre_Read", $"<chambres><hotel>{Reference_ViewModel.Header.CurrentHotel.Id}</hotel></chambres>");
-            if (Loads.HasFlag(LoadEnum.Etages)) Load_Etages("Etage_Read", $"<groupeChambres><hotel>{Reference_ViewModel.Header.CurrentHotel.Id}</hotel></groupeChambres>");
+            if (Loads.HasFlag(LoadEnum.Etages)) Load_Etages("GroupeChambre_Read", $"<groupeChambres><hotel>{Reference_ViewModel.Header.CurrentHotel.Id}</hotel></groupeChambres>");
             if (Loads.HasFlag(LoadEnum.Interventions)) Load_Interventions("Intervention_Read", $@"<interventions><hotel>{Reference_ViewModel.Header.CurrentHotel.Id}</hotel><delete>{Reference_ViewModel.Intervention.CurrentDgSource.Id}</delete></interventions>");
-            if (Loads.HasFlag(LoadEnum.Utilisateurs)) Load_Utilisateurs("Read_Utilisateur", null);
+            if (Loads.HasFlag(LoadEnum.Utilisateurs)) Load_Utilisateurs("Utilisateur_Read", null);
 
             Load_DgSource();
         }
@@ -547,7 +549,6 @@ namespace Makrisoft.Makfi.ViewModels
                         e.CodePin = MakfiData.Reader["CodePin"] as string;
                         e.Statut = (RoleEnum)(byte)MakfiData.Reader["Statut"];
                     })
-                .Where(u => u.Statut == RoleEnum.Gouvernante)
                 .Select(x => new Utilisateur_VM
                 {
                     Id = x.Id,

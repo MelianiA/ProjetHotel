@@ -70,7 +70,7 @@ namespace Makrisoft.Makfi.ViewModels
                     message.Etat = MakfiData.Etats.Where(e => e.Entite == EntiteEnum.Message && e.Libelle == "Non lu").Single();
                     message.SaveColor = "Red";
                     var spParam = $@"
-                    <messages>
+                    <messages><message>
                         <id>{message.Id}</id>
                         <de>{message.De?.Id}</de>
                         <a>{message.A?.Id}</a>
@@ -78,7 +78,7 @@ namespace Makrisoft.Makfi.ViewModels
                         <libelle>{message.Libelle}</libelle>
                         <objet>{message.Objet}</objet>
                         <etat>{message.Etat.Id}</etat>
-                     </messages>";
+                     </message></messages>";
                     var ids = MakfiData.Save<Message>("Message_Save", spParam);
                 }
             }
@@ -92,7 +92,7 @@ namespace Makrisoft.Makfi.ViewModels
             base.DgSource_Save(
                 "Message_Save",
                 $@"
-                    <messages>
+                    <messages><message>
                         <id>{CurrentDgSource.Id}</id>
                         <de>{CurrentDgSource.De?.Id}</de>
                         <a>{CurrentDgSource.A?.Id}</a>
@@ -100,7 +100,7 @@ namespace Makrisoft.Makfi.ViewModels
                         <libelle>{CurrentDgSource.Libelle}</libelle>
                         <objet>{CurrentDgSource.Objet}</objet>
                         <etat>{CurrentDgSource.Etat.Id}</etat>
-                     </messages>");
+                     </message></messages>");
         }
         public override bool DgSource_Filter(object item)
         {
@@ -130,13 +130,12 @@ namespace Makrisoft.Makfi.ViewModels
         }
         public override void OnDeleteCommand(string spName, string spParam)
         {
-            spName = "Message_CanDelete";
-            spParam = $@"
+            base.OnDeleteCommand(
+                "Message_Delete",
+                $@"
                     <messages>
                         <archive>{CurrentDgSource.Id}</archive>
-                     </messages>";
-
-            base.OnDeleteCommand(spName, spParam);
+                     </messages>");
         }
         public override bool OnCanExecuteSaveCommand() { return CurrentDgSource != null && CurrentDgSource.SaveColor == "Red"; }
 
@@ -175,7 +174,7 @@ namespace Makrisoft.Makfi.ViewModels
                 CurrentDgSource.SaveColor = "Navy";
                 // Save
                 var spParam = $@"
-                    <messages>
+                    <messages><message>
                         <id>{CurrentDgSource.Id}</id>
                         <de>{CurrentDgSource.De?.Id}</de>
                         <a>{CurrentDgSource.A?.Id}</a>
@@ -183,7 +182,7 @@ namespace Makrisoft.Makfi.ViewModels
                         <libelle>{CurrentDgSource.Libelle}</libelle>
                         <objet>{CurrentDgSource.Objet}</objet>
                         <etat>{CurrentDgSource.Etat.Id}</etat>
-                     </messages>";
+                     </message></messages>";
                 var ids = MakfiData.Save<Message>("Message_Save", spParam);
 
             }

@@ -53,7 +53,7 @@ namespace Makrisoft.Makfi.ViewModels
             base.DgSource_Save(
                 "Intervention_Save",
                 $@"
-                    <intervention>
+                    <interventions><intervention>
                         <id>{CurrentDgSource.Id}</id>
                         <libelle>{CurrentDgSource.Libelle}</libelle>
                         <commentaire>{CurrentDgSource.Commentaire}</commentaire>    
@@ -61,7 +61,7 @@ namespace Makrisoft.Makfi.ViewModels
                         <date1>{CurrentDgSource.Date1}</date1>    
                         <model>{CurrentDgSource.Model}</model>   
                         <etat>{CurrentDgSource.Etat.Id}</etat> 
-                     </intervention>");
+                     </intervention></interventions>");
         }
         public override bool DgSource_Filter(object item)
         {
@@ -88,10 +88,9 @@ namespace Makrisoft.Makfi.ViewModels
         }
         public override void OnDeleteCommand(string spName, string spParam)
         {
-            spName = "Intervention_CanDelete";
-            spParam = $"<intervention><id>{CurrentDgSource.Id}</id></intervention>";
-
-            base.OnDeleteCommand(spName, spParam);
+            base.OnDeleteCommand(
+                 "Intervention_Delete",
+                 $"<interventions><intervention><id>{CurrentDgSource.Id}</id></intervention></interventions>");
         }
         public override void OnChangeViewCommand()
         {

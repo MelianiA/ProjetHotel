@@ -52,13 +52,13 @@ namespace Makrisoft.Makfi.ViewModels
         {
             base.DgSource_Save(
                 "Chambre_Save",
-                $@"<chambres>
+                $@"<chambres><chambre>
                     <id>{CurrentDgSource.Id}</id>
                     <nom>{CurrentDgSource.Nom}</nom>
                     <etat>{CurrentDgSource.Etat.Id}</etat>
                     <commentaire>{CurrentDgSource.Commentaire}</commentaire>    
                     <hotel>{Reference_ViewModel.Header.CurrentHotel.Id}</hotel>
-                </chambres>");
+                </chambre></chambres>");
         }
         public override bool DgSource_Filter(object item)
         {
@@ -82,9 +82,9 @@ namespace Makrisoft.Makfi.ViewModels
         }
         public override void OnDeleteCommand(string spName, string spParam)
         {
-            spName = "Chambre_CanDelete";
-            spParam = $"<chambres><id>{CurrentDgSource.Id}</id></chambres> ";
-            base.OnDeleteCommand(spName, spParam);
+            base.OnDeleteCommand(
+                 "Chambre_Delete",
+                 $"<chambres><chambre><id>{CurrentDgSource.Id}</id></chambre></chambres>");
         }
         public override void OnChangeViewCommand()
         {

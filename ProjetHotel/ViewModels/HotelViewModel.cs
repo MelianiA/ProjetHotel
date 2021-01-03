@@ -1,14 +1,10 @@
 ﻿using Makrisoft.Makfi.Dal;
 using Makrisoft.Makfi.Models;
-using Makrisoft.Makfi.Tools;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
-using System.Windows;
-using System.Windows.Data;
-using System.Windows.Input;
 
 namespace Makrisoft.Makfi.ViewModels
 {
@@ -59,13 +55,13 @@ namespace Makrisoft.Makfi.ViewModels
         {
             base.DgSource_Save(
                 "Hotel_Save",
-                $@"<hotels>
+                $@"<hotels><hotel>
                         <id>{CurrentDgSource.Id}</id>
                         <nom>{CurrentDgSource.Nom}</nom> 
                         <reception>{CurrentDgSource.Reception?.Id}</reception>
                         <gouvernante>{CurrentDgSource.Gouvernante?.Id}</gouvernante>
                         <commentaire>{CurrentDgSource.Commentaire}</commentaire>       
-                    </hotels>");
+                    </hotel></hotels>");
         }
 
         #endregion
@@ -78,10 +74,9 @@ namespace Makrisoft.Makfi.ViewModels
         }
         public override void OnDeleteCommand(string spName, string spParam)
         {
-            spName = "Hotel_CanDelete";
-            spParam = $"<hotels><id>{CurrentDgSource.Id}</id></hotels>";
-
-            base.OnDeleteCommand(spName, spParam);
+            base.OnDeleteCommand(
+                "Hotel_Delete",
+                $"<hotels><hotel><id>{CurrentDgSource.Id}</id></hotel></hotels>");
         }
         #endregion
 

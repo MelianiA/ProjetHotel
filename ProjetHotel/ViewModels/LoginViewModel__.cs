@@ -9,7 +9,12 @@ namespace Makrisoft.Makfi.ViewModels
 {
     public class LoginViewModel : ViewModelBase
     {
-        #region Propriété
+        #region Constructeur
+        public LoginViewModel()
+        {
+            // ICommand
+            LoginKeyCommand = new RelayCommand(p => OnLoginKeyCommand(p));
+        }
         #endregion
 
         #region Binding
@@ -42,12 +47,12 @@ namespace Makrisoft.Makfi.ViewModels
                 if (Reference_ViewModel.Header.Message == "Tapez votre code pin" || Reference_ViewModel.Header.Message == "Nouveau code pin")
                 {
                     Reference_ViewModel.Header.CurrentUtilisateur.CodePin = Password;
-                    var param = $@"<utilisateur>
+                    var param = $@"<utilisateurs><utilisateur>
                                     <id>{Reference_ViewModel.Header.CurrentUtilisateur.Id}</id>
                                     <nom>{Reference_ViewModel.Header.CurrentUtilisateur.Nom}</nom>
                                     <codePin>{Reference_ViewModel.Header.CurrentUtilisateur.CodePin}</codePin>
                                     <statut>{(byte)Reference_ViewModel.Header.CurrentUtilisateur.Statut}</statut>
-                                </utilisateur>";
+                                </utilisateur></utilisateur>";
                     var ids = MakfiData.Save<Utilisateur>("Utilisateur_Save", param);
                     if (ids.Count == 0) throw new Exception("Rien n'a été sauvgardé ! ");
                     Reference_ViewModel.Header.Message = "";
@@ -79,19 +84,14 @@ namespace Makrisoft.Makfi.ViewModels
             }
         }
 
-        public override void Load()
-        {
-            Reference_ViewModel.Header.Utilisateur_Load();
-
-        }
 
         #endregion
 
-        #region Constructeur
-        public LoginViewModel()
+
+        #region Load
+        public override void Load()
         {
-            // ICommand
-            LoginKeyCommand = new RelayCommand(p => OnLoginKeyCommand(p));
+            Reference_ViewModel.Header.Utilisateur_Load();
         }
         #endregion
     }

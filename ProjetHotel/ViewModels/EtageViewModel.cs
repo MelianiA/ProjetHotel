@@ -48,7 +48,7 @@ namespace Makrisoft.Makfi.ViewModels
         {
             var etages = MakfiData.Read<Etage>
                 (
-                "Etage_Read",
+                "GroupeChambre_Read",
                 $"<groupeChambres><hotel>{Reference_ViewModel.Header.CurrentHotel.Id}</hotel></groupeChambres>",
                 e =>
                 {
@@ -103,15 +103,15 @@ namespace Makrisoft.Makfi.ViewModels
         public override void DgSource_Save(string spName, string spParam)
         {
             base.DgSource_Save(
-                "Etage_Save",
+                "GroupeChambre_Save",
                 $@"
-                <groupeChambres>
+                <groupeChambres><groupeChambre>
                     <id>{CurrentDgSource.Id}</id>
                     <nom>{CurrentDgSource.Nom}</nom>
                     <hotel>{Reference_ViewModel.Header.CurrentHotel.Id}</hotel>
                     <chambres>{string.Join("", CurrentDgSource.Chambres.Select(c => $"<chambre>{c.Id}</chambre>"))}</chambres>
                     <commentaire>{CurrentDgSource.Commentaire}</commentaire>    
-                </groupeChambres>");
+                </groupeChambre></groupeChambres>");
         }
         #endregion
 
@@ -127,10 +127,9 @@ namespace Makrisoft.Makfi.ViewModels
         }
         public override void OnDeleteCommand(string spName, string spParam)
         {
-            spName = "Etage_CanDelete";
-            spParam = $"<groupechambres><id>{CurrentDgSource.Id}</id></groupechambres>";
-
-            base.OnDeleteCommand(spName, spParam);
+            base.OnDeleteCommand(
+                "GroupeChambre_Delete",
+                $"<groupechambres><groupechambre><id>{CurrentDgSource.Id}</id></groupechambre></groupechambres>");
         }
         //ICommand
         public ICommand AjouterChambreCommand { get; set; }

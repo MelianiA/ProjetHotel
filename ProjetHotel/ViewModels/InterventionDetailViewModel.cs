@@ -70,13 +70,17 @@ namespace Makrisoft.Makfi.ViewModels
         }
         public override void DgSource_Save(string spName, string spParam)
         {
-            var param = $@"<interventionDetails><intervention>{Reference_ViewModel.Intervention.CurrentDgSource.Id}</intervention> <interventionDetail>
-                            <id>{CurrentDgSource.Id}</id>
-                            <employeAffecte>{CurrentDgSource.Employe.Id}</employeAffecte>
-                            <commentaire>{CurrentDgSource.Commentaire}</commentaire>    
-                            <chambreAffectee>{CurrentDgSource.Chambre.Id}</chambreAffectee>
-                            <etat>{CurrentDgSource.Etat.Id}</etat> 
-                           </interventionDetail></interventionDetails>";
+            var param = $@"
+                        <interventionDetails>
+                            <intervention>{Reference_ViewModel.Intervention.CurrentDgSource.Id}</intervention> 
+                            <interventionDetail>
+                                <id>{CurrentDgSource.Id}</id>
+                                <employeAffecte>{CurrentDgSource.Employe.Id}</employeAffecte>
+                                <commentaire>{CurrentDgSource.Commentaire}</commentaire>    
+                                <chambreAffectee>{CurrentDgSource.Chambre.Id}</chambreAffectee>
+                                <etat>{CurrentDgSource.Etat.Id}</etat> 
+                            </interventionDetail>
+                        </interventionDetails>";
             var ids = MakfiData.Save<InterventionDetail>("InterventionDetail_Save", param);
 
             if (ids.Count == 0) throw new Exception("InterventionDetailViewModel.DgSource_Save:1");
@@ -84,7 +88,7 @@ namespace Makrisoft.Makfi.ViewModels
             CurrentDgSource.SaveColor = "Navy";
 
             param = $@"
-                    <intervention>
+                    <interventions><intervention>
                         <id>{Reference_ViewModel.Intervention.CurrentDgSource.Id}</id>
                         <libelle>{Reference_ViewModel.Intervention.CurrentDgSource.Libelle}</libelle>
                         <commentaire>{Reference_ViewModel.Intervention.CurrentDgSource.Commentaire}</commentaire>    
@@ -92,7 +96,7 @@ namespace Makrisoft.Makfi.ViewModels
                         <date1>{Reference_ViewModel.Intervention.CurrentDgSource.Date1}</date1>    
                         <model>{Reference_ViewModel.Intervention.CurrentDgSource.Model}</model>   
                         <etat>{SommeEtat().Id}</etat> 
-                     </intervention>";
+                     </intervention></interventions>";
 
             var ids2 = MakfiData.Save<Intervention>("Intervention_Save", param);
 
@@ -138,13 +142,15 @@ namespace Makrisoft.Makfi.ViewModels
         {
             if (CurrentDgSource.Id != null)
             {
-                MakfiData.Delete("InterventionDetails_Delete", $" < interventionDetails><id>{CurrentDgSource.Id}</id></interventionDetails>");
+                MakfiData.Delete(
+                    "InterventionDetail_Delete", 
+                    $"<interventionDetails><interventionDetail><id>{CurrentDgSource.Id}</id></interventionDetail></interventionDetails>");
             }
             DgSource.Remove(CurrentDgSource);
 
             // Maj intervention Etat 
             spParam = $@"
-                    <intervention>
+                    <interventions><intervention>
                         <id>{Reference_ViewModel.Intervention.CurrentDgSource.Id}</id>
                         <libelle>{Reference_ViewModel.Intervention.CurrentDgSource.Libelle}</libelle>
                         <commentaire>{Reference_ViewModel.Intervention.CurrentDgSource.Commentaire}</commentaire>    
@@ -152,7 +158,7 @@ namespace Makrisoft.Makfi.ViewModels
                         <date1>{Reference_ViewModel.Intervention.CurrentDgSource.Date1}</date1>    
                         <model>{Reference_ViewModel.Intervention.CurrentDgSource.Model}</model>   
                         <etat>{SommeEtat().Id}</etat> 
-                     </intervention>";
+                     </intervention></interventions>";
 
             var ids2 = MakfiData.Save<Intervention>("Intervention_Save", spParam);
 
@@ -196,7 +202,7 @@ namespace Makrisoft.Makfi.ViewModels
 
             // Maj intervention Etat 
             param = $@"
-                    <intervention>
+                    <interventions><intervention>
                         <id>{Reference_ViewModel.Intervention.CurrentDgSource.Id}</id>
                         <libelle>{Reference_ViewModel.Intervention.CurrentDgSource.Libelle}</libelle>
                         <commentaire>{Reference_ViewModel.Intervention.CurrentDgSource.Commentaire}</commentaire>    
@@ -204,7 +210,7 @@ namespace Makrisoft.Makfi.ViewModels
                         <date1>{Reference_ViewModel.Intervention.CurrentDgSource.Date1}</date1>    
                         <model>{Reference_ViewModel.Intervention.CurrentDgSource.Model}</model>   
                         <etat>{SommeEtat().Id}</etat> 
-                     </intervention>";
+                     </intervention></interventions>";
 
             var ids2 = MakfiData.Save<Intervention>("Intervention_Save", param);
 
@@ -214,11 +220,13 @@ namespace Makrisoft.Makfi.ViewModels
         private void OnDeleteAllCommand()
         {
             DgSource.Clear();
-            MakfiData.Delete("InterventionDetails_Delete", $" < interventionDetails><intervention>{Reference_ViewModel.Intervention.CurrentDgSource.Id}</intervention></interventionDetails>");
+            MakfiData.Delete(
+                "InterventionDetail_Delete", 
+                $"<interventionDetails><interventions><id>{Reference_ViewModel.Intervention.CurrentDgSource.Id}</id></interventions></interventionDetails>");
 
             // Maj intervention Etat 
             var param = $@"
-                    <intervention>
+                    <interventions><intervention>
                         <id>{Reference_ViewModel.Intervention.CurrentDgSource.Id}</id>
                         <libelle>{Reference_ViewModel.Intervention.CurrentDgSource.Libelle}</libelle>
                         <commentaire>{Reference_ViewModel.Intervention.CurrentDgSource.Commentaire}</commentaire>    
@@ -226,7 +234,7 @@ namespace Makrisoft.Makfi.ViewModels
                         <date1>{Reference_ViewModel.Intervention.CurrentDgSource.Date1}</date1>    
                         <model>{Reference_ViewModel.Intervention.CurrentDgSource.Model}</model>   
                         <etat>{SommeEtat().Id}</etat> 
-                     </intervention>";
+                      </intervention></interventions>";
 
             var ids2 = MakfiData.Save<Intervention>("Intervention_Save", param);
 

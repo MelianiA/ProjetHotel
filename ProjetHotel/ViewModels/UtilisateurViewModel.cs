@@ -54,12 +54,12 @@ namespace Makrisoft.Makfi.ViewModels
         {
             base.DgSource_Save(
                 "Utilisateur_Save",
-                $@"<utilisateur>
+                $@"<utilisateurs><utilisateur>
                         <id>{CurrentDgSource.Id}</id>
                         <nom>{CurrentDgSource.Nom}</nom>
                         <codePin>{CurrentDgSource.CodePin}</codePin>
                         <statut>{(byte)CurrentDgSource.Statut}</statut>
-                    </utilisateur>");
+                    </utilisateur></utilisateur>");
         }
         public override bool DgSource_Filter(object item)
         {
@@ -83,10 +83,9 @@ namespace Makrisoft.Makfi.ViewModels
         }
         public override void OnDeleteCommand(string spName, string spParam)
         {
-            spName = "Utilisateur_CanDelete";
-            spParam = $"<utilisateurs><id>{CurrentDgSource.Id}</id></utilisateurs>";
-
-            base.OnDeleteCommand(spName, spParam);
+            base.OnDeleteCommand(
+                "Utilisateur_Delete",
+                $"<utilisateurs><utilisateur><id>{CurrentDgSource.Id}</id></utilisateur></utilisateurs>");
         }
         public override bool OnCanExecuteDeleteCommand()
         {

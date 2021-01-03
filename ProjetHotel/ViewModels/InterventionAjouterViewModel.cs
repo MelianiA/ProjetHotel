@@ -62,7 +62,7 @@ namespace Makrisoft.Makfi.ViewModels
                 var chambres = MakfiData.Read<Chambre>
                     (
                     "Chambre_Read",
-                    $"<chambres><groupeChambre>{CurrentEtage.Id}</groupeChambre></chambres>",
+                    $"<chambres><hotel>{Reference_ViewModel.Header.CurrentHotel.Id}</hotel><groupeChambre>{CurrentEtage.Id}</groupeChambre></chambres>",
                     e =>
                     {
                         e.Id = (Guid)MakfiData.Reader["Id"];
