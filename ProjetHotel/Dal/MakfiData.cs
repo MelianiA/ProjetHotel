@@ -173,7 +173,7 @@ namespace Makrisoft.Makfi.Dal
                 }
                 ).Where(x => x.Nombre > 0);
         }
-        public static bool Delete(string spName, string spParam = null)
+        public static bool Delete(string spName, string spParam)
         {
             if (Cnx == null)
             {
