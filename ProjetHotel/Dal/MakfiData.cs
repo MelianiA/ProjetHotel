@@ -39,7 +39,7 @@ namespace Makrisoft.Makfi.Dal
             ConnectionString = connectionString;
 
             // Lecture table Info : PasswordAdmin - PasswordChange - Etats
-            var infos = new ObservableCollection<Info_VM>(MakfiData.Read<Info>
+            var infos = new ObservableCollection<Info_VM>(MakfiData.Crud<Info>
                 (
                  "Info_Read",
                 null,
@@ -60,7 +60,7 @@ namespace Makrisoft.Makfi.Dal
 
             if (infos.Count > 0)
             {
-                Etats = MakfiData.Read<Etat>
+                Etats = MakfiData.Crud<Etat>
                     (
                     "Etat_Read",
                     null,
@@ -133,8 +133,16 @@ namespace Makrisoft.Makfi.Dal
         #endregion
 
         #region Queries
-        public static List<T> Read<T>(string spName, string spParam, Action<T> spFields) where T : Modele, new()
+        public static List<T> Crud<T>(string spName, string spParam, Action<T> spFields = null) where T : Modele, new()
         {
+            if (spFields == null)
+            {
+                spFields = e =>
+                {
+                     e.Id = (Guid)MakfiData.Reader["Id"];
+                     e.Insere = (bool)MakfiData.Reader["insere"];
+                };
+            }
             List<T> entities = new List<T>();
             T entite;
             if (ExecuteReader(spName, spParam))
@@ -147,22 +155,66 @@ namespace Makrisoft.Makfi.Dal
             Close();
             return entities;
         }
-        public static List<T> Save<T>(string spName, string spParam) where T : Modele, new()
-        {
-            return Read<T>
-            (
-            spName,
-            spParam,
-            e =>
-            {
-                e.Id = (Guid)Reader["Id"];
-                e.Insere = (bool)Reader["insere"];
-            }
-            );
-        }
+        //public static List<T> Save<T>(string spName, string spParam) where T : Modele, new()
+        //{
+        //    return Read<T>
+        //    (
+        //    spName,
+        //    spParam,
+        //    e =>
+        //    {
+        //        e.Id = (Guid)Reader["Id"];
+        //        e.Insere = (bool)Reader["insere"];
+        //    }
+        //    );
+        //}
+        //        public static List<T> Delete<T>(string spName, string spParam) */where T : Modele, new()
+        //        {
+        //            return Read<T>
+        //            (
+        //            spName,
+        //            spParam,
+        //            e =>
+        //            {
+        //                e.Id = (Guid) Reader["Id"];
+        //        e.Insere = (bool) Reader["insere"];
+        //    }
+        //            );
+        //            if (Cnx == null)
+        //            {
+        //                Cnx = new SqlConnection(ConnectionString);
+        //                try
+        //                {
+        //                    Cnx.Open();
+        //                }
+        //                catch (Exception ex)
+        //{
+        //    Erreur = ex.Message;
+        //    if (ex.InnerException != null) if (ex.InnerException.InnerException != null) Erreur = ex.InnerException.InnerException.Message; else Erreur = ex.InnerException.Message;
+        //}
+        //            }
+        //            Command = new SqlCommand
+        //            {
+        //                Connection = Cnx,
+        //                CommandType = System.Data.CommandType.StoredProcedure,
+        //                CommandText = spName
+        //            };
+        //if (spParam != null) Command.Parameters.Add(new SqlParameter("data", spParam));
+        //try
+        //{
+        //    Command.ExecuteNonQuery();
+        //    return true;
+        //}
+        //catch (Exception ex)
+        //{
+        //    Erreur = ex.Message;
+        //    if (ex.InnerException != null) if (ex.InnerException.InnerException != null) Erreur = ex.InnerException.InnerException.Message; else Erreur = ex.InnerException.Message;
+        //    return false;
+        //}
+        //        }
         public static IEnumerable<CanDelete> CanDelete(string spName, string spParam)
         {
-            return Read<CanDelete>
+            return Crud<CanDelete>
                 (
                 spName,
                 spParam,
@@ -173,40 +225,7 @@ namespace Makrisoft.Makfi.Dal
                 }
                 ).Where(x => x.Nombre > 0);
         }
-        public static bool Delete(string spName, string spParam)
-        {
-            if (Cnx == null)
-            {
-                Cnx = new SqlConnection(ConnectionString);
-                try
-                {
-                    Cnx.Open();
-                }
-                catch (Exception ex)
-                {
-                    Erreur = ex.Message;
-                    if (ex.InnerException != null) if (ex.InnerException.InnerException != null) Erreur = ex.InnerException.InnerException.Message; else Erreur = ex.InnerException.Message;
-                }
-            }
-            Command = new SqlCommand
-            {
-                Connection = Cnx,
-                CommandType = System.Data.CommandType.StoredProcedure,
-                CommandText = spName
-            };
-            if (spParam != null) Command.Parameters.Add(new SqlParameter("data", spParam));
-            try
-            {
-                Command.ExecuteNonQuery();
-                return true;
-            }
-            catch (Exception ex)
-            {
-                Erreur = ex.Message;
-                if (ex.InnerException != null) if (ex.InnerException.InnerException != null) Erreur = ex.InnerException.InnerException.Message; else Erreur = ex.InnerException.Message;
-                return false;
-            }
-        }
+
         #endregion
     }
 }

@@ -25,7 +25,7 @@ namespace Makrisoft.Makfi.ViewModels
         #region DgSource
         public override IEnumerable<Intervention_VM> DgSource_Read()
         {
-            return MakfiData.Read<Intervention>(
+            return MakfiData.Crud<Intervention>(
                 "Intervention_Read",
                 $"<interventions><hotel>{Reference_ViewModel.Header.CurrentHotel.Id}</hotel></interventions>",
                 e =>

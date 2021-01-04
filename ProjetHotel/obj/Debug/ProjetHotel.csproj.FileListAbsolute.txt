@@ -141,7 +141,6 @@ C:\Users\alyf\Source\Repos\meliania\ProjetHotel\ProjetHotel\bin\Debug\Microsoft.
 C:\Users\alyf\Source\Repos\meliania\ProjetHotel\ProjetHotel\bin\Debug\Microsoft.Xaml.Behaviors.xml
 C:\Users\alyf\Source\Repos\meliania\ProjetHotel\ProjetHotel\obj\Debug\ProjetHotel.csprojAssemblyReference.cache
 C:\Users\alyf\Source\Repos\meliania\ProjetHotel\ProjetHotel\obj\Debug\Views\AdministrationView.g.cs
-C:\Users\alyf\Source\Repos\meliania\ProjetHotel\ProjetHotel\obj\Debug\Views\ChambreGroupeView.g.cs
 C:\Users\alyf\Source\Repos\meliania\ProjetHotel\ProjetHotel\obj\Debug\Views\ChambreView.g.cs
 C:\Users\alyf\Source\Repos\meliania\ProjetHotel\ProjetHotel\obj\Debug\Views\EmployeView.g.cs
 C:\Users\alyf\Source\Repos\meliania\ProjetHotel\ProjetHotel\obj\Debug\Views\HeaderView.g.cs
@@ -161,7 +160,6 @@ C:\Users\alyf\Source\Repos\meliania\ProjetHotel\ProjetHotel\obj\Debug\Makrisoft.
 C:\Users\alyf\Source\Repos\meliania\ProjetHotel\ProjetHotel\obj\Debug\Makrisoft.Makfi_MarkupCompile.lref
 C:\Users\alyf\Source\Repos\meliania\ProjetHotel\ProjetHotel\obj\Debug\App.baml
 C:\Users\alyf\Source\Repos\meliania\ProjetHotel\ProjetHotel\obj\Debug\Views\AdministrationView.baml
-C:\Users\alyf\Source\Repos\meliania\ProjetHotel\ProjetHotel\obj\Debug\Views\ChambreGroupeView.baml
 C:\Users\alyf\Source\Repos\meliania\ProjetHotel\ProjetHotel\obj\Debug\Views\ChambreView.baml
 C:\Users\alyf\Source\Repos\meliania\ProjetHotel\ProjetHotel\obj\Debug\Views\EmployeView.baml
 C:\Users\alyf\Source\Repos\meliania\ProjetHotel\ProjetHotel\obj\Debug\Views\HeaderView.baml
@@ -250,3 +248,5 @@ D:\ProjetHotel\ProjetHotel\obj\Debug\Makrisoft.Makfi.pdb
 D:\ProjetHotel\ProjetHotel\obj\Debug\Views\EtageView.g.cs
 D:\ProjetHotel\ProjetHotel\obj\Debug\Views\EtageView.baml
 D:\ProjetHotel\ProjetHotel\obj\Debug\ProjetHotel.csprojAssemblyReference.cache
+C:\Users\alyf\Source\Repos\meliania\ProjetHotel\ProjetHotel\obj\Debug\Views\EtageView.g.cs
+C:\Users\alyf\Source\Repos\meliania\ProjetHotel\ProjetHotel\obj\Debug\Views\EtageView.baml

@@ -22,5 +22,11 @@ namespace Makrisoft.Makfi.ViewModels
             ChangeViewCommand = new RelayCommand(p => OnChangeViewCommand(p));
         }
 
+        public override void Load()
+        {
+            base.Load();
+        }
+
+
     }
 }

@@ -27,7 +27,7 @@ namespace Makrisoft.Makfi.ViewModels
         public override IEnumerable<Hotel_VM> DgSource_Read()
         {
             return new ObservableCollection<Hotel_VM>(
-                MakfiData.Read<Hotel>
+                MakfiData.Crud<Hotel>
                 (
                     "Hotel_Read",
                     null,
@@ -77,7 +77,15 @@ namespace Makrisoft.Makfi.ViewModels
             base.OnDeleteCommand(
                 "Hotel_Delete",
                 $"<hotels><hotel><id>{CurrentDgSource.Id}</id></hotel></hotels>");
+            Reference_ViewModel.Header.Load_Hotel();
         }
+
+        public override void OnSaveCommand<T>()
+        {
+            base.OnSaveCommand<T>();
+            Reference_ViewModel.Header.Load_Hotel();
+        }
+
         #endregion
 
     }

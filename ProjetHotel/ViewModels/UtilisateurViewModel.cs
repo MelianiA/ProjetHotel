@@ -24,13 +24,12 @@ namespace Makrisoft.Makfi.ViewModels
         }
         #endregion
 
-
         #region DgSource
         public override IEnumerable<Utilisateur_VM> DgSource_Read()
         {
             return new ObservableCollection<Utilisateur_VM>(
-                MakfiData.Read<Utilisateur>(
-                   "Read_Utilisateur",
+                MakfiData.Crud<Utilisateur>(
+                   "Utilisateur_Read",
                    null,
                     e =>
                     {
@@ -59,7 +58,7 @@ namespace Makrisoft.Makfi.ViewModels
                         <nom>{CurrentDgSource.Nom}</nom>
                         <codePin>{CurrentDgSource.CodePin}</codePin>
                         <statut>{(byte)CurrentDgSource.Statut}</statut>
-                    </utilisateur></utilisateur>");
+                    </utilisateur></utilisateurs>");
         }
         public override bool DgSource_Filter(object item)
         {

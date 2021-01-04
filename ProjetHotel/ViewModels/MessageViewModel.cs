@@ -33,7 +33,7 @@ namespace Makrisoft.Makfi.ViewModels
         public override IEnumerable<Message_VM> DgSource_Read()
         {
             var SupprXml = !Reference_ViewModel.Parametre.VoirMsgArchives ? "<exclude>Supprimé</exclude>" : "";
-            var messages = MakfiData.Read<Message>
+            var messages = MakfiData.Crud<Message>
                 (
                 "Message_Read",
                 $"<messages>{SupprXml}<deOuA>{Reference_ViewModel.Header.CurrentUtilisateur.Id}</deOuA></messages>",
@@ -79,7 +79,7 @@ namespace Makrisoft.Makfi.ViewModels
                         <objet>{message.Objet}</objet>
                         <etat>{message.Etat.Id}</etat>
                      </message></messages>";
-                    var ids = MakfiData.Save<Message>("Message_Save", spParam);
+                    var ids = MakfiData.Crud<Message>("Message_Save", spParam);
                 }
             }
             return messages;
@@ -183,7 +183,7 @@ namespace Makrisoft.Makfi.ViewModels
                         <objet>{CurrentDgSource.Objet}</objet>
                         <etat>{CurrentDgSource.Etat.Id}</etat>
                      </message></messages>";
-                var ids = MakfiData.Save<Message>("Message_Save", spParam);
+                var ids = MakfiData.Crud<Message>("Message_Save", spParam);
 
             }
             HistoEnabled = CurrentDgSource != null;

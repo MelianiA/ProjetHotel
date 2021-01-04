@@ -106,7 +106,7 @@ from @data.nodes('interventions') as T(N)
 
 -- CAS 1 : <interventions><hotel>@hotel</hotel></interventions>
 --		   <interventions><hotel>@hotel</hotel><delete>@delete</delete></interventions>
- select Id,Libelle,Etat,convert(date, Date1, 120) as Date1 , Commentaire, Model from Intervention i
+ select Id,Libelle,convert(date, Date1, 120) as Date1 , Commentaire, Model from Intervention i
   where (@hotel is null or i.Hotel=@hotel) and (@delete is null or Id <> @delete)
  GO
 ---------------------------------------------------------------------------------------------------
@@ -173,11 +173,11 @@ DECLARE @message nvarchar(MAX)
 
 -- #DATA
 select 
- 		T.N.value('(id/text())[1]', 'uniqueidentifier') Id, 
-		T.N.value('(nom/text())[1]', 'nvarchar(MAX)') Nom, 
- 		T.N.value('(etat/text())[1]', 'uniqueidentifier') Etat,
-		T.N.value('(commentaire/text())[1]', 'nvarchar(MAX)') Commentaire,
-		T.N.value('(hotel/text())[1]', 'uniqueidentifier') Hotel
+ 		T.N.value('(./id/text())[1]', 'uniqueidentifier') Id, 
+		T.N.value('(./nom/text())[1]', 'nvarchar(MAX)') Nom, 
+ 		T.N.value('(./etat/text())[1]', 'uniqueidentifier') Etat,
+		T.N.value('(./commentaire/text())[1]', 'nvarchar(MAX)') Commentaire,
+		T.N.value('(./hotel/text())[1]', 'uniqueidentifier') Hotel
   	 into #data
 from @data.nodes('chambres/chambre') as T(N)
 
@@ -239,12 +239,12 @@ DECLARE @message nvarchar(MAX)
 
 -- #DATA
 select 
-		T.N.value('(id/text())[1]', 'uniqueidentifier') Id, 
-		T.N.value('(hotel/text())[1]', 'uniqueidentifier') hotel, 
-		T.N.value('(nom/text())[1]', 'nvarchar(MAX)') Nom, 
-		T.N.value('(prenom/text())[1]', 'nvarchar(MAX)') Prenom, 
-		T.N.value('(etat/text())[1]', 'uniqueidentifier') Etat,
-		T.N.value('(commentaire/text())[1]', 'nvarchar(MAX)') Commentaire
+		T.N.value('(./id/text())[1]', 'uniqueidentifier') Id, 
+		T.N.value('(./hotel/text())[1]', 'uniqueidentifier') hotel, 
+		T.N.value('(./nom/text())[1]', 'nvarchar(MAX)') Nom, 
+		T.N.value('(./prenom/text())[1]', 'nvarchar(MAX)') Prenom, 
+		T.N.value('(./etat/text())[1]', 'uniqueidentifier') Etat,
+		T.N.value('(./commentaire/text())[1]', 'nvarchar(MAX)') Commentaire
   	 into #data
 	 from @data.nodes('employes/employe') as T(N)
 
@@ -311,12 +311,12 @@ DECLARE @message nvarchar(MAX)
 
 -- #DATA
 select 
-	T.N.value('(id/text())[1]', 'uniqueidentifier') Id, 
-	T.N.value('(hotel/text())[1]', 'uniqueidentifier') hotel, 
-	T.N.value('(nom/text())[1]', 'nvarchar(MAX)') Nom, 
-	T.N.value('(commentaire/text())[1]', 'nvarchar(MAX)') Commentaire
+	T.N.value('(./id/text())[1]', 'uniqueidentifier') Id, 
+	T.N.value('(./hotel/text())[1]', 'uniqueidentifier') hotel, 
+	T.N.value('(./nom/text())[1]', 'nvarchar(MAX)') Nom, 
+	T.N.value('(./commentaire/text())[1]', 'nvarchar(MAX)') Commentaire
 into #data
-from @data.nodes('groupeChambres') as T(N)
+from @data.nodes('groupeChambres/groupeChambre') as T(N)
 
 -- CAS 1
 --  <groupeChambres><groupeChambre>
@@ -352,7 +352,7 @@ END CATCH
 -- INSERT
 BEGIN TRY
 	merge into GroupeChambre 
-	using (select Nom, hotel, Commentaire, hotel from #data where Id is null) as t
+	using (select Nom, hotel, Commentaire from #data where Id is null) as t
 	on 1=0
 		when not matched then
 		insert (Nom, hotel, Commentaire) 
@@ -378,13 +378,13 @@ DECLARE @message nvarchar(MAX)
 
 -- #DATA
 select 
-	T.N.value('(id/text())[1]', 'uniqueidentifier') Id, 
-	T.N.value('(nom/text())[1]', 'nvarchar(MAX)') Nom, 
-	T.N.value('(reception/text())[1]', 'uniqueidentifier') Reception,
-	T.N.value('(gouvernante/text())[1]', 'uniqueidentifier') Gouvernante,
-	T.N.value('(commentaire/text())[1]', 'nvarchar(MAX)') Commentaire
+	T.N.value('(./id/text())[1]', 'uniqueidentifier') Id, 
+	T.N.value('(./nom/text())[1]', 'nvarchar(MAX)') Nom, 
+	T.N.value('(./reception/text())[1]', 'uniqueidentifier') Reception,
+	T.N.value('(./gouvernante/text())[1]', 'uniqueidentifier') Gouvernante,
+	T.N.value('(./commentaire/text())[1]', 'nvarchar(MAX)') Commentaire
 into #data
-from @data.nodes('hotels') as T(N)
+from @data.nodes('hotels/hotel') as T(N)
 
 -- CAS 1 
 --<hotels><hotel>
@@ -442,15 +442,15 @@ DECLARE @message nvarchar(MAX)
 
 -- #DATA
 select 
-	T.N.value('(id/text())[1]', 'uniqueidentifier') Id, 
-	T.N.value('(libelle/text())[1]', 'nvarchar(MAX)') Libelle, 
-	T.N.value('(commentaire/text())[1]', 'nvarchar(MAX)') Commentaire,
-	T.N.value('(hotel/text())[1]', 'uniqueidentifier') Hotel,
-	T.N.value('(etat/text())[1]', 'uniqueidentifier') Etat,
-	T.N.value('(date1/text())[1]', 'date') Date1,
-	T.N.value('(model/text())[1]', 'bit') Model
+	T.N.value('(./id/text())[1]', 'uniqueidentifier') Id, 
+	T.N.value('(./libelle/text())[1]', 'nvarchar(MAX)') Libelle, 
+	T.N.value('(./commentaire/text())[1]', 'nvarchar(MAX)') Commentaire,
+	T.N.value('(./hotel/text())[1]', 'uniqueidentifier') Hotel,
+	T.N.value('(./etat/text())[1]', 'uniqueidentifier') Etat,
+	T.N.value('(./date1/text())[1]', 'date') Date1,
+	T.N.value('(./model/text())[1]', 'bit') Model
 into #data
-from @data.nodes('intervention') as T(N)
+from @data.nodes('interventions/intervention') as T(N)
 
 -- CAS 1
 --<interventions><intervention>
@@ -512,11 +512,11 @@ DECLARE @message nvarchar(MAX)
 -- #DATA
 select 
  		T.N.value('(../intervention/text())[1]', 'uniqueidentifier') intervention,
- 		T.N.value('(id/text())[1]', 'uniqueidentifier') Id, 
-		T.N.value('(employeAffecte/text())[1]', 'uniqueidentifier') EmployeAffecte, 
- 		T.N.value('(chambreAffectee/text())[1]', 'uniqueidentifier') ChambreAffectee,
- 		T.N.value('(commentaire/text())[1]', 'nvarchar(MAX)') Commentaire,
-  		T.N.value('(etat/text())[1]', 'uniqueidentifier') Etat
+ 		T.N.value('(./id/text())[1]', 'uniqueidentifier') Id, 
+		T.N.value('(./employeAffecte/text())[1]', 'uniqueidentifier') EmployeAffecte, 
+ 		T.N.value('(./chambreAffectee/text())[1]', 'uniqueidentifier') ChambreAffectee,
+ 		T.N.value('(./commentaire/text())[1]', 'nvarchar(MAX)') Commentaire,
+  		T.N.value('(./etat/text())[1]', 'uniqueidentifier') Etat
 into #data
 from @data.nodes('interventionDetails/interventionDetail') as T(N)
 
@@ -580,17 +580,17 @@ DECLARE @message nvarchar(MAX)
 
 -- #DATA
 select 
-	T.N.value('(archive/text())[1]', 'uniqueidentifier') archive, 
-	T.N.value('(id/text())[1]', 'uniqueidentifier') id, 
-	T.N.value('(idHisto/text())[1]', 'uniqueidentifier') idHisto, 
-	T.N.value('(de/text())[1]', 'uniqueidentifier') de, 
-	T.N.value('(a/text())[1]', 'uniqueidentifier') a,
-	T.N.value('(envoyeLe/text())[1]', 'datetime') envoyeLe,
-	T.N.value('(libelle/text())[1]', 'nvarchar(MAX)') libelle,
-	T.N.value('(objet/text())[1]', 'nvarchar(MAX)') objet,
-	T.N.value('(etat/text())[1]', 'uniqueidentifier') etat
+	T.N.value('(./archive/text())[1]', 'uniqueidentifier') archive, 
+	T.N.value('(./id/text())[1]', 'uniqueidentifier') id, 
+	T.N.value('(./idHisto/text())[1]', 'uniqueidentifier') idHisto, 
+	T.N.value('(./de/text())[1]', 'uniqueidentifier') de, 
+	T.N.value('(./a/text())[1]', 'uniqueidentifier') a,
+	T.N.value('(./envoyeLe/text())[1]', 'datetime') envoyeLe,
+	T.N.value('(./libelle/text())[1]', 'nvarchar(MAX)') libelle,
+	T.N.value('(./objet/text())[1]', 'nvarchar(MAX)') objet,
+	T.N.value('(./etat/text())[1]', 'uniqueidentifier') etat
 into #data	
-from @data.nodes('messages') as T(N)
+from @data.nodes('messages/message') as T(N)
 
 -- CAS 1
 --<messages><message>
@@ -654,12 +654,12 @@ DECLARE @message nvarchar(MAX)
 
 -- #DATA
 select 
-		T.N.value('(id/text())[1]', 'uniqueidentifier') id, 
-		T.N.value('nom[1]', 'nvarchar(MAX)') Nom, 
-		T.N.value('codePin[1]', 'nvarchar(MAX)') CodePin,
-		T.N.value('statut[1]', 'tinyint') Statut
+		T.N.value('(./id/text())[1]', 'uniqueidentifier') id, 
+		T.N.value('(./nom/text())[1]', 'nvarchar(MAX)') Nom, 
+		T.N.value('(./codePin/text())[1]', 'nvarchar(MAX)') CodePin,
+		T.N.value('(./statut/text())[1]', 'tinyint') Statut
 into #data	
-from @data.nodes('utilisateur') as T(N)
+from @data.nodes('utilisateurs/utilisateur') as T(N)
 
 -- CAS 1
 --<utilisateurs><utilisateur>
@@ -668,7 +668,6 @@ from @data.nodes('utilisateur') as T(N)
 --	<codePin></codePin>
 --	<statut></statut>
 --</utilisateur></utilisateur>
-
 -- UPDATE
 BEGIN TRY
 	merge into Utilisateur
@@ -752,7 +751,7 @@ DECLARE @message nvarchar(MAX)
 select 
 		T.N.value('(id/text())[1]', 'uniqueidentifier') id
 into #data	
-from @data.nodes('utilisateurs/utilisateur') as T(N)
+from @data.nodes('hotels/hotel') as T(N)
 
 -- CAS 1
 -- <hotels><hotel><id></id></hotel></hotels>
@@ -945,7 +944,7 @@ go
 -- *************************************************************************************************
 create PROC Utilisateur_CanDelete(@data xml=NULL)
 AS
-select T.N.value('id[1]', 'uniqueidentifier') id
+select T.N.value('(id/text())[1]', 'uniqueidentifier') id
 into #data
 from @data.nodes('utilisateurs/utilisateur') as T(N)
 
@@ -956,7 +955,7 @@ GO
 -----------------------------------------------------------------------------------------------------
 Create PROC Hotel_CanDelete(@data xml=NULL)
 AS
-select T.N.value('id[1]', 'uniqueidentifier') id
+select T.N.value('(id/text())[1]', 'uniqueidentifier') id
 into #data
 from @data.nodes('utilisateurs/utilisateur') as T(N)
 
@@ -971,7 +970,7 @@ GO
 -----------------------------------------------------------------------------------------------------
 Create PROC Employe_CanDelete(@data xml=NULL)
 AS
-select T.N.value('id[1]', 'uniqueidentifier') id
+select T.N.value('(id/text())[1]', 'uniqueidentifier') id
 into #data
 from @data.nodes('utilisateurs/utilisateur') as T(N)
 
@@ -982,7 +981,7 @@ GO
 -----------------------------------------------------------------------------------------------------
 CREATE PROC Chambre_CanDelete(@data xml=NULL)
 AS
-select T.N.value('id[1]', 'uniqueidentifier') id
+select T.N.value('(id/text())[1]', 'uniqueidentifier') id
 into #data
 from @data.nodes('utilisateurs/utilisateur') as T(N)
 
@@ -992,7 +991,7 @@ GO
 -----------------------------------------------------------------------------------------------------
 create PROC GroupeChambre_CanDelete(@data xml=NULL)
 AS
-select T.N.value('id[1]', 'uniqueidentifier') id
+select T.N.value('(id/text())[1]', 'uniqueidentifier') id
 into #data
 from @data.nodes('utilisateurs/utilisateur') as T(N)
 
@@ -1002,7 +1001,7 @@ GO
 -----------------------------------------------------------------------------------------------------
 create PROC [dbo].[Intervention_CanDelete](@data xml=NULL)
 AS
-select T.N.value('id[1]', 'uniqueidentifier') id
+select T.N.value('(id/text())[1]', 'uniqueidentifier') id
 into #data
 from @data.nodes('utilisateurs/utilisateur') as T(N)
 

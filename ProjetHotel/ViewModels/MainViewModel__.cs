@@ -25,6 +25,10 @@ namespace Makrisoft.Makfi.ViewModels
                     case ViewEnum.Login: Reference_ViewModel.Login.Load(); break;
                     case ViewEnum.Message: Reference_ViewModel.Message.Load(); break;
                     case ViewEnum.Utilisateur: Reference_ViewModel.Utilisateur.Load(); break;
+                    case ViewEnum.Administration: Reference_ViewModel.Administration.Load(); break;
+                    case ViewEnum.Parametre: Reference_ViewModel.Parametre.Load(); break;
+
+
                 }
                 OnPropertyChanged("ViewSelected");
             }

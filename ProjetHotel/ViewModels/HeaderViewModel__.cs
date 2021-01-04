@@ -22,7 +22,7 @@ namespace Makrisoft.Makfi.ViewModels
             MessageViewCommand = new RelayCommand(p => OnMessageViewCommand(), p => OnCanExecuteMessageViewCommand());
 
             // Utilisateur
-            Utilisateur_Load();
+            Load_Utilisateur();
 
             // Horloge
             HeaderTimer.Elapsed += (s, e) => HorlogeLoop();
@@ -59,57 +59,11 @@ namespace Makrisoft.Makfi.ViewModels
             set
             {
                 currentUtilisateur = value;
-                Message = "";
+                MessageClear();
                 if (currentUtilisateur == null) return;
 
-                if (currentUtilisateur.IsAdmin)
-                {
-                    Hotels = new ObservableCollection<Hotel_VM>(
-                       MakfiData.Read<Hotel>
-                       (
-                           "Hotel_Read",
-                           null,
-                            e =>
-                            {
-                                e.Id = (Guid)MakfiData.Reader["Id"];
-                                e.Nom = MakfiData.Reader["Nom"] as string;
-                                e.Gouvernante = MakfiData.Reader["Gouvernante"] as Guid?;
-                                e.Reception = MakfiData.Reader["Reception"] as Guid?;
-                                e.Commentaire = MakfiData.Reader["Commentaire"] as string;
-                            }
-                           ).Select(x => new Hotel_VM
-                           {
-                               Id = x.Id,
-                               Nom = x.Nom,
-                               Image = $"/Makrisoft.Makfi;component/Assets/hotels/{x.Nom.ToLower()}.png",
-                               Gouvernante = Utilisateurs.Where(u => u.Id == x.Gouvernante).SingleOrDefault()
-                           }));
-                }
-                else
-                {
-                    // Hotel
-                    Hotels = new ObservableCollection<Hotel_VM>(
-                        MakfiData.Read<Hotel>
-                        (
-                            "Hotel_Read",
-                            $"<hotels><gouvernante>{currentUtilisateur.Id}</gouvernante></hotels>",
-                            e =>
-                            {
-                                e.Id = (Guid)MakfiData.Reader["Id"];
-                                e.Nom = MakfiData.Reader["Nom"] as string;
-                                e.Gouvernante = MakfiData.Reader["Gouvernante"] as Guid?;
-                                e.Reception = MakfiData.Reader["Reception"] as Guid?;
-                                e.Commentaire = MakfiData.Reader["Commentaire"] as string;
-                            }
-                            ).Select(x => new Hotel_VM
-                            {
-                                Id = x.Id,
-                                Nom = x.Nom,
-                                Image = $"/Makrisoft.Makfi;component/Assets/hotels/{x.Nom.ToLower()}.png",
-                                Gouvernante = Utilisateurs.Where(u => u.Id == x.Gouvernante).SingleOrDefault()
-                            }));
-                }
-                CurrentHotel = Hotels.FirstOrDefault();
+                Load_Hotel();
+
 
                 if (string.IsNullOrEmpty(CurrentUtilisateur.CodePin))
                 {
@@ -120,6 +74,19 @@ namespace Makrisoft.Makfi.ViewModels
                 OnPropertyChanged("CurrentUtilisateur");
             }
         }
+
+        internal void MessageClear()
+        {
+            MessagerieVisibility = Visibility.Visible;
+            Message = string.Empty;
+        }
+
+        internal void MessageBox(string message)
+        {
+            MessagerieVisibility = Visibility.Hidden;
+            Message = message;
+        }
+
         private Utilisateur_VM currentUtilisateur;
         public bool CanChangeUtilisateur
         {
@@ -294,6 +261,7 @@ namespace Makrisoft.Makfi.ViewModels
         {
             Reference_ViewModel.Main.ViewSelected = ViewEnum.Login;
             CurrentUtilisateur = Utilisateurs.FirstOrDefault(g => g.Nom.ToLower() == Properties.Settings.Default.Login.ToLower());
+            if (CurrentUtilisateur == null) CurrentUtilisateur = Utilisateurs.First();
             CanChangeUtilisateur = true;
             MenuVisibility = Visibility.Hidden;
             MessagesVisibility = Visibility.Visible;
@@ -312,16 +280,20 @@ namespace Makrisoft.Makfi.ViewModels
         private bool OnCanExecuteBackCommand()
         {
             return
+                Reference_ViewModel.Main.ViewSelected == ViewEnum.Administration ||
+                Reference_ViewModel.Main.ViewSelected == ViewEnum.Parametre ||
                 Reference_ViewModel.Main.ViewSelected == ViewEnum.Message ||
                 Reference_ViewModel.Main.ViewSelected == ViewEnum.InterventionAjouter ||
                 (Reference_ViewModel.Main.ViewSelected != ViewEnum.Home && Reference_ViewModel.Main.ViewSelected != ViewEnum.Login)
-                &&
+                 &&
                 (
                     (Reference_ViewModel.Main.ViewSelected == ViewEnum.InterventionDetail && Reference_ViewModel.InterventionDetail.DgSource != null && !Reference_ViewModel.InterventionDetail.DgSource.Any(x => x.SaveColor == "Red")) ||
                     (Reference_ViewModel.Main.ViewSelected == ViewEnum.Intervention && Reference_ViewModel.Intervention.DgSource != null && !Reference_ViewModel.Intervention.DgSource.Any(x => x.SaveColor == "Red")) ||
                     (Reference_ViewModel.Main.ViewSelected == ViewEnum.Employe && Reference_ViewModel.Employe.DgSource != null && !Reference_ViewModel.Employe.DgSource.Any(x => x.SaveColor == "Red")) ||
                     (Reference_ViewModel.Main.ViewSelected == ViewEnum.Chambre && Reference_ViewModel.Chambre.DgSource != null && !Reference_ViewModel.Chambre.DgSource.Any(x => x.SaveColor == "Red")) ||
-                    (Reference_ViewModel.Main.ViewSelected == ViewEnum.Etage && Reference_ViewModel.Etage.DgSource != null && !Reference_ViewModel.Etage.DgSource.Any(x => x.SaveColor == "Red"))
+                    (Reference_ViewModel.Main.ViewSelected == ViewEnum.Etage && Reference_ViewModel.Etage.DgSource != null && !Reference_ViewModel.Etage.DgSource.Any(x => x.SaveColor == "Red")) ||
+                    (Reference_ViewModel.Main.ViewSelected == ViewEnum.Utilisateur && Reference_ViewModel.Utilisateur.DgSource != null && !Reference_ViewModel.Utilisateur.DgSource.Any(x => x.SaveColor == "Red")) ||
+                    (Reference_ViewModel.Main.ViewSelected == ViewEnum.Hotel && Reference_ViewModel.Hotel.DgSource != null && !Reference_ViewModel.Hotel.DgSource.Any(x => x.SaveColor == "Red"))
                 );
         }
         private bool OnCanExecuteDeconnectCommand()
@@ -331,10 +303,10 @@ namespace Makrisoft.Makfi.ViewModels
         #endregion
 
         #region Load
-        public void Utilisateur_Load()
+        public void Load_Utilisateur()
         {
             Utilisateurs = new ObservableCollection<Utilisateur_VM>(
-               MakfiData.Read<Utilisateur>(
+               MakfiData.Crud<Utilisateur>(
                    "Utilisateur_Read",
                    null,
                     e =>
@@ -355,12 +327,38 @@ namespace Makrisoft.Makfi.ViewModels
                    SaveColor = "Navy"
                }));
             if (MakfiData.Erreur != string.Empty)
-                MessageBox.Show(MakfiData.Erreur, "HeaderViewModel.Utilisateur_Load");
+                System.Windows.MessageBox.Show(MakfiData.Erreur, "HeaderViewModel.Utilisateur_Load");
             if (Utilisateurs.Count == 1) CurrentUtilisateur = Utilisateurs[0];
             if (CurrentUtilisateur == null)
                 CurrentUtilisateur = Utilisateurs.FirstOrDefault(g => g.Nom.ToUpper() == Properties.Settings.Default.Login.ToUpper());
             if (CurrentUtilisateur == null) CurrentUtilisateur = Utilisateurs.FirstOrDefault(u => u.Statut == RoleEnum.Gouvernante);
             if (CurrentUtilisateur == null) CurrentUtilisateur = Utilisateurs.FirstOrDefault();
+        }
+
+        public void Load_Hotel()
+        {
+            Hotels = new ObservableCollection<Hotel_VM>(
+               MakfiData.Crud<Hotel>
+               (
+                   "Hotel_Read",
+                   currentUtilisateur.IsAdmin ? null : $"<hotels><gouvernante>{currentUtilisateur.Id}</gouvernante></hotels>",
+                    e =>
+                    {
+                        e.Id = (Guid)MakfiData.Reader["Id"];
+                        e.Nom = MakfiData.Reader["Nom"] as string;
+                        e.Gouvernante = MakfiData.Reader["Gouvernante"] as Guid?;
+                        e.Reception = MakfiData.Reader["Reception"] as Guid?;
+                        e.Commentaire = MakfiData.Reader["Commentaire"] as string;
+                    })
+                .Select(x => new Hotel_VM
+                {
+                    Id = x.Id,
+                    Nom = x.Nom,
+                    Image = $"/Makrisoft.Makfi;component/Assets/hotels/{x.Nom.ToLower()}.png",
+                    Gouvernante = Utilisateurs.Where(u => u.Id == x.Gouvernante).SingleOrDefault()
+                }));
+
+            CurrentHotel = Hotels.FirstOrDefault();
         }
         #endregion
 

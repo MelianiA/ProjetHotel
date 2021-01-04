@@ -29,7 +29,7 @@ namespace Makrisoft.Makfi.ViewModels
         #region DgSource
         public override IEnumerable<Employe_VM> DgSource_Read()
         {
-            return MakfiData.Read<Employe>
+            return MakfiData.Crud<Employe>
                 (
                     "Employe_Read",
                     $"<employes><hotel>{Reference_ViewModel.Header.CurrentHotel.Id}</hotel></employes>",

@@ -31,7 +31,7 @@ namespace Makrisoft.Makfi.ViewModels
             if (CurrentIntervention != null)
             {
                 return MakfiData
-                    .Read<InterventionDetail>(
+                    .Crud<InterventionDetail>(
                     "InterventionDetail_Read",
                     $@"
                         <interventionDetails>
@@ -59,7 +59,7 @@ namespace Makrisoft.Makfi.ViewModels
             else if (CurrentEtage != null && CurrentEmploye != null)
             {
                 var interDetails = new List<InterventionDetail_VM>();
-                var chambres = MakfiData.Read<Chambre>
+                var chambres = MakfiData.Crud<Chambre>
                     (
                     "Chambre_Read",
                     $"<chambres><hotel>{Reference_ViewModel.Header.CurrentHotel.Id}</hotel><groupeChambre>{CurrentEtage.Id}</groupeChambre></chambres>",
@@ -68,7 +68,6 @@ namespace Makrisoft.Makfi.ViewModels
                         e.Id = (Guid)MakfiData.Reader["Id"];
                         e.Nom = MakfiData.Reader["Nom"] as string;
                         e.Etat = (Guid)MakfiData.Reader["Etat"];
-                        e.Etage = MakfiData.Reader["GroupeChambre"] as Guid?;
                         e.Commentaire = MakfiData.Reader["Commentaire"] as string;
                     });
                 foreach (var chambre in chambres)

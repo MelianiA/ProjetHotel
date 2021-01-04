@@ -1,12 +1,8 @@
 ﻿using Makrisoft.Makfi.Dal;
 using Makrisoft.Makfi.Models;
-using Makrisoft.Makfi.Tools;
 using System;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Windows;
-using System.Windows.Data;
-using System.Windows.Input;
 
 namespace Makrisoft.Makfi.ViewModels
 {
@@ -46,11 +42,14 @@ namespace Makrisoft.Makfi.ViewModels
         #endregion
 
         #region Load
-
+        public override void Load()
+        {
+            base.Load();
+        }
         public void Load_Parametres()
         {
             var infoList = new ObservableCollection<Info_VM>(
-             MakfiData.Read<Info>(
+             MakfiData.Crud<Info>(
                  "Info_Read",
                  null,
                 e =>

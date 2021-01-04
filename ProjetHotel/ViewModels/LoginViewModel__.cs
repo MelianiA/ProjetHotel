@@ -29,15 +29,8 @@ namespace Makrisoft.Makfi.ViewModels
         // Méthode
         private void OnLoginKeyCommand(object key)
         {
-            if (Reference_ViewModel.Header.CurrentUtilisateur == null)
-            {
-                Reference_ViewModel.Header.MessagerieVisibility = Visibility.Hidden;
-                Reference_ViewModel.Header.Message = "Redémarrage nécessaire";
-                return;
-            }
-            if (Reference_ViewModel.Home != null)
-                Reference_ViewModel.Home.WithHotel = Reference_ViewModel.Header.CurrentHotel != null;
-
+ 
+ 
             Password += key.ToString();
             if (Password.Length == 4)
             {
@@ -52,8 +45,8 @@ namespace Makrisoft.Makfi.ViewModels
                                     <nom>{Reference_ViewModel.Header.CurrentUtilisateur.Nom}</nom>
                                     <codePin>{Reference_ViewModel.Header.CurrentUtilisateur.CodePin}</codePin>
                                     <statut>{(byte)Reference_ViewModel.Header.CurrentUtilisateur.Statut}</statut>
-                                </utilisateur></utilisateur>";
-                    var ids = MakfiData.Save<Utilisateur>("Utilisateur_Save", param);
+                                </utilisateur></utilisateurs>";
+                    var ids = MakfiData.Crud<Utilisateur>("Utilisateur_Save", param);
                     if (ids.Count == 0) throw new Exception("Rien n'a été sauvgardé ! ");
                     Reference_ViewModel.Header.Message = "";
                 }
@@ -68,7 +61,6 @@ namespace Makrisoft.Makfi.ViewModels
                 {
                     if (Password == Reference_ViewModel.Header.CurrentUtilisateur.CodePin)
                     {
-                        Reference_ViewModel.Header.MessagerieVisibility = Visibility.Visible;
                         Reference_ViewModel.Main.ViewSelected = ViewEnum.Home;
                         Reference_ViewModel.Header.CanChangeUtilisateur = false;
                         Reference_ViewModel.Home.IsAdmin = Reference_ViewModel.Header.CurrentUtilisateur.IsAdmin;
@@ -87,11 +79,11 @@ namespace Makrisoft.Makfi.ViewModels
 
         #endregion
 
-
         #region Load
         public override void Load()
         {
-            Reference_ViewModel.Header.Utilisateur_Load();
+            base.Load();
+            Reference_ViewModel.Header.Load_Utilisateur();
         }
         #endregion
     }

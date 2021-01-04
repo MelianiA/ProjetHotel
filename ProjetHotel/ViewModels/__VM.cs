@@ -7,7 +7,6 @@ namespace Makrisoft.Makfi.ViewModels
 {
     public class Chambre_VM : ViewModelBase
     {
-        public Guid? Etage { get; set; }
         public string Nom
         {
             get { return nom; }
@@ -55,7 +54,6 @@ namespace Makrisoft.Makfi.ViewModels
     }
     public class Employe_VM : ViewModelBase
     {
-        public Guid? Id { get; set; }
         public Etat_VM Etat
         {
             get { return etat; }
@@ -101,9 +99,8 @@ namespace Makrisoft.Makfi.ViewModels
         }
         private string commentaire;
     }
-    public class Etat_VM
+    public class Etat_VM : ViewModelBase
     {
-        public Guid? Id { get; set; }
         public string Icone { get; set; }
         public string Libelle { get; set; }
         public string Couleur { get; set; }
@@ -113,7 +110,6 @@ namespace Makrisoft.Makfi.ViewModels
     }
     public class Hotel_VM : ViewModelBase
     {
-        public Guid? Id { get; set; }
         public string Nom
         {
             get { return nom; }
@@ -172,15 +168,7 @@ namespace Makrisoft.Makfi.ViewModels
     }
     public class Utilisateur_VM : ViewModelBase
     {
-        public Guid? Id
-        {
-            get
-            {
-                return id;
-            }
-            set { id = value; }
-        }
-        private Guid? id;
+
 
         public string Nom
         {
@@ -246,7 +234,6 @@ namespace Makrisoft.Makfi.ViewModels
     }
     public class Etage_VM : ViewModelBase
     {
-        public Guid? Id;
         public string Nom
         {
             get { return nom; }
@@ -328,7 +315,6 @@ namespace Makrisoft.Makfi.ViewModels
     }
     public class Intervention_VM : ViewModelBase
     {
-        public Guid? Id { get; set; }
         public string Libelle
         {
             get { return libelle; }
@@ -359,9 +345,9 @@ namespace Makrisoft.Makfi.ViewModels
             set
             {
                 date1 = value;
-                if (libelle!=null && libelle.EndsWith(Properties.Settings.Default.Autocar))
+                if (libelle != null && libelle.EndsWith(Properties.Settings.Default.Autocar))
                     Libelle = $"Intervention du {date1.ToShortDateString()}{Properties.Settings.Default.Autocar}";
-                
+
                 SaveColor = "Red";
                 OnPropertyChanged("Date1");
             }
@@ -395,7 +381,6 @@ namespace Makrisoft.Makfi.ViewModels
     }
     public class InterventionDetail_VM : ViewModelBase
     {
-        public Guid? Id { get; set; }
 
         public string Libelle
         {
@@ -458,9 +443,8 @@ namespace Makrisoft.Makfi.ViewModels
         }
         private string commentaire;
     }
-    public class Message_VM  : ViewModelBase
+    public class Message_VM : ViewModelBase
     {
-        public Guid? Id;
         public Guid? IdHisto;
         public string Libelle
         {
@@ -534,9 +518,8 @@ namespace Makrisoft.Makfi.ViewModels
         }
         private string objet;
     }
-    public class Info_VM
+    public class Info_VM : ViewModelBase
     {
-        public Guid? Id;
         public string Cle { get; set; }
         public string Valeur { get; set; }
 

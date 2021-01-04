@@ -46,7 +46,7 @@ namespace Makrisoft.Makfi.ViewModels
         public override IEnumerable<InterventionDetail_VM> DgSource_Read()
         {
             if (Reference_ViewModel.Intervention.CurrentDgSource == null) return null;
-            return MakfiData.Read<InterventionDetail>(
+            return MakfiData.Crud<InterventionDetail>(
                 "InterventionDetail_Read",
                 $"<interventionDetails><intervention>{Reference_ViewModel.Intervention.CurrentDgSource.Id}</intervention></interventionDetails>",
                 e =>
@@ -81,7 +81,7 @@ namespace Makrisoft.Makfi.ViewModels
                                 <etat>{CurrentDgSource.Etat.Id}</etat> 
                             </interventionDetail>
                         </interventionDetails>";
-            var ids = MakfiData.Save<InterventionDetail>("InterventionDetail_Save", param);
+            var ids = MakfiData.Crud<InterventionDetail>("InterventionDetail_Save", param);
 
             if (ids.Count == 0) throw new Exception("InterventionDetailViewModel.DgSource_Save:1");
             CurrentDgSource.Id = ids[0].Id;
@@ -98,7 +98,7 @@ namespace Makrisoft.Makfi.ViewModels
                         <etat>{SommeEtat().Id}</etat> 
                      </intervention></interventions>";
 
-            var ids2 = MakfiData.Save<Intervention>("Intervention_Save", param);
+            var ids2 = MakfiData.Crud<Intervention>("Intervention_Save", param);
 
             if (ids2.Count == 0) throw new Exception("InterventionDetailViewModel.DgSource_Save:2");
         }
@@ -142,7 +142,7 @@ namespace Makrisoft.Makfi.ViewModels
         {
             if (CurrentDgSource.Id != null)
             {
-                MakfiData.Delete(
+                MakfiData.Crud<Intervention>(
                     "InterventionDetail_Delete", 
                     $"<interventionDetails><interventionDetail><id>{CurrentDgSource.Id}</id></interventionDetail></interventionDetails>");
             }
@@ -160,7 +160,7 @@ namespace Makrisoft.Makfi.ViewModels
                         <etat>{SommeEtat().Id}</etat> 
                      </intervention></interventions>";
 
-            var ids2 = MakfiData.Save<Intervention>("Intervention_Save", spParam);
+            var ids2 = MakfiData.Crud<Intervention>("Intervention_Save", spParam);
 
             if (ids2.Count == 0) throw new Exception("InterventionDetailViewModel.DgSource_Save:2");
         }
@@ -186,7 +186,7 @@ namespace Makrisoft.Makfi.ViewModels
                     </interventionDetail>
                     "))
                 + "</interventionDetails>";
-            var ids = MakfiData.Save<InterventionDetail>("InterventionDetail_Save", param);
+            var ids = MakfiData.Crud<InterventionDetail>("InterventionDetail_Save", param);
 
             if (ids.Count == 0) throw new Exception("InterventionDetailViewModel.OnSaveAllCommand");
             ids = ids.Where(x => x.Insere).ToList();
@@ -212,7 +212,7 @@ namespace Makrisoft.Makfi.ViewModels
                         <etat>{SommeEtat().Id}</etat> 
                      </intervention></interventions>";
 
-            var ids2 = MakfiData.Save<Intervention>("Intervention_Save", param);
+            var ids2 = MakfiData.Crud<Intervention>("Intervention_Save", param);
 
             if (ids2.Count == 0) throw new Exception("InterventionDetailViewModel.DgSource_Save:2");
         }
@@ -220,7 +220,7 @@ namespace Makrisoft.Makfi.ViewModels
         private void OnDeleteAllCommand()
         {
             DgSource.Clear();
-            MakfiData.Delete(
+            MakfiData.Crud<InterventionDetail>(
                 "InterventionDetail_Delete", 
                 $"<interventionDetails><interventions><id>{Reference_ViewModel.Intervention.CurrentDgSource.Id}</id></interventions></interventionDetails>");
 
@@ -236,7 +236,7 @@ namespace Makrisoft.Makfi.ViewModels
                         <etat>{SommeEtat().Id}</etat> 
                       </intervention></interventions>";
 
-            var ids2 = MakfiData.Save<Intervention>("Intervention_Save", param);
+            var ids2 = MakfiData.Crud<Intervention>("Intervention_Save", param);
 
             if (ids2.Count == 0) throw new Exception("InterventionDetailViewModel.OnDeleteAllCommand");
 

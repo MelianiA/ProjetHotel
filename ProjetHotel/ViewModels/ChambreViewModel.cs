@@ -25,7 +25,7 @@ namespace Makrisoft.Makfi.ViewModels
         #region DgSource
         public override IEnumerable<Chambre_VM> DgSource_Read()
         {
-            return MakfiData.Read<Chambre>
+            return MakfiData.Crud<Chambre>
                 (
                 "Chambre_Read",
                 $"<chambres><hotel>{Reference_ViewModel.Header.CurrentHotel.Id}</hotel></chambres>",
@@ -34,7 +34,6 @@ namespace Makrisoft.Makfi.ViewModels
                     e.Id = (Guid)MakfiData.Reader["Id"];
                     e.Nom = MakfiData.Reader["Nom"] as string;
                     e.Etat = (Guid)MakfiData.Reader["Etat"];
-                    e.Etage = MakfiData.Reader["GroupeChambre"] as Guid?;
                     e.Commentaire = MakfiData.Reader["Commentaire"] as string;
                 })
                 .Select(x => new Chambre_VM
@@ -43,7 +42,6 @@ namespace Makrisoft.Makfi.ViewModels
                     Nom = x.Nom,
                     Etat = MakfiData.Etats.Where(e => e.Id == x.Etat).Single(),
                     Commentaire = x.Commentaire,
-                    Etage = x.Etage,
                     SaveColor = "Navy"
                 });
         }
@@ -63,8 +61,8 @@ namespace Makrisoft.Makfi.ViewModels
         public override bool DgSource_Filter(object item)
         {
             var chambre = (Chambre_VM)item;
-            return (FilterEtage == null || (chambre.Etage != null && Etages.Any(e => chambre.Etage.Value == FilterEtage.Id))) &&
-                   (FilterEtat == null || Etats.Any(e => chambre.Etat.Id == FilterEtat.Id));
+            return (FilterEtage == null || FilterEtage.Chambres.Any(e =>e.Id == chambre.Id)) &&
+                   (FilterEtat == null  || Etats.Any(e => chambre.Etat.Id == FilterEtat.Id));
         }
 
         #endregion

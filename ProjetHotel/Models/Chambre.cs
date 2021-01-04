@@ -10,7 +10,6 @@ namespace Makrisoft.Makfi.Models
     {
         public string Nom;
         public Guid Etat;
-        public Guid? Etage;
         public string Commentaire;
         public Hotel Hotel;
     }

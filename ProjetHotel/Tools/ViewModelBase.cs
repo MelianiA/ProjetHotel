@@ -1,6 +1,7 @@
 ﻿using Makrisoft.Makfi.Dal;
 using System;
 using System.ComponentModel;
+using System.Windows;
 
 namespace Makrisoft.Makfi.ViewModels
 {
@@ -35,8 +36,23 @@ namespace Makrisoft.Makfi.ViewModels
             }
         }
         private string saveColor = "Navy";
-        public Guid? Id { get; set; }
-        public virtual void Load() { }
+
+        public Guid? Id
+        {
+            get { return id; }
+            set
+            {
+                id = value;
+                OnPropertyChanged("Id");
+            }
+        }
+        private Guid? id;
+
+
+        public virtual void Load()
+        {
+            Reference_ViewModel.Header.MessageClear();
+        }
 
         #endregion
     }

@@ -283,8 +283,8 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Assets\hotels\hotel.png" />
-    <Resource Include="Assets\hotels\IbisBudget.png" />
-    <Resource Include="Assets\hotels\IbisStyle.png" />
+    <Resource Include="Assets\hotels\Ibis Budget.png" />
+    <Resource Include="Assets\hotels\Ibis Style.png" />
     <Resource Include="Assets\photos\ali.makri.png" />
     <Resource Include="Assets\photos\lopez.png" />
     <Resource Include="Assets\photos\traore.png" />

@@ -57,6 +57,7 @@ namespace Makrisoft.Makfi.ViewModels
             {
                 currentDgSource = value;
                 IsModifierEnabled = currentDgSource != null;
+                Reference_ViewModel.Header.MessageClear();
                 DgSource_Change();
                 OnPropertyChanged("CurrentDgSource");
             }
@@ -229,7 +230,7 @@ namespace Makrisoft.Makfi.ViewModels
                 if (FilterEtage != null)
                 {
                     filterEtage.Chambres = new ObservableCollection<Chambre_VM>(
-                        MakfiData.Read<Chambre>(
+                        MakfiData.Crud<Chambre>(
                             "Chambre_Read",
                             $"<chambres><hotel>{Reference_ViewModel.Header.CurrentHotel.Id}</hotel><groupeChambre>{filterEtage.Id}</groupeChambre></chambres>",
                             e =>
@@ -237,7 +238,6 @@ namespace Makrisoft.Makfi.ViewModels
                                 e.Id = (Guid)MakfiData.Reader["Id"];
                                 e.Nom = MakfiData.Reader["Nom"] as string;
                                 e.Etat = (Guid)MakfiData.Reader["Etat"];
-                                e.Etage = MakfiData.Reader["GroupeChambre"] as Guid?;
                                 e.Commentaire = MakfiData.Reader["Commentaire"] as string;
                             })
                             .Select(x => new Chambre_VM
@@ -306,27 +306,31 @@ namespace Makrisoft.Makfi.ViewModels
         public ICommand ChangeViewCommand { get; set; }
 
         // Méthodes OnCommand
-        public void OnSaveCommand<T>() where T : Modele, new()
+        public virtual void OnSaveCommand<T>() where T : Modele, new()
         {
             DgSource_Save(null, null);
-            DgSourceCollectionView.Refresh();
+            //DgSourceCollectionView.Refresh();
         }
         public virtual void OnAddCommand() { }
         public virtual void OnDeleteCommand(string spName, string spParam)
         {
-            var canDeletes = MakfiData.CanDelete(
-                spName.Replace("_Delete","_CanDelete"), 
-                spParam);
-            if (MakfiData.Erreur == string.Empty && canDeletes.Count() == 0)
+            var canDeletes = MakfiData.CanDelete( spName.Replace("_Delete", "_CanDelete"), spParam);
+            if (MakfiData.Erreur == string.Empty)
             {
-                var param = MakfiData.Delete(spName, spParam);
-                if (MakfiData.Erreur == string.Empty && param)
+                if (canDeletes.Count() != 0)
+                {
+                    Reference_ViewModel.Header.MessageBox($"Suppression impossible !");
+                    return;
+                }
+                var ids = MakfiData.Crud<M>(spName, spParam);
+                if (ids.Count == 0) throw new Exception($"{spName.Replace("_Delete", "ViewModel")}.OnDeleteCommand");
+                if (MakfiData.Erreur == string.Empty)
                 {
                     DgSource.Remove(CurrentDgSource);
                     return;
                 }
             }
-            MessageBox.Show($"{MakfiData.Erreur}{Environment.NewLine}{spParam}", spName);
+            MessageBox.Show($"{MakfiData.Erreur}{Environment.NewLine}{spParam}");
         }
 
         public virtual void OnFilterClearCommand()
@@ -354,7 +358,7 @@ namespace Makrisoft.Makfi.ViewModels
         public override void Load()
         {
             // Divers
-            Reference_ViewModel.Header.MessagesVisibility = this is MessageViewModel ? Visibility.Hidden: Visibility.Visible;
+            Reference_ViewModel.Header.MessagesVisibility = this is MessageViewModel ? Visibility.Hidden : Visibility.Visible;
             RetourIntervention = false;
 
             // Load
@@ -375,7 +379,7 @@ namespace Makrisoft.Makfi.ViewModels
         private void Load_Employes(string spName, string spParam)
         {
             var items = MakfiData
-                .Read<Employe>(
+                .Crud<Employe>(
                     spName,
                     spParam,
                     e =>
@@ -405,7 +409,7 @@ namespace Makrisoft.Makfi.ViewModels
         }
         private void Load_Chambres(string spName, string spParam)
         {
-            var items = MakfiData.Read<Chambre>(
+            var items = MakfiData.Crud<Chambre>(
                 spName,
                 spParam,
                 e =>
@@ -413,7 +417,6 @@ namespace Makrisoft.Makfi.ViewModels
                     e.Id = (Guid)MakfiData.Reader["Id"];
                     e.Nom = MakfiData.Reader["Nom"] as string;
                     e.Etat = (Guid)MakfiData.Reader["Etat"];
-                    e.Etage = MakfiData.Reader["GroupeChambre"] as Guid?;
                     e.Commentaire = MakfiData.Reader["Commentaire"] as string;
                 })
                 .Select(x => new Chambre_VM
@@ -435,7 +438,7 @@ namespace Makrisoft.Makfi.ViewModels
         }
         private void Load_Etages(string spName, string spParam)
         {
-            var items = MakfiData.Read<Etage>(
+            var items = MakfiData.Crud<Etage>(
                 spName,
                 spParam,
                 e =>
@@ -473,7 +476,7 @@ namespace Makrisoft.Makfi.ViewModels
         }
         private void Load_Interventions(string spName, string spParam)
         {
-            var items = MakfiData.Read<Intervention>(
+            var items = MakfiData.Crud<Intervention>(
                 spName,
                 spParam,
                 e =>
@@ -508,7 +511,7 @@ namespace Makrisoft.Makfi.ViewModels
         private void Load_Utilisateurs(string spName, string spParam)
         {
             var items = new ObservableCollection<Utilisateur_VM>(
-                MakfiData.Read<Utilisateur>(
+                MakfiData.Crud<Utilisateur>(
                    spName,
                    spParam,
                     e =>
@@ -539,7 +542,7 @@ namespace Makrisoft.Makfi.ViewModels
         private void Load_Gouvernantes(string spName, string spParam)
         {
             var items = new ObservableCollection<Utilisateur_VM>(
-                MakfiData.Read<Utilisateur>(
+                MakfiData.Crud<Utilisateur>(
                    spName,
                    spParam,
                     e =>
@@ -570,7 +573,7 @@ namespace Makrisoft.Makfi.ViewModels
         private void Load_Receptions(string spName, string spParam)
         {
             var items = new ObservableCollection<Utilisateur_VM>(
-                MakfiData.Read<Utilisateur>(
+                MakfiData.Crud<Utilisateur>(
                    spName,
                    spParam,
                     e =>
@@ -601,7 +604,7 @@ namespace Makrisoft.Makfi.ViewModels
         }
         private void Load_Messages(string spName, string spParam)
         {
-            var items = new ObservableCollection<Message_VM>(MakfiData.Read<Message>(
+            var items = new ObservableCollection<Message_VM>(MakfiData.Crud<Message>(
                  spName,
                 spParam,
                 e =>
@@ -643,7 +646,7 @@ namespace Makrisoft.Makfi.ViewModels
         public virtual IEnumerable<VM> DgSource_Read() { return null; }
         public virtual void DgSource_Save(string spName, string spParam)
         {
-            var ids = MakfiData.Save<M>(spName, spParam);
+            var ids = MakfiData.Crud<M>(spName, spParam);
             if (ids.Count == 0) throw new Exception($"{spName.Replace("_Save", "ViewModel")}.DgSource_Save");
             CurrentDgSource.Id = ids[0].Id;
             CurrentDgSource.SaveColor = "Navy";
