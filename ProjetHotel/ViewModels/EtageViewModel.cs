@@ -56,51 +56,12 @@ namespace Makrisoft.Makfi.ViewModels
                     e.Nom = MakfiData.Reader["Nom"] as string;
                     e.Commentaire = MakfiData.Reader["Commentaire"] as string;
                 })
-              .Select(x => new Etage_VM
-              {
-                  Id = x.Id,
-                  Nom = x.Nom,
-                  Commentaire = x.Commentaire,
-                  SaveColor = "Navy",
-                  Chambres = new ObservableCollection<Chambre_VM>(
-                      MakfiData.Crud<Chambre>(
-                            "Chambre_Read",
-                            $"<chambres><hotel>{Reference_ViewModel.Header.CurrentHotel.Id}</hotel><groupeChambre>{x.Id}</groupeChambre></chambres>",
-                            e =>
-                            {
-                                e.Id = (Guid)MakfiData.Reader["Id"];
-                                e.Nom = MakfiData.Reader["Nom"] as string;
-                                e.Etat = (Guid)MakfiData.Reader["Etat"];
-                                e.Commentaire = MakfiData.Reader["Commentaire"] as string;
-                            })
-                  .Select(c => new Chambre_VM
-                  {
-                      Id = c.Id,
-                      Nom = c.Nom,
-                  })),
-                  AutresChambres = new ObservableCollection<Chambre_VM>(
-                      MakfiData.Crud<Chambre>(
-                          "Chambre_Read",
-                          $"<chambres><hotel>{Reference_ViewModel.Header.CurrentHotel.Id}</hotel><notGroupeChambre>{x.Id}</notGroupeChambre></chambres>",
-                          e =>
-                          {
-                              e.Id = (Guid)MakfiData.Reader["Id"];
-                              e.Nom = MakfiData.Reader["Nom"] as string;
-                              e.Etat = (Guid)MakfiData.Reader["Etat"];
-                              e.Commentaire = MakfiData.Reader["Commentaire"] as string;
-                          })
-                          .Select(c => new Chambre_VM
-                          {
-                              Id = c.Id,
-                              Nom = c.Nom,
-                          }))
-              });
+              .Select(x => new Etage_VM(x));
             return etages;
         }
 
-        public override void DgSource_Save(string spName, string spParam) 
+        public override void DgSource_Save(string spName, string spParam)
         {
-            Iciiiii !!!
             base.DgSource_Save(
                 "GroupeChambre_Save",
                 $@"
@@ -122,7 +83,7 @@ namespace Makrisoft.Makfi.ViewModels
                 Id = null,
                 Nom = "( A définir !)",
                 Chambres = new ObservableCollection<Chambre_VM>(),
-                AutresChambres = new ObservableCollection<Chambre_VM>()
+                AutresChambres = new ObservableCollection<Chambre_VM>(Chambres)
             };
             DgSource.Add(CurrentDgSource);
         }

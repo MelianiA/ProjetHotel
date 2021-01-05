@@ -61,8 +61,8 @@ namespace Makrisoft.Makfi.ViewModels
         public override bool DgSource_Filter(object item)
         {
             var chambre = (Chambre_VM)item;
-            return (FilterEtage == null || FilterEtage.Chambres.Any(e =>e.Id == chambre.Id)) &&
-                   (FilterEtat == null  || Etats.Any(e => chambre.Etat.Id == FilterEtat.Id));
+            return (FilterEtage == null || FilterEtage.Chambres.Any(e => e.Id == chambre.Id)) &&
+                   (FilterEtat == null || Etats.Any(e => chambre.Etat.Id == FilterEtat.Id));
         }
 
         #endregion
@@ -88,7 +88,10 @@ namespace Makrisoft.Makfi.ViewModels
         {
             Reference_ViewModel.Main.ViewSelected = ViewEnum.Etage;
         }
-        public override bool OnCanExecuteChangeView() { return true; }
+        public override bool OnCanExecuteChangeView()
+        {
+            return !DgSource.Any(x => x.SaveColor == "Red");
+        }
 
         #endregion
     }

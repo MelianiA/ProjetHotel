@@ -294,6 +294,7 @@
     <Folder Include="Assets\chambres\" />
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="Doc\Version.txt" />
     <Resource Include="Doc\MakfiDB.png" />
     <Resource Include="Doc\Manuel.txt" />
     <Resource Include="Assets\photos\Ziani.png" />

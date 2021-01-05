@@ -21,8 +21,14 @@ DECLARE @notGroupeChambre uniqueidentifier=NULL
 select 
 	@hotel            = T.N.value('hotel[1]',            'uniqueidentifier'),
 	@groupeChambre    = T.N.value('groupeChambre[1]',    'uniqueidentifier'),
-	@notGroupeChambre = T.N.value('notGroupeChambre[1]', 'uniqueidentifier') 
+	@notGroupeChambre = T.N.value('notChambres[1]', 'uniqueidentifier') 
 from @data.nodes('chambres') as T(N)
+
+select T.N.value('(./chambre/text())[1]', 'uniqueidentifier') chambre 
+into #data 
+from @data.nodes('chambres/notChambres') as T(N)
+
+select * from #data
 
 --CAS 1 : <chambres><hotel>@hotel</hotel><groupeChambre>@groupeChambre</groupeChambre></chambres>
 IF @groupeChambre is not null
@@ -35,7 +41,7 @@ ELSE IF @notGroupeChambre is not null
 	select c.Id,c.Nom,c.Etat,c.Commentaire, cgc.GroupeChambre from Chambre c
 	left outer join ChambreGroupeChambre cgc on cgc.Chambre=c.Id
 	left outer join GroupeChambre gc on cgc.GroupeChambre=gc.Id
-	where (@hotel is null or c.Hotel=@hotel) and (gc.Id is null or gc.Id<>@notGroupeChambre)
+	where (@hotel is null or c.Hotel=@hotel) and (@notGroupeChambre is null or c.Id not in(select chambre from #data))
 --CAS 3 : <chambres><hotel>@hotel</hotel></chambres>
 ELSE
 	Select c.Id,Nom,Etat,Commentaire, null GroupeChambre  
@@ -295,7 +301,7 @@ BEGIN CATCH
 	RETURN;
 END CATCH
 
--- TABLES ANNEXES : HotelEmploye
+-- TABLE ANNEXE : HotelEmploye
 delete HotelEmploye from HotelEmploye he inner join #data d on he.Employe = d.Id and he.Hotel=d.hotel
 insert HotelEmploye (Hotel, Employe) select Hotel, Id from @iDS
 
@@ -303,7 +309,19 @@ insert HotelEmploye (Hotel, Employe) select Hotel, Id from @iDS
 select Id, insere,hotel from @IDs
 GO
 ----------------------------------------------------------------------------------------------------------
-CREATE PROC GroupeChambre_Save(@data xml=NULL)
+-- CAS 1
+--  <groupeChambres><groupeChambre>
+--  	<id>}</id>
+--  	<nom></nom>
+--  	<hotel></hotel>
+--  	<chambres>
+--        <chambre></chambre>
+--        ...
+--        <chambre></chambre>
+--      </chambres>
+--  	<commentaire></commentaire>    
+--  </groupeChambre></groupeChambres>
+CREATE PROC Test(@data xml=NULL)
 AS
 -- DECLARE
 DECLARE @IDs TABLE(ID uniqueidentifier, insere bit);
@@ -315,7 +333,28 @@ select
 	T.N.value('(./hotel/text())[1]', 'uniqueidentifier') hotel, 
 	T.N.value('(./nom/text())[1]', 'nvarchar(MAX)') Nom, 
 	T.N.value('(./commentaire/text())[1]', 'nvarchar(MAX)') Commentaire
-into #data
+from @data.nodes('groupeChambres/groupeChambre') as T(N)
+
+select 
+	T.N.value('(../../id/text())[1]', 'uniqueidentifier') GroupeChambre, 
+	T.N.value('(./text())[1]', 'nvarchar(MAX)') Chambre
+from @data.nodes('groupeChambres/groupeChambre/chambres/chambre') as T(N)
+GO
+----------------------------------------------------------------------------------------------------------
+CREATE PROC GroupeChambre_Save(@data xml=NULL)
+AS
+-- DECLARE
+DECLARE @IDs TABLE(ID uniqueidentifier, insere bit);
+DECLARE @message nvarchar(MAX)
+DECLARE @id uniqueidentifier
+
+-- #DATA1
+select 
+	T.N.value('(./id/text())[1]', 'uniqueidentifier') Id, 
+	T.N.value('(./hotel/text())[1]', 'uniqueidentifier') hotel, 
+	T.N.value('(./nom/text())[1]', 'nvarchar(MAX)') Nom, 
+	T.N.value('(./commentaire/text())[1]', 'nvarchar(MAX)') Commentaire
+into #data1
 from @data.nodes('groupeChambres/groupeChambre') as T(N)
 
 -- CAS 1
@@ -334,7 +373,7 @@ from @data.nodes('groupeChambres/groupeChambre') as T(N)
 -- UPDATE
 BEGIN TRY
 	merge into GroupeChambre
-	using (select Id, Nom, Commentaire, Hotel from #data) t
+	using (select Id, Nom, Commentaire, Hotel from #data1) t
 	on GroupeChambre.Id=t.Id
 		when matched then
 		update set 
@@ -352,7 +391,7 @@ END CATCH
 -- INSERT
 BEGIN TRY
 	merge into GroupeChambre 
-	using (select Nom, hotel, Commentaire from #data where Id is null) as t
+	using (select Nom, hotel, Commentaire from #data1 where Id is null) as t
 	on 1=0
 		when not matched then
 		insert (Nom, hotel, Commentaire) 
@@ -364,6 +403,16 @@ BEGIN CATCH
 	RAISERROR (@message, 16, 1);  
 	RETURN;
 END CATCH
+
+-- #DATA2 : ChambreGroupeChambre
+select @id = id from @IDs
+select 
+	T.N.value('(../../id/text())[1]', 'uniqueidentifier') GroupeChambre, 
+	T.N.value('(./text())[1]', 'nvarchar(MAX)') Chambre
+into #data2
+from @data.nodes('groupeChambres/groupeChambre/chambres/chambre') as T(N)
+delete ChambreGroupeChambre where GroupeChambre=@id
+insert ChambreGroupeChambre (GroupeChambre, Chambre) select @id, chambre from #data2
 
 -- RETURN
 select Id, insere from @IDs
@@ -811,9 +860,9 @@ DECLARE @message nvarchar(MAX)
 
 -- #DATA
 select 
-		T.N.value('(id/text())[1]', 'uniqueidentifier') id
+	T.N.value('(id/text())[1]', 'uniqueidentifier') id
 into #data	
-from @data.nodes('utilisateurs/utilisateur') as T(N)
+from @data.nodes('chambres/chambre') as T(N)
 
 -- CAS 1
 -- <chambres><chambre><id></id></chambre></chambres>

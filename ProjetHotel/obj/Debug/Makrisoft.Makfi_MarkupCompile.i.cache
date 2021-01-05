@@ -4,16 +4,16 @@
 winexe
 C#
 .cs
-C:\Users\alyf\Source\Repos\meliania\ProjetHotel\ProjetHotel\obj\Debug\
+D:\ProjetHotel\ProjetHotel\obj\Debug\
 Makrisoft.Makfi
 none
 false
 TRACE;DEBUG;PASSEDROIT
-C:\Users\alyf\Source\Repos\meliania\ProjetHotel\ProjetHotel\App.xaml
+D:\ProjetHotel\ProjetHotel\App.xaml
 16-1527794480
 21148203114
 57-1121408453
-2444714695
+241107949930
 Views\AdministrationView.xaml;Views\EtageView.xaml;Views\ChambreView.xaml;Views\EmployeView.xaml;Views\HeaderView.xaml;Views\HomeView.xaml;Views\HotelView.xaml;Views\InterventionSupprimer.xaml;Views\InterventionAjouter.xaml;Views\InterventionDetailView.xaml;Views\InterventionView.xaml;Views\LoginView.xaml;Views\MainView.xaml;Views\MessageView.xaml;Views\ParametreView.xaml;Views\UtilisateurView.xaml;
 
 False

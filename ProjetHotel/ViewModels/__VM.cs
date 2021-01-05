@@ -1,6 +1,8 @@
 ﻿using Makrisoft.Makfi.Dal;
+using Makrisoft.Makfi.Models;
 using System;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Windows.Data;
 
 namespace Makrisoft.Makfi.ViewModels
@@ -234,6 +236,54 @@ namespace Makrisoft.Makfi.ViewModels
     }
     public class Etage_VM : ViewModelBase
     {
+        public Etage_VM()
+        {
+
+        }
+        public Etage_VM(Etage x)
+        {
+
+            Id = x.Id;
+            Nom = x.Nom;
+            Commentaire = x.Commentaire;
+            SaveColor = "Navy";
+              
+            Chambres = new ObservableCollection<Chambre_VM>(
+                MakfiData.Crud<Chambre>(
+                      "Chambre_Read",
+                      $"<chambres><hotel>{Reference_ViewModel.Header.CurrentHotel.Id}</hotel><groupeChambre>{x.Id}</groupeChambre></chambres>",
+                      e =>
+                      {
+                          e.Id = (Guid)MakfiData.Reader["Id"];
+                          e.Nom = MakfiData.Reader["Nom"] as string;
+                          e.Etat = (Guid)MakfiData.Reader["Etat"];
+                          e.Commentaire = MakfiData.Reader["Commentaire"] as string;
+                      })
+            .Select(c => new Chambre_VM
+            {
+                Id = c.Id,
+                Nom = c.Nom,
+            }));
+
+            AutresChambres = new ObservableCollection<Chambre_VM>(
+                MakfiData.Crud<Chambre>(
+                    "Chambre_Read",
+                    $"<chambres><hotel>{Reference_ViewModel.Header.CurrentHotel.Id}</hotel><notChambres>" +
+                    (Chambres == null ? "" : string.Join("", Chambres.Select(ch => $"<chambre>{ ch.Id}</chambre>"))) +
+                    $"</notChambres></chambres>",
+                    e =>
+                    {
+                        e.Id = (Guid)MakfiData.Reader["Id"];
+                        e.Nom = MakfiData.Reader["Nom"] as string;
+                        e.Etat = (Guid)MakfiData.Reader["Etat"];
+                        e.Commentaire = MakfiData.Reader["Commentaire"] as string;
+                    })
+                    .Select(c => new Chambre_VM
+                    {
+                        Id = c.Id,
+                        Nom = c.Nom,
+                    }));
+        }
         public string Nom
         {
             get { return nom; }
