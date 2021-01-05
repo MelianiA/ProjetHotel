@@ -24,11 +24,9 @@ select
 	@notGroupeChambre = T.N.value('notChambres[1]', 'uniqueidentifier') 
 from @data.nodes('chambres') as T(N)
 
-select T.N.value('(./chambre/text())[1]', 'uniqueidentifier') chambre 
+select T.N.value('(./text())[1]', 'uniqueidentifier') chambre 
 into #data 
-from @data.nodes('chambres/notChambres') as T(N)
-
-select * from #data
+from @data.nodes('chambres/notChambres/chambre') as T(N)
 
 --CAS 1 : <chambres><hotel>@hotel</hotel><groupeChambre>@groupeChambre</groupeChambre></chambres>
 IF @groupeChambre is not null
@@ -38,7 +36,7 @@ IF @groupeChambre is not null
 	where (@hotel is null or c.Hotel=@hotel) and gc.Id=@groupeChambre
 --CAS 2 : <chambres><hotel>@hotel</hotel><notGroupeChambre>@notGroupeChambre</notGroupeChambre></chambres>
 ELSE IF @notGroupeChambre is not null
-	select c.Id,c.Nom,c.Etat,c.Commentaire, cgc.GroupeChambre from Chambre c
+	select distinct c.Id,c.Nom,c.Etat,c.Commentaire, null GroupeChambre from Chambre c
 	left outer join ChambreGroupeChambre cgc on cgc.Chambre=c.Id
 	left outer join GroupeChambre gc on cgc.GroupeChambre=gc.Id
 	where (@hotel is null or c.Hotel=@hotel) and (@notGroupeChambre is null or c.Id not in(select chambre from #data))

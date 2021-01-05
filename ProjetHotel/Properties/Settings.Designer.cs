@@ -59,5 +59,14 @@ namespace Makrisoft.Makfi.Properties {
                 return ((string)(this["MessagePath"]));
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0.0.2")]
+        public string Version {
+            get {
+                return ((string)(this["Version"]));
+            }
+        }
     }
 }
